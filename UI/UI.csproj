@@ -414,9 +414,6 @@
     <EmbeddedResource Include="Map\FormSelectPoint.resx">
       <DependentUpon>FormSelectPoint.cs</DependentUpon>
     </EmbeddedResource>
-    <Content Include="License-LGPL.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="main_icon.ico" />
     <Content Include="Schemes\associate_scheme.reg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
