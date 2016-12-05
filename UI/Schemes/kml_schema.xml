@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://earth.google.com/kml/2.2">
+  <Document xmlns="">
+    <Folder>
+      <Folder>
+        <name></name>
+        <open>1</open>
+        <TimeSpan>
+          <begin></begin>
+          <end></end>
+        </TimeSpan>
+        <Style>
+          <ListStyle>
+            <listItemType>check</listItemType>
+            <bgColor>00ffffff</bgColor>
+          </ListStyle>
+        </Style>
+        <Placemark>
+          <name></name>
+          <description></description>
+          <Style>
+            <LineStyle>
+              <color>A60000FF</color>
+              <width>2</width>
+            </LineStyle>
+          </Style>
+          <LineString>
+            <extrude>1</extrude>
+            <coordinates></coordinates>
+          </LineString>
+        </Placemark>
+      </Folder>
+    </Folder>
+  </Document>
+</kml>

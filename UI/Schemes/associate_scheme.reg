@@ -1,0 +1,20 @@
+﻿Windows Registry Editor Version 5.00
+
+[HKEY_CLASSES_ROOT\{extension}]
+@="{name}"
+
+[HKEY_CLASSES_ROOT\{name}]
+@="{comment}"
+
+[HKEY_CLASSES_ROOT\{name}\CLSID]
+
+[HKEY_CLASSES_ROOT\{name}\DefaultIcon]
+@="\"{exename}\",1"
+
+[HKEY_CLASSES_ROOT\{name}\Shell]
+
+[HKEY_CLASSES_ROOT\{name}\Shell\Open]
+@="Открыть"
+
+[HKEY_CLASSES_ROOT\{name}\Shell\Open\Command]
+@="\"{exename}\" "%1""

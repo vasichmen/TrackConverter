@@ -1,0 +1,516 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{BF67CF2C-B1D4-4C2E-8705-C8FE68727EAF}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>TrackConverter.UI</RootNamespace>
+    <AssemblyName>TrackConverter</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <TargetFrameworkProfile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+    <PublishUrl>public\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <TargetCulture>ru-RU</TargetCulture>
+    <ProductName>TrackConverter</ProductName>
+    <PublisherName>Vasich</PublisherName>
+    <ApplicationRevision>16</ApplicationRevision>
+    <ApplicationVersion>2.5.4.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <CreateDesktopShortcut>true</CreateDesktopShortcut>
+    <PublishWizardCompleted>true</PublishWizardCompleted>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\TrackConverter.XML</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>main_icon.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>TrackConverter.UI.Program</StartupObject>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestCertificateThumbprint>88DAC9A81FC568106749C9BDFD969E68B89DD6F2</ManifestCertificateThumbprint>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestKeyFile>UI_TemporaryKey.pfx</ManifestKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <GenerateManifests>true</GenerateManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <TargetZone>LocalIntranet</TargetZone>
+  </PropertyGroup>
+  <PropertyGroup />
+  <PropertyGroup>
+    <SignManifests>false</SignManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>false</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="GMap.NET.Core">
+      <HintPath>..\packages\GMap.NET.WindowsForms.1.7.1\lib\net40\GMap.NET.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="GMap.NET.WindowsForms">
+      <HintPath>..\packages\GMap.NET.WindowsForms.1.7.1\lib\net40\GMap.NET.WindowsForms.dll</HintPath>
+    </Reference>
+    <Reference Include="ICSharpCode.SharpZipLib">
+      <HintPath>..\packages\SharpZipLib.0.86.0\lib\20\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.VisualBasic" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.SQLite, Version=1.0.103.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Data.SQLite.Core.1.0.103\lib\net40\System.Data.SQLite.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.DirectoryServices" />
+    <Reference Include="System.Web.DataVisualization" />
+    <Reference Include="System.Windows.Forms.DataVisualization" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="UIAutomationProvider" />
+    <Reference Include="WindowsBase" />
+    <Reference Include="WindowsFormsIntegration" />
+    <Reference Include="ZedGraph, Version=5.1.7.430, Culture=neutral, PublicKeyToken=02a83cbd123fcd60, processorArchitecture=MSIL">
+      <HintPath>..\packages\ZedGraph.5.1.7\lib\net35-Client\ZedGraph.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Common\FormBrowser.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Common\FormBrowser.Designer.cs">
+      <DependentUpon>FormBrowser.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Common\FormContainer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Common\FormContainer.Designer.cs">
+      <DependentUpon>FormContainer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Common\TrayIcon.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Tools\FormCalculateDistance.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Tools\FormCalculateDistance.Designer.cs">
+      <DependentUpon>FormCalculateDistance.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Converter\FormJoinTracks.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Converter\FormJoinTracks.Designer.cs">
+      <DependentUpon>FormJoinTracks.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Map\FormEditRoute.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Map\FormEditRoute.Designer.cs">
+      <DependentUpon>FormEditRoute.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Common\Dialogs\FormEditPoint.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Common\Dialogs\FormEditPoint.Designer.cs">
+      <DependentUpon>FormEditPoint.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tools\FormConsole.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Tools\FormConsole.Designer.cs">
+      <DependentUpon>FormConsole.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tools\FormElevVisual.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Tools\FormElevVisual.Designer.cs">
+      <DependentUpon>FormElevVisual.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Converter\FormConverter.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Converter\FormConverter.Designer.cs">
+      <DependentUpon>FormConverter.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Map\FormMap.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Map\FormMap.Designer.cs">
+      <DependentUpon>FormMap.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Map\FormMapNavigator.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Map\FormMapNavigator.Designer.cs">
+      <DependentUpon>FormMapNavigator.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tools\FormOptions.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Tools\FormOptions.Designer.cs">
+      <DependentUpon>FormOptions.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tools\FormPoints.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Tools\FormPoints.Designer.cs">
+      <DependentUpon>FormPoints.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Common\Dialogs\FormReadText.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Common\Dialogs\FormReadText.Designer.cs">
+      <DependentUpon>FormReadText.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Converter\FormTrackInformation.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Converter\FormTrackInformation.Designer.cs">
+      <DependentUpon>FormTrackInformation.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tools\FormTrackComparison.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Tools\FormTrackComparison.Designer.cs">
+      <DependentUpon>FormTrackComparison.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tools\FormTransformCoordinate.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Tools\FormTransformCoordinate.Designer.cs">
+      <DependentUpon>FormTransformCoordinate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Common\FormWaiting.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Common\FormWaiting.Designer.cs">
+      <DependentUpon>FormWaiting.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Map\FormSelectMapActions.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Map\FormSelectMapActions.Designer.cs">
+      <DependentUpon>FormSelectMapActions.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Map\FormSelectPoint.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Map\FormSelectPoint.Designer.cs">
+      <DependentUpon>FormSelectPoint.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Content Include="Docs\api_keys.txt" />
+    <Content Include="Docs\добавление действия для отмены.txt" />
+    <Content Include="Docs\добавление иконки маркера.txt" />
+    <Content Include="Docs\добавление провайдера карты.txt" />
+    <Content Include="Docs\добавление формата файла.txt" />
+    <Content Include="Docs\стандарты.txt" />
+    <Content Include="Images\icons\001.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\icons\002.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\icons\003.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\icons\004.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\icons\005.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\icons\006.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\icons\007.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\icons\008.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\icons\009.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\icons\010.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\icons\011.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\icons\012.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\icons\013.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\icons\014.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\icons\015.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\icons\016.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\icons\017.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\icons\018.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\icons\019.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\icons\020.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\icons\021.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\maps\google_hibride.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\maps\google_map.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\maps\google_satellite.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\maps\osm_cycle.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\maps\yandex_hibride.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\maps\yandex_map.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\maps\yandex_satellite.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Scripts\test.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <EmbeddedResource Include="Common\FormBrowser.resx">
+      <DependentUpon>FormBrowser.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Common\FormContainer.resx">
+      <DependentUpon>FormContainer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Tools\FormCalculateDistance.resx">
+      <DependentUpon>FormCalculateDistance.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Tools\FormConsole.resx">
+      <DependentUpon>FormConsole.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Tools\FormElevVisual.ru.resx">
+      <DependentUpon>FormElevVisual.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Converter\FormJoinTracks.resx">
+      <DependentUpon>FormJoinTracks.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Map\FormEditRoute.resx">
+      <DependentUpon>FormEditRoute.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Common\Dialogs\FormEditPoint.resx">
+      <DependentUpon>FormEditPoint.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Tools\FormElevVisual.resx">
+      <DependentUpon>FormElevVisual.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Converter\FormConverter.resx">
+      <DependentUpon>FormConverter.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Map\FormMap.resx">
+      <DependentUpon>FormMap.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Map\FormMapNavigator.resx">
+      <DependentUpon>FormMapNavigator.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Tools\FormOptions.resx">
+      <DependentUpon>FormOptions.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Tools\FormPoints.resx">
+      <DependentUpon>FormPoints.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Common\Dialogs\FormReadText.resx">
+      <DependentUpon>FormReadText.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Converter\FormTrackInformation.resx">
+      <DependentUpon>FormTrackInformation.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Tools\FormTrackComparison.resx">
+      <DependentUpon>FormTrackComparison.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Tools\FormTransformCoordinate.resx">
+      <DependentUpon>FormTransformCoordinate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Common\FormWaiting.resx">
+      <DependentUpon>FormWaiting.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Map\FormSelectMapActions.resx">
+      <DependentUpon>FormSelectMapActions.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Map\FormSelectPoint.resx">
+      <DependentUpon>FormSelectPoint.cs</DependentUpon>
+    </EmbeddedResource>
+    <Content Include="License-LGPL.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="main_icon.ico" />
+    <Content Include="Schemes\associate_scheme.reg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Include="Data\ETOPO2\etopo2.bin" />
+    <None Include="Data\ETOPO2\etopo2.hdr" />
+    <None Include="Data\ETOPO2\ETOPO2v2c_f4_MSB.flt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Data\ETOPO2\ETOPO2v2c_f4_MSB.hdr">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="packages.config" />
+    <None Include="Properties\app.manifest" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Lib\Lib.csproj">
+      <Project>{02f3efc7-9fd9-41f2-8eb5-9aa91b454eb4}</Project>
+      <Name>Lib</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Res\Res.csproj">
+      <Project>{44d81bc5-5baf-4562-88fe-180bec5b96dc}</Project>
+      <Name>Res</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Docs\change_log.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Docs\formats.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Schemes\gpx_schema.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Docs\help.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Schemes\kml_schema.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Schemes\osm_schema.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.5">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.5 %28x86 и x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>Клиентский профиль .NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <COMReference Include="IWshRuntimeLibrary">
+      <Guid>{F935DC20-1CF0-11D0-ADB9-00C04FD58A0B}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+  <Import Project="..\packages\System.Data.SQLite.Core.1.0.103\build\net40\System.Data.SQLite.Core.targets" Condition="Exists('..\packages\System.Data.SQLite.Core.1.0.103\build\net40\System.Data.SQLite.Core.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>Данный проект ссылается на пакеты NuGet, отсутствующие на этом компьютере. Используйте восстановление пакетов NuGet, чтобы скачать их.  Дополнительную информацию см. по адресу: http://go.microsoft.com/fwlink/?LinkID=322105. Отсутствует следующий файл: {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\System.Data.SQLite.Core.1.0.103\build\net40\System.Data.SQLite.Core.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\System.Data.SQLite.Core.1.0.103\build\net40\System.Data.SQLite.Core.targets'))" />
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

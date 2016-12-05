@@ -1,0 +1,11 @@
+﻿Google elevation_api
+AIzaSyDmc2dTdwizL-CNdgHw5PliuhtKc6JOPss
+
+Yandex API_KEY
+PLDmd5925Sr792Z798MjAQWMRDjQTY0~R9xo0NTgIR9-85X-aUZkLRwgoAXa-B97XBzf2jd-dDZkSpCd2aLZxS55DjFt~AtG90jY1EtCLbk=
+
+Yandex token registration doc:
+https://tech.yandex.ru/oauth/doc/dg/tasks/get-oauth-token-docpage/
+Token: AQAAAAAE_Q8AAAOMgZtn3OjmCEJGjMh3rBLSadw
+Life-time: 1 year
+

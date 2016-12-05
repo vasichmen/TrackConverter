@@ -1,0 +1,5 @@
+﻿0. добавить перечисление Classes.Enums.EditInfoType
+1. добавить перечисление в switch StackEdits.SteckItem.конструктор
+2. добавить описание StackEdits.SteckItem.Text
+3. добавить класс действия в StackEdits
+4. в нужном месте добавлять в стек новый элемент

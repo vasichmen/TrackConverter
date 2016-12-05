@@ -1,0 +1,177 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{02F3EFC7-9FD9-41F2-8EB5-9AA91B454EB4}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>TrackConverter.Lib</RootNamespace>
+    <AssemblyName>Lib</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\Lib.XML</DocumentationFile>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>false</SignAssembly>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="GMap.NET.Core">
+      <HintPath>..\packages\GMap.NET.WindowsForms.1.7.1\lib\net40\GMap.NET.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="GMap.NET.WindowsForms">
+      <HintPath>..\packages\GMap.NET.WindowsForms.1.7.1\lib\net40\GMap.NET.WindowsForms.dll</HintPath>
+    </Reference>
+    <Reference Include="ICSharpCode.SharpZipLib">
+      <HintPath>..\packages\SharpZipLib.0.86.0\lib\20\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net40\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.SQLite, Version=1.0.103.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Data.SQLite.Core.1.0.103\lib\net40\System.Data.SQLite.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Drawing.Design" />
+    <Reference Include="System.Runtime.Caching" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Classes\MapProviderRecord.cs" />
+    <Compile Include="Classes\MarkerTag.cs" />
+    <Compile Include="Classes\Options\Common.cs" />
+    <Compile Include="Classes\Options\Container.cs" />
+    <Compile Include="Classes\Options\Converter.cs" />
+    <Compile Include="Classes\Options\DataSources.cs" />
+    <Compile Include="Classes\Options\Graphs.cs" />
+    <Compile Include="Classes\Options\Services.cs" />
+    <Compile Include="Classes\StackEdits\Actions.cs" />
+    <Compile Include="Classes\StackEdits\IUndoInfo.cs" />
+    <Compile Include="Classes\StackEdits\StackItem.cs" />
+    <Compile Include="Data\Interfaces\IGeoInfoProvider.cs" />
+    <Compile Include="Data\Interfaces\IGeoсoderProvider.cs" />
+    <Compile Include="Data\Interfaces\ILinkShorterProvider.cs" />
+    <Compile Include="Data\Providers\InternetServices\Clck.cs" />
+    <Compile Include="Data\Providers\InternetServices\Google.cs" />
+    <Compile Include="Data\Providers\InternetServices\GTOPO30.cs" />
+    <Compile Include="Data\Providers\InternetServices\Nominatim.cs" />
+    <Compile Include="Data\Providers\InternetServices\Qps.cs" />
+    <Compile Include="Data\Providers\InternetServices\Yandex.cs" />
+    <Compile Include="Data\Interfaces\IRouterProvider.cs" />
+    <Compile Include="Data\Providers\Local\ETOPO2\BaseGrid.cs" />
+    <Compile Include="Data\Providers\Local\ETOPO2\IDatabase.cs" />
+    <Compile Include="Data\Providers\Local\ETOPO2\Int16Database.cs" />
+    <Compile Include="Data\Providers\Local\ETOPO2\ETOPO2Provider.cs" />
+    <Compile Include="Data\Providers\InternetServices\BaseConnection.cs" />
+    <Compile Include="Data\GeoCoder.cs" />
+    <Compile Include="Data\GeoInfo.cs" />
+    <Compile Include="Data\GeoRouter.cs" />
+    <Compile Include="Classes\MapMarker.cs" />
+    <Compile Include="Data\LinkShorter.cs" />
+    <Compile Include="Data\Providers\Local\ETOPO2\FloatDatabase.cs" />
+    <Compile Include="Data\Providers\Local\ETOPO2\SQLiteDatabase.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="Mathematic\Assessment\Approximation.cs" />
+    <Compile Include="Mathematic\Assessment\ElevationAnalysis.cs" />
+    <Compile Include="Mathematic\Routing\BaseLogist.cs" />
+    <Compile Include="Mathematic\Routing\BranchBoundsElements\BinaryTree.cs" />
+    <Compile Include="Mathematic\Routing\BranchBoundsElements\Graph.cs" />
+    <Compile Include="Mathematic\Routing\BranchBoundsElements\Map.cs" />
+    <Compile Include="Mathematic\Routing\BranchBoundsElements\MapCell.cs" />
+    <Compile Include="Mathematic\Routing\BranchBoundsElements\MemoryAllocator.cs" />
+    <Compile Include="Mathematic\Routing\BranchBoundsElements\StatVars.cs" />
+    <Compile Include="Mathematic\Routing\BranchBoundsElements\Tree.cs" />
+    <Compile Include="Mathematic\Routing\FullSearch.cs" />
+    <Compile Include="Mathematic\Routing\FullSearchElements\Graph.cs" />
+    <Compile Include="Mathematic\Routing\FullSearchElements\IndexArray.cs" />
+    <Compile Include="Mathematic\Routing\Greedy.cs" />
+    <Compile Include="Mathematic\Routing\BranchBounds.cs" />
+    <Compile Include="Mathematic\Constants.cs" />
+    <Compile Include="Classes\Options\Map.cs" />
+    <Compile Include="Mathematic\Calc.cs" />
+    <Compile Include="Classes\Coordinate.cs" />
+    <Compile Include="Classes\Enums.cs" />
+    <Compile Include="Classes\Options\Options.cs" />
+    <Compile Include="Mathematic\Routing\GreedyElements\Cell.cs" />
+    <Compile Include="Mathematic\Routing\GreedyElements\Graph.cs" />
+    <Compile Include="Data\SQLiteCache.cs" />
+    <Compile Include="Mathematic\Routing\RecursiveEnum.cs" />
+    <Compile Include="Mathematic\Routing\RecursiveEnumElements\Graph.cs" />
+    <Compile Include="Tracking\Serializer.cs" />
+    <Compile Include="Tracking\GeoFile.cs" />
+    <Compile Include="Tracking\TrackFileList.cs" />
+    <Compile Include="Tracking\TrackFile.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Tracking\TrackPoint.cs" />
+    <Compile Include="Vars.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Res\Res.csproj">
+      <Project>{44d81bc5-5baf-4562-88fe-180bec5b96dc}</Project>
+      <Name>Res</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+  <Import Project="..\packages\System.Data.SQLite.Core.1.0.103\build\net40\System.Data.SQLite.Core.targets" Condition="Exists('..\packages\System.Data.SQLite.Core.1.0.103\build\net40\System.Data.SQLite.Core.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>Данный проект ссылается на пакеты NuGet, отсутствующие на этом компьютере. Используйте восстановление пакетов NuGet, чтобы скачать их.  Дополнительную информацию см. по адресу: http://go.microsoft.com/fwlink/?LinkID=322105. Отсутствует следующий файл: {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\System.Data.SQLite.Core.1.0.103\build\net40\System.Data.SQLite.Core.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\System.Data.SQLite.Core.1.0.103\build\net40\System.Data.SQLite.Core.targets'))" />
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
