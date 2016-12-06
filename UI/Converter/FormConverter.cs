@@ -1125,7 +1125,6 @@ namespace TrackConverter.UI.Converter
             {
                 DataGridViewCell cell = this.dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex];
                 TrackFile tf = Tracks[e.RowIndex];
-
                 string text = "Название: " + tf.Name + "\r\n";
                 text+="Длина: "+tf.Distance.ToString("00.00")+" км\r\n";
                 text += "Количество точек: " + tf.Count + "\r\n";
@@ -1133,7 +1132,6 @@ namespace TrackConverter.UI.Converter
                 text += "Описание: " + tf.Description + "\r\n";
                 text += "Общее время: " + tf.Time + "\r\n";
                 text += "Имя файла: " + tf.FileName + "\r\n";
-                
                 cell.ToolTipText = text;
             }
         }
