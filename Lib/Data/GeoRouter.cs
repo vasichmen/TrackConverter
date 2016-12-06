@@ -60,6 +60,7 @@ namespace TrackConverter.Lib.Data
         /// построить все пути между точками. В ячейки с одинаковыми индексами записывается null
         /// </summary>
         /// <param name="points">точки, между которыми надо построить маршруты</param>
+        /// <param name="callback">действие, выполняемое во время обработки</param>
         /// <returns></returns>
         public List<List<TrackFile>> CreateRoutes(TrackFile points, Action<string> callback)
         {

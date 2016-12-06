@@ -152,7 +152,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                 }
                 return res;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 throw new ApplicationException("Через заданные точки яндекс не смог построить маршрут.\r\n(путь нельзя проложить в выбранном районе)");
             }

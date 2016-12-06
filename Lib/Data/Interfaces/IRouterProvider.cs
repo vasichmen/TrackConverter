@@ -9,7 +9,23 @@ namespace TrackConverter.Lib.Data.Interfaces
     /// </summary>
     interface IRouterProvider
     {
+        /// <summary>
+        /// Построить маршрут от заданной точки from до заданной точки to через точки waypoints
+        /// </summary>
+        /// <param name="from">начальная точка</param>
+        /// <param name="to">конечная точка</param>
+        /// <param name="waypoints">промежуточные точки</param>
+        /// <returns></returns>
         TrackFile CreateRoute(Coordinate from, Coordinate to, TrackFile waypoints);
+
+        /// <summary>
+        /// построить маршруты между всеми зданными точками. 
+        /// Возвращает матрицу, в которой элемент ij содержит маршрут из точки с номером i в точку с номеро j. 
+        /// Элементы на главной диагонали равны null
+        /// </summary>
+        /// <param name="points">точки, между которыми надо построить маршруты</param>
+        /// <param name="callback">дейстие, выполняемое при построении</param>
+        /// <returns></returns>
         List<List<TrackFile>> CreateRoutes(TrackFile points, Action<string> callback);
     }
 }

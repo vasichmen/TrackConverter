@@ -63,6 +63,7 @@ namespace TrackConverter.UI.Map
             this.очисткаToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.clearRoutesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.clearMarkersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.clearAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.окноToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showNavigatorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.инструментыToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -101,7 +102,6 @@ namespace TrackConverter.UI.Map
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripButtonRuler = new System.Windows.Forms.ToolStripButton();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.clearAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.contextMenuStripMap.SuspendLayout();
             this.toolStrip1.SuspendLayout();
@@ -317,6 +317,13 @@ namespace TrackConverter.UI.Map
             this.clearMarkersToolStripMenuItem.Size = new System.Drawing.Size(189, 22);
             this.clearMarkersToolStripMenuItem.Text = "Очистить маркеры";
             this.clearMarkersToolStripMenuItem.Click += new System.EventHandler(this.clearMarkersToolStripMenuItem_Click);
+            // 
+            // clearAllToolStripMenuItem
+            // 
+            this.clearAllToolStripMenuItem.Name = "clearAllToolStripMenuItem";
+            this.clearAllToolStripMenuItem.Size = new System.Drawing.Size(189, 22);
+            this.clearAllToolStripMenuItem.Text = "Очистить всё";
+            this.clearAllToolStripMenuItem.Click += new System.EventHandler(this.clearAllToolStripMenuItem_Click);
             // 
             // окноToolStripMenuItem
             // 
@@ -684,14 +691,6 @@ namespace TrackConverter.UI.Map
             this.toolStripButtonRuler.Size = new System.Drawing.Size(21, 20);
             this.toolStripButtonRuler.ToolTipText = "Измерение расстояний";
             this.toolStripButtonRuler.Click += new System.EventHandler(this.toolStripButtonRuler_Click);
-            // 
-            // clearAllToolStripMenuItem
-            // 
-            this.clearAllToolStripMenuItem.Name = "clearAllToolStripMenuItem";
-            this.clearAllToolStripMenuItem.Size = new System.Drawing.Size(189, 22);
-            this.clearAllToolStripMenuItem.Text = "Очистить всё";
-            this.clearAllToolStripMenuItem.Click += clearRoutesToolStripMenuItem_Click;
-            this.clearAllToolStripMenuItem.Click += clearMarkersToolStripMenuItem_Click;
             // 
             // FormMap
             // 

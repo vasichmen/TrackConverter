@@ -104,16 +104,6 @@ namespace TrackConverter.UI.Converter
         }
 
         /// <summary>
-        /// закрытие окна с подтверждением выхода
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void FormConverter_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            e.Cancel = Program.winMap.TryClose(this, e);
-        }
-
-        /// <summary>
         /// перевод фокуса на форму
         /// </summary>
         /// <param name="sender"></param>
@@ -149,7 +139,7 @@ namespace TrackConverter.UI.Converter
                     Program.winMain.BeginOperation();
                     //метод обновления информации о выполняемой операции
 
-                    pts = Serializer.DeserializeTrackFile(openingFile, Program.winMain.setCurrentOperation) ;
+                    pts = Serializer.DeserializeTrackFile(openingFile, Program.winMain.setCurrentOperation);
                     openingFile = null;
                     //обработка результатов
                     Program.winMap.Invoke(new Action(() =>
@@ -745,11 +735,25 @@ namespace TrackConverter.UI.Converter
             }
 
             int row = dataGridView1.SelectedRows[0].Index;
-
-            Program.winMap.EditRoute(Tracks[row], (tf) => { EndEditRoute(tf); }); //начало редактирования
-            Tracks.Remove(Tracks[row]); //удаляем редактируемый  трек из списка
-            OpenFile(null, true); //обновление интерфейса
-            Program.winMap.Activate(); //фокус на карту
+            TrackFile backup = Tracks[row].Clone(); //запоминаем старый маршрут
+            TrackFile ed = Tracks[row].Clone(); //новый маршрут для редактирования
+            Tracks.RemoveAt(row); //удаление из списка
+            OpenFile(null, true);
+            //начало редактирования
+            Program.winMap.BeginEditRoute(ed,
+                (tf) =>
+                {
+                    EndEditRoute(tf);
+                },
+                () =>
+                {
+                    backup.CalculateAll();
+                    Tracks.Add(backup);
+                    OpenFile(null, true);
+                }
+                );
+            Vars.currentSelectedTrack = null;
+            Program.RefreshWindows(this);
         }
 
         /// <summary>
@@ -1096,7 +1100,7 @@ namespace TrackConverter.UI.Converter
         /// <param name="e"></param>
         private void dataGridView1_Paint(object sender, PaintEventArgs e)
         {
-            if (dataGridView1.RowCount > 0 && dataGridView1.ColumnCount > 0)
+            if (dataGridView1.RowCount > 0 && dataGridView1.ColumnCount > 0 && Tracks.Count > 0)
             {
                 int i = 0;
                 foreach (DataGridViewRow dgvr in dataGridView1.Rows)

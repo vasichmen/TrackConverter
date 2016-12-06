@@ -341,6 +341,7 @@ namespace TrackConverter.UI.Tools
                 mainCurves.Add(curveSelectedTrack);
                 gp.CurveList.Add(curveSelectedTrack);
             }
+            else Clear();
 
             zedGraph.AxisChange();
             zedGraph.Invalidate();

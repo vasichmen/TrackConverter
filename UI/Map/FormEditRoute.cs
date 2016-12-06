@@ -30,7 +30,7 @@ namespace TrackConverter.UI.Map
         private Action cancelAction;
         private GMapOverlay overlay;
         private TrackFile route;
-
+        private bool userCancel = true;
 
         /// <summary>
         /// создет новое окно редактирования маршрута
@@ -40,7 +40,7 @@ namespace TrackConverter.UI.Map
         /// <param name="overlay">слой для вывода редактируемого маршрута</param>
         /// <param name="route">редактируемый маршрут</param>
         /// <param name="Title">Заголовок окна редактирования</param>
-        public FormEditRoute(string Title,TrackFile route, GMapOverlay overlay, Action<TrackFile> actionAfter, Action cancelAction)
+        public FormEditRoute(string Title,TrackFile route,GMapOverlay overlay, Action<TrackFile> actionAfter, Action cancelAction)
         {
             InitializeComponent();
             this.actionAfter = actionAfter;
@@ -96,12 +96,10 @@ namespace TrackConverter.UI.Map
         {
             if (this.route.Color.IsEmpty)
                 this.route.Color = Vars.Options.Converter.GetColor();
-
-
             //выполнение действия после создания маршрута
             if (actionAfter != null)
                 actionAfter.Invoke(this.route);
-
+            this.userCancel = false;
             Close();
         }
 
@@ -112,8 +110,6 @@ namespace TrackConverter.UI.Map
         /// <param name="e"></param>
         private void buttonCancel_Click(object sender, EventArgs e)
         {
-            if (cancelAction != null)
-                cancelAction.Invoke();
             Close();
         }
 
@@ -124,10 +120,13 @@ namespace TrackConverter.UI.Map
         /// <param name="e"></param>
         private void FormEditRoute_FormClosed(object sender, FormClosedEventArgs e)
         {
-            if (e.CloseReason == CloseReason.UserClosing && cancelAction != null)
+            if (this.userCancel && cancelAction != null)
                 cancelAction.Invoke();
             if (Program.winMap.isCreatingRoute)
+            {
                 Program.winMap.isCreatingRoute = false;
+                Program.winMap.creatingRouteOverlay.Clear();
+            }
             if (Program.winMap.isRuling)
                 Program.winMap.isRuling = false;
             Program.winMap.toolStripStatusLabelInfo.Text = "";

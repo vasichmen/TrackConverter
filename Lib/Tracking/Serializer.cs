@@ -1553,7 +1553,13 @@ namespace TrackConverter.Lib.Tracking
             GeoFile res = new GeoFile();
             XmlDocument xml = new XmlDocument();
             xml.Load(FileName);
-            return KmlHelper.CheckFolder(xml.DocumentElement);
+            res = KmlHelper.CheckFolder(xml.DocumentElement);
+            foreach (TrackFile tf in res.Routes)
+            {
+                tf.FilePath = FileName;
+                tf.FileName = Path.GetFileNameWithoutExtension(FileName);
+            }
+            return res;
         }
 
 

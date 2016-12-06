@@ -463,7 +463,6 @@
             this.Name = "FormConverter";
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "Список маршрутов";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormConverter_FormClosing);
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.FormConverter_FormClosed);
             this.Load += new System.EventHandler(this.FormConverter_Load);
             this.menuStrip1.ResumeLayout(false);
