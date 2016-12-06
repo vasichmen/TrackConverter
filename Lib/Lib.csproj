@@ -136,6 +136,9 @@
     <Compile Include="Data\SQLiteCache.cs" />
     <Compile Include="Mathematic\Routing\RecursiveEnum.cs" />
     <Compile Include="Mathematic\Routing\RecursiveEnumElements\Graph.cs" />
+    <Compile Include="Tracking\Helpers\KmlHelper.cs" />
+    <Compile Include="Tracking\Helpers\RteHelper.cs" />
+    <Compile Include="Tracking\Helpers\XmlHelper.cs" />
     <Compile Include="Tracking\Serializer.cs" />
     <Compile Include="Tracking\GeoFile.cs" />
     <Compile Include="Tracking\TrackFileList.cs" />

@@ -139,11 +139,6 @@
       <DependentUpon>FormContainer.cs</DependentUpon>
     </Compile>
     <Compile Include="Common\TrayIcon.cs" />
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
     <Compile Include="Tools\FormCalculateDistance.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -344,7 +339,10 @@
     <Content Include="Images\maps\yandex_satellite.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Scripts\test.js">
+    <Content Include="license.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="readme.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <EmbeddedResource Include="Common\FormBrowser.resx">
@@ -352,10 +350,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Common\FormContainer.resx">
       <DependentUpon>FormContainer.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Tools\FormCalculateDistance.resx">
       <DependentUpon>FormCalculateDistance.cs</DependentUpon>

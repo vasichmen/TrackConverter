@@ -587,8 +587,10 @@ namespace TrackConverter.UI.Map
                 this.waypoints = gf.Waypoints;
                 this.tracks = gf.Routes;
                 Vars.Options.Common.LastFileLoadDirectory = Path.GetDirectoryName(of.FileName);
-                ShowTracks(baseOverlay);
                 ShowWaypoints(waypoints, baseOverlay, false);
+
+                foreach (TrackFile tf in gf.Routes)
+                    Program.winConverter.AddRouteToList(tf);
             }
         }
 

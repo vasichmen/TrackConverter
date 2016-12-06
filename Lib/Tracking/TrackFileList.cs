@@ -38,7 +38,7 @@ namespace TrackConverter.Lib.Tracking
         /// <param name="list"></param>
         public TrackFileList(IEnumerable<TrackFile> list)
         {
-            this.AddRange(list);
+            this.Add(list);
         }
 
         /// <summary>
@@ -151,6 +151,16 @@ namespace TrackConverter.Lib.Tracking
             base.Add(item);
         }
 
-
+        /// <summary>
+        /// добавление списка маршрутов
+        /// </summary>
+        /// <param name="routes">список маршрутов для добавления</param>
+        internal void Add(IEnumerable<TrackFile> routes)
+        {
+            if (routes == null)
+                throw new ArgumentNullException("Аргумент не существует");
+            foreach (TrackFile t in routes)
+                this.Add(t);
+        }
     }
 }

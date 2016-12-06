@@ -13,6 +13,7 @@ using TrackConverter.Lib.Classes;
 using TrackConverter.Res.Properties;
 using System.Threading;
 using TrackConverter.Lib.Data;
+using TrackConverter.Lib.Tracking.Helpers;
 
 namespace TrackConverter.Lib.Tracking
 {
@@ -263,14 +264,14 @@ namespace TrackConverter.Lib.Tracking
             if (!File.Exists(FileName))
                 throw new Exception("Файл не существует:  " + FileName);
 
-            string extension = FileName.Substring(FileName.LastIndexOf('.') + 1);
+            string extension = Path.GetExtension(FileName);
 
             switch (extension)
             {
-                case "kml":
+                case ".kml":
                     res = LoadKml(FileName);
                     break;
-                case "kmz":
+                case ".kmz":
                     res = LoadKmz(FileName);
                     break;
                 default:
@@ -308,7 +309,7 @@ namespace TrackConverter.Lib.Tracking
 
         /// <summary>
         /// загрузка точек из файла kml. Ели надо загружать маршрут, 
-        /// то использовать метод списка маршрутов. TrackFileList.LoadKML
+        /// то использовать метод  LoadKML()
         /// </summary>
         /// <param name="FilePath"></param>
         private static TrackFile LoadKMLwaypoints(string FilePath)
@@ -634,7 +635,7 @@ namespace TrackConverter.Lib.Tracking
                 res.Color = Color.FromArgb(int.Parse(arrd[2]));
             if (version >= 2)
                 sr.ReadLine(); //количество точек в треке
-            while (!sr.EndOfStream) 
+            while (!sr.EndOfStream)
             {
                 string line = sr.ReadLine();
                 line.Replace(" ", "");
@@ -1489,49 +1490,10 @@ namespace TrackConverter.Lib.Tracking
             int i = 1;
             foreach (TrackFile tf in track)
             {
-                WriteTrackToRTEFile(tf, i, outputS);
+                RteHelper.WriteTrackToRTEFile(tf, i, outputS);
                 i++;
             }
             outputS.Close();
-        }
-        /// <summary>
-        /// дописать блок с отдельным треком в файл rte
-        /// </summary>
-        /// <param name="tf">трек, который надо записать</param>
-        /// <param name="number">номер маршрута по порядку</param>
-        /// <param name="outputS">объект StreamWriter, куда произвдится запись</param>
-        private static void WriteTrackToRTEFile(TrackFile tf, int number, StreamWriter outputS)
-        {
-            //заголовок
-            //<номер маршрута>,<имя маршрута>,<описание маршрута>,<цвет маршрута>
-            string header = string.Format("R,{0},{1},{2},{3}", number, tf.Name, tf.Description, tf.Color.ToArgb());
-            outputS.WriteLine(header);
-            //точки
-            //<номер маршрута>,<номер точки в маршруте>,<имя точки>,<описание точки>,<широта>,<долгота>,<время>,<>,<>,<>,<>,<65535>,<описание>,<0>,<0>,<сходное расстояние>,<высота в футах>
-            int i = 0;
-            foreach (TrackPoint pt in tf)
-            {
-                string line = string.Format("W,{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15},{16}",
-                    number, //<номер маршрута>
-                    i, //<номер точки в маршруте>
-                    pt.Name, //<имя точки>
-                    pt.Description, //<описание точки>
-                    pt.Coordinates.Latitude.TotalDegrees.ToString().Replace(Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0], '.'), //<широта>
-                    pt.Coordinates.Longitude.TotalDegrees.ToString().Replace(Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0], '.'), //<долгота>
-                    pt.Time.ToOADate().ToString().Replace(Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0], '.'), //<время>
-                    "",
-                    "",
-                    "",
-                    "",
-                    65535,
-                    "", //<описание>
-                    0,
-                    0,
-                    0,
-                    pt.FeetAltitude.ToString().Replace(Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0], '.')); //высота в футах
-                i++;
-                outputS.WriteLine(line);
-            }
         }
 
         /// <summary>
@@ -1591,181 +1553,9 @@ namespace TrackConverter.Lib.Tracking
             GeoFile res = new GeoFile();
             XmlDocument xml = new XmlDocument();
             xml.Load(FileName);
-
-
-            //выбор стрктуры документа
-            //если после тега document идет маршрут, то корневой элемент document (Folder.ParentNode)
-            XmlNode root = null;
-            if (xml.DocumentElement.GetElementsByTagName("Folder").Count == 1)
-                root = xml.DocumentElement.GetElementsByTagName("Folder")[0].ParentNode;
-            //если после document идет еще папка, то корневой элемент эта папка
-            else
-                root = xml.DocumentElement.GetElementsByTagName("Folder")[0];
-
-            //если эти теги не найдены, то маршрутов нет в файле
-            bool containsRoutes = root.InnerXml.ToLower().Contains("linestring") && root.InnerXml.ToLower().Contains("coordinates");
-
-            foreach (XmlNode fl in root)
-            {
-
-                #region МАРШРУТЫ
-
-                if (fl.LocalName.ToLower() == "folder" && containsRoutes)
-                {
-                    TrackFile tf = new TrackFile();
-                    foreach (XmlNode rtn in fl.ChildNodes)
-                    {
-                        //время маршрута
-                        if (rtn.Name.ToLower() == "timespan")
-                        {
-                            string begin = "";
-                            string end = "";
-                            foreach (XmlNode dcls in rtn.ChildNodes)
-                            {
-                                if (dcls.Name.ToLower() == "begin")
-                                    begin = dcls.InnerText;
-                                if (dcls.Name.ToLower() == "end")
-                                    end = dcls.InnerText;
-                            }
-
-
-                            if (begin != "" && end != "")
-                            {
-                                TimeSpan rest = TimeSpan.Zero;
-                                DateTime bg = DateTime.Parse(begin);
-                                DateTime en = DateTime.Parse(end);
-
-                                rest = en - bg;
-                                tf.Time = rest;
-                            }
-
-                            tf.Time = TimeSpan.Zero;
-                        }
-
-                        //имя маршрута
-                        if (rtn.Name.ToLower() == "name")
-                            tf.Name = rtn.InnerText;
-
-                        //точки маршрута
-                        if (rtn.LocalName.ToLower() == "placemark")
-                        {
-                            //выделение точек маршрута
-                            string routePoints = "";
-                            foreach (XmlNode cc in rtn.ChildNodes)
-                            {
-                                //цвет
-                                if (cc.Name.ToLower() == "style")
-                                    foreach (XmlNode dccd in cc.ChildNodes)
-                                        if (dccd.Name.ToLower() == "linestyle")
-                                            foreach (XmlNode cl in dccd.ChildNodes)
-                                                if (cl.Name.ToLower() == "color")
-                                                    try
-                                                    {
-                                                        tf.Color = ColorTranslator.FromHtml("#" + cl.InnerText);
-                                                    }
-                                                    catch (Exception) { tf.Color = Vars.Options.Converter.GetColor(); }
-
-
-                                //координаты
-                                if (cc.Name.ToLower() == "linestring")
-                                    foreach (XmlNode dccd in cc.ChildNodes)
-                                        if (dccd.Name.ToLower() == "coordinates")
-                                            routePoints += dccd.InnerText;
-                            }
-
-
-                            //переменная routePoints содержит последовательность координат в формате:
-                            //долгота1,широта1,высота1 долгота2,широта2,высота2
-
-                            //разбиваем на отдельные точки
-                            string[] pts = Regex.Split(routePoints.Trim(), "w* w*");
-
-                            foreach (string pt in pts)
-                            {
-                                //тут надо разделять в массив как строки вида: "39,221223,55,892775,99,900000"
-                                //так и такого: "39.221223,55.892775,99.900000"
-                                //в обоих видах записаны 3 числа, но с разными разделителями десятичных разрядов
-                                //в массиве должно быть 3 соответствующих числа: "39,221223" "55,892775" "99,900000"
-                                //string pt = "39.221223,55.892775,99.900000";
-
-                                //вроде работает, но устройство этого регулярного выражения мне не ясно
-                                MatchCollection arr = Regex.Matches(pt, @"\d+\:\d+|\d+[.,]\d+");
-
-                                string al = "0";
-                                string lo = arr[0].ToString().Replace('.', Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0]).Trim();
-                                string la = arr[1].ToString().Replace('.', Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0]).Trim();
-                                if (arr.Count == 3)
-                                    al = arr[2].ToString().Replace('.', Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0]).Trim();
-
-                                TrackPoint nv = new TrackPoint(la, lo)
-                                {
-                                    MetrAltitude = Convert.ToDouble(al) //высота в метрах
-                                };
-
-                                tf += nv;
-                            }
-                        }
-
-                        //описание маршрута
-                        if (root.Name.ToLower() == "description")
-                            tf.Description = root.InnerText;
-                    }
-
-                    tf.CalculateAll();
-                    tf.FileName = Path.GetFileNameWithoutExtension(FileName);
-                    tf.FilePath = FileName;
-                    res.Routes.Add(tf);
-                }
-
-                #endregion
-
-                #region ТОЧКИ
-
-                if (fl.LocalName.ToLower() == "placemark")
-                {
-                    string coords = "";
-                    string name = "";
-                    string desc = "";
-                    TrackPoint nv = null;
-
-                    foreach (XmlNode pnt in fl.ChildNodes)
-                    {
-                        if (pnt.LocalName.ToLower() == "name")
-                            name = pnt.InnerText;
-                        if (pnt.LocalName.ToLower() == "description")
-                            desc = pnt.InnerText;
-                        if (pnt.LocalName.ToLower() == "point")
-                            foreach (XmlNode cc in pnt.ChildNodes)
-                                if (cc.LocalName.ToLower() == "coordinates")
-                                {
-                                    coords = cc.InnerText;
-
-                                    //разбор координат точки
-                                    //вроде работает, но устройство этого регулярного выражения мне не ясно
-                                    MatchCollection arr = Regex.Matches(coords, @"\d+\:\d+|\d+[.,]\d+");
-
-                                    string al = "0";
-                                    string lo = arr[0].ToString().Replace('.', Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0]).Trim();
-                                    string la = arr[1].ToString().Replace('.', Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0]).Trim();
-                                    if (arr.Count == 3)
-                                        al = arr[2].ToString().Replace('.', Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0]).Trim();
-
-                                    nv = new TrackPoint(la, lo)
-                                    {
-                                        MetrAltitude = Convert.ToDouble(al) //высота в метрах
-                                    };
-                                }
-                    }
-                    nv.Name = name;
-                    nv.Description = desc;
-                    res.Waypoints.Add(nv);
-                }
-
-                #endregion
-
-            }
-            return res;
+            return KmlHelper.CheckFolder(xml.DocumentElement);
         }
+
 
         #endregion
 
@@ -1789,8 +1579,6 @@ namespace TrackConverter.Lib.Tracking
             XmlNode document = doc.CreateNode(XmlNodeType.Element, "Document", null);
             kml.AppendChild(document);
 
-
-
             //группа 
             XmlNode folder = doc.CreateNode(XmlNodeType.Element, "Folder", null);
             document.AppendChild(folder);
@@ -1802,32 +1590,12 @@ namespace TrackConverter.Lib.Tracking
 
             //ЗАПИСЬ МАРШРУТОВ
             foreach (TrackFile tf in file.Routes)
-                folder = WriteTrackToKMLNode(doc, folder, tf);
+                folder = KmlHelper.WriteTrackToKMLNode(doc, folder, tf);
 
             //ЗАПИСЬ ТОЧЕК
             foreach (TrackPoint tt in file.Waypoints)
             {
-                XmlNode placemark = doc.CreateNode(XmlNodeType.Element, "Placemark", null);
-
-                //имя
-                XmlNode pnm = doc.CreateNode(XmlNodeType.Element, "name", null);
-                pnm.InnerText = tt.Name;
-                placemark.AppendChild(pnm);
-
-                //описание
-                XmlNode pdesc = doc.CreateNode(XmlNodeType.Element, "description", null);
-                pdesc.InnerText = tt.Description;
-                placemark.AppendChild(pdesc);
-
-                //точка
-                XmlNode ppoint = doc.CreateNode(XmlNodeType.Element, "Point", null);
-                string cords = tt.Coordinates.Longitude.TotalDegrees.ToString("00.0000000000000").Replace(Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0], '.').Trim() + ","
-                    + tt.Coordinates.Latitude.TotalDegrees.ToString("00.0000000000000").Replace(Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0], '.').Trim() + ","
-                    + tt.MetrAltitude.ToString("00.000").Replace(Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0], '.').Trim() + " ";
-                ppoint.InnerXml = string.Format(@"<extrude>1</extrude><coordinates>{0}</coordinates>", cords);
-                placemark.AppendChild(ppoint);
-
-                folder.AppendChild(placemark);
+                folder = KmlHelper.WritePlacemarkToKMLNode(doc, folder, tt);
             }
 
             //ЗАКРЫТИЕ ФАЙЛА
@@ -1835,70 +1603,6 @@ namespace TrackConverter.Lib.Tracking
             xw.Close();
         }
 
-        /// <summary>
-        /// запись трека в указанный xml узел 
-        /// </summary>
-        /// <param name="rootFold">узел, куда надо записать трек</param>
-        /// <param name="tf">Трек для записи</param>
-        /// <param name="parentDoc">родительский документ, от которого создаются элементы</param>
-        /// <returns></returns>
-        private static XmlNode WriteTrackToKMLNode(XmlDocument parentDoc, XmlNode rootFold, TrackFile tf)
-        {
-            XmlNode root = parentDoc.CreateNode(XmlNodeType.Element, "Folder", null);
-
-            //параметры отображения и имя маршрута
-            XmlNode name = parentDoc.CreateNode(XmlNodeType.Element, "name", null);
-            name.InnerText = tf.Name;
-
-            XmlNode style = parentDoc.CreateNode(XmlNodeType.Element, "Style", null);
-
-            style.InnerXml = string.Format(@"<ListStyle><listItemType>check</listItemType><bgColor>00ffffff</bgColor></ListStyle>");
-
-            root.AppendChild(name);
-            root.AppendChild(style);
-
-
-            //маршрут
-            XmlNode placemark = parentDoc.CreateNode(XmlNodeType.Element, "Placemark", null);
-
-            //color
-            XmlNode styleL = parentDoc.CreateNode(XmlNodeType.Element, "Style", null);
-            styleL.InnerXml = string.Format(@"<LineStyle><color>FF{0}</color><width>2</width></LineStyle>", ColorTranslator.ToHtml(tf.Color).TrimStart('#').ToLower());
-            placemark.AppendChild(styleL);
-
-            // еще имя маршрута
-            XmlNode pmnm = parentDoc.CreateNode(XmlNodeType.Element, "name", null);
-            pmnm.InnerText = tf.Name;
-            placemark.AppendChild(pmnm);
-
-            //описание
-            XmlNode pmdes = parentDoc.CreateNode(XmlNodeType.Element, "description", null);
-            pmdes.InnerText = tf.Description;
-            placemark.AppendChild(pmdes);
-
-            //координаты
-            string cords = "";
-            foreach (TrackPoint pt in tf)
-                cords += pt.Coordinates.Longitude.TotalDegrees.ToString("00.0000000000000").Replace(Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0], '.').Trim() + ","
-                    + pt.Coordinates.Latitude.TotalDegrees.ToString("00.0000000000000").Replace(Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0], '.').Trim() + ","
-                    + pt.MetrAltitude.ToString("00.000").Replace(Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0], '.').Trim() + " ";
-
-            //LineString
-            XmlNode pmlnstr = parentDoc.CreateNode(XmlNodeType.Element, "LineString", null);
-            pmlnstr.InnerXml = "<extrude>1</extrude>";
-
-            //coordinates
-            XmlNode pmcrd = parentDoc.CreateNode(XmlNodeType.Element, "coordinates", null);
-            pmcrd.InnerText = cords;
-            pmlnstr.AppendChild(pmcrd);
-
-            placemark.AppendChild(pmlnstr);
-
-
-            root.AppendChild(placemark);
-            rootFold.AppendChild(root);
-            return rootFold;
-        }
 
         /// <summary>
         /// экспорт в файл kmz
@@ -1919,7 +1623,5 @@ namespace TrackConverter.Lib.Tracking
         #endregion
 
         #endregion
-
-
     }
 }
