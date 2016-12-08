@@ -47,6 +47,8 @@ namespace TrackConverter.Lib.Data
             {
                 case GeoInfoProvider.ETOPO2:
                     if (ETOPO2Provider == null)
+                        if (Vars.TaskLoadingETOPO2.Status != System.Threading.Tasks.TaskStatus.Running)
+                            Vars.TaskLoadingETOPO2.Start();
                         Vars.TaskLoadingETOPO2.Wait();
                     if (ETOPO2Provider == null)
                         throw new ApplicationException("Ошибка при загрузке базы данных ETOPO2 из директории " + Vars.Options.DataSources.ETOPO2DBFolder);

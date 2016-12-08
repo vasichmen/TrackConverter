@@ -132,8 +132,8 @@ namespace TrackConverter.UI.Common
         /// <param name="e"></param>
         private void FormContainer_Resize(object sender, EventArgs e)
         {
-            if (!Program.winMapNullOrDisposed && 
-                !Program.winConverterNullOrDisposed && 
+            if (!Program.winMapNullOrDisposed &&
+                !Program.winConverterNullOrDisposed &&
                 !Program.winPointsNullOrDisposed &&
                 !Program.winElevVisualNullOrDisposed)
             {
@@ -166,16 +166,29 @@ namespace TrackConverter.UI.Common
             //установка размеров дочених окон
             this.FormContainer_Resize(null, null);
 
-            //начало загрузки базы данных ETOPO2
-            if (Vars.Options.Common.IsLoadETOPO2OnStart)
+            //метод загрузки базы данных ETOPO2
+            Vars.TaskLoadingETOPO2 = new Task(new Action(() =>
             {
-                BeginOperation();
-                Vars.TaskLoadingETOPO2 = new Task(new Action(() =>
+                try
                 {
                     if (GeoInfo.IsETOPO2Ready)
                         GeoInfo.ETOPO2Provider = new ETOPO2Provider(Vars.Options.DataSources.ETOPO2DBFolder, this.setCurrentOperation);
+                    else throw new ApplicationException("База данных ETOPO2 не установлена. Укажите в настройках путь к файла базы данных");
+                }
+                catch (Exception exc)
+                {
+                    throw exc;
+                }
+                finally
+                {
                     EndOperation();
-                }));
+                }
+            }));
+
+            //если надо - запускаем загрузку ЕТОРО2
+            if (Vars.Options.Common.IsLoadETOPO2OnStart)
+            {
+                BeginOperation();
                 Vars.TaskLoadingETOPO2.Start();
             }
         }
