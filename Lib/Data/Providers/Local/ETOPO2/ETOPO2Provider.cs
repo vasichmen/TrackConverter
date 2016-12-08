@@ -171,7 +171,16 @@ namespace TrackConverter.Lib.Data.Providers.Local.ETOPO2
             //проверка наличия заголовочного файла
             string[] hfiles = Directory.GetFiles(databaseFolder, "*.hdr", SearchOption.TopDirectoryOnly);
             if (hfiles.Length != 1)
-                return false;
+            {
+                string[] sqfile = Directory.GetFiles(databaseFolder, "*.sq3", SearchOption.TopDirectoryOnly);
+                if (sqfile.Length > 0)
+                {
+                    hfiles = sqfile;
+                }
+                else
+                    throw new FileLoadException("В папке " + databaseFolder + " не обнаружено корректной базы данных");
+            }
+
             string hfile = hfiles[0];
 
             //определение типа базы данных
@@ -192,6 +201,7 @@ namespace TrackConverter.Lib.Data.Providers.Local.ETOPO2
                         return false;
                     string dfile = bfiles[0];
                     break;
+                case ETOPO2DBType.SQLite: return true;
                 default: return false;
             }
             return true;
