@@ -17,8 +17,15 @@ namespace TrackConverter.UI.Tools
     /// </summary>
     public partial class FormConsole : Form
     {
-        List<string> commands = new List<string>();
-        int pos = 0;
+        /// <summary>
+        /// список послдний вызванных команд
+        /// </summary>
+        Stack<string> commands = new Stack<string>();
+
+        /// <summary>
+        /// замена посленей строки вывода на указанную строку
+        /// </summary>
+        private Action<string> setLastLineOutput;
 
         /// <summary>
         /// создает новое окно консоли
@@ -28,6 +35,32 @@ namespace TrackConverter.UI.Tools
             InitializeComponent();
             textBoxCommand.Text = Vars.Options.Common.LastConsoleCommand;
             textBoxCommand.SelectionStart = 4;
+
+            //действие замены последней строке в окне вывода
+            setLastLineOutput = new Action<string>((text) =>
+            {
+                try
+                {
+                    if (this.InvokeRequired)
+                    {
+                        this.Invoke(new Action(() =>
+                        {
+                            string[] all = textBoxResult.Lines;
+                            textBoxResult.Clear();
+                            textBoxResult.Lines = all.Take(all.Length - 1).ToArray();
+                            textBoxResult.Text += "\r\n" + text;
+                        }));
+                    }
+                    else
+                    {
+                        string[] all = textBoxResult.Lines;
+                        textBoxResult.Clear();
+                        textBoxResult.Lines = all.Take(all.Length - 1).ToArray();
+                        textBoxResult.Text += "\r\n" + text;
+                    }
+                }
+                catch (Exception) { return; }
+            });
         }
 
         /// <summary>
@@ -43,8 +76,7 @@ namespace TrackConverter.UI.Tools
 
                 textBoxResult.Text += textBoxCommand.Text.Substring(4) + "\r\n";
                 Vars.Options.Common.LastConsoleCommand = textBoxCommand.Text;
-                this.commands.Add(textBoxCommand.Text);
-                pos++;
+                this.commands.Push(textBoxCommand.Text);
 
                 if (com.Length == 0) return;
                 switch (com[0].ToLower())
@@ -70,21 +102,28 @@ namespace TrackConverter.UI.Tools
                                     if (GeoInfo.IsETOPO2Ready)
                                     {
                                         if (GeoInfo.ETOPO2Provider == null)
-                                            Vars.TaskLoadingETOPO2.Wait();
-                                        Program.winMain.BeginOperation();
+                                        {
+                                            this.textBoxResult.Text += "База данных ETOPO2 не загружена!\r\n";
+                                            break;
+                                        }
                                         Task ts = new Task(new Action(() =>
                                         {
-                                            GeoInfo.ETOPO2Provider.ExportSQLite(com[4], Program.winMain.setCurrentOperation);
-                                            Program.winMain.EndOperation();
+                                            GeoInfo.ETOPO2Provider.ExportSQLite(com[4], this.setLastLineOutput);
+                                            this.Invoke(new Action(() => textBoxCommand.Enabled = true));
                                         }
                                         ));
                                         ts.Start();
+                                        textBoxCommand.Enabled = false;
                                     }
-                                    else this.textBoxResult.Text += "База данных ETOPO2 не загружена!\r\n";
+                                    else
+                                    {
+                                        this.textBoxResult.Text += "База данных ETOPO2 не подключена!\r\n";
+                                        break;
+                                    }
                         }
                         break;
                     default:
-                        textBoxResult.Text += "Неизвестная команда \"" + com[0] + "\"\r\n";
+                        textBoxResult.Text += "Неизвестная команда \"" + com[0] + "\"\r\ncom>";
                         break;
                 }
                 textBoxResult.Text += "com>";
@@ -92,9 +131,8 @@ namespace TrackConverter.UI.Tools
             }
             if (e.KeyData == Keys.Up)
             {
-                if (pos == 0) return;
-                textBoxCommand.Text = "com>" + commands[pos - 1];
-                pos--;
+                if (commands.Count == 0) return;
+                textBoxCommand.Text = commands.Pop();
             }
 
         }
