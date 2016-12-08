@@ -45,19 +45,8 @@ namespace TrackConverter.Lib.Data.Providers.Local.ETOPO2
         /// <returns></returns>
         public override double this[int i, int j] { get { return matrix[i, j]; } }
 
-        /// <summary>
-        /// возвращает высоту по заданным координатам точки
-        /// </summary>
-        /// <param name="coordinate">географические координаты точки</param>
-        /// <returns></returns>
-        public override double this[Coordinate coordinate]
-        {
-            get
-            {
-                Point pt = GeoToLocal(coordinate);
-                return matrix[pt.Y, pt.X];
-            }
-        }
+       
+
 
         /// <summary>
         /// Загружает базу данных из заданных файлов

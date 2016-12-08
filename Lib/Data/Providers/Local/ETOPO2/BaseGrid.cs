@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.SQLite;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -81,7 +83,14 @@ namespace TrackConverter.Lib.Data.Providers.Local.ETOPO2
         /// </summary>
         /// <param name="coordinate">географические координаты точки</param>
         /// <returns></returns>
-        public abstract double this[Coordinate coordinate] { get; }
+        public double this[Coordinate coordinate]
+        {
+            get
+            {
+                Point pt = GeoToLocal(coordinate);
+                return this[pt.Y, pt.X];
+            }
+        }
 
 
 
@@ -160,6 +169,53 @@ namespace TrackConverter.Lib.Data.Providers.Local.ETOPO2
             throw new Exception("Не удалось определить тип базы данных. В файле " + headerFile + " нет информации о типе баы данных");
         }
 
+        /// <summary>
+        /// сохраняет базу данных в SQLite БД в указанном файле
+        /// </summary>
+        /// <param name="FileName"></param>
+        /// <param name="callback">Действие, выполняемое во время сохранения</param>
+        public void ExportToSQL(string FileName, Action<string> callback = null)
+        {
+            //СОЗДАНИЕ БД
+            string table_name = "etopo2_data_table";
+            File.Delete(FileName);
+            Directory.CreateDirectory(Path.GetDirectoryName(FileName));
+            SQLiteConnection.CreateFile(FileName);
+            SQLiteConnection con = new SQLiteConnection("Data Source = " + FileName + "; Version = 3; Synchronous = 0;");
+            con.Open();
+            SQLiteCommand commCreate = new SQLiteCommand(
+                @"CREATE TABLE " + table_name + @"
+                (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, 
+                row INTEGER NOT NULL,
+                column INTEGER NOT NULL,
+                altitude double
+                );",
+                con);
+            commCreate.ExecuteNonQuery();
+            con.Close();
+
+            //ЭКСПОРТ ДАННЫХ
+            double all = this.Columns * this.Rows;
+            double c = 0;
+            con.Open();
+
+            for (int i = 0; i < this.Rows; i++)
+            {
+                SQLiteCommand cm = con.CreateCommand();
+                SQLiteTransaction trans = con.BeginTransaction();
+               
+                for (int j = 0; j <this.Columns; j++)
+                {
+                    cm.CommandText = @"INSERT INTO '" + table_name + @"'('row','column','altitude') VALUES (" + i + "," + j + "," + this[i, j] + "); ";
+                    cm.ExecuteNonQuery();
+                    c++;
+                    if (c % 10000 == 0 && callback != null)
+                        callback.Invoke("Сохранение ETOPO2 в SQLite файл. Завершено: " + (c / all * 100d).ToString("0.0") + "%");
+                }
+                trans.Commit();
+            }
+            con.Close();
+        }
 
     }
 }

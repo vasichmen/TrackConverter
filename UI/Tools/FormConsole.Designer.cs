@@ -44,8 +44,10 @@
             this.textBoxResult.Multiline = true;
             this.textBoxResult.Name = "textBoxResult";
             this.textBoxResult.ReadOnly = true;
+            this.textBoxResult.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.textBoxResult.Size = new System.Drawing.Size(575, 293);
             this.textBoxResult.TabIndex = 1;
+            this.textBoxResult.TabStop = false;
             this.textBoxResult.Text = "com>";
             // 
             // textBoxCommand

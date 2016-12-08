@@ -32,8 +32,19 @@ namespace TrackConverter.UI.Common
             InitializeComponent();
             setCurrentOperation = new Action<string>((text) =>
              {
-                 toolStripStatusLabelCurrentOperation.Text = text;
-                 Application.DoEvents();
+                 if (this.InvokeRequired)
+                 {
+                     this.Invoke(new Action(() =>
+                     {
+                         toolStripStatusLabelCurrentOperation.Text = text;
+                         Application.DoEvents();
+                     }));
+                 }
+                 else
+                 {
+                     toolStripStatusLabelCurrentOperation.Text = text;
+                     Application.DoEvents();
+                 }
              });
         }
 

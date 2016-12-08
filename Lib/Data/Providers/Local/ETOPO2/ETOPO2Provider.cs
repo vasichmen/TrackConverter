@@ -95,6 +95,16 @@ namespace TrackConverter.Lib.Data.Providers.Local.ETOPO2
         }
 
         /// <summary>
+        /// Экспорт базы данных в SQLite базу данных
+        /// </summary>
+        /// <param name="FileName">Имя файла, в который будет экспортирована база данных</param>
+        /// <param name="callback">Действие, выполняемое при сохранении</param>
+        public void ExportSQLite(string FileName,Action<string>callback=null)
+        {
+            this.database.ExportToSQL(FileName,callback);
+        }
+
+        /// <summary>
         /// 
         /// </summary>
         /// <param name="coordinate"></param>

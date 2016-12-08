@@ -1,15 +1,12 @@
 ﻿using System;
+using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Xml;
-using GMap.NET;
 using TrackConverter.Lib.Classes;
-using TrackConverter.Lib.Tracking;
-using System.Threading;
-using System.IO;
+using TrackConverter.Lib.Data.Interfaces;
 using TrackConverter.Lib.Data.Providers.InternetServices;
 using TrackConverter.Lib.Data.Providers.Local.ETOPO2;
+using TrackConverter.Lib.Tracking;
 using TrackConverter.Res.Properties;
-using TrackConverter.Lib.Data.Interfaces;
 
 namespace TrackConverter.Lib.Data
 {
@@ -47,7 +44,7 @@ namespace TrackConverter.Lib.Data
             {
                 case GeoInfoProvider.ETOPO2:
                     if (ETOPO2Provider == null)
-                        if (Vars.TaskLoadingETOPO2.Status != System.Threading.Tasks.TaskStatus.Running)
+                        if (Vars.TaskLoadingETOPO2.Status != TaskStatus.Running)
                             Vars.TaskLoadingETOPO2.Start();
                         Vars.TaskLoadingETOPO2.Wait();
                     if (ETOPO2Provider == null)

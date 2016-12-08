@@ -1,4 +1,5 @@
-﻿using TrackConverter.Lib.Classes;
+﻿using System;
+using TrackConverter.Lib.Classes;
 
 namespace TrackConverter.Lib.Data.Providers.Local.ETOPO2
 {
@@ -6,7 +7,6 @@ namespace TrackConverter.Lib.Data.Providers.Local.ETOPO2
     {
         double this[Coordinate coordinate] { get; }
         double this[int i, int j] { get; }
-
         double CellSize { get; }
         int Columns { get; }
         string DataFile { get; }
@@ -14,5 +14,6 @@ namespace TrackConverter.Lib.Data.Providers.Local.ETOPO2
         string HeaderFile { get; }
         int Rows { get; }
         ETOPO2DBType Type { get; }
+        void ExportToSQL(string FileName, Action<string> callback=null);
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -8,6 +9,9 @@ using TrackConverter.Lib.Classes;
 
 namespace TrackConverter.Lib.Data.Providers.Local.ETOPO2
 {
+    /// <summary>
+    /// Работа с базой данных ETOPO2 в формате SQLite
+    /// </summary>
     class SQLiteDatabase : IDatabase
     {
         private string dbFile;
@@ -15,18 +19,27 @@ namespace TrackConverter.Lib.Data.Providers.Local.ETOPO2
         private int cols;
         private SQLiteConnection connection;
 
-
+        /// <summary>
+        /// создает новый экземпляр и открывает базу данных
+        /// </summary>
+        /// <param name="file"></param>
         public SQLiteDatabase(string file)
         {
             this.dbFile = file;
             this.Load(file);
         }
 
+        /// <summary>
+        /// открывает базу данных
+        /// </summary>
+        /// <param name="file">файл с базой данных</param>
         private void Load(string file)
         {
             string connectionString = "Data Source = " + file;
             connection = new SQLiteConnection();
             connection.ConnectionString = connectionString;
+            cols = 10800;
+            rows = 5400;
         }
 
         /// <summary>
@@ -37,11 +50,11 @@ namespace TrackConverter.Lib.Data.Providers.Local.ETOPO2
         {
             connection.Open();
             SQLiteCommand cmd = connection.CreateCommand();
-            cmd.CommandText = "SELECT data FROM tbData WHERE id=" + i.ToString();
+            cmd.CommandText = "SELECT data FROM tbData WHERE row = " + i.ToString() + " AND " + " column =  " + j.ToString();
             SQLiteDataReader dr = cmd.ExecuteReader();
 
             double[] data;
-            double res=double.NaN;
+            double res = double.NaN;
             while (dr.Read())
             {
 
@@ -50,30 +63,79 @@ namespace TrackConverter.Lib.Data.Providers.Local.ETOPO2
             return res;
         }
 
+        /// <summary>
+        /// всегда приводит к возникновению InvalidOperationException
+        /// </summary>
+        /// <param name="FileName"></param>
+        /// <param name="callback"></param>
+        public void ExportToSQL(string FileName, Action<string> callback = null)
+        {
+            throw new InvalidOperationException("Попытка преобразовать базу данных SQLite в тот же формат");
+        }
+
+        /// <summary>
+        /// возвращае высоту по координатам точки
+        /// </summary>
+        /// <param name="coordinate"></param>
+        /// <returns></returns>
         public double this[Coordinate coordinate]
         {
             get
             {
-                throw new NotImplementedException();
+                Point pt = this.GeoToLocal(coordinate);
+                return this[pt.Y, pt.X];
             }
         }
 
+        /// <summary>
+        /// преобразование географических координат в локальные. X - столбец, Y - строка
+        /// </summary>
+        /// <param name="coordinate">географические координаты точки</param>
+        /// <returns></returns>
+        private Point GeoToLocal(Coordinate coordinate)
+        {
+            double lat = coordinate.Latitude.TotalDegrees;
+            double lon = coordinate.Longitude.TotalDegrees;
+            double in1cell = this.CellSize;
+            double ic = rows / 2;
+            double jc = Columns / 2;
+
+            Point res = new Point();
+
+            res.Y = (int)Math.Round(ic - lat / in1cell, 0);
+            res.X = (int)Math.Round(jc + lon / in1cell, 0);
+
+            return res;
+        }
+
+        /// <summary>
+        /// возвращает высоту по указанным строке и столбцу из таблицы
+        /// </summary>
+        /// <param name="i"></param>
+        /// <param name="j"></param>
+        /// <returns></returns>
         public double this[int i, int j]
         {
             get
             {
-                throw new NotImplementedException();
+                return GetElev(i, j);
             }
         }
 
+        /// <summary>
+        /// размер ячейки градусов
+        /// </summary>
         public double CellSize
         {
             get
             {
-                return -1;
+                return 180d / (Rows + 0.0d);
             }
         }
 
+        /// <summary>
+        /// количество столбцов
+        /// </summary>
         public int Columns
         {
             get
@@ -82,6 +144,9 @@ namespace TrackConverter.Lib.Data.Providers.Local.ETOPO2
             }
         }
 
+        /// <summary>
+        /// адрес файла данных
+        /// </summary>
         public string DataFile
         {
             get
@@ -90,6 +155,9 @@ namespace TrackConverter.Lib.Data.Providers.Local.ETOPO2
             }
         }
 
+        /// <summary>
+        /// папка с файлами базы данных
+        /// </summary>
         public string Folder
         {
             get
@@ -98,6 +166,9 @@ namespace TrackConverter.Lib.Data.Providers.Local.ETOPO2
             }
         }
 
+        /// <summary>
+        /// адрес заголовочного файла
+        /// </summary>
         public string HeaderFile
         {
             get
@@ -106,6 +177,9 @@ namespace TrackConverter.Lib.Data.Providers.Local.ETOPO2
             }
         }
 
+        /// <summary>
+        /// количетсво строк
+        /// </summary>
         public int Rows
         {
             get
@@ -114,6 +188,9 @@ namespace TrackConverter.Lib.Data.Providers.Local.ETOPO2
             }
         }
 
+        /// <summary>
+        /// тип базы данных
+        /// </summary>
         public ETOPO2DBType Type
         {
             get
