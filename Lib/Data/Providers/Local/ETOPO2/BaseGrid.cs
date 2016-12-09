@@ -94,7 +94,6 @@ namespace TrackConverter.Lib.Data.Providers.Local.ETOPO2
 
 
 
-
         /// <summary>
         /// создает базу данных, но не загружает ее 
         /// </summary>
@@ -176,46 +175,64 @@ namespace TrackConverter.Lib.Data.Providers.Local.ETOPO2
         /// <param name="callback">Действие, выполняемое во время сохранения</param>
         public void ExportToSQL(string FileName, Action<string> callback = null)
         {
-            //СОЗДАНИЕ БД
-            string table_name = "etopo2_data_table";
-            File.Delete(FileName);
-            Directory.CreateDirectory(Path.GetDirectoryName(FileName));
             SQLiteConnection.CreateFile(FileName);
-            SQLiteConnection con = new SQLiteConnection("Data Source = " + FileName + "; Version = 3; Synchronous = 0;");
-            con.Open();
-            SQLiteCommand commCreate = new SQLiteCommand(
-                @"CREATE TABLE " + table_name + @"
-                (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, 
-                row INTEGER NOT NULL,
-                column INTEGER NOT NULL,
-                altitude double
-                );",
-                con);
-            commCreate.ExecuteNonQuery();
-            con.Close();
+            SQLiteConnection con = new SQLiteConnection("Data Source = " + FileName + "; Version = 3;");
 
-            //ЭКСПОРТ ДАННЫХ
-            double all = this.Columns * this.Rows;
-            double c = 0;
-            con.Open();
-
-            for (int i = 0; i < this.Rows; i++)
-            {
-                SQLiteCommand cm = con.CreateCommand();
-                SQLiteTransaction trans = con.BeginTransaction();
-               
-                for (int j = 0; j <this.Columns; j++)
-                {
-                    cm.CommandText = @"INSERT INTO '" + table_name + @"'('row','column','altitude') VALUES (" + i + "," + j + "," + this[i, j] + "); ";
-                    cm.ExecuteNonQuery();
-                    c++;
-                    if (c % 10000 == 0 && callback != null)
-                        callback.Invoke("Сохранение ETOPO2 в SQLite файл. Завершено: " + (c / all * 100d).ToString("0.0") + "%");
-                }
-                trans.Commit();
-            }
-            con.Close();
+            CreateTable(0, 1350, con, callback);
+            CreateTable(1350, 1350, con, callback);
+            CreateTable(2700, 1350, con, callback);
+            CreateTable(4050, 1350, con, callback);
+            CreateTable(5400, 1350, con, callback);
+            CreateTable(6750, 1350, con, callback);
+            CreateTable(8100, 1350, con, callback);
+            CreateTable(9450, 1350, con, callback);
         }
 
+        private void CreateTable(int startIndex, int length, SQLiteConnection connection, Action<string> callback = null)
+        {
+            //СОЗДАНИЕ БД
+            string table_name = "tb" + startIndex;
+            connection.Open();
+
+            string create = @"CREATE TABLE " + table_name + @"
+                (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,";
+
+            for (int j = startIndex; j < startIndex + length; j++)
+                create += "col" + j + " DOUBLE NOT NULL,";
+            create = create.TrimEnd(new char[] { ',' });
+            create += ");";
+
+            SQLiteCommand commCreate = new SQLiteCommand(create, connection);
+            commCreate.ExecuteNonQuery();
+            connection.Close();
+
+            //ЭКСПОРТ ДАННЫХ
+            connection.Open();
+            SQLiteTransaction trans = connection.BeginTransaction();
+            double tNumber = startIndex / length + 1d;
+            for (int i = 0; i < this.Rows; i++)
+            {
+                SQLiteCommand cm = connection.CreateCommand();
+
+                string command = @"INSERT INTO '" + table_name + @"'";
+                string cols = "(";
+                string data = "(";
+                for (int j = startIndex; j < startIndex + length; j++)
+                {
+                    cols += "'col" + j + "',";
+                    data += this[i, j] + ",";
+                }
+                cols = cols.TrimEnd(new char[] { ',' });
+                data = data.TrimEnd(new char[] { ',' });
+                command += cols + ") VALUES " + data + ");";
+
+                cm.CommandText = command;
+                cm.ExecuteNonQuery();
+                if (i % 200 == 0 && callback != null)
+                    callback.Invoke("Создание базы данный SQLITE: таблица " + tNumber.ToString("0") + " из 8, завершено " + ((i / (double)this.Rows) * 100d).ToString("0.0"));
+            }
+            trans.Commit();
+            connection.Close();
+        }
     }
 }

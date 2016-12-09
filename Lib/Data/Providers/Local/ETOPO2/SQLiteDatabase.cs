@@ -18,7 +18,6 @@ namespace TrackConverter.Lib.Data.Providers.Local.ETOPO2
         private int rows;
         private int cols;
         private SQLiteConnection connection;
-        private string table_name = "etopo2_data_table";
 
         /// <summary>
         /// создает новый экземпляр и открывает базу данных
@@ -49,17 +48,21 @@ namespace TrackConverter.Lib.Data.Providers.Local.ETOPO2
         /// <returns></returns>
         private double GetElev(int i, int j)
         {
+            //выбор нужной таблицы
+            int ind = -1;
+            for (int inn = 7; inn >= 0; inn--)
+                if (j >= inn * 1350)
+                { ind = inn; break; }
+
+            string table_name = "tb" + ind*1350;
             connection.Open();
             SQLiteCommand cmd = connection.CreateCommand();
-            cmd.CommandText = "SELECT altitude FROM " + table_name+" WHERE row = " + i.ToString() + " AND " + " column =  " + j.ToString();
+            cmd.CommandText = "SELECT * FROM " + table_name + " WHERE id = " + i.ToString();
             SQLiteDataReader dr = cmd.ExecuteReader();
 
-            double[] data;
             double res = double.NaN;
-            while (dr.Read())
-            {
-                res =  (double)dr["altitude"];
-            }
+            if (dr.Read())
+                res = (double)dr["col"+j];
             connection.Close();
             return res;
         }

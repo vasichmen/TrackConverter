@@ -49,6 +49,7 @@ namespace TrackConverter.UI.Tools
                             textBoxResult.Clear();
                             textBoxResult.Lines = all.Take(all.Length - 1).ToArray();
                             textBoxResult.Text += "\r\n" + text;
+                            Application.DoEvents();
                         }));
                     }
                     else
@@ -57,6 +58,7 @@ namespace TrackConverter.UI.Tools
                         textBoxResult.Clear();
                         textBoxResult.Lines = all.Take(all.Length - 1).ToArray();
                         textBoxResult.Text += "\r\n" + text;
+                        Application.DoEvents();
                     }
                 }
                 catch (Exception) { return; }
@@ -109,7 +111,12 @@ namespace TrackConverter.UI.Tools
                                         Task ts = new Task(new Action(() =>
                                         {
                                             GeoInfo.ETOPO2Provider.ExportSQLite(com[4], this.setLastLineOutput);
-                                            this.Invoke(new Action(() => textBoxCommand.Enabled = true));
+                                            this.Invoke(new Action(() =>
+                                            {
+                                                textBoxCommand.Enabled = true;
+                                                this.setLastLineOutput.Invoke("Экспортирование ETOPO2 в SQLite успешно завершено!\r\ncom>");
+                                            }));
+
                                         }
                                         ));
                                         ts.Start();
