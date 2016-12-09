@@ -17,7 +17,7 @@ namespace TrackConverter.Lib.Classes.Options
         /// </summary>
         public DataSources()
         {
-            ETOPO2DBFolder = Application.StartupPath+"\\Data\\ETOPO2";
+            ETOPO2DBFolder = ""; 
         }
 
         /// <summary>

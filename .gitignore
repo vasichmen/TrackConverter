@@ -243,6 +243,7 @@ ModelManifest.xml
 
 # Data, cache, sources, documetations and files ETOPO2
 *.flt
+*.sq3
 *.hdr
 *topo2.bin
 *der.gcdb

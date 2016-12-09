@@ -412,12 +412,9 @@
     <Content Include="Schemes\associate_scheme.reg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <None Include="Data\ETOPO2\etopo2.bin" />
-    <None Include="Data\ETOPO2\etopo2.hdr" />
-    <None Include="Data\ETOPO2\ETOPO2v2c_f4_MSB.flt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\ETOPO2\ETOPO2v2c_f4_MSB.hdr">
+    <None Include="Data\ETOPO2\Binary\ETOPO2v2c_f4_MSB.flt" />
+    <None Include="Data\ETOPO2\Binary\ETOPO2v2c_f4_MSB.hdr" />
+    <None Include="Data\ETOPO2\SQL\etopo2.sq3">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="packages.config" />
