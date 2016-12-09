@@ -104,7 +104,9 @@ namespace TrackConverter.Lib.Data
         {
             if (address == "" || address == null)
                 throw new ArgumentNullException();
-            Coordinate res = Vars.dataCache.GetCoordinate(address);
+            Coordinate res = Coordinate.Empty;
+            if (Vars.Options.DataSources.UseGeocoderCache)
+                res = Vars.dataCache.GetCoordinate(address);
             if (res.isEmpty)
             {
                 Coordinate coord = coder.GetCoordinate(address);
@@ -112,6 +114,8 @@ namespace TrackConverter.Lib.Data
                 return coord;
             }
             else return res;
+
+
         }
 
         /// <summary>
@@ -138,8 +142,12 @@ namespace TrackConverter.Lib.Data
             for (int i = 0; i < AddressList.Count; i++)
             {
                 string adr = AddressList[i];
-                Coordinate cd = this.GetCoordinate(adr);
-                res.Add(new TrackPoint(cd) { Name = adr });
+                try
+                {
+                    Coordinate cd = this.GetCoordinate(adr);
+                    res.Add(new TrackPoint(cd) { Name = adr });
+                }
+                catch (ApplicationException) { }
                 if (callback != null)
                     callback.Invoke("Обработка адреса: " + adr);
             }

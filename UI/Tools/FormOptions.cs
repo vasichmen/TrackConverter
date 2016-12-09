@@ -107,6 +107,10 @@ namespace TrackConverter.UI.Tools
                     break;
             }
 
+            //использовать кэш
+            checkBoxUseCacheGeocoder.Checked=Vars.Options.DataSources.UseGeocoderCache ;
+
+            //папка ETOPO2
             textBoxDBETOPOFolder.Text = Vars.Options.DataSources.ETOPO2DBFolder;
             new ToolTip().SetToolTip(textBoxDBETOPOFolder, Vars.Options.DataSources.ETOPO2DBFolder);
 
@@ -324,6 +328,10 @@ namespace TrackConverter.UI.Tools
             if (comboBoxGeoInfoProvider.SelectedIndex == 2)
                 Vars.Options.DataSources.GeoInfoProvider = GeoInfoProvider.ETOPO2;
 
+            //использовать кэш
+            Vars.Options.DataSources.UseGeocoderCache = checkBoxUseCacheGeocoder.Checked;
+
+            //папка ETOPO2
             Vars.Options.DataSources.ETOPO2DBFolder = textBoxDBETOPOFolder.Text;
 
             #endregion

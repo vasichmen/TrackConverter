@@ -415,6 +415,8 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
             XmlDocument xml = SendXmlRequest(url);
 
             XmlNode cord = xml.GetElementsByTagName("featureMember")[0];
+            if (cord==null)
+                throw new ApplicationException("Не найден адрес: " + address);
             XmlNode nd = cord.ChildNodes[0]["Point"];
 
             string cd = nd["pos"].InnerText;

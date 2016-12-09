@@ -98,6 +98,7 @@
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.checkBoxUseCacheGeocoder = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.tabControl1.SuspendLayout();
@@ -619,6 +620,7 @@
             // 
             // tabPage3
             // 
+            this.tabPage3.Controls.Add(this.checkBoxUseCacheGeocoder);
             this.tabPage3.Controls.Add(this.buttonSelectETOPOFolder);
             this.tabPage3.Controls.Add(this.label8);
             this.tabPage3.Controls.Add(this.textBoxDBETOPOFolder);
@@ -639,7 +641,7 @@
             // 
             this.buttonSelectETOPOFolder.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonSelectETOPOFolder.AutoSize = true;
-            this.buttonSelectETOPOFolder.Location = new System.Drawing.Point(359, 59);
+            this.buttonSelectETOPOFolder.Location = new System.Drawing.Point(359, 80);
             this.buttonSelectETOPOFolder.Name = "buttonSelectETOPOFolder";
             this.buttonSelectETOPOFolder.Size = new System.Drawing.Size(26, 23);
             this.buttonSelectETOPOFolder.TabIndex = 13;
@@ -651,7 +653,7 @@
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(8, 63);
+            this.label8.Location = new System.Drawing.Point(8, 84);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(118, 13);
             this.label8.TabIndex = 12;
@@ -662,7 +664,7 @@
             // 
             this.textBoxDBETOPOFolder.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxDBETOPOFolder.Location = new System.Drawing.Point(128, 60);
+            this.textBoxDBETOPOFolder.Location = new System.Drawing.Point(128, 81);
             this.textBoxDBETOPOFolder.Name = "textBoxDBETOPOFolder";
             this.textBoxDBETOPOFolder.Size = new System.Drawing.Size(225, 20);
             this.textBoxDBETOPOFolder.TabIndex = 11;
@@ -942,6 +944,16 @@
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.buttonOK_Click);
             // 
+            // checkBoxUseCacheGeocoder
+            // 
+            this.checkBoxUseCacheGeocoder.AutoSize = true;
+            this.checkBoxUseCacheGeocoder.Location = new System.Drawing.Point(11, 58);
+            this.checkBoxUseCacheGeocoder.Name = "checkBoxUseCacheGeocoder";
+            this.checkBoxUseCacheGeocoder.Size = new System.Drawing.Size(228, 17);
+            this.checkBoxUseCacheGeocoder.TabIndex = 14;
+            this.checkBoxUseCacheGeocoder.Text = "Кэшировать данные геокодера и высот";
+            this.checkBoxUseCacheGeocoder.UseVisualStyleBackColor = true;
+            // 
             // FormOptions
             // 
             this.AcceptButton = this.buttonOK;
@@ -1058,5 +1070,6 @@
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.ComboBox comboBoxPathRouteMode;
         private System.Windows.Forms.CheckBox checkBoxIsLoadETOPO2OnStart;
+        private System.Windows.Forms.CheckBox checkBoxUseCacheGeocoder;
     }
 }

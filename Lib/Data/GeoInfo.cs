@@ -46,7 +46,7 @@ namespace TrackConverter.Lib.Data
                     if (ETOPO2Provider == null)
                         if (Vars.TaskLoadingETOPO2.Status != TaskStatus.Running)
                             Vars.TaskLoadingETOPO2.Start();
-                        Vars.TaskLoadingETOPO2.Wait();
+                    Vars.TaskLoadingETOPO2.Wait();
                     if (ETOPO2Provider == null)
                         throw new ApplicationException("Ошибка при загрузке базы данных ETOPO2 из директории " + Vars.Options.DataSources.ETOPO2DBFolder);
                     break;
@@ -69,7 +69,10 @@ namespace TrackConverter.Lib.Data
         {
             if (provider == GeoInfoProvider.ETOPO2)
                 return ETOPO2Provider.GetElevation(coordinate);
-            double res = Vars.dataCache.GetElevation(coordinate);
+
+            double res = double.NaN;
+            if (Vars.Options.DataSources.UseGeocoderCache)
+                res = Vars.dataCache.GetElevation(coordinate);
             if (double.IsNaN(res))
             {
                 double elev = geoinfo.GetElevation(coordinate);
@@ -94,7 +97,7 @@ namespace TrackConverter.Lib.Data
         /// <param name="track">трек</param>
         /// <param name="callback">действие, выполняемое при обработке точек</param>
         /// <returns>трек с высотами точек</returns>
-        public TrackFile GetElevation(TrackFile track, Action<string> callback=null)
+        public TrackFile GetElevation(TrackFile track, Action<string> callback = null)
         {
             //еси провайдер поддерживает множетсвенные запроссы высот
             if (provider == GeoInfoProvider.Google)

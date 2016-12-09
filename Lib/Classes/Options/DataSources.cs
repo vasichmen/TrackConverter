@@ -17,7 +17,10 @@ namespace TrackConverter.Lib.Classes.Options
         /// </summary>
         public DataSources()
         {
-            ETOPO2DBFolder = ""; 
+            ETOPO2DBFolder = "";
+            GeoCoderProvider = GeoCoderProvider.Yandex;
+            GeoInfoProvider = GeoInfoProvider.Google;
+            UseGeocoderCache = true;
         }
 
         /// <summary>
@@ -34,5 +37,10 @@ namespace TrackConverter.Lib.Classes.Options
         /// папка базы данных ETOPO2
         /// </summary>
         public string ETOPO2DBFolder { get; set; }
+
+        /// <summary>
+        /// Использовать кэш геокодера и высот в интернет-сервисах
+        /// </summary>
+        public bool UseGeocoderCache { get; set; }
     }
 }
