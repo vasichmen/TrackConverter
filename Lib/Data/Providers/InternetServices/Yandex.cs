@@ -165,6 +165,8 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         /// <returns></returns>
         private static TrackFile DecodePolyline2(string encodedCoordinates)
         {
+            throw new NotImplementedException();
+
             string key = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_=";
 
             //создание строки бит
@@ -177,7 +179,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
 
             //изменение порядка на обратный
 
-
+            List<List<string>> list = null;
             //перевод в 10 СС с учетом знака
             List<List<int>> coords = new List<List<int>>();
             foreach (List<string> cd in list)

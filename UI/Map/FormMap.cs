@@ -539,7 +539,7 @@ namespace TrackConverter.UI.Map
                 switch (sf.FilterIndex)
                 {
                     case 1:
-                        GeoFile gf = new GeoFile(tracks, waypoints);
+                        GeoFile gf = new GeoFile(Program.winConverter.Tracks, waypoints);
                         Serializer.Serialize(sf.FileName, gf, FileFormats.KmlFile);
                         break;
                     case 2:

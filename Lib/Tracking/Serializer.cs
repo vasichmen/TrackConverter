@@ -1600,9 +1600,7 @@ namespace TrackConverter.Lib.Tracking
 
             //ЗАПИСЬ ТОЧЕК
             foreach (TrackPoint tt in file.Waypoints)
-            {
                 folder = KmlHelper.WritePlacemarkToKMLNode(doc, folder, tt);
-            }
 
             //ЗАКРЫТИЕ ФАЙЛА
             kml.WriteTo(xw);
