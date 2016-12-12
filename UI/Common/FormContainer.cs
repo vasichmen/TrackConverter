@@ -184,7 +184,7 @@ namespace TrackConverter.UI.Common
                 {
                     if (GeoInfo.IsETOPO2Ready)
                         GeoInfo.ETOPO2Provider = new ETOPO2Provider(Vars.Options.DataSources.ETOPO2DBFolder, this.setCurrentOperation);
-                    else throw new ApplicationException("База данных ETOPO2 не установлена. Укажите в настройках путь к файла базы данных");
+                    else throw new ApplicationException("База данных ETOPO2 не установлена. Укажите в настройках путь к файлам базы данных");
                 }
                 catch (Exception exc)
                 {

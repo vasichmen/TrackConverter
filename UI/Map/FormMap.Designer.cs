@@ -140,14 +140,14 @@ namespace TrackConverter.UI.Map
             this.saveFileWaypointsRoutesToolStripMenuItem});
             this.сохранитьToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("сохранитьToolStripMenuItem.Image")));
             this.сохранитьToolStripMenuItem.Name = "сохранитьToolStripMenuItem";
-            this.сохранитьToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
+            this.сохранитьToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.сохранитьToolStripMenuItem.Text = "Сохранить";
             // 
             // saveFileWaypointsToolStripMenuItem
             // 
             this.saveFileWaypointsToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("saveFileWaypointsToolStripMenuItem.Image")));
             this.saveFileWaypointsToolStripMenuItem.Name = "saveFileWaypointsToolStripMenuItem";
-            this.saveFileWaypointsToolStripMenuItem.Size = new System.Drawing.Size(261, 22);
+            this.saveFileWaypointsToolStripMenuItem.Size = new System.Drawing.Size(270, 22);
             this.saveFileWaypointsToolStripMenuItem.Text = "Путевые точки в файл";
             this.saveFileWaypointsToolStripMenuItem.Click += new System.EventHandler(this.saveFileWaypointsToolStripMenuItem_Click);
             // 
@@ -155,8 +155,8 @@ namespace TrackConverter.UI.Map
             // 
             this.saveFileWaypointsRoutesToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("saveFileWaypointsRoutesToolStripMenuItem.Image")));
             this.saveFileWaypointsRoutesToolStripMenuItem.Name = "saveFileWaypointsRoutesToolStripMenuItem";
-            this.saveFileWaypointsRoutesToolStripMenuItem.Size = new System.Drawing.Size(261, 22);
-            this.saveFileWaypointsRoutesToolStripMenuItem.Text = "Путевые точки и маршрут в файл";
+            this.saveFileWaypointsRoutesToolStripMenuItem.Size = new System.Drawing.Size(270, 22);
+            this.saveFileWaypointsRoutesToolStripMenuItem.Text = "Путевые точки и маршруты в файл";
             this.saveFileWaypointsRoutesToolStripMenuItem.ToolTipText = "Сохранение все маршрутов и путевых точек в один файл";
             this.saveFileWaypointsRoutesToolStripMenuItem.Click += new System.EventHandler(this.saveFileWaypointsRoutesToolStripMenuItem_Click);
             // 
@@ -166,7 +166,7 @@ namespace TrackConverter.UI.Map
             this.createRouteToolStripMenuItem});
             this.создатьToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("создатьToolStripMenuItem.Image")));
             this.создатьToolStripMenuItem.Name = "создатьToolStripMenuItem";
-            this.создатьToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
+            this.создатьToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.создатьToolStripMenuItem.Text = "Создать";
             // 
             // createRouteToolStripMenuItem
@@ -184,7 +184,7 @@ namespace TrackConverter.UI.Map
             this.loadWaypointsToolStripMenuItem1});
             this.открытьToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("открытьToolStripMenuItem.Image")));
             this.открытьToolStripMenuItem.Name = "открытьToolStripMenuItem";
-            this.открытьToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
+            this.открытьToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.открытьToolStripMenuItem.Text = "Открыть ";
             // 
             // openFileWaypointsRoutesToolStripMenuItem

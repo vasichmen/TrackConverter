@@ -1,24 +1,19 @@
-﻿using Microsoft.VisualBasic.Devices;
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Microsoft.VisualBasic.Devices;
+using TrackConverter.Lib.Data;
 using TrackConverter.Lib.Mathematic.Assessment;
 using TrackConverter.Lib.Tracking;
 using TrackConverter.UI.Common;
 using TrackConverter.UI.Common.Dialogs;
 using TrackConverter.UI.Map;
 using TrackConverter.UI.Tools;
-using System.Collections.Generic;
-using TrackConverter.Lib.Classes;
-using TrackConverter.Lib.Data;
-using System.Text;
-using System.Collections;
 
 namespace TrackConverter.UI.Converter
 {
@@ -230,7 +225,7 @@ namespace TrackConverter.UI.Converter
 
             //если кнопка контекстного меню
             if ((string)(((ToolStripMenuItem)sender).Name) == "saveFileContextToolStripMenuItem1")
-                if (dataGridView1.SelectedRows.Count > 1)
+                if (dataGridView1.SelectedRows.Count > 1) //если выделено больше одного маршрута, то сохранение в один файл
                 {
                     saveAllInOneFileToolStripMenuItem_Click(sender, e);
                     return;
@@ -238,7 +233,7 @@ namespace TrackConverter.UI.Converter
                 else
                     tf = Tracks[dataGridView1.SelectedRows[0].Index];
             else
-            {
+            {//если нажата кнопка главного меню
                 if (Tracks.Count > 1)
                 {
                     MessageBox.Show(this, "Для сохранения в один файл должен быть загружен только один маршрут! Если требуется сохранить несколько маршрутов в один файл, используйте соответствующий пункт меню.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -277,9 +272,9 @@ namespace TrackConverter.UI.Converter
             sf.FileName = tf.FileName;
 
 
-            if (sf.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            if (sf.ShowDialog() == DialogResult.OK)
             {
-
+                tf.FileName = sf.FileName;
                 switch (sf.FilterIndex)
                 {
                     case 1:
@@ -328,10 +323,9 @@ namespace TrackConverter.UI.Converter
                         ts.Start();
                         break;
                 }
-
+                Vars.Options.Common.LastFileSaveDirectory = Path.GetDirectoryName(sf.FileName);
+                Vars.Options.Common.LastSaveExtensionNumberSaveOneTrack = sf.FilterIndex;
             }
-            Vars.Options.Common.LastFileSaveDirectory = Path.GetDirectoryName(sf.FileName);
-            Vars.Options.Common.LastSaveExtensionNumberSaveOneTrack = sf.FilterIndex;
         }
 
         /// <summary>
@@ -1126,7 +1120,7 @@ namespace TrackConverter.UI.Converter
                 DataGridViewCell cell = this.dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex];
                 TrackFile tf = Tracks[e.RowIndex];
                 string text = "Название: " + tf.Name + "\r\n";
-                text+="Длина: "+tf.Distance.ToString("00.00")+" км\r\n";
+                text += "Длина: " + tf.Distance.ToString("00.00") + " км\r\n";
                 text += "Количество точек: " + tf.Count + "\r\n";
                 text += "Средняя скорость: " + tf.KmphSpeed + " км/ч\r\n";
                 text += "Описание: " + tf.Description + "\r\n";

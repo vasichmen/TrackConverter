@@ -159,6 +159,54 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         }
 
         /// <summary>
+        /// декодирование ломаной быстрым способом
+        /// </summary>
+        /// <param name="encodedCoordinates"></param>
+        /// <returns></returns>
+        private static TrackFile DecodePolyline2(string encodedCoordinates)
+        {
+            string key = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_=";
+
+            //создание строки бит
+            byte[] bytes = new byte[encodedCoordinates.Length];
+            for (int i = 0; i < encodedCoordinates.Length;i++)
+                bytes[i] = (byte)key.IndexOf(encodedCoordinates[i]);
+
+            //создание списка . Чтение по 6 бит. Каждые 32 бита добавление в пару lon-lat
+
+
+            //изменение порядка на обратный
+
+
+            //перевод в 10 СС с учетом знака
+            List<List<int>> coords = new List<List<int>>();
+            foreach (List<string> cd in list)
+            {
+                List<int> c = new List<int>();
+                foreach (string s in cd)
+                {
+                    int r = Convert.ToInt32(s, 2);
+                    c.Add(r);
+                }
+                coords.Add(c);
+            }
+
+            //сложение сдвигов 
+            for (int i = 1; i < coords.Count; i++)
+            {
+                coords[i][0] = coords[i - 1][0] + coords[i][0];
+                coords[i][1] = coords[i - 1][1] + coords[i][1];
+            }
+
+            //запись результата
+            TrackFile res = new TrackFile();
+            foreach (List<int> cd in coords)
+                res.Add(new TrackPoint((double)(cd[1] / 1000000d), (double)(cd[0] / 1000000d)));
+
+            return res;
+        }
+
+        /// <summary>
         /// декодиорвание ломаной.
         /// Алгоритм кодирования: 
         /// https://tech.yandex.ru/maps/doc/jsapi/1.x/dg/tasks/how-to-add-polyline-docpage/#encoding-polyline-points

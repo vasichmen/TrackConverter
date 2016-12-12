@@ -677,7 +677,7 @@ namespace TrackConverter.UI.Map
 
                             this.Invoke(new Action(() =>
                                           {
-                                              Program.winMap.Clear();
+                                              Program.winMap.clearMarkersToolStripMenuItem_Click(null,null);
                                               ShowWaypoints(tf, baseOverlay, false);
                                               if (waypoints == null)
                                                   waypoints = new TrackFile();
