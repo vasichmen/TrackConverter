@@ -56,12 +56,6 @@ namespace TrackConverter.UI.Tools
                     MessageBox.Show(this, "Обработка больших маршрутов без использования аппроксимации может занять длительное время", "Внимание", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 DataTable dt = ElevationAnalysis.AnalyzeTracks(Tracks);
 
-                if (!Program.winElevVisualNullOrDisposed && Program.winElevVisual.Visible)
-                    Program.winElevVisual.Close();
-                Program.winElevVisual = new FormElevVisual(Tracks);
-                Program.winElevVisual.Show(this);
-
-
                 dataGridView1.DataSource = null;
                 dataGridView1.DataSource = dt;
                 dataGridView1.Refresh();

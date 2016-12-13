@@ -170,9 +170,9 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
             string key = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_=";
 
             //создание строки бит
-            byte[] bytes = new byte[encodedCoordinates.Length];
-            for (int i = 0; i < encodedCoordinates.Length;i++)
-                bytes[i] = (byte)key.IndexOf(encodedCoordinates[i]);
+            int[] bytes = new int[encodedCoordinates.Length];
+            for (int i = 0; i < encodedCoordinates.Length; i++)
+                bytes[i] = key.IndexOf(encodedCoordinates[i]) << 2;
 
             //создание списка . Чтение по 6 бит. Каждые 32 бита добавление в пару lon-lat
 
@@ -465,7 +465,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
             XmlDocument xml = SendXmlRequest(url);
 
             XmlNode cord = xml.GetElementsByTagName("featureMember")[0];
-            if (cord==null)
+            if (cord == null)
                 throw new ApplicationException("Не найден адрес: " + address);
             XmlNode nd = cord.ChildNodes[0]["Point"];
 

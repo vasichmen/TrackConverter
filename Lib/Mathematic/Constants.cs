@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace TrackConverter.Lib.Mathematic
+﻿namespace TrackConverter.Lib.Mathematic
 {
     /// <summary>
     /// основные константы для расчетов 

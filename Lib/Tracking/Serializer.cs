@@ -5,15 +5,14 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
+using System.Threading;
 using System.Windows.Forms;
 using System.Xml;
 using ICSharpCode.SharpZipLib.Zip;
 using TrackConverter.Lib.Classes;
-using TrackConverter.Res.Properties;
-using System.Threading;
 using TrackConverter.Lib.Data;
 using TrackConverter.Lib.Tracking.Helpers;
+using TrackConverter.Res.Properties;
 
 namespace TrackConverter.Lib.Tracking
 {

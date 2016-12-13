@@ -103,6 +103,8 @@ namespace TrackConverter.Lib.Mathematic
             return D;
         }
 
+
+
         /// <summary>
         /// Вычисление истинного азимута в градусах
         /// </summary>
