@@ -1,6 +1,6 @@
 # TrackConverter
 This program purpose to creating routes for bicycles using maps from Google, Yandex and OSM CycleMap. 
-Exist ability getting altitude above sea level (use sevices Google, GTOPO30, ETOPO2). 
+Exists ability getting altitude above sea level (use sevices Google, GTOPO30, ETOPO2). 
 Work with GPS files, OZI Explorer files, Google Eart Files and others formats. 
 Full list supported formats: rt2, crd, plt, wpt, kml, kmz , rte, gpx, csv, osm, nmea, txt, adrs. 
 Apart from file formats program works with links Yandex.ru, Wikimapia.org. 
