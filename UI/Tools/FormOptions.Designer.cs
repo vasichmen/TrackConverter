@@ -30,11 +30,6 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormOptions));
-            this.radioButtonPifagor = new System.Windows.Forms.RadioButton();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.radioButtonModGaver = new System.Windows.Forms.RadioButton();
-            this.radioButtonGaversin = new System.Windows.Forms.RadioButton();
-            this.radioButtonSphere = new System.Windows.Forms.RadioButton();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
@@ -71,6 +66,7 @@
             this.label6 = new System.Windows.Forms.Label();
             this.checkBoxRestoreWptsRts = new System.Windows.Forms.CheckBox();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.checkBoxUseCacheGeocoder = new System.Windows.Forms.CheckBox();
             this.buttonSelectETOPOFolder = new System.Windows.Forms.Button();
             this.label8 = new System.Windows.Forms.Label();
             this.textBoxDBETOPOFolder = new System.Windows.Forms.TextBox();
@@ -98,8 +94,8 @@
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.checkBoxUseCacheGeocoder = new System.Windows.Forms.CheckBox();
-            this.groupBox1.SuspendLayout();
+            this.comboBoxEllipsoid = new System.Windows.Forms.ComboBox();
+            this.label14 = new System.Windows.Forms.Label();
             this.groupBox2.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage5.SuspendLayout();
@@ -117,63 +113,6 @@
             this.groupBox4.SuspendLayout();
             this.SuspendLayout();
             // 
-            // radioButtonPifagor
-            // 
-            this.radioButtonPifagor.AutoSize = true;
-            this.radioButtonPifagor.Location = new System.Drawing.Point(6, 19);
-            this.radioButtonPifagor.Name = "radioButtonPifagor";
-            this.radioButtonPifagor.Size = new System.Drawing.Size(122, 17);
-            this.radioButtonPifagor.TabIndex = 3;
-            this.radioButtonPifagor.Text = "теорема Пифагора";
-            this.radioButtonPifagor.UseVisualStyleBackColor = true;
-            // 
-            // groupBox1
-            // 
-            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox1.Controls.Add(this.radioButtonModGaver);
-            this.groupBox1.Controls.Add(this.radioButtonGaversin);
-            this.groupBox1.Controls.Add(this.radioButtonSphere);
-            this.groupBox1.Controls.Add(this.radioButtonPifagor);
-            this.groupBox1.Location = new System.Drawing.Point(6, 6);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(302, 117);
-            this.groupBox1.TabIndex = 4;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Способ вычисления расстояний";
-            // 
-            // radioButtonModGaver
-            // 
-            this.radioButtonModGaver.AutoSize = true;
-            this.radioButtonModGaver.Checked = true;
-            this.radioButtonModGaver.Location = new System.Drawing.Point(6, 88);
-            this.radioButtonModGaver.Name = "radioButtonModGaver";
-            this.radioButtonModGaver.Size = new System.Drawing.Size(244, 17);
-            this.radioButtonModGaver.TabIndex = 7;
-            this.radioButtonModGaver.TabStop = true;
-            this.radioButtonModGaver.Text = "модифицированная теорема гаверсинусов";
-            this.radioButtonModGaver.UseVisualStyleBackColor = true;
-            // 
-            // radioButtonGaversin
-            // 
-            this.radioButtonGaversin.AutoSize = true;
-            this.radioButtonGaversin.Location = new System.Drawing.Point(6, 65);
-            this.radioButtonGaversin.Name = "radioButtonGaversin";
-            this.radioButtonGaversin.Size = new System.Drawing.Size(141, 17);
-            this.radioButtonGaversin.TabIndex = 5;
-            this.radioButtonGaversin.Text = "теорема гаверсинусов";
-            this.radioButtonGaversin.UseVisualStyleBackColor = true;
-            // 
-            // radioButtonSphere
-            // 
-            this.radioButtonSphere.AutoSize = true;
-            this.radioButtonSphere.Location = new System.Drawing.Point(6, 42);
-            this.radioButtonSphere.Name = "radioButtonSphere";
-            this.radioButtonSphere.Size = new System.Drawing.Size(182, 17);
-            this.radioButtonSphere.TabIndex = 4;
-            this.radioButtonSphere.Text = "сферическая теорема синусов";
-            this.radioButtonSphere.UseVisualStyleBackColor = true;
-            // 
             // groupBox2
             // 
             this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
@@ -182,7 +121,7 @@
             this.groupBox2.Controls.Add(this.label1);
             this.groupBox2.Controls.Add(this.textBoxMagnNPLon);
             this.groupBox2.Controls.Add(this.textBoxMagnNPLat);
-            this.groupBox2.Location = new System.Drawing.Point(6, 194);
+            this.groupBox2.Location = new System.Drawing.Point(11, 120);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(302, 82);
             this.groupBox2.TabIndex = 8;
@@ -366,13 +305,14 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.label14);
+            this.tabPage1.Controls.Add(this.comboBoxEllipsoid);
             this.tabPage1.Controls.Add(this.label12);
             this.tabPage1.Controls.Add(this.textBoxMinimumRiseInterval);
             this.tabPage1.Controls.Add(this.labelApproxPower);
             this.tabPage1.Controls.Add(this.numericUpDownAmount);
             this.tabPage1.Controls.Add(this.checkBoxIsapproximate);
             this.tabPage1.Controls.Add(this.groupBox2);
-            this.tabPage1.Controls.Add(this.groupBox1);
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
@@ -385,7 +325,7 @@
             // label12
             // 
             this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(81, 132);
+            this.label12.Location = new System.Drawing.Point(7, 37);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(191, 13);
             this.label12.TabIndex = 13;
@@ -393,7 +333,7 @@
             // 
             // textBoxMinimumRiseInterval
             // 
-            this.textBoxMinimumRiseInterval.Location = new System.Drawing.Point(6, 129);
+            this.textBoxMinimumRiseInterval.Location = new System.Drawing.Point(204, 34);
             this.textBoxMinimumRiseInterval.Name = "textBoxMinimumRiseInterval";
             this.textBoxMinimumRiseInterval.Size = new System.Drawing.Size(69, 20);
             this.textBoxMinimumRiseInterval.TabIndex = 12;
@@ -401,7 +341,7 @@
             // labelApproxPower
             // 
             this.labelApproxPower.AutoSize = true;
-            this.labelApproxPower.Location = new System.Drawing.Point(63, 173);
+            this.labelApproxPower.Location = new System.Drawing.Point(67, 82);
             this.labelApproxPower.Name = "labelApproxPower";
             this.labelApproxPower.Size = new System.Drawing.Size(132, 13);
             this.labelApproxPower.TabIndex = 11;
@@ -409,7 +349,7 @@
             // 
             // numericUpDownAmount
             // 
-            this.numericUpDownAmount.Location = new System.Drawing.Point(6, 171);
+            this.numericUpDownAmount.Location = new System.Drawing.Point(10, 80);
             this.numericUpDownAmount.Maximum = new decimal(new int[] {
             90,
             0,
@@ -435,7 +375,7 @@
             this.checkBoxIsapproximate.AutoSize = true;
             this.checkBoxIsapproximate.Checked = true;
             this.checkBoxIsapproximate.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxIsapproximate.Location = new System.Drawing.Point(6, 155);
+            this.checkBoxIsapproximate.Location = new System.Drawing.Point(10, 64);
             this.checkBoxIsapproximate.Name = "checkBoxIsapproximate";
             this.checkBoxIsapproximate.Size = new System.Drawing.Size(166, 17);
             this.checkBoxIsapproximate.TabIndex = 9;
@@ -636,6 +576,16 @@
             this.tabPage3.Text = "Источники данных";
             this.tabPage3.ToolTipText = "Настройки источников географических данных";
             this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxUseCacheGeocoder
+            // 
+            this.checkBoxUseCacheGeocoder.AutoSize = true;
+            this.checkBoxUseCacheGeocoder.Location = new System.Drawing.Point(11, 58);
+            this.checkBoxUseCacheGeocoder.Name = "checkBoxUseCacheGeocoder";
+            this.checkBoxUseCacheGeocoder.Size = new System.Drawing.Size(228, 17);
+            this.checkBoxUseCacheGeocoder.TabIndex = 14;
+            this.checkBoxUseCacheGeocoder.Text = "Кэшировать данные геокодера и высот";
+            this.checkBoxUseCacheGeocoder.UseVisualStyleBackColor = true;
             // 
             // buttonSelectETOPOFolder
             // 
@@ -944,15 +894,26 @@
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.buttonOK_Click);
             // 
-            // checkBoxUseCacheGeocoder
+            // comboBoxEllipsoid
             // 
-            this.checkBoxUseCacheGeocoder.AutoSize = true;
-            this.checkBoxUseCacheGeocoder.Location = new System.Drawing.Point(11, 58);
-            this.checkBoxUseCacheGeocoder.Name = "checkBoxUseCacheGeocoder";
-            this.checkBoxUseCacheGeocoder.Size = new System.Drawing.Size(228, 17);
-            this.checkBoxUseCacheGeocoder.TabIndex = 14;
-            this.checkBoxUseCacheGeocoder.Text = "Кэшировать данные геокодера и высот";
-            this.checkBoxUseCacheGeocoder.UseVisualStyleBackColor = true;
+            this.comboBoxEllipsoid.FormattingEnabled = true;
+            this.comboBoxEllipsoid.Items.AddRange(new object[] {
+            "WGS 84",
+            "ПЗ-90.11"});
+            this.comboBoxEllipsoid.Location = new System.Drawing.Point(76, 6);
+            this.comboBoxEllipsoid.Name = "comboBoxEllipsoid";
+            this.comboBoxEllipsoid.Size = new System.Drawing.Size(121, 21);
+            this.comboBoxEllipsoid.TabIndex = 14;
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(8, 9);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(62, 13);
+            this.label14.TabIndex = 15;
+            this.label14.Text = "Эллипсоид";
+            this.toolTip1.SetToolTip(this.label14, "Эллипсоид, использкемый для вычислений координат");
             // 
             // FormOptions
             // 
@@ -969,8 +930,6 @@
             this.MinimumSize = new System.Drawing.Size(415, 423);
             this.Name = "FormOptions";
             this.Text = "Настройки";
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             this.tabControl1.ResumeLayout(false);
@@ -1001,12 +960,6 @@
         }
 
         #endregion
-
-        private System.Windows.Forms.RadioButton radioButtonPifagor;
-        private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.RadioButton radioButtonGaversin;
-        private System.Windows.Forms.RadioButton radioButtonSphere;
-        private System.Windows.Forms.RadioButton radioButtonModGaver;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
@@ -1071,5 +1024,7 @@
         private System.Windows.Forms.ComboBox comboBoxPathRouteMode;
         private System.Windows.Forms.CheckBox checkBoxIsLoadETOPO2OnStart;
         private System.Windows.Forms.CheckBox checkBoxUseCacheGeocoder;
+        private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.ComboBox comboBoxEllipsoid;
     }
 }

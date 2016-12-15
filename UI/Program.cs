@@ -6,8 +6,12 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using GMap.NET.MapProviders;
 using TrackConverter.Lib.Classes;
 using TrackConverter.Lib.Classes.Options;
+using TrackConverter.Lib.Data;
+using TrackConverter.Lib.Data.Providers.Local.ETOPO2;
+using TrackConverter.Lib.Mathematic.Geodesy.Systems;
 using TrackConverter.Lib.Tracking;
 using TrackConverter.Res.Properties;
 using TrackConverter.UI.Common;
@@ -135,8 +139,9 @@ namespace TrackConverter.UI
 
         #endregion
 
-
-
+        /// <summary>
+        /// иконка в панели задач
+        /// </summary>
         static TrayIcon trayIcon = null;
 
 
@@ -148,6 +153,8 @@ namespace TrackConverter.UI
         {
             try
             {
+                #region система
+
                 //установка параметров отображения
                 Application.SetCompatibleTextRenderingDefault(false);
                 Application.EnableVisualStyles();
@@ -181,7 +188,11 @@ namespace TrackConverter.UI
                 Vars.Options = Options.Load(Application.StartupPath + Resources.options_folder);
 
                 //проверка файлов программы
-                CheckFiles(Vars.Options);
+                CheckFiles();
+
+                #endregion
+
+                #region окна
 
                 //создание основного окна
                 winMain = new FormContainer()
@@ -201,7 +212,6 @@ namespace TrackConverter.UI
                 //создание окна ожидания
                 winWaiting = new FormWaiting();
 
-
                 //открытие окна навигации, если требуется
                 if (Vars.Options.Map.IsFormNavigatorShow)
                 {
@@ -214,8 +224,24 @@ namespace TrackConverter.UI
                 winElevVisual.Show();
                 winPoints.Show();
 
-                //запуск основной формы
+                #endregion
+
+                #region настройки объектов
+
+                //открытие БД кэша геокодера
+                Vars.dataCache = new SQLiteCache(Application.StartupPath + Resources.cache_directory + "\\geocoder");
+
+                //метод загрузки базы данных ETOPO2
+                Vars.TaskLoadingETOPO2 = GetETOPO2LoadingTask();
+
+                //применение настроек
+                AcceptOptions();
+
+                #endregion
+
+                //запуск основного окна
                 Application.Run(winMain);
+
             }
             catch (Exception ex) //запись ошибки в лог
             {
@@ -265,7 +291,7 @@ namespace TrackConverter.UI
         /// проверка файлов программы
         /// <param name="opts">настройки программы</param>
         /// </summary>
-        private static void CheckFiles(Options opts)
+        private static void CheckFiles()
         {
             if (!File.Exists(Application.StartupPath + Resources.lib_dll_file))
             {
@@ -315,12 +341,71 @@ namespace TrackConverter.UI
                 return;
             }
 
-            foreach (MapProviderRecord mpr in opts.Map.AllProviders)
+            foreach (MapProviderRecord mpr in Vars.Options.Map.AllProviders)
                 if (!File.Exists(Application.StartupPath + mpr.IconName))
                 {
                     MessageBox.Show(null, "Файл карты " + mpr.IconName + " не был найден в папке " + Application.StartupPath, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
+        }
+
+        /// <summary>
+        /// применение новыx настроек программы
+        /// </summary>
+        internal static void AcceptOptions()
+        {
+            //эллипсоид
+            //установка системы координат
+            switch (Vars.Options.Converter.Geosystem)
+            {
+                case Geosystems.PZ90:
+                    Vars.CurrentGeosystem = new PZ90();
+                    break;
+                case Geosystems.WGS84:
+                    Vars.CurrentGeosystem = new WGS84();
+                    break;
+                default:
+                    MessageBox.Show("Ошибка при создании системы координат: " + Vars.Options.Converter.Geosystem);
+                    break;
+            }
+
+            //база данных ETOPO2
+            if (Vars.Options.DataSources.GeoInfoProvider == GeoInfoProvider.ETOPO2)
+            {
+                if (Vars.TaskLoadingETOPO2.Status == TaskStatus.RanToCompletion)
+                    Vars.TaskLoadingETOPO2 = GetETOPO2LoadingTask();
+                winMain.BeginOperation();
+                Vars.TaskLoadingETOPO2.Start();
+            }
+
+            //язык карты
+            GMapProvider.Language = Vars.Options.Map.MapLanguange;
+
+        }
+
+        /// <summary>
+        /// получить задачу загрузки БД ЕТОРО2
+        /// </summary>
+        /// <returns></returns>
+        private static Task GetETOPO2LoadingTask()
+        {
+            return new Task(new Action(() =>
+         {
+             try
+             {
+                 if (GeoInfo.IsETOPO2Ready)
+                     GeoInfo.ETOPO2Provider = new ETOPO2Provider(Vars.Options.DataSources.ETOPO2DBFolder, winMain.setCurrentOperation);
+                 else throw new ApplicationException("База данных ETOPO2 не установлена. Укажите в настройках путь к файлам базы данных");
+             }
+             catch (Exception exc)
+             {
+                 throw exc;
+             }
+             finally
+             {
+                 winMain.EndOperation();
+             }
+         }));
         }
     }
 }

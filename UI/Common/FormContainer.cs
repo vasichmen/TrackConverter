@@ -177,27 +177,9 @@ namespace TrackConverter.UI.Common
             //установка размеров дочених окон
             this.FormContainer_Resize(null, null);
 
-            //метод загрузки базы данных ETOPO2
-            Vars.TaskLoadingETOPO2 = new Task(new Action(() =>
-            {
-                try
-                {
-                    if (GeoInfo.IsETOPO2Ready)
-                        GeoInfo.ETOPO2Provider = new ETOPO2Provider(Vars.Options.DataSources.ETOPO2DBFolder, this.setCurrentOperation);
-                    else throw new ApplicationException("База данных ETOPO2 не установлена. Укажите в настройках путь к файлам базы данных");
-                }
-                catch (Exception exc)
-                {
-                    throw exc;
-                }
-                finally
-                {
-                    EndOperation();
-                }
-            }));
-
             //если надо - запускаем загрузку ЕТОРО2
             if (Vars.Options.Common.IsLoadETOPO2OnStart)
+                if(GeoInfo.ETOPO2Provider==null)
             {
                 BeginOperation();
                 Vars.TaskLoadingETOPO2.Start();

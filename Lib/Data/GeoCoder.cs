@@ -33,8 +33,7 @@ namespace TrackConverter.Lib.Data
         public GeoCoder(GeoCoderProvider provider)
         {
             this.provider = provider;
-            if (Vars.dataCache == null)
-                Vars.dataCache = new SQLiteCache(Application.StartupPath + Resources.cache_directory + "\\geocoder");
+
             switch (provider)
             {
                 case GeoCoderProvider.Yandex:

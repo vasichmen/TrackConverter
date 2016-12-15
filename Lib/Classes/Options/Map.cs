@@ -80,7 +80,7 @@ namespace TrackConverter.Lib.Classes.Options
 
 
         /// <summary>
-        /// было ли открыто окно навигации
+        /// было ли открыто окно навигации при выходе
         /// </summary>
         public bool IsFormNavigatorShow { get; set; }
 

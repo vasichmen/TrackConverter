@@ -1,117 +1,123 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using TrackConverter.Lib.Classes;
 using TrackConverter.Lib.Tracking;
 
-namespace TrackConverter.Lib.Mathematic
+namespace TrackConverter.Lib.Mathematic.Geodesy.Systems
 {
     /// <summary>
-    /// статические методы расчета длины, склонений, азимутов
+    /// система координат
     /// </summary>
-   public static class Calc
+    public abstract class BaseSystem : IGeosystem
     {
-        /// <summary>
-        /// расчет расстояния между двумя точками в метрах по теореме Пифагора.
-        /// Подходит для малых расстояний
-        /// </summary>
-        /// <param name="p1">начальная точка</param>
-        /// <param name="p2">конечная точка</param>
-        /// <returns>расстояние между точками в метрах</returns>
-        private static double CalcDistV1(TrackPoint p1, TrackPoint p2)
-        {
-            double dist = 0;
-            double latDiv = Math.Abs(p2.Coordinates.Latitude.TotalDegrees - p1.Coordinates.Latitude.TotalDegrees); //разница по широте  в градусах
-            double lonDiv = Math.Abs(p2.Coordinates.Longitude.TotalDegrees - p1.Coordinates.Longitude.TotalDegrees); //разница по долготе в градусах
-            double altDiv = (p2.MetrAltitude < 0 || p1.MetrAltitude < 0) ? 0 : Math.Abs(p2.MetrAltitude - p1.MetrAltitude); //разница высот в метрах
-            double latinrad = p1.Coordinates.Latitude.TotalDegrees * Math.PI / 180; //широта в радианах
-            double In1Lon = Constants.Equator * Math.Cos(latinrad) / 360; //в одном градусе долготы 
-            double latDivM = latDiv * Constants.In1Lat; //разница в метрах по широте
-            double lonDivM = lonDiv * In1Lon; //разница в метрах по долготе
-            double altDivM = altDiv; //разница в метрах по высоте
-            dist = Math.Sqrt(Math.Pow(latDivM, 2) + Math.Pow(lonDivM, 2) + Math.Pow(altDivM, 2)); // расстояние в метра между точками
-            return dist;
-        }
+
+        #region параметры эллипсоида
 
         /// <summary>
-        /// рассчет расстояния между двумя точками в метрах по сферичиской теореме синусов
-        /// Подходит для больших расстояний
+        /// скорость света в вакууме, м/с
         /// </summary>
-        /// <param name="p1">начальная точка</param>
-        /// <param name="p2">конечная точка</param>
-        /// <returns></returns>
-        private static double CalcDistV2(TrackPoint p1, TrackPoint p2)
-        {
-            double rad1d = Math.PI / 180;
-            double f1 = p1.Coordinates.Latitude.TotalDegrees * rad1d; //широта первой точки в радианах
-            double f2 = p2.Coordinates.Latitude.TotalDegrees * rad1d; //широта второй точки в радианах
-            double l1 = p1.Coordinates.Longitude.TotalDegrees * rad1d; //долгота первой точки в радианах
-            double l2 = p2.Coordinates.Longitude.TotalDegrees * rad1d; //долгота второй точки в радианах
-            //угловая длина между заданными точками в радианах
-            double td = Math.Sin(f1) * Math.Sin(f2) + Math.Cos(f1) * Math.Cos(f2) * Math.Cos(l2 - l1);
-            double d = Math.Acos(td);
-            //расстояние по окружности в метрах
-            double D = d * Constants.Radius;
-            return D;
-        }
+        public abstract double LightSpeed { get; }
 
         /// <summary>
-        /// рассчет расстояния между двумя точками в метрах по теореме гаверсинусов.
-        /// Подходит для больших и малых расстояний для точек, не лежащих на концах диаметра
+        /// Геоцентрическая гравитационная постоянная(с учетом атмосферы), м^3/с^2
         /// </summary>
-        /// <param name="p1"></param>
-        /// <param name="p2"></param>
-        /// <returns></returns>
-        private static double CalcDistV3(TrackPoint p1, TrackPoint p2)
-        {
-            double rad1d = Math.PI / 180;
-            double f1 = p1.Coordinates.Latitude.TotalDegrees * rad1d; //широта первой точки в радианах
-            double f2 = p2.Coordinates.Latitude.TotalDegrees * rad1d; //широта второй точки в радианах
-            double l1 = p1.Coordinates.Longitude.TotalDegrees * rad1d; //долгота первой точки в радианах
-            double l2 = p2.Coordinates.Longitude.TotalDegrees * rad1d; //долгота второй точки в радианах
-            double d_1 = Math.Pow(Math.Sin((f2 - f1) / 2), 2) +
-                Math.Cos(f1) * Math.Cos(f2) * Math.Pow(Math.Sin((l2 - l1) / 2), 2);
-            double d0 = Math.Sqrt(d_1);
-            double d = 2 * Math.Asin(d0);
-            //расстояние по окружности в метрах
-            double D = d * Constants.Radius;
-            return D;
-        }
+        public abstract double f { get; }
 
         /// <summary>
-        /// рассчет расстояния между двумя точками в метрах по модифицированной теореме гаверсинусов.
+        /// Угловая скорость вращения Земли, рад/с
+        /// </summary>
+        public abstract double AngleSpeed { get; }
+
+        /// <summary>
+        /// Больший радиус общеземного эллипсоида (к экватору), м
+        /// </summary>
+        public abstract double MaxAxis { get; }
+
+        /// <summary>
+        /// Полярное сжатие общеземного  эллипсоида. 
+        /// Compression = (MaxAxis - MinAxis)/MaxAxis
+        /// </summary>
+        public abstract double Compression { get; }
+
+        /// <summary>
+        /// Средний радиус, м
+        /// </summary>
+        public double AverageRadius { get { return (MinAxis + MaxAxis) / 2; } }
+
+        /// <summary>
+        /// Малый радиус (к полюсу), м
+        /// </summary>
+        public double MinAxis { get { return MaxAxis - Compression * MaxAxis; } }
+
+        /// <summary>
+        /// Длина экватора, м
+        /// </summary>
+        public double Equator { get { return 2 * Math.PI * MaxAxis; } }
+
+        /// <summary>
+        /// Длина меридина, м
+        /// </summary>
+        public double Meridian { get { return 2 * Math.PI * MinAxis; } }
+
+        /// <summary>
+        /// Расстояние в одном градусе широты
+        /// </summary>
+        public double In1Lat { get { return Meridian / 360d; } }
+
+        #endregion
+
+        #region Реализации интерфейсов
+
+        /// <summary>
+        /// вычисление расстояния между точками в метрах
         /// </summary>
         /// <param name="p1"></param>
         /// <param name="p2"></param>
         /// <returns></returns>
-        private static double CalcDistV4(TrackPoint p1, TrackPoint p2)
+        public double CalculateDistance(TrackPoint p1, TrackPoint p2)
         {
-            double rad1d = Math.PI / 180;
-            double f1 = p1.Coordinates.Latitude.TotalDegrees * rad1d; //широта первой точки в радианах
-            double f2 = p2.Coordinates.Latitude.TotalDegrees * rad1d; //широта второй точки в радианах
-            double l1 = p1.Coordinates.Longitude.TotalDegrees * rad1d; //долгота первой точки в радианах
-            double l2 = p2.Coordinates.Longitude.TotalDegrees * rad1d; //долгота второй точки в радианах
-
-            double f_1 = Math.Pow((Math.Cos(f2) * Math.Sin(l2 - l1)), 2) + Math.Pow((Math.Cos(f1) * Math.Sin(f2) - Math.Sin(f1) * Math.Cos(f2) * Math.Cos(l2 - l1)), 2);
-
-            double f_2 = Math.Sin(f1) * Math.Sin(f2) + Math.Cos(f1) * Math.Cos(f2) * Math.Cos(l2 - l1);
-
-            double f_0 = Math.Sqrt(f_1) / f_2;
-
-            double d = Math.Atan(f_0);
-
-            //расстояние по окружности в метрах
-            double D = d * Constants.Radius;
-            return D;
+            return CalcDistV4(p1,p2);
         }
 
-
+        /// <summary>
+        /// вычисление магнитного склонение в заданной точке
+        /// </summary>
+        /// <param name="p1"></param>
+        /// <returns></returns>
+        public double CalculateMagneticDeclination(TrackPoint p1)
+        {
+            TrackPoint p2 = new TrackPoint(new Coordinate(37.459201, 55.935163));
+            double trA = CalculateTrueAzimuth(p1, p2);
+            double mnA = CalculateMagneticAzimuth(p1, p2);
+            return mnA - trA;
+        }
 
         /// <summary>
-        /// Вычисление истинного азимута в градусах
+        /// вычисление магнитного азимута в градусах
         /// </summary>
-        /// <param name="p1">начальная точка</param>
-        /// <param name="p2">конечная точка</param>
+        /// <param name="p1"></param>
+        /// <param name="p2"></param>
         /// <returns></returns>
-        public static double CalculateTrueAzimuth(TrackPoint p1, TrackPoint p2)
+        public double CalculateMagneticAzimuth(TrackPoint p1, TrackPoint p2)
+        {
+            if (Vars.Options.Converter.NorthPoleLatitude == 0)
+                Vars.Options.Converter.NorthPoleLatitude = 85.90000;
+            if (Vars.Options.Converter.NorthPoleLongitude == 0)
+                Vars.Options.Converter.NorthPoleLongitude = -147.00000;
+
+            return CalculateAngle(p1.Coordinates, new Coordinate(Vars.Options.Converter.NorthPoleLatitude, Vars.Options.Converter.NorthPoleLongitude), p2.Coordinates, AngleMeasure.Degrees);
+
+        }
+
+        /// <summary>
+        /// вычисление истинного азимута от p1 к р2 в градусах
+        /// </summary>
+        /// <param name="p1"></param>
+        /// <param name="p2"></param>
+        /// <returns></returns>
+        public double CalculateTrueAzimuth(TrackPoint p1, TrackPoint p2)
         {
             //перевод градусов в радианы
             double rad1deg = Math.PI / 180;
@@ -128,35 +134,119 @@ namespace TrackConverter.Lib.Mathematic
                 else return 180;
 
             return CalculateAngle(p1.Coordinates, new Coordinate(90, 0), p2.Coordinates, AngleMeasure.Degrees);
+        }
 
+        #endregion
+
+        #region вычисления на сфере
+
+        #region расстояния
+
+        /// <summary>
+        /// расчет расстояния между двумя точками в метрах по теореме Пифагора.
+        /// Подходит для малых расстояний
+        /// </summary>
+        /// <param name="p1">начальная точка</param>
+        /// <param name="p2">конечная точка</param>
+        /// <returns>расстояние между точками в метрах</returns>
+        private double CalcDistV1(TrackPoint p1, TrackPoint p2)
+        {
+            double dist = 0;
+            double latDiv = Math.Abs(p2.Coordinates.Latitude.TotalDegrees - p1.Coordinates.Latitude.TotalDegrees); //разница по широте  в градусах
+            double lonDiv = Math.Abs(p2.Coordinates.Longitude.TotalDegrees - p1.Coordinates.Longitude.TotalDegrees); //разница по долготе в градусах
+            double altDiv = (p2.MetrAltitude < 0 || p1.MetrAltitude < 0) ? 0 : Math.Abs(p2.MetrAltitude - p1.MetrAltitude); //разница высот в метрах
+            double latinrad = p1.Coordinates.Latitude.TotalDegrees * Math.PI / 180; //широта в радианах
+            double In1Lon = this.Equator * Math.Cos(latinrad) / 360; //в одном градусе долготы 
+            double latDivM = latDiv * this.In1Lat; //разница в метрах по широте
+            double lonDivM = lonDiv * In1Lon; //разница в метрах по долготе
+            double altDivM = altDiv; //разница в метрах по высоте
+            dist = Math.Sqrt(Math.Pow(latDivM, 2) + Math.Pow(lonDivM, 2) + Math.Pow(altDivM, 2)); // расстояние в метра между точками
+            return dist;
         }
 
         /// <summary>
-        /// вычисление магнитного азимута в градусах
+        /// рассчет расстояния между двумя точками в метрах по сферичиской теореме синусов
+        /// Подходит для больших расстояний
+        /// </summary>
+        /// <param name="p1">начальная точка</param>
+        /// <param name="p2">конечная точка</param>
+        /// <returns></returns>
+        private double CalcDistV2(TrackPoint p1, TrackPoint p2)
+        {
+            double rad1d = Math.PI / 180;
+            double f1 = p1.Coordinates.Latitude.TotalDegrees * rad1d; //широта первой точки в радианах
+            double f2 = p2.Coordinates.Latitude.TotalDegrees * rad1d; //широта второй точки в радианах
+            double l1 = p1.Coordinates.Longitude.TotalDegrees * rad1d; //долгота первой точки в радианах
+            double l2 = p2.Coordinates.Longitude.TotalDegrees * rad1d; //долгота второй точки в радианах
+            //угловая длина между заданными точками в радианах
+            double td = Math.Sin(f1) * Math.Sin(f2) + Math.Cos(f1) * Math.Cos(f2) * Math.Cos(l2 - l1);
+            double d = Math.Acos(td);
+            //расстояние по окружности в метрах
+            double D = d * this.AverageRadius;
+            return D;
+        }
+
+        /// <summary>
+        /// рассчет расстояния между двумя точками в метрах по теореме гаверсинусов.
+        /// Подходит для больших и малых расстояний для точек, не лежащих на концах диаметра
         /// </summary>
         /// <param name="p1"></param>
         /// <param name="p2"></param>
         /// <returns></returns>
-        public static double CalculateMagneticAzimuth(TrackPoint p1, TrackPoint p2)
+        private double CalcDistV3(TrackPoint p1, TrackPoint p2)
         {
-
-            if (Vars.Options.Converter.NorthPoleLatitude == 0)
-                Vars.Options.Converter.NorthPoleLatitude = 85.90000;
-            if (Vars.Options.Converter.NorthPoleLongitude == 0)
-                Vars.Options.Converter.NorthPoleLongitude = -147.00000;
-
-            return CalculateAngle(p1.Coordinates, new Coordinate(Vars.Options.Converter.NorthPoleLatitude, Vars.Options.Converter.NorthPoleLongitude), p2.Coordinates, AngleMeasure.Degrees);
+            double rad1d = Math.PI / 180;
+            double f1 = p1.Coordinates.Latitude.TotalDegrees * rad1d; //широта первой точки в радианах
+            double f2 = p2.Coordinates.Latitude.TotalDegrees * rad1d; //широта второй точки в радианах
+            double l1 = p1.Coordinates.Longitude.TotalDegrees * rad1d; //долгота первой точки в радианах
+            double l2 = p2.Coordinates.Longitude.TotalDegrees * rad1d; //долгота второй точки в радианах
+            double d_1 = Math.Pow(Math.Sin((f2 - f1) / 2), 2) +
+                Math.Cos(f1) * Math.Cos(f2) * Math.Pow(Math.Sin((l2 - l1) / 2), 2);
+            double d0 = Math.Sqrt(d_1);
+            double d = 2 * Math.Asin(d0);
+            //расстояние по окружности в метрах
+            double D = d * this.AverageRadius;
+            return D;
         }
 
         /// <summary>
-        /// рассчет угла криволинейного треугольника на сфере.
-        /// Возвращает угол ВАС в градусах.  
+        /// рассчет расстояния между двумя точками в метрах по модифицированной теореме гаверсинусов.
         /// </summary>
-        /// <param name="A">точка А (первая точка)</param>
-        /// <param name="B">точка В (полюс)</param>
-        /// <param name="C">точка С (вторая точка)</param>
-        /// <param name="Measure">единица измерения угла для результата</param>
+        /// <param name="p1"></param>
+        /// <param name="p2"></param>
         /// <returns></returns>
+        private double CalcDistV4(TrackPoint p1, TrackPoint p2)
+        {
+            double rad1d = Math.PI / 180;
+            double f1 = p1.Coordinates.Latitude.TotalDegrees * rad1d; //широта первой точки в радианах
+            double f2 = p2.Coordinates.Latitude.TotalDegrees * rad1d; //широта второй точки в радианах
+            double l1 = p1.Coordinates.Longitude.TotalDegrees * rad1d; //долгота первой точки в радианах
+            double l2 = p2.Coordinates.Longitude.TotalDegrees * rad1d; //долгота второй точки в радианах
+
+            double f_1 = Math.Pow((Math.Cos(f2) * Math.Sin(l2 - l1)), 2) + Math.Pow((Math.Cos(f1) * Math.Sin(f2) - Math.Sin(f1) * Math.Cos(f2) * Math.Cos(l2 - l1)), 2);
+
+            double f_2 = Math.Sin(f1) * Math.Sin(f2) + Math.Cos(f1) * Math.Cos(f2) * Math.Cos(l2 - l1);
+
+            double f_0 = Math.Sqrt(f_1) / f_2;
+
+            double d = Math.Atan(f_0);
+
+            //расстояние по окружности в метрах
+            double D = d * this.AverageRadius;
+            return D;
+        }
+
+        #endregion
+
+        ///// <summary>
+        ///// рассчет угла криволинейного треугольника на сфере. 
+        ///// Возвращает угол ВАС в градусах.  
+        ///// </summary>
+        ///// <param name="A">точка А (первая точка)</param>
+        ///// <param name="B">точка В (полюс)</param>
+        ///// <param name="C">точка С (вторая точка)</param>
+        ///// <param name="Measure">единица измерения угла для результата</param>
+        ///// <returns></returns>
         private static double CalculateAngle(Coordinate A, Coordinate B, Coordinate C, AngleMeasure Measure)
         {
             //В - полюс 
@@ -220,36 +310,7 @@ namespace TrackConverter.Lib.Mathematic
 
         }
 
-        /// <summary>
-        /// Вычисление магнитного склонения в заданной точке
-        /// </summary>
-        /// <param name="p1">точка, в которой определяется магнитное склонение</param>
-        /// <returns></returns>
-        public static double CalculateMagneticDeclination(TrackPoint p1)
-        {
-            TrackPoint p2 = new TrackPoint(new Coordinate(37.459201, 55.935163));
-            double trA = CalculateTrueAzimuth(p1, p2);
-            double mnA = CalculateMagneticAzimuth(p1, p2);
-            return mnA - trA;
-        }
+        #endregion
 
-        /// <summary>
-        /// расчет расстояния между двумя точками в метрах заданным методом
-        /// </summary>
-        /// <param name="p1">первая точка</param>
-        /// <param name="p2">вторая точка</param>
-        /// <param name="Method">Метод вычисления расстояния</param>
-        /// <returns></returns>
-        public static double CalculateDistance(TrackPoint p1, TrackPoint p2, DistanceMethodType Method)
-        {
-            switch (Method)
-            {
-                case DistanceMethodType.PifagorTeory: return CalcDistV1(p1, p2);
-                case DistanceMethodType.SphereSin: return CalcDistV2(p1, p2);
-                case DistanceMethodType.GaverSin: return CalcDistV3(p1, p2);
-                case DistanceMethodType.ModGaverSin: return CalcDistV4(p1, p2);
-                default: return double.NaN;
-            }
-        }
     }
 }

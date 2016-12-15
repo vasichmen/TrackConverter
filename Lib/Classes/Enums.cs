@@ -212,31 +212,6 @@ namespace TrackConverter
 
     #region Вычисления
 
-    /// <summary>
-    /// Метод вычисления расстояния на сфере
-    /// </summary>
-    public enum DistanceMethodType
-    {
-        /// <summary>
-        /// теорема гаверсинусов
-        /// </summary>
-        GaverSin,
-
-        /// <summary>
-        /// теорема Пифагора
-        /// </summary>
-        PifagorTeory,
-
-        /// <summary>
-        /// сферическая теорема синусов
-        /// </summary>
-        SphereSin,
-
-        /// <summary>
-        /// модифицированная теорема гаверсинусов
-        /// </summary>
-        ModGaverSin
-    }
 
     /// <summary>
     /// единицы измерения углов
@@ -252,6 +227,22 @@ namespace TrackConverter
         /// градусы
         /// </summary>
         Degrees
+    }
+
+    /// <summary>
+    /// система координат
+    /// </summary>
+    public enum Geosystems
+    {
+        /// <summary>
+        /// эллипсоид WGS84
+        /// </summary>
+        WGS84,
+
+        /// <summary>
+        /// эллипсоид ПЗ-90
+        /// </summary>
+        PZ90
     }
 
     /// <summary>
@@ -452,4 +443,5 @@ namespace TrackConverter
         /// </summary>
         XML
     }
+
 }

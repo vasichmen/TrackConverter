@@ -26,7 +26,6 @@ namespace TrackConverter.Lib.Classes.Options {
         /// создает новый экземпляр с настройками по умолчанию
         /// </summary>
         public Converter() {
-            this.DistanceMethodType = DistanceMethodType.ModGaverSin;
             this.NorthPoleLatitude = 85.90000;
             this.NorthPoleLongitude = -147.00000;
             this.MaxRecentFiles = 5;
@@ -36,6 +35,7 @@ namespace TrackConverter.Lib.Classes.Options {
             this.ApproximateAmount = 60;
             this.MinimumRiseInterval = 2000;
             this.WinSize = new Size(300,300);
+            this.Geosystem = Geosystems.WGS84;
         }
 
         /// <summary>
@@ -74,9 +74,9 @@ namespace TrackConverter.Lib.Classes.Options {
         public double NorthPoleLongitude { get; set; }
 
         /// <summary>
-        /// Тип метода для расчета расстояний
+        /// система координат
         /// </summary>
-        public DistanceMethodType DistanceMethodType { get; set; }
+        public Geosystems Geosystem { get; set; }
 
         /// <summary>
         /// степень аппроксимации высот

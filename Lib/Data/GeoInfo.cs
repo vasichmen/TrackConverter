@@ -38,8 +38,6 @@ namespace TrackConverter.Lib.Data
         {
             this.provider = provider;
             if (Vars.dataCache == null)
-                Vars.dataCache = new SQLiteCache(Application.StartupPath + Resources.cache_directory + "\\geocoder");
-
             switch (provider)
             {
                 case GeoInfoProvider.ETOPO2:

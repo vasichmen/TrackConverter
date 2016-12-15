@@ -9,6 +9,7 @@ using TrackConverter.Lib;
 using TrackConverter.Lib.Classes;
 using TrackConverter.Lib.Mathematic;
 using TrackConverter.Res;
+using TrackConverter.Lib.Mathematic.Geodesy;
 
 namespace TrackConverter.Lib.Tracking
 {
@@ -154,7 +155,7 @@ namespace TrackConverter.Lib.Tracking
         {
             TrackFile res = new TrackFile();
             //если расстояние до следующей точки меньше заданного, то добавляем конечную и выходим
-            if (Calc.CalculateDistance(this, trackPoint, Vars.Options.Converter.DistanceMethodType) <= length)
+            if (Vars.CurrentGeosystem.CalculateDistance(this, trackPoint) <= length)
             {
                 res.Add(trackPoint);
                 return res;

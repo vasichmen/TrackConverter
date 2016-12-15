@@ -69,22 +69,13 @@ namespace TrackConverter.UI.Tools
             TrackPoint p1 = new TrackPoint(lat1, lon1);
             TrackPoint p2 = new TrackPoint(lat2, lon2);
 
-            double dist = 0;
-            if (radioButtonGaversin.Checked)
-                dist = Math.Round(Calc.CalculateDistance(p1, p2, DistanceMethodType.GaverSin), 2);
-            if (radioButtonSphere.Checked)
-                dist = Math.Round(Calc.CalculateDistance(p1, p2, DistanceMethodType.SphereSin), 2);
-            if (radioButtonPifagor.Checked)
-                dist = Math.Round(Calc.CalculateDistance(p1, p2, DistanceMethodType.PifagorTeory), 2);
-            if (radioButtonModGaver.Checked)
-                dist = Math.Round(Calc.CalculateDistance(p1, p2, DistanceMethodType.ModGaverSin), 2);
+            double dist = Math.Round(Vars.CurrentGeosystem.CalculateDistance(p1, p2), 2);
 
+            double trAzi = Math.Round(Vars.CurrentGeosystem.CalculateTrueAzimuth(p1, p2), 2);
 
-            double trAzi = Math.Round(Calc.CalculateTrueAzimuth(p1, p2), 2);
+            double mnAzi = Math.Round(Vars.CurrentGeosystem.CalculateMagneticAzimuth(p1, p2), 2);
 
-            double mnAzi = Math.Round(Calc.CalculateMagneticAzimuth(p1, p2), 2);
-
-            double mnDiv = Math.Round(Calc.CalculateMagneticDeclination(p1), 2);
+            double mnDiv = Math.Round(Vars.CurrentGeosystem.CalculateMagneticDeclination(p1), 2);
 
             labelDistance.Text = "Расстояие: " + dist + " м";
             labelTrueAzimuth.Text = "Истинный азимут: " + trAzi + "º";

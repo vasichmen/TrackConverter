@@ -8,6 +8,7 @@ using TrackConverter.Lib.Classes;
 using TrackConverter.Lib.Classes.Options;
 using TrackConverter.Lib.Data;
 using TrackConverter.Lib.Tracking;
+using TrackConverter.Lib.Mathematic.Geodesy.Systems;
 
 namespace TrackConverter
 {
@@ -54,7 +55,7 @@ namespace TrackConverter
         }
 
         /// <summary>
-        /// текущий выделенный трек в списке маршрутов
+        /// текущий выделенный трек в списке маршрутов для обновления информации во всех окнах
         /// </summary>
         public static TrackFile currentSelectedTrack { get; set; }
 
@@ -67,5 +68,10 @@ namespace TrackConverter
         /// задача загрузки базы данных ETOPO2
         /// </summary>
         public static Task TaskLoadingETOPO2;
+
+        /// <summary>
+        /// текущая система координат
+        /// </summary>
+        public static IGeosystem CurrentGeosystem;
     }
 }

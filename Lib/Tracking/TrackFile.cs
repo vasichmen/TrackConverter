@@ -12,7 +12,7 @@ using GMap.NET;
 using ICSharpCode.SharpZipLib.Zip;
 using TrackConverter.Lib.Classes;
 using TrackConverter.Lib.Mathematic;
-
+using TrackConverter.Lib.Mathematic.Geodesy;
 
 namespace TrackConverter.Lib.Tracking
 {
@@ -327,9 +327,9 @@ namespace TrackConverter.Lib.Tracking
         {
             for (int i = 0; i < this.Count - 1; i++)
             {
-                this.Track[i].MagneticAzimuth = Math.Round(Calc.CalculateMagneticAzimuth(Track[i], Track[i + 1]), 3);
-                this.Track[i].TrueAzimuth = Math.Round(Calc.CalculateTrueAzimuth(Track[i], Track[i + 1]), 3);
-                this.Track[i].MagneticDeclination = Math.Round(Calc.CalculateMagneticDeclination(Track[i]), 3);
+                this.Track[i].MagneticAzimuth = Math.Round(Vars.CurrentGeosystem.CalculateMagneticAzimuth(Track[i], Track[i + 1]), 3);
+                this.Track[i].TrueAzimuth = Math.Round(Vars.CurrentGeosystem.CalculateTrueAzimuth(Track[i], Track[i + 1]), 3);
+                this.Track[i].MagneticDeclination = Math.Round(Vars.CurrentGeosystem.CalculateMagneticDeclination(Track[i]), 3);
             }
         }
 
@@ -341,7 +341,7 @@ namespace TrackConverter.Lib.Tracking
             double distance = 0;
             for (int i = 0; i < Track.Count - 1; i++)
             {
-                double d = Calc.CalculateDistance(Track[i], Track[i + 1], Vars.Options.Converter.DistanceMethodType);
+                double d = Vars.CurrentGeosystem.CalculateDistance(Track[i], Track[i + 1]);
 
                 //если действительное число, то прибавляем
                 distance += !double.IsNaN(d) ? d : 0;
@@ -370,7 +370,7 @@ namespace TrackConverter.Lib.Tracking
             //начиная со второй точки считаем скорости
             for (int i = 1; i < this.Count; i++)
             {
-                this.Track[i].Distance = Calc.CalculateDistance(this.Track[i - 1], this.Track[i], Vars.Options.Converter.DistanceMethodType) / 1000.00;
+                this.Track[i].Distance = Vars.CurrentGeosystem.CalculateDistance(this.Track[i - 1], this.Track[i]) / 1000.00;
                 TimeSpan tm = this.Track[i].Time - this.Track[i - 1].Time;
                 this.Track[i].KmphSpeed = this.Track[i].Distance / tm.TotalHours;
                 this.Track[i].StartDistance = this.Track[i - 1].StartDistance + this.Track[i].Distance;

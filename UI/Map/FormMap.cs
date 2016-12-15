@@ -2007,8 +2007,10 @@ namespace TrackConverter.UI.Map
             //заполнение отсутствующих тайлов из меньшего масштаба
             gmapControlMap.FillEmptyTiles = true;
 
-            //поставщик карты
+            //язык карты
             GMapProvider.Language = Vars.Options.Map.MapLanguange;
+            
+            //поставщик карты
             switch (Vars.Options.Map.MapProvider.Enum)
             {
                 case MapProviders.GoogleHybridMap:

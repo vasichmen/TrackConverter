@@ -38,6 +38,7 @@ namespace TrackConverter.UI.Tools
             checkBoxLastExtension.Checked = Vars.Options.Common.IsExtension;
             checkBoxIsLoadETOPO2OnStart.Checked = Vars.Options.Common.IsLoadETOPO2OnStart;
 
+            //формат настроек
             switch (Vars.Options.Format)
             {
                 case OptionsFormat.XML:
@@ -52,28 +53,20 @@ namespace TrackConverter.UI.Tools
 
             #region Конвертер
 
-
-            switch (Vars.Options.Converter.DistanceMethodType)
-            {
-                case DistanceMethodType.GaverSin:
-                    radioButtonGaversin.Checked = true;
-                    break;
-                case DistanceMethodType.PifagorTeory:
-                    radioButtonPifagor.Checked = true;
-                    break;
-                case DistanceMethodType.SphereSin:
-                    radioButtonSphere.Checked = true;
-                    break;
-                case DistanceMethodType.ModGaverSin:
-                    radioButtonModGaver.Checked = true;
-                    break;
-            }
-
             textBoxMagnNPLat.Text = Vars.Options.Converter.NorthPoleLatitude.ToString();
             textBoxMagnNPLon.Text = Vars.Options.Converter.NorthPoleLongitude.ToString();
             textBoxMinimumRiseInterval.Text = Vars.Options.Converter.MinimumRiseInterval.ToString("00.00");
             checkBoxIsapproximate.Checked = Vars.Options.Converter.IsApproximateAltitudes;
             numericUpDownAmount.Value = Vars.Options.Converter.ApproximateAmount;
+
+            //эллипсоид
+            switch (Vars.Options.Converter.Geosystem)
+            {
+                case Geosystems.WGS84: comboBoxEllipsoid.SelectedIndex = 0;
+                    break;
+                case Geosystems.PZ90: comboBoxEllipsoid.SelectedIndex = 1;
+                    break;
+            }
 
             #endregion
 
@@ -222,12 +215,7 @@ namespace TrackConverter.UI.Tools
 
             #endregion
 
-
-            new ToolTip().SetToolTip(radioButtonGaversin, "Подходит для любых расстояний, если точки не лежат на концах диаметра");
-            new ToolTip().SetToolTip(radioButtonModGaver, "Подходит для любых расстояний");
-            new ToolTip().SetToolTip(radioButtonPifagor, "Подходит для маленьких расстояний. При вычислении используется значение высоты, если оно известно");
-            new ToolTip().SetToolTip(radioButtonSphere, "Подходит для больших расстояний");
-            new ToolTip().SetToolTip(buttonAssociateFiles, "Ассоциировать с программой поддерживаемые форматы файлов");
+ new ToolTip().SetToolTip(buttonAssociateFiles, "Ассоциировать с программой поддерживаемые форматы файлов");
             new ToolTip().SetToolTip(checkBoxLastExtension, "При сохранении файлов запоминать последний выбранный формат");
             new ToolTip().SetToolTip(checkBoxLoadPath, "При загрузке файлов запоминать последнюю папку");
             new ToolTip().SetToolTip(checkBoxSavePath, "При сохранении файлов запоминать последнюю папку");
@@ -258,20 +246,19 @@ namespace TrackConverter.UI.Tools
 
             #region Конвертер
 
-            if (radioButtonGaversin.Checked)
-                Vars.Options.Converter.DistanceMethodType = DistanceMethodType.GaverSin;
-            if (radioButtonPifagor.Checked)
-                Vars.Options.Converter.DistanceMethodType = DistanceMethodType.PifagorTeory;
-            if (radioButtonSphere.Checked)
-                Vars.Options.Converter.DistanceMethodType = DistanceMethodType.SphereSin;
-            if (radioButtonModGaver.Checked)
-                Vars.Options.Converter.DistanceMethodType = DistanceMethodType.ModGaverSin;
-
             Vars.Options.Converter.NorthPoleLatitude = double.Parse(textBoxMagnNPLat.Text.Replace('.', ','));
             Vars.Options.Converter.NorthPoleLongitude = double.Parse(textBoxMagnNPLon.Text.Replace('.', ','));
             Vars.Options.Converter.MinimumRiseInterval = double.Parse(textBoxMinimumRiseInterval.Text.Replace('.', ','));
+
+            //аппроксимация высот
             Vars.Options.Converter.IsApproximateAltitudes = checkBoxIsapproximate.Checked;
             Vars.Options.Converter.ApproximateAmount = numericUpDownAmount.Value;
+
+            //эллипсоид
+            if (comboBoxEllipsoid.SelectedIndex == 0)
+                Vars.Options.Converter.Geosystem = Geosystems.WGS84;
+            if (comboBoxEllipsoid.SelectedIndex == 1)
+                Vars.Options.Converter.Geosystem = Geosystems.PZ90;
 
             #endregion
 
@@ -371,6 +358,7 @@ namespace TrackConverter.UI.Tools
             #endregion
 
             Vars.Options.Save(Application.StartupPath + Resources.options_folder);
+            Program.AcceptOptions();
 
             this.Close();
         }

@@ -110,8 +110,12 @@
     <Compile Include="Data\Providers\Local\ETOPO2\FloatDatabase.cs" />
     <Compile Include="Data\Providers\Local\ETOPO2\SQLiteDatabase.cs" />
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="Mathematic\Geodesy\Systems\IGeosystem.cs" />
     <Compile Include="Mathematic\Assessment\Approximation.cs" />
     <Compile Include="Mathematic\Assessment\ElevationAnalysis.cs" />
+    <Compile Include="Mathematic\Geodesy\Systems\BaseSystem.cs" />
+    <Compile Include="Mathematic\Geodesy\Systems\PZ90.cs" />
+    <Compile Include="Mathematic\Geodesy\Systems\WGS84.cs" />
     <Compile Include="Mathematic\Routing\BaseLogist.cs" />
     <Compile Include="Mathematic\Routing\BranchBoundsElements\BinaryTree.cs" />
     <Compile Include="Mathematic\Routing\BranchBoundsElements\Graph.cs" />
@@ -125,9 +129,8 @@
     <Compile Include="Mathematic\Routing\FullSearchElements\IndexArray.cs" />
     <Compile Include="Mathematic\Routing\Greedy.cs" />
     <Compile Include="Mathematic\Routing\BranchBounds.cs" />
-    <Compile Include="Mathematic\Constants.cs" />
+    <Compile Include="Mathematic\Geodesy\Constants.cs" />
     <Compile Include="Classes\Options\Map.cs" />
-    <Compile Include="Mathematic\Calc.cs" />
     <Compile Include="Classes\Coordinate.cs" />
     <Compile Include="Classes\Enums.cs" />
     <Compile Include="Classes\Options\Options.cs" />
