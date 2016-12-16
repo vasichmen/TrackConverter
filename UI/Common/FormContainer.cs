@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using TrackConverter.Lib.Data;
-using TrackConverter.Lib.Data.Providers.Local.ETOPO2;
+using TrackConverter.Lib.Data.Providers.Local.ETOPO;
 using TrackConverter.UI.Converter;
 using TrackConverter.UI.Tools;
 
@@ -178,11 +178,11 @@ namespace TrackConverter.UI.Common
             this.FormContainer_Resize(null, null);
 
             //если надо - запускаем загрузку ЕТОРО2
-            if (Vars.Options.Common.IsLoadETOPO2OnStart)
-                if(GeoInfo.ETOPO2Provider==null)
+            if (Vars.Options.Common.IsLoadETOPOOnStart)
+                if(GeoInfo.ETOPOProvider==null)
             {
                 BeginOperation();
-                Vars.TaskLoadingETOPO2.Start();
+                Vars.TaskLoadingETOPO.Start();
             }
         }
 

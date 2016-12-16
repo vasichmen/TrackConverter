@@ -19,7 +19,7 @@ namespace TrackConverter.Lib.Classes.Options
             this.IsExtension = true;
             this.IsLoadDir = true;
             this.IsSaveDir = true;
-            this.IsLoadETOPO2OnStart = false;
+            this.IsLoadETOPOOnStart = false;
             this.LastConsoleCommand = "help";
         }
 
@@ -64,9 +64,9 @@ namespace TrackConverter.Lib.Classes.Options
         public bool IsLoadDir { get; set; }
 
         /// <summary>
-        /// если истина, от при старте программы будет загружаться БД ETOPO2
+        /// если истина, от при старте программы будет загружаться БД ETOPO
         /// </summary>
-        public bool IsLoadETOPO2OnStart { get; set; }
+        public bool IsLoadETOPOOnStart { get; set; }
 
         /// <summary>
         ///  послденяя набранная команда в консоли

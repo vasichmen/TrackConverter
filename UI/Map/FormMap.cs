@@ -863,10 +863,10 @@ namespace TrackConverter.UI.Map
                     {
                         try
                         {
-                            if (GeoInfo.IsETOPO2Ready)
-                                elevTrack = new GeoInfo(GeoInfoProvider.ETOPO2).GetElevation(added);
+                            if (GeoInfo.IsETOPOReady)
+                                elevTrack = new GeoInfo(GeoInfoProvider.ETOPO).GetElevation(added);
                             else
-                                throw new InvalidOperationException("База данных ETOPO2 не установлена");
+                                throw new InvalidOperationException("База данных ETOPO не установлена");
                         }
                         catch (Exception exr)
                         {

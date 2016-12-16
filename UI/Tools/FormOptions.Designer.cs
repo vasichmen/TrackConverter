@@ -37,7 +37,7 @@
             this.textBoxMagnNPLat = new System.Windows.Forms.TextBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage5 = new System.Windows.Forms.TabPage();
-            this.checkBoxIsLoadETOPO2OnStart = new System.Windows.Forms.CheckBox();
+            this.checkBoxIsLoadETOPOOnStart = new System.Windows.Forms.CheckBox();
             this.buttonShortcutDesktop = new System.Windows.Forms.Button();
             this.buttonClearCache = new System.Windows.Forms.Button();
             this.label10 = new System.Windows.Forms.Label();
@@ -185,7 +185,7 @@
             // 
             // tabPage5
             // 
-            this.tabPage5.Controls.Add(this.checkBoxIsLoadETOPO2OnStart);
+            this.tabPage5.Controls.Add(this.checkBoxIsLoadETOPOOnStart);
             this.tabPage5.Controls.Add(this.buttonShortcutDesktop);
             this.tabPage5.Controls.Add(this.buttonClearCache);
             this.tabPage5.Controls.Add(this.label10);
@@ -203,16 +203,16 @@
             this.tabPage5.ToolTipText = "Общие настройки поведения программы";
             this.tabPage5.UseVisualStyleBackColor = true;
             // 
-            // checkBoxIsLoadETOPO2OnStart
+            // checkBoxIsLoadETOPOOnStart
             // 
-            this.checkBoxIsLoadETOPO2OnStart.AutoSize = true;
-            this.checkBoxIsLoadETOPO2OnStart.Location = new System.Drawing.Point(13, 73);
-            this.checkBoxIsLoadETOPO2OnStart.Name = "checkBoxIsLoadETOPO2OnStart";
-            this.checkBoxIsLoadETOPO2OnStart.Size = new System.Drawing.Size(184, 17);
-            this.checkBoxIsLoadETOPO2OnStart.TabIndex = 16;
-            this.checkBoxIsLoadETOPO2OnStart.Text = "Загружать ETOPO2 при старте";
-            this.toolTip1.SetToolTip(this.checkBoxIsLoadETOPO2OnStart, "Выберите, чтобы начинать загрузку базы данных ETOPO2 при старте программы");
-            this.checkBoxIsLoadETOPO2OnStart.UseVisualStyleBackColor = true;
+            this.checkBoxIsLoadETOPOOnStart.AutoSize = true;
+            this.checkBoxIsLoadETOPOOnStart.Location = new System.Drawing.Point(13, 73);
+            this.checkBoxIsLoadETOPOOnStart.Name = "checkBoxIsLoadETOPOOnStart";
+            this.checkBoxIsLoadETOPOOnStart.Size = new System.Drawing.Size(184, 17);
+            this.checkBoxIsLoadETOPOOnStart.TabIndex = 16;
+            this.checkBoxIsLoadETOPOOnStart.Text = "Загружать ETOPO при старте";
+            this.toolTip1.SetToolTip(this.checkBoxIsLoadETOPOOnStart, "Выберите, чтобы начинать загрузку базы данных ETOPO при старте программы");
+            this.checkBoxIsLoadETOPOOnStart.UseVisualStyleBackColor = true;
             // 
             // buttonShortcutDesktop
             // 
@@ -607,8 +607,8 @@
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(118, 13);
             this.label8.TabIndex = 12;
-            this.label8.Text = "База данных ETOPO2";
-            this.toolTip1.SetToolTip(this.label8, "Адрес папки с базой данных ETOPO2");
+            this.label8.Text = "База данных ETOPO";
+            this.toolTip1.SetToolTip(this.label8, "Адрес папки с базой данных ETOPO");
             // 
             // textBoxDBETOPOFolder
             // 
@@ -637,7 +637,7 @@
             this.comboBoxGeoInfoProvider.Items.AddRange(new object[] {
             "Google",
             "GTOPO30",
-            "ETOPO2"});
+            "ETOPO"});
             this.comboBoxGeoInfoProvider.Location = new System.Drawing.Point(128, 33);
             this.comboBoxGeoInfoProvider.Name = "comboBoxGeoInfoProvider";
             this.comboBoxGeoInfoProvider.Size = new System.Drawing.Size(257, 21);
@@ -1022,7 +1022,7 @@
         private System.Windows.Forms.CheckBox checkBoxUseBranchBounds;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.ComboBox comboBoxPathRouteMode;
-        private System.Windows.Forms.CheckBox checkBoxIsLoadETOPO2OnStart;
+        private System.Windows.Forms.CheckBox checkBoxIsLoadETOPOOnStart;
         private System.Windows.Forms.CheckBox checkBoxUseCacheGeocoder;
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.ComboBox comboBoxEllipsoid;

@@ -10,7 +10,7 @@ using GMap.NET.MapProviders;
 using TrackConverter.Lib.Classes;
 using TrackConverter.Lib.Classes.Options;
 using TrackConverter.Lib.Data;
-using TrackConverter.Lib.Data.Providers.Local.ETOPO2;
+using TrackConverter.Lib.Data.Providers.Local.ETOPO;
 using TrackConverter.Lib.Mathematic.Geodesy.Systems;
 using TrackConverter.Lib.Tracking;
 using TrackConverter.Res.Properties;
@@ -231,8 +231,8 @@ namespace TrackConverter.UI
                 //открытие БД кэша геокодера
                 Vars.dataCache = new SQLiteCache(Application.StartupPath + Resources.cache_directory + "\\geocoder");
 
-                //метод загрузки базы данных ETOPO2
-                Vars.TaskLoadingETOPO2 = GetETOPO2LoadingTask();
+                //метод загрузки базы данных ETOPO
+                Vars.TaskLoadingETOPO = GetETOPOLoadingTask();
 
                 //применение настроек
                 AcceptOptions();
@@ -369,13 +369,13 @@ namespace TrackConverter.UI
                     break;
             }
 
-            //база данных ETOPO2
-            if (Vars.Options.DataSources.GeoInfoProvider == GeoInfoProvider.ETOPO2)
+            //база данных ETOPO
+            if (Vars.Options.DataSources.GeoInfoProvider == GeoInfoProvider.ETOPO)
             {
-                if (Vars.TaskLoadingETOPO2.Status == TaskStatus.RanToCompletion)
-                    Vars.TaskLoadingETOPO2 = GetETOPO2LoadingTask();
+                if (Vars.TaskLoadingETOPO.Status == TaskStatus.RanToCompletion || Vars.TaskLoadingETOPO.IsCompleted)
+                    Vars.TaskLoadingETOPO = GetETOPOLoadingTask();
                 winMain.BeginOperation();
-                Vars.TaskLoadingETOPO2.Start();
+                Vars.TaskLoadingETOPO.Start();
             }
 
             //язык карты
@@ -387,25 +387,28 @@ namespace TrackConverter.UI
         /// получить задачу загрузки БД ЕТОРО2
         /// </summary>
         /// <returns></returns>
-        private static Task GetETOPO2LoadingTask()
+        private static Task GetETOPOLoadingTask()
         {
             return new Task(new Action(() =>
-         {
-             try
              {
-                 if (GeoInfo.IsETOPO2Ready)
-                     GeoInfo.ETOPO2Provider = new ETOPO2Provider(Vars.Options.DataSources.ETOPO2DBFolder, winMain.setCurrentOperation);
-                 else throw new ApplicationException("База данных ETOPO2 не установлена. Укажите в настройках путь к файлам базы данных");
-             }
-             catch (Exception exc)
-             {
-                 throw exc;
-             }
-             finally
-             {
-                 winMain.EndOperation();
-             }
-         }));
+                 try
+                 {
+                     if (GeoInfo.IsETOPOReady)
+                         GeoInfo.ETOPOProvider = new ETOPOProvider(Vars.Options.DataSources.ETOPODBFolder, winMain.setCurrentOperation);
+                     else throw new ApplicationException("База данных ETOPO не установлена. Укажите в настройках путь к файлам базы данных");
+                 }
+                 catch (Exception exc)
+                 {
+                     Vars.Options.DataSources.ETOPODBFolder = "";
+                     Vars.Options.DataSources.GeoInfoProvider = GeoInfoProvider.Google;
+                     MessageBox.Show(null, "Ошибка при загрузке базы данных ETOPO: " + exc.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                     throw exc;
+                 }
+                 finally
+                 {
+                     winMain.EndOperation();
+                 }
+             }));
         }
     }
 }

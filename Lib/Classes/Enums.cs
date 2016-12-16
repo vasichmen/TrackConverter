@@ -63,9 +63,9 @@ namespace TrackConverter
         GTOPO30,
 
         /// <summary>
-        /// ETOPO2
+        /// ETOPO
         /// </summary>
-        ETOPO2
+        ETOPO
     }
 
     /// <summary>
@@ -278,9 +278,9 @@ namespace TrackConverter
     #region Базы данных
 
     /// <summary>
-    /// тип базы данных ETOPO2
+    /// тип базы данных ETOPO
     /// </summary>
-    public enum ETOPO2DBType
+    public enum ETOPODBType
     {
         /// <summary>
         /// Float 

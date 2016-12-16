@@ -7,10 +7,10 @@ using System.Linq;
 using System.Text;
 using TrackConverter.Lib.Classes;
 
-namespace TrackConverter.Lib.Data.Providers.Local.ETOPO2
+namespace TrackConverter.Lib.Data.Providers.Local.ETOPO
 {
     /// <summary>
-    /// Работа с базой данных ETOPO2 в формате SQLite
+    /// Работа с базой данных ETOPO в формате SQLite
     /// </summary>
     class SQLiteDatabase : IDatabase
     {
@@ -195,11 +195,11 @@ namespace TrackConverter.Lib.Data.Providers.Local.ETOPO2
         /// <summary>
         /// тип базы данных
         /// </summary>
-        public ETOPO2DBType Type
+        public ETOPODBType Type
         {
             get
             {
-                return ETOPO2DBType.SQLite;
+                return ETOPODBType.SQLite;
             }
         }
     }

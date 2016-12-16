@@ -99,22 +99,22 @@ namespace TrackConverter.UI.Tools
                     case "export":
                         if (com.Length == 5)
                         {
-                            if (com[1] == "etopo2")
+                            if (com[1] == "etopo")
                                 if (com[3] == "sql")
-                                    if (GeoInfo.IsETOPO2Ready)
+                                    if (GeoInfo.IsETOPOReady)
                                     {
-                                        if (GeoInfo.ETOPO2Provider == null)
+                                        if (GeoInfo.ETOPOProvider == null)
                                         {
-                                            this.textBoxResult.Text += "База данных ETOPO2 не загружена!\r\n";
+                                            this.textBoxResult.Text += "База данных ETOPO не загружена!\r\n";
                                             break;
                                         }
                                         Task ts = new Task(new Action(() =>
                                         {
-                                            GeoInfo.ETOPO2Provider.ExportSQLite(com[4], this.setLastLineOutput);
+                                            GeoInfo.ETOPOProvider.ExportSQLite(com[4], this.setLastLineOutput);
                                             this.Invoke(new Action(() =>
                                             {
                                                 textBoxCommand.Enabled = true;
-                                                this.setLastLineOutput.Invoke("Экспортирование ETOPO2 в SQLite успешно завершено!\r\ncom>");
+                                                this.setLastLineOutput.Invoke("Экспортирование ETOPO в SQLite успешно завершено!\r\ncom>");
                                             }));
 
                                         }
@@ -124,7 +124,7 @@ namespace TrackConverter.UI.Tools
                                     }
                                     else
                                     {
-                                        this.textBoxResult.Text += "База данных ETOPO2 не подключена!\r\n";
+                                        this.textBoxResult.Text += "База данных ETOPO не подключена!\r\n";
                                         break;
                                     }
                         }
@@ -155,7 +155,7 @@ namespace TrackConverter.UI.Tools
             textBoxResult.Text += "open [формат] [имя_файла]\t - открытие файла поддерживаемого формата\r\n";
             textBoxResult.Text += "\t[формат]\t - file - открытие файла, link - открытие ссылки\r\n";
             textBoxResult.Text += "\t[имя_файла]\t - путь к файлу маршрута. В пути не допускаются пробелы\r\n";
-            textBoxResult.Text += "export etopo2 to sql [имя_файла] - сохранение базы данных ETOPO2 в указанный файл как базу данных SQLite. В названии файла не допускаются пробелы.\r\n";
+            textBoxResult.Text += "export etopo to sql [имя_файла] - сохранение базы данных ETOPO в указанный файл как базу данных SQLite. В названии файла не допускаются пробелы.\r\n";
         }
 
         /// <summary>

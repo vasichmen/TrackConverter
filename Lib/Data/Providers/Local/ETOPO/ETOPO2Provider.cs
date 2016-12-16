@@ -9,17 +9,17 @@ using TrackConverter.Lib.Classes;
 using TrackConverter.Lib.Data.Interfaces;
 using TrackConverter.Lib.Tracking;
 
-namespace TrackConverter.Lib.Data.Providers.Local.ETOPO2
+namespace TrackConverter.Lib.Data.Providers.Local.ETOPO
 {
     /// <summary>
-    /// Данные о высоте из локальной базы данных ETOPO2. 
+    /// Данные о высоте из локальной базы данных ETOPO. 
     /// </summary>
-    public class ETOPO2Provider:IGeoInfoProvider
+    public class ETOPOProvider:IGeoInfoProvider
     {
         /// <summary>
         /// тип базы данных
         /// </summary>
-        public ETOPO2DBType DBType { get { return database.Type; } }
+        public ETOPODBType DBType { get { return database.Type; } }
 
         /// <summary>
         /// Точность в секундах
@@ -48,10 +48,13 @@ namespace TrackConverter.Lib.Data.Providers.Local.ETOPO2
         /// <param name="databaseFolder"></param>
         /// <param name="callback">действие, выполняемой при загрузке БД</param>
         /// <exception cref="FileLoadException">Если при загрузке базы данных произошла ошибка</exception>
-        public ETOPO2Provider(string databaseFolder, Action<string> callback = null)
+        public ETOPOProvider(string databaseFolder, Action<string> callback = null)
         {
+            if (string.IsNullOrWhiteSpace(databaseFolder))
+                throw new ArgumentException("Пустой адрес папки БД");
+
             if (callback != null)
-                callback.Invoke("Идет загрузка базы данных ETOPO2");
+                callback.Invoke("Идет загрузка базы данных ETOPO");
 
             //проверка наличия заголовочного файла
             string[] hfiles = Directory.GetFiles(databaseFolder, "*.hdr", SearchOption.TopDirectoryOnly);
@@ -68,26 +71,26 @@ namespace TrackConverter.Lib.Data.Providers.Local.ETOPO2
             string hfile = hfiles[0];
 
             //определение типа базы данных
-            ETOPO2DBType dbt = BaseGrid.ReadDBType(hfile);
+            ETOPODBType dbt = BaseGrid.ReadDBType(hfile);
 
             //открытие базы данных в зависимости от типа
             switch (dbt)
             {
-                case ETOPO2DBType.Float:
+                case ETOPODBType.Float:
                     string[] ffiles = Directory.GetFiles(databaseFolder, "*.flt", SearchOption.TopDirectoryOnly);
                     if (ffiles.Length != 1)
                         throw new FileLoadException("Обнаружено несколько *.flt файлов данных или не найдено ни одного");
                     string ffile = ffiles[0];
                     this.database = new FloatDatabase(hfile, ffile);
                     break;
-                case ETOPO2DBType.Int16:
+                case ETOPODBType.Int16:
                     string[] bfiles = Directory.GetFiles(databaseFolder, "*.bin", SearchOption.TopDirectoryOnly);
                     if (bfiles.Length != 1)
                         throw new FileLoadException("Обнаружено несколько *.bin файлов данных или не найдено ни одного");
                     string dfile = bfiles[0];
                     this.database = new Int16Database(hfile, dfile);
                     break;
-                case ETOPO2DBType.SQLite:
+                case ETOPODBType.SQLite:
                     this.database = new SQLiteDatabase(hfile);
                     break;
                 default: throw new FileLoadException("Ошибка при открытии базы данных");
@@ -184,24 +187,24 @@ namespace TrackConverter.Lib.Data.Providers.Local.ETOPO2
             string hfile = hfiles[0];
 
             //определение типа базы данных
-            ETOPO2DBType dbt = BaseGrid.ReadDBType(hfile);
+            ETOPODBType dbt = BaseGrid.ReadDBType(hfile);
 
             //открытие базы данных в зависимости от типа
             switch (dbt)
             {
-                case ETOPO2DBType.Float:
+                case ETOPODBType.Float:
                     string[] ffiles = Directory.GetFiles(databaseFolder, "*.flt", SearchOption.TopDirectoryOnly);
                     if (ffiles.Length != 1)
                         return false;
                     string ffile = ffiles[0];
                     break;
-                case ETOPO2DBType.Int16:
+                case ETOPODBType.Int16:
                     string[] bfiles = Directory.GetFiles(databaseFolder, "*.bin", SearchOption.TopDirectoryOnly);
                     if (bfiles.Length != 1)
                         return false;
                     string dfile = bfiles[0];
                     break;
-                case ETOPO2DBType.SQLite: return true;
+                case ETOPODBType.SQLite: return true;
                 default: return false;
             }
             return true;

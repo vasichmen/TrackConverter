@@ -65,9 +65,9 @@ namespace TrackConverter
         public static SQLiteCache dataCache = null;
 
         /// <summary>
-        /// задача загрузки базы данных ETOPO2
+        /// задача загрузки базы данных ETOPO
         /// </summary>
-        public static Task TaskLoadingETOPO2;
+        public static Task TaskLoadingETOPO;
 
         /// <summary>
         /// текущая система координат

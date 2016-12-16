@@ -9,10 +9,10 @@ using System.Text;
 using System.Threading.Tasks;
 using TrackConverter.Lib.Classes;
 
-namespace TrackConverter.Lib.Data.Providers.Local.ETOPO2
+namespace TrackConverter.Lib.Data.Providers.Local.ETOPO
 {
     /// <summary>
-    /// базовый класс базы данных ETOPO2
+    /// базовый класс базы данных ETOPO
     /// </summary>
     abstract class BaseGrid : IDatabase
     {
@@ -68,7 +68,7 @@ namespace TrackConverter.Lib.Data.Providers.Local.ETOPO2
         /// <summary>
         /// тип базы данных
         /// </summary>
-        public ETOPO2DBType Type { get; set; }
+        public ETOPODBType Type { get; set; }
 
         /// <summary>
         /// Возвращает элемент по заданным столбцу и строке
@@ -145,10 +145,10 @@ namespace TrackConverter.Lib.Data.Providers.Local.ETOPO2
         /// </summary>
         /// <param name="headerFile">путь к заголовочному файлу базы данных</param>
         /// <returns></returns>
-        public static ETOPO2DBType ReadDBType(string headerFile)
+        public static ETOPODBType ReadDBType(string headerFile)
         {
             if (Path.GetExtension(headerFile) == ".sq3")
-                return ETOPO2DBType.SQLite;
+                return ETOPODBType.SQLite;
             using (StreamReader sr = new StreamReader(headerFile))
             {
                 do
@@ -158,9 +158,9 @@ namespace TrackConverter.Lib.Data.Providers.Local.ETOPO2
                     {
                         string type = line.Substring(line.IndexOf(" ")).Trim();
                         if (type == "2_BYTE_INTEGER")
-                            return ETOPO2DBType.Int16;
+                            return ETOPODBType.Int16;
                         if (type == "4_BYTE_FLOAT")
-                            return ETOPO2DBType.Float;
+                            return ETOPODBType.Float;
                     }
                 }
                 while (!sr.EndOfStream);

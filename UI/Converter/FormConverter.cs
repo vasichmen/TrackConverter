@@ -804,7 +804,7 @@ namespace TrackConverter.UI.Converter
                     {
                         try
                         {
-                            tf = new GeoInfo(GeoInfoProvider.ETOPO2).GetElevation(tf);
+                            tf = new GeoInfo(GeoInfoProvider.ETOPO).GetElevation(tf);
                         }
                         catch (ApplicationException eeeee)
                         { MessageBox.Show("Ошибка запроса"); }

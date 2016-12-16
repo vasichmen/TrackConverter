@@ -1,7 +1,7 @@
 ﻿using System;
 using TrackConverter.Lib.Classes;
 
-namespace TrackConverter.Lib.Data.Providers.Local.ETOPO2
+namespace TrackConverter.Lib.Data.Providers.Local.ETOPO
 {
     interface IDatabase
     {
@@ -13,7 +13,7 @@ namespace TrackConverter.Lib.Data.Providers.Local.ETOPO2
         string Folder { get; }
         string HeaderFile { get; }
         int Rows { get; }
-        ETOPO2DBType Type { get; }
+        ETOPODBType Type { get; }
         void ExportToSQL(string FileName, Action<string> callback=null);
     }
 }

@@ -4,7 +4,7 @@ using System.Windows.Forms;
 using TrackConverter.Lib.Classes;
 using TrackConverter.Lib.Data.Interfaces;
 using TrackConverter.Lib.Data.Providers.InternetServices;
-using TrackConverter.Lib.Data.Providers.Local.ETOPO2;
+using TrackConverter.Lib.Data.Providers.Local.ETOPO;
 using TrackConverter.Lib.Tracking;
 using TrackConverter.Res.Properties;
 
@@ -16,9 +16,9 @@ namespace TrackConverter.Lib.Data
     public class GeoInfo
     {
         /// <summary>
-        /// База данных Etopo2
+        /// База данных ETOPO
         /// </summary>
-        public static ETOPO2Provider ETOPO2Provider { get; set; }
+        public static ETOPOProvider ETOPOProvider { get; set; }
 
         /// <summary>
         /// поставщик геокодера
@@ -40,13 +40,13 @@ namespace TrackConverter.Lib.Data
             if (Vars.dataCache == null)
             switch (provider)
             {
-                case GeoInfoProvider.ETOPO2:
-                    if (ETOPO2Provider == null)
-                        if (Vars.TaskLoadingETOPO2.Status != TaskStatus.Running)
-                            Vars.TaskLoadingETOPO2.Start();
-                    Vars.TaskLoadingETOPO2.Wait();
-                    if (ETOPO2Provider == null)
-                        throw new ApplicationException("Ошибка при загрузке базы данных ETOPO2 из директории " + Vars.Options.DataSources.ETOPO2DBFolder);
+                case GeoInfoProvider.ETOPO:
+                    if (ETOPOProvider == null)
+                        if (Vars.TaskLoadingETOPO.Status != TaskStatus.Running)
+                            Vars.TaskLoadingETOPO.Start();
+                    Vars.TaskLoadingETOPO.Wait();
+                    if (ETOPOProvider == null)
+                        throw new ApplicationException("Ошибка при загрузке базы данных ETOPO из директории " + Vars.Options.DataSources.ETOPODBFolder);
                     break;
                 case GeoInfoProvider.Google:
                     geoinfo = new Google();
@@ -65,8 +65,8 @@ namespace TrackConverter.Lib.Data
         /// <returns></returns>
         public double GetElevation(Coordinate coordinate)
         {
-            if (provider == GeoInfoProvider.ETOPO2)
-                return ETOPO2Provider.GetElevation(coordinate);
+            if (provider == GeoInfoProvider.ETOPO)
+                return ETOPOProvider.GetElevation(coordinate);
 
             double res = double.NaN;
             if (Vars.Options.DataSources.UseGeocoderCache)
@@ -123,13 +123,13 @@ namespace TrackConverter.Lib.Data
         }
 
         /// <summary>
-        /// истина, если база данных ETOPO2 установлена
+        /// истина, если база данных ETOPO установлена
         /// </summary>
-        public static bool IsETOPO2Ready
+        public static bool IsETOPOReady
         {
             get
             {
-                return ETOPO2Provider.DatabaseInstalled(Vars.Options.DataSources.ETOPO2DBFolder);
+                return ETOPOProvider.DatabaseInstalled(Vars.Options.DataSources.ETOPODBFolder);
             }
         }
     }

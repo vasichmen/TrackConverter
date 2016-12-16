@@ -13,7 +13,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using TrackConverter.Lib.Classes;
-using TrackConverter.Lib.Data.Providers.Local.ETOPO2;
+using TrackConverter.Lib.Data.Providers.Local.ETOPO;
 using TrackConverter.Res.Properties;
 using TrackConverter.UI.Common;
 
@@ -36,7 +36,7 @@ namespace TrackConverter.UI.Tools
             checkBoxLoadPath.Checked = Vars.Options.Common.IsLoadDir;
             checkBoxSavePath.Checked = Vars.Options.Common.IsSaveDir;
             checkBoxLastExtension.Checked = Vars.Options.Common.IsExtension;
-            checkBoxIsLoadETOPO2OnStart.Checked = Vars.Options.Common.IsLoadETOPO2OnStart;
+            checkBoxIsLoadETOPOOnStart.Checked = Vars.Options.Common.IsLoadETOPOOnStart;
 
             //формат настроек
             switch (Vars.Options.Format)
@@ -95,7 +95,7 @@ namespace TrackConverter.UI.Tools
                 case GeoInfoProvider.GTOPO30:
                     comboBoxGeoInfoProvider.SelectedIndex = 1;
                     break;
-                case GeoInfoProvider.ETOPO2:
+                case GeoInfoProvider.ETOPO:
                     comboBoxGeoInfoProvider.SelectedIndex = 2;
                     break;
             }
@@ -103,9 +103,9 @@ namespace TrackConverter.UI.Tools
             //использовать кэш
             checkBoxUseCacheGeocoder.Checked=Vars.Options.DataSources.UseGeocoderCache ;
 
-            //папка ETOPO2
-            textBoxDBETOPOFolder.Text = Vars.Options.DataSources.ETOPO2DBFolder;
-            new ToolTip().SetToolTip(textBoxDBETOPOFolder, Vars.Options.DataSources.ETOPO2DBFolder);
+            //папка ETOPO
+            textBoxDBETOPOFolder.Text = Vars.Options.DataSources.ETOPODBFolder;
+            new ToolTip().SetToolTip(textBoxDBETOPOFolder, Vars.Options.DataSources.ETOPODBFolder);
 
             #endregion
 
@@ -234,7 +234,7 @@ namespace TrackConverter.UI.Tools
             Vars.Options.Common.IsLoadDir = checkBoxLoadPath.Checked;
             Vars.Options.Common.IsSaveDir = checkBoxSavePath.Checked;
             Vars.Options.Common.IsExtension = checkBoxLastExtension.Checked;
-            Vars.Options.Common.IsLoadETOPO2OnStart = checkBoxIsLoadETOPO2OnStart.Checked;
+            Vars.Options.Common.IsLoadETOPOOnStart = checkBoxIsLoadETOPOOnStart.Checked;
 
             //основное окно
             if (comboBoxOptionsFormat.SelectedIndex == 0)
@@ -313,13 +313,13 @@ namespace TrackConverter.UI.Tools
             if (comboBoxGeoInfoProvider.SelectedIndex == 1)
                 Vars.Options.DataSources.GeoInfoProvider = GeoInfoProvider.GTOPO30;
             if (comboBoxGeoInfoProvider.SelectedIndex == 2)
-                Vars.Options.DataSources.GeoInfoProvider = GeoInfoProvider.ETOPO2;
+                Vars.Options.DataSources.GeoInfoProvider = GeoInfoProvider.ETOPO;
 
             //использовать кэш
             Vars.Options.DataSources.UseGeocoderCache = checkBoxUseCacheGeocoder.Checked;
 
-            //папка ETOPO2
-            Vars.Options.DataSources.ETOPO2DBFolder = textBoxDBETOPOFolder.Text;
+            //папка ETOPO
+            Vars.Options.DataSources.ETOPODBFolder = textBoxDBETOPOFolder.Text;
 
             #endregion
 
@@ -382,8 +382,8 @@ namespace TrackConverter.UI.Tools
         private void buttonSelectETOPOFolder_Click(object sender, EventArgs e)
         {
             FolderBrowserDialog fb = new FolderBrowserDialog();
-            if (Vars.Options.DataSources.ETOPO2DBFolder != null)
-                fb.SelectedPath = Vars.Options.DataSources.ETOPO2DBFolder;
+            if (Vars.Options.DataSources.ETOPODBFolder != null)
+                fb.SelectedPath = Vars.Options.DataSources.ETOPODBFolder;
             else
                 fb.SelectedPath = Application.StartupPath;
 
@@ -400,7 +400,7 @@ namespace TrackConverter.UI.Tools
                 //если ОК, то проверка папки
                 if (dr == System.Windows.Forms.DialogResult.OK)
                     //если папка не подходит, то заново открываем диалог
-                    if (!ETOPO2Provider.DatabaseInstalled(fb.SelectedPath))
+                    if (!ETOPOProvider.DatabaseInstalled(fb.SelectedPath))
                     {
                         MessageBox.Show("В этой папке не найдено поддерживаемой базы данных или база данных повреждена");
                         continue;
