@@ -71,7 +71,7 @@ namespace TrackConverter.UI.Common.Dialogs
 
             if (point != null)
             {
-                textBoxName.Text = point.Name;
+                textBoxName.Text = string.IsNullOrWhiteSpace(point.Name) ? "Имя точки" : point.Name;
                 textBoxLat.Text = point.Coordinates.Latitude.TotalDegrees.ToString();
                 textBoxLon.Text = point.Coordinates.Longitude.TotalDegrees.ToString();
                 textBoxAlt.Text = point.MetrAltitude.ToString();
@@ -108,6 +108,14 @@ namespace TrackConverter.UI.Common.Dialogs
         /// <param name="e"></param>
         private void buttonSave_Click(object sender, EventArgs e)
         {
+
+        //ожидание ввода коректного имени точки
+            if (string.IsNullOrWhiteSpace(textBoxName.Text))
+            {
+                MessageBox.Show(this, "Имя точки не может быть пустым", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
             DialogResult = System.Windows.Forms.DialogResult.OK;
             Result = new TrackPoint(new Coordinate(textBoxLat.Text, textBoxLon.Text))
             {
@@ -182,7 +190,7 @@ namespace TrackConverter.UI.Common.Dialogs
         /// <param name="e"></param>
         private void linkLabelGetLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            string link = new Coordinate(textBoxLat.Text,textBoxLon.Text).ExportYandex();
+            string link = new Coordinate(textBoxLat.Text, textBoxLon.Text).ExportYandex();
             //сокращение ссылок образает основную ссылку по координаты. Остается только координаты ценра карты
             //string slink = new LinkShorter( Vars.Options.Map.LinkShorterProvider ).Short( link );
             new FormReadText(DialogType.ExportText, "Ссылка на точку:", link, false, true, true, true).Show(this);

@@ -170,13 +170,9 @@
     <value>\Schemes\osm_schema.xml</value>
     <comment>схема файла OSM</comment>
   </data>
-  <data name="saveRoutes_file" xml:space="preserve">
-    <value>\saveRoutes.rte</value>
-    <comment>файл сохранения последних марршрутов карты</comment>
-  </data>
-  <data name="saveWaypoints_file" xml:space="preserve">
-    <value>\saveWaypoints.wpt</value>
-    <comment>фал сохранения последних путевых точек карты</comment>
+  <data name="saveLast_file" xml:space="preserve">
+    <value>\saveRoutes.kml</value>
+    <comment>файл сохранения последних марршрутов и точек карты</comment>
   </data>
   <data name="marker_start" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\start.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>

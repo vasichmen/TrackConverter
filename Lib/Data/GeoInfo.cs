@@ -37,7 +37,6 @@ namespace TrackConverter.Lib.Data
         public GeoInfo(GeoInfoProvider provider)
         {
             this.provider = provider;
-            if (Vars.dataCache == null)
             switch (provider)
             {
                 case GeoInfoProvider.ETOPO:

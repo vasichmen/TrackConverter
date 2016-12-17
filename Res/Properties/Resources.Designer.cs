@@ -279,20 +279,11 @@ namespace TrackConverter.Res.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на \saveRoutes.rte.
+        ///   Ищет локализованную строку, похожую на \saveRoutes.kml.
         /// </summary>
-        public static string saveRoutes_file {
+        public static string saveLast_file {
             get {
-                return ResourceManager.GetString("saveRoutes_file", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на \saveWaypoints.wpt.
-        /// </summary>
-        public static string saveWaypoints_file {
-            get {
-                return ResourceManager.GetString("saveWaypoints_file", resourceCulture);
+                return ResourceManager.GetString("saveLast_file", resourceCulture);
             }
         }
         

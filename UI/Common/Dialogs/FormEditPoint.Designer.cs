@@ -100,6 +100,7 @@
             this.textBoxName.Name = "textBoxName";
             this.textBoxName.Size = new System.Drawing.Size(220, 20);
             this.textBoxName.TabIndex = 3;
+            this.textBoxName.Text = "Имя точки";
             // 
             // textBoxDescription
             // 

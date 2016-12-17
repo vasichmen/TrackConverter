@@ -338,41 +338,30 @@ namespace TrackConverter.UI.Map
                 mapProviderToolStripMenuItem.DropDownItems.Add(it2);
             }
 
+
+            GeoFile gf = null;
+            if (Vars.Options.Map.RestoreRoutesWaypoints && File.Exists(Application.StartupPath + Resources.saveLast_file))
+                gf = Serializer.DeserializeGeoFile(Application.StartupPath + Resources.saveLast_file);
+
             //обновление списка отображаемых маршрутов
             if (tracksList != null)
-            {
-                this.tracks = tracksList;
-                ShowTracks(baseOverlay);
-            }
+                ShowTracks(tracksList, true);
             //загрузка сохраненных маршрутов с послденего запуска
             else
-            {
-                if (Vars.Options.Map.RestoreRoutesWaypoints && File.Exists(Application.StartupPath + Resources.saveRoutes_file))
-                {
-                    this.tracks = Serializer.DeserializeTrackFileList(Application.StartupPath + Resources.saveRoutes_file);
-                    ShowTracks(baseOverlay);
-                }
-            }
+             if (gf != null)
+                ShowTracks(gf.Routes, true);
 
             //обновление путевых точек
             if (waypointsList != null)
-            {
-                this.waypoints = waypointsList;
-                ShowWaypoints(waypoints, baseOverlay, false);
-            }
+                ShowWaypoints(waypointsList, baseOverlay, false);
             //загрузка точек с последнего запкска
-            else
-            {
-                if (Vars.Options.Map.RestoreRoutesWaypoints && File.Exists(Application.StartupPath + Resources.saveWaypoints_file))
-                {
-                    this.waypoints = Serializer.DeserializeTrackFile(Application.StartupPath + Resources.saveWaypoints_file);
-                    ShowWaypoints(waypoints, baseOverlay, false);
-                }
-            }
+            else if (gf != null)
+                ShowWaypoints(gf.Waypoints, baseOverlay, false);
 
             //размеры окна
             this.Size = Vars.Options.Map.WinSize;
         }
+
 
         #endregion
 
@@ -429,7 +418,7 @@ namespace TrackConverter.UI.Map
             if (!Program.winNavigator.Visible)
                 Program.winNavigator.Show(this);
             Program.winNavigator.Activate();
-        } 
+        }
         #endregion
 
         #region Файл
@@ -676,7 +665,7 @@ namespace TrackConverter.UI.Map
 
                             this.Invoke(new Action(() =>
                                           {
-                                              Program.winMap.clearMarkersToolStripMenuItem_Click(null,null);
+                                              Program.winMap.clearMarkersToolStripMenuItem_Click(null, null);
                                               ShowWaypoints(tf, baseOverlay, false);
                                               if (waypoints == null)
                                                   waypoints = new TrackFile();
@@ -918,7 +907,7 @@ namespace TrackConverter.UI.Map
             if (tracks == null)
                 tracks = new TrackFileList();
             tracks.Add(waypoints);
-            ShowTracks(baseOverlay);
+            ShowTracks(this.tracks, true);
             waypoints = null;
             baseOverlay.Markers.Clear();
         }
@@ -1777,18 +1766,29 @@ namespace TrackConverter.UI.Map
         #region отрисовка карты
 
         /// <summary>
-        /// выод на карту списка точек
+        /// выод на карту списка точек. Новые точки будут добавлены в список
         /// </summary>
         /// <param name="isClearBefore">если истина, то перед выводом слой будет очищен от мареров</param>
         /// <param name="wpts">список точек для вывода</param>
         /// <param name="lay">слой, на котором будут выведены точки</param>
         private void ShowWaypoints(TrackFile wpts, GMapOverlay lay, bool isClearBefore)
         {
+            if (this.waypoints == null)
+                this.waypoints = new TrackFile();
+
             gmapControlMap.SuspendLayout();
             if (isClearBefore)
+            {
                 lay.Markers.Clear();
+                this.waypoints = wpts;
+            }
+
             foreach (TrackPoint tt in wpts)
+            {
                 ShowWaypoint(tt, lay);
+                if (!waypoints.Contains(tt))
+                    waypoints.Add(tt);
+            }
             gmapControlMap.ResumeLayout();
         }
 
@@ -1859,6 +1859,9 @@ namespace TrackConverter.UI.Map
             Point offsets = IconOffsets.GetOffset(point.Icon);
             MapMarker mar = new MapMarker(point.Coordinates.GMap, icon, offsets);
 
+            if (string.IsNullOrWhiteSpace(point.Name))
+                point.Name = point.Coordinates.ToString("{lat},{lon}", "00.000");
+
             mar.Tag.Type = mType;
             mar.ToolTipText = point.Name;
             mar.ToolTipMode = ttMode;
@@ -1899,22 +1902,23 @@ namespace TrackConverter.UI.Map
             //gmapControlMap.ResumeLayout(true);
         }
 
+
         /// <summary>
-        /// отрисовать все маршруты из tracks в заданном слое.
-        /// перед отрисовкой бкдет произведена очистка слоя
+        /// показать на карте маршруты.
         /// </summary>
-        /// <param name="lay">слой для вывода маршрутов</param>
-        private void ShowTracks(GMapOverlay lay)
+        /// <param name="tracksList">маршруты</param>
+        /// <param name="isClearBefore">если истина, то перед добавление будут удалены предыдущие маршруты</param>
+        private void ShowTracks(TrackFileList tracksList, bool isClearBefore)
         {
-            if (tracks == null)
-                return;
-            gmapControlMap.SuspendLayout();
+            if (isClearBefore)
+                baseOverlay.Routes.Clear();
 
-            lay.Routes.Clear();
-            foreach (TrackFile tf in tracks)
-                ShowTrack(tf, lay);
-            gmapControlMap.ResumeLayout();
-
+            foreach (TrackFile tf in tracksList)
+            {
+                if (!tracks.Contains(tf))
+                    tracks.Add(tf);
+                ShowTrack(tf, baseOverlay, false);
+            }
         }
 
         /// <summary>
@@ -2009,7 +2013,7 @@ namespace TrackConverter.UI.Map
 
             //язык карты
             GMapProvider.Language = Vars.Options.Map.MapLanguange;
-            
+
             //поставщик карты
             switch (Vars.Options.Map.MapProvider.Enum)
             {
@@ -2369,7 +2373,8 @@ namespace TrackConverter.UI.Map
         /// <param name="point">точка</param>
         /// <param name="addToWaypoint">еси истина, то точка будет добавлена к путевым точкам</param>
         public void ShowPoint(TrackPoint point, bool addToWaypoint)
-        {if (point == null)
+        {
+            if (point == null)
                 throw new ArgumentNullException("point");
             if (addToWaypoint)
                 waypoints.Add(point);
@@ -2450,7 +2455,7 @@ namespace TrackConverter.UI.Map
             if (tracks != null && tracks.Contains(trackFile))
             {
                 tracks.Remove(trackFile);
-                ShowTracks(baseOverlay);
+                ShowTracks(this.tracks, true);
             }
 
             //открываем маршрут для редактирования
@@ -2461,7 +2466,7 @@ namespace TrackConverter.UI.Map
                 "Редактирование маршрута",
                 this.creatingRoute,
                 this.creatingRouteOverlay,
-                afterAction ,
+                afterAction,
                 cancelAction
                 );
             Program.winRouteEditor.Show(this);
@@ -2481,7 +2486,7 @@ namespace TrackConverter.UI.Map
             if (tracks != null)
             {
                 tracks.Remove(trackFile);
-                ShowTracks(baseOverlay);
+                ShowTracks(this.tracks, true);
             }
         }
 
@@ -2526,10 +2531,10 @@ namespace TrackConverter.UI.Map
                     e.Cancel = true;
                     return true;
                 }
-            if (waypoints != null)
-                Serializer.Serialize(Application.StartupPath + Resources.saveWaypoints_file, waypoints, FileFormats.WptFile);
-            if (tracks != null)
-                Serializer.Serialize(Application.StartupPath + Resources.saveRoutes_file, tracks, FileFormats.RteFile);
+
+            GeoFile gf = new GeoFile(tracks, waypoints);
+            Serializer.Serialize(Application.StartupPath + Resources.saveLast_file, gf, FileFormats.KmlFile);
+
             return false;
         }
 
