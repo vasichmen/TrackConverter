@@ -306,6 +306,9 @@ namespace TrackConverter.Lib.Classes
                     case "00.000000":
                         res = this.TotalDegrees.ToString("00.000000").Replace(Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0], '.');
                         break;
+                    case "00.000":
+                        res = this.TotalDegrees.ToString("00.000").Replace(Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0], '.');
+                        break;
                     default:
                         throw new FormatException("Неподдерживаемый формат координат");
                 }

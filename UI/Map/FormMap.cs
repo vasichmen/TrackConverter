@@ -781,6 +781,8 @@ namespace TrackConverter.UI.Map
             fromToOverlay.Markers.Clear();
             baseOverlay.Markers.Clear();
             selectedRouteOverlay.Markers.Clear();
+            fromPoint = null;
+            toPoint = null;
         }
 
         /// <summary>
