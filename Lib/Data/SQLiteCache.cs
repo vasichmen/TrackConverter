@@ -81,6 +81,37 @@ namespace TrackConverter.Lib.Data
                 );
         }
 
+        /// <summary>
+        /// записать большое количество высот одной транзакцией в кэш
+        /// </summary>
+        /// <param name="track"></param>
+        /// <param name="els"></param>
+        internal void Put(TrackFile track, List<double> els, Action<string> callback=null)
+        {
+            //ЭКСПОРТ ДАННЫХ
+            this.geocoder_connection.Open();
+            SQLiteTransaction trans = this.geocoder_connection.BeginTransaction();
+            double all = track.Count;
+            for (int i = 0; i < track.Count; i++)
+            {
+                SQLiteCommand cm = geocoder_connection.CreateCommand();
+
+                string command = CreateCommand(
+                track[i].Coordinates.Latitude.TotalDegrees,
+                track[i].Coordinates.Longitude.TotalDegrees,
+                els[i],
+                null);
+
+                cm.CommandText = command;
+                cm.ExecuteNonQuery();
+                if (i % 200 == 0 && callback != null)
+                    callback.Invoke("Запись данных в кэш: завершено " + ((i / all) * 100d).ToString("0.0"));
+            }
+            trans.Commit();
+            this.geocoder_connection.Close();
+        }
+
+
         #region работа с базой данных
 
         /// <summary>
@@ -122,12 +153,17 @@ namespace TrackConverter.Lib.Data
         /// <param name="addr">адрес</param>
         private void Add(double lat, double lon, double alt, string addr)
         {
-            string com = string.Format(@"INSERT INTO '" + table_name + @"'('latitude','longitude','altitude','address') VALUES ({0},{1},{2},{3});",
-                    Math.Round(lat, decimal_digits).ToString().Replace(',', '.'),
-                    Math.Round(lon, decimal_digits).ToString().Replace(',', '.'),
-                    double.IsNaN(alt) ? "NULL" : alt.ToString().Replace(',', '.'),
-                    string.IsNullOrEmpty(addr) ? "NULL" : "'" + addr + "'");
-            ExecuteQuery(com);
+            ExecuteQuery(CreateCommand(lat,lon,alt,addr));
+        }
+
+        private string CreateCommand(double lat, double lon, double alt, string addr)
+        {
+            string com = string.Format(@"INSERT OR REPLACE INTO '" + table_name + @"'('latitude','longitude','altitude','address') VALUES ({0},{1},{2},{3});",
+                       Math.Round(lat, decimal_digits).ToString().Replace(',', '.'),
+                       Math.Round(lon, decimal_digits).ToString().Replace(',', '.'),
+                       double.IsNaN(alt) ? "NULL" : alt.ToString().Replace(',', '.'),
+                       string.IsNullOrEmpty(addr) ? "NULL" : "'" + addr + "'");
+            return com;
         }
 
         /// <summary>
@@ -139,8 +175,9 @@ namespace TrackConverter.Lib.Data
             geocoder_connection.Open();
             SQLiteCommand com = geocoder_connection.CreateCommand();
             com.CommandText = query;
-            com.ExecuteNonQuery();
+          int i =  com.ExecuteNonQuery();
             geocoder_connection.Close();
+            List<Row> r = ExecuteReader("SELECT * FROM "+table_name);
         }
 
         /// <summary>

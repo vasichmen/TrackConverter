@@ -115,7 +115,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         private static TrackFile decodeXMLPath(XmlDocument xml)
         {
             if (xml.GetElementsByTagName("status")[0].InnerText != "OK")
-                throw new ApplicationException("Произошла ошибка: "+ xml.GetElementsByTagName("status")[0].InnerText+"\r\n"+ xml.GetElementsByTagName("error_message")[0].InnerText);
+                throw new ApplicationException("Произошла ошибка: " + xml.GetElementsByTagName("status")[0].InnerText + "\r\n" + xml.GetElementsByTagName("error_message")[0].InnerText);
 
             XmlNode leg = xml.GetElementsByTagName("leg")[0];
             TrackFile res = new TrackFile();
@@ -389,7 +389,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
             //заполнение высот
             for (int i = 0; i < track.Count; i++)
                 track[i].MetrAltitude = els[i];
-
+            Vars.dataCache.Put(track, els, callback);
             return track;
         }
 
