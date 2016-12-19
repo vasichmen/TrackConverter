@@ -1,4 +1,4 @@
-﻿namespace TrackConverter.Lib.Mathematic
+﻿namespace TrackConverter.Lib.Mathematic.Geodesy
 {
     /// <summary>
     /// основные константы для расчетов 

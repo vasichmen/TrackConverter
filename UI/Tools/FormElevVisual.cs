@@ -47,16 +47,14 @@ namespace TrackConverter.UI.Tools
         {
             tracks = fl;
             InitializeComponent();
-
-            if (Program.winWaitingNullOrDisposed)
-                Program.winWaiting = new FormWaiting();
-            Program.winWaiting.Show(this);
-            Program.winWaiting.Focus();
-
-            Task pr = new Task(new Action(() => ConfigureGraph()));
+            Task pr = new Task(new Action(() =>
+            {
+                Program.winMain.BeginOperation();
+                Program.winMain.setCurrentOperation.Invoke("Построение профиля...");
+                ConfigureGraph();
+                Program.winMain.EndOperation();
+            }));
             pr.Start();
-            pr.Wait();
-            Program.winWaiting.Visible = false;
         }
 
 
@@ -313,35 +311,36 @@ namespace TrackConverter.UI.Tools
             }
 
             //ДОБАВЛЕНИЕ ВЫДЕЛЕННОГО ТРЕКА
-            if (Vars.currentSelectedTrack != null)
-            {
-                PointPairList list = new PointPairList();
-                TrackFile selTrack = Vars.currentSelectedTrack;
-                string name = selTrack.Name;
-                foreach (TrackPoint tt in selTrack)
+            if (this == Program.winElevVisual) // если это окно - часть главного окна, то проверяем выделенный маршрут
+                if (Vars.currentSelectedTrack != null)
                 {
-                    //значения в километрах
-                    double x = tt.StartDistance * 1000.000;
-                    double y = tt.MetrAltitude;
+                    PointPairList list = new PointPairList();
+                    TrackFile selTrack = Vars.currentSelectedTrack;
+                    string name = selTrack.Name;
+                    foreach (TrackPoint tt in selTrack)
+                    {
+                        //значения в километрах
+                        double x = tt.StartDistance * 1000.000;
+                        double y = tt.MetrAltitude;
 
-                    //если настройки требуют, то перевод в метры
-                    if (Vars.Options.Graphs.isXKm)
-                        x /= 1000.000;
-                    if (Vars.Options.Graphs.isYKm)
-                        y /= 1000.000;
+                        //если настройки требуют, то перевод в метры
+                        if (Vars.Options.Graphs.isXKm)
+                            x /= 1000.000;
+                        if (Vars.Options.Graphs.isYKm)
+                            y /= 1000.000;
 
-                    //добавление пары
-                    list.Add(x, y);
+                        //добавление пары
+                        list.Add(x, y);
+                    }
+
+                    curveSelectedTrack = new LineItem(name, list, selTrack.Color, SymbolType.None);
+                    curveSelectedTrack.Line.IsSmooth = true;
+                    curveSelectedTrack.Tag = "selectedTrack";
+
+                    mainCurves.Add(curveSelectedTrack);
+                    gp.CurveList.Add(curveSelectedTrack);
                 }
-
-                curveSelectedTrack = new LineItem(name, list, selTrack.Color, SymbolType.None);
-                curveSelectedTrack.Line.IsSmooth = true;
-                curveSelectedTrack.Tag = "selectedTrack";
-
-                mainCurves.Add(curveSelectedTrack);
-                gp.CurveList.Add(curveSelectedTrack);
-            }
-            else Clear();
+                else Clear();
 
             zedGraph.AxisChange();
             zedGraph.Invalidate();

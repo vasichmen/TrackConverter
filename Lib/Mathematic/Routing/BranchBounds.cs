@@ -228,7 +228,6 @@ namespace TrackConverter.Lib.Mathematic.Routing
 
             //очистка ресурсов
             sw.Close();
-            sw.Dispose();
             sw = null;
             root = null;
             minBound = null;

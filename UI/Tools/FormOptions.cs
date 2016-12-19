@@ -425,7 +425,7 @@ namespace TrackConverter.UI.Tools
             {
                 Directory.Delete(Application.StartupPath + Resources.cache_directory, true);
             }
-            catch (Exception ex)
+            catch (Exception)
             { }
             MessageBox.Show("Кэш очищен!");
         }

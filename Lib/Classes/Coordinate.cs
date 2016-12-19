@@ -511,7 +511,7 @@ namespace TrackConverter.Lib.Classes
             if (obj == null)
                 return false;
             if (this.isEmpty)
-                throw new AggregateException("Координата пуста!");
+                return false;
 
             //return c1.Equals(c2);
 
@@ -520,6 +520,23 @@ namespace TrackConverter.Lib.Classes
             return (this.llat == d.llat) & (this.llon == d.llon);
         }
 
+        /// <summary>
+        /// сравнение координат на равенство
+        /// </summary>
+        /// <param name="c1"></param>
+        /// <param name="c2"></param>
+        /// <returns></returns>
+        public static bool operator ==(Coordinate c1, Coordinate c2)
+        { return c1.Equals(c2); }
+
+        /// <summary>
+        /// сравнение координат на неравенство
+        /// </summary>
+        /// <param name="c1"></param>
+        /// <param name="c2"></param>
+        /// <returns></returns>
+        public static bool operator !=(Coordinate c1, Coordinate c2)
+        { return c1.Equals(c2); }
     }
 
 }

@@ -192,7 +192,7 @@ namespace TrackConverter.UI
 
                 #endregion
 
-                #region окна
+                #region создание окон
 
                 //создание основного окна
                 winMain = new FormContainer()
@@ -212,18 +212,7 @@ namespace TrackConverter.UI
                 //создание окна ожидания
                 winWaiting = new FormWaiting();
 
-                //открытие окна навигации, если требуется
-                if (Vars.Options.Map.IsFormNavigatorShow)
-                {
-                    winNavigator = new FormMapNavigator();
-                    winNavigator.Show(winMain);
-                }
-
-                winMap.Show();
-                winConverter.Show();
-                winElevVisual.Show();
-                winPoints.Show();
-
+               
                 #endregion
 
                 #region настройки объектов
@@ -236,6 +225,22 @@ namespace TrackConverter.UI
 
                 //применение настроек
                 AcceptOptions();
+
+                #endregion
+
+                #region открытие окон
+
+                //открытие окна навигации, если требуется
+                if (Vars.Options.Map.IsFormNavigatorShow)
+                {
+                    winNavigator = new FormMapNavigator();
+                    winNavigator.Show(winMain);
+                }
+
+                winMap.Show();
+                winConverter.Show();
+                winElevVisual.Show();
+                winPoints.Show();
 
                 #endregion
 
@@ -289,7 +294,6 @@ namespace TrackConverter.UI
 
         /// <summary>
         /// проверка файлов программы
-        /// <param name="opts">настройки программы</param>
         /// </summary>
         private static void CheckFiles()
         {
@@ -402,7 +406,6 @@ namespace TrackConverter.UI
                      Vars.Options.DataSources.ETOPODBFolder = "";
                      Vars.Options.DataSources.GeoInfoProvider = GeoInfoProvider.Google;
                      MessageBox.Show(null, "Ошибка при загрузке базы данных ETOPO: " + exc.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                     throw exc;
                  }
                  finally
                  {

@@ -24,6 +24,9 @@ namespace TrackConverter.UI.Map
                     baseOverlay.Dispose();
                     components.Dispose();
                     rulerRouteOverlay.Dispose();
+                    fromToOverlay.Dispose();
+                    selectedPointsOverlay.Dispose();
+                    selectedRouteOverlay.Dispose();
                 }
                 catch (Exception) { }
             }
@@ -140,7 +143,7 @@ namespace TrackConverter.UI.Map
             this.saveFileWaypointsRoutesToolStripMenuItem});
             this.сохранитьToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("сохранитьToolStripMenuItem.Image")));
             this.сохранитьToolStripMenuItem.Name = "сохранитьToolStripMenuItem";
-            this.сохранитьToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.сохранитьToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
             this.сохранитьToolStripMenuItem.Text = "Сохранить";
             // 
             // saveFileWaypointsToolStripMenuItem
@@ -166,7 +169,7 @@ namespace TrackConverter.UI.Map
             this.createRouteToolStripMenuItem});
             this.создатьToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("создатьToolStripMenuItem.Image")));
             this.создатьToolStripMenuItem.Name = "создатьToolStripMenuItem";
-            this.создатьToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.создатьToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
             this.создатьToolStripMenuItem.Text = "Создать";
             // 
             // createRouteToolStripMenuItem
@@ -184,7 +187,7 @@ namespace TrackConverter.UI.Map
             this.loadWaypointsToolStripMenuItem1});
             this.открытьToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("открытьToolStripMenuItem.Image")));
             this.открытьToolStripMenuItem.Name = "открытьToolStripMenuItem";
-            this.открытьToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.открытьToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
             this.открытьToolStripMenuItem.Text = "Открыть ";
             // 
             // openFileWaypointsRoutesToolStripMenuItem
@@ -713,6 +716,7 @@ namespace TrackConverter.UI.Map
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "Карта";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormMap_FormClosing);
+            this.Load += new System.EventHandler(this.FormMap_Load);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FormMap_KeyDown);
             this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.FormMap_KeyUp);
             this.menuStrip1.ResumeLayout(false);

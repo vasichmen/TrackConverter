@@ -252,7 +252,10 @@ namespace TrackConverter.Lib.Data
             {
                 geocoder_connection.Close();
                 geocoder_connection.Dispose();
+                GC.SuppressFinalize(this);
             }
+
+
         }
 
 

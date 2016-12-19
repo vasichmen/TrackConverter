@@ -60,7 +60,7 @@ namespace TrackConverter.UI.Converter
                             GeoFile gf = Serializer.DeserializeGeoFile(args[0]);
                             this.Tracks = gf.Routes;
                             Program.winMap.Clear();
-                            Program.winMap.ShowPoints(gf.Waypoints, true);
+                            Program.winMap.ShowPoints(gf.Waypoints, true, true);
                             OpenFile(null, true);
                         }
                         else
@@ -141,7 +141,7 @@ namespace TrackConverter.UI.Converter
                     {
                         Program.winMain.EndOperation();
                         Program.winMap.Clear();
-                        Program.winMap.ShowPoints(pts, true);
+                        Program.winMap.ShowPoints(pts, true, true);
                     }));
                 }));
                 ts.Start();
@@ -681,7 +681,9 @@ namespace TrackConverter.UI.Converter
             foreach (DataGridViewRow dgvr in dataGridView1.SelectedRows)
             {
                 int row = dgvr.Index;
-                Tracks.Remove(Tracks[row]);
+                TrackFile tttt = Tracks[row];
+                Program.winMap.DeleteRoute(tttt);
+                Tracks.Remove(tttt);
             }
             OpenFile(null, true);
             if (dataGridView1.SelectedRows.Count > 0)
@@ -763,8 +765,7 @@ namespace TrackConverter.UI.Converter
                 TrackFile tf = Tracks[row];
                 if (tf.Color.IsEmpty)
                     tf.Color = Vars.Options.Converter.GetColor();
-
-                new FormMap(new TrackFileList(Tracks[row])).Show(Program.winMain);
+                Program.winMap.ShowRoute(Tracks[row]);
             }
         }
 
@@ -786,35 +787,25 @@ namespace TrackConverter.UI.Converter
             if (frt.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
             {
                 TrackFileList tfl = new TrackFileList();
-
-                if (Program.winWaitingNullOrDisposed)
-                    Program.winWaiting = new FormWaiting();
-
-                Program.winWaiting.Focus();
-                Program.winWaiting.Show(this);
-                foreach (DataGridViewRow row in dataGridView1.SelectedRows)
-                {
-                    int rowI = row.Index;
-                    TrackFile tf = Tracks[rowI];
-
-                    double lg = double.Parse(frt.Result);
-                    tf = tf.AddIntermediatePoints(lg);
-
-                    Task pr = new Task(new Action(() =>
+                Task pr = new Task(new Action(() =>
                     {
-                        try
+                        Program.winMain.BeginOperation();
+                        foreach (DataGridViewRow row in dataGridView1.SelectedRows)
                         {
-                            tf = new GeoInfo(GeoInfoProvider.ETOPO).GetElevation(tf);
+                            int rowI = row.Index;
+                            TrackFile tf = Tracks[rowI];
+
+                            double lg = double.Parse(frt.Result);
+                            tf = tf.AddIntermediatePoints(lg);
+
+                            tf = new GeoInfo(Vars.Options.DataSources.GeoInfoProvider).GetElevation(tf, Program.winMain.setCurrentOperation);
+                            tf.CalculateAll();
+                            tfl.Add(tf);
                         }
-                        catch (ApplicationException eeeee)
-                        { MessageBox.Show("Ошибка запроса"); }
+                        this.Invoke(new Action(() => new FormElevVisual(tfl) { FormBorderStyle = FormBorderStyle.Sizable }.Show()));
+                        Program.winMain.EndOperation();
                     }));
-                    pr.Start();
-                    pr.Wait();
-                    tfl.Add(tf);
-                }
-                Program.winWaiting.Visible = false;
-                new FormElevVisual(tfl).Show(Program.winMain);
+                pr.Start();
             }
         }
 
@@ -826,13 +817,22 @@ namespace TrackConverter.UI.Converter
         private void elevgraphToolStripMenuItem_Click(object sender, EventArgs e)
         {
             TrackFileList tfl = new TrackFileList();
-            foreach (DataGridViewRow row in dataGridView1.SelectedRows)
+            Task pr = new Task(new Action(() =>
             {
-                int rowI = row.Index;
-                TrackFile tf = Tracks[rowI];
-                tfl.Add(tf);
-            }
-            new FormElevVisual(tfl).Show(Program.winMain);
+                Program.winMain.BeginOperation();
+                foreach (DataGridViewRow row in dataGridView1.SelectedRows)
+                {
+                    int rowI = row.Index;
+                    TrackFile tf = Tracks[rowI];
+
+                    tf = new GeoInfo(Vars.Options.DataSources.GeoInfoProvider).GetElevation(tf, Program.winMain.setCurrentOperation);
+                    tf.CalculateAll();
+                    tfl.Add(tf);
+                }
+                this.Invoke(new Action(() => new FormElevVisual(tfl) { FormBorderStyle = FormBorderStyle.Sizable }.Show()));
+                Program.winMain.EndOperation();
+            }));
+            pr.Start();
         }
 
         /// <summary>
@@ -843,7 +843,7 @@ namespace TrackConverter.UI.Converter
         private void showWaypointsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             foreach (DataGridViewRow r in dataGridView1.SelectedRows)
-                Program.winMap.ShowPoints(Tracks[r.Index], true);
+                Program.winMap.ShowPoints(Tracks[r.Index], false, true);
         }
 
         /// <summary>

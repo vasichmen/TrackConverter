@@ -199,7 +199,7 @@ namespace TrackConverter.UI.Tools
             }
             if (!Program.winMap.Visible)
                 Program.winMap.Show();
-            Program.winMap.ShowPoints(Points, false);
+            Program.winMap.ShowPoints(Points,false, false);
             Program.winMap.Activate();
         }
 
@@ -469,7 +469,7 @@ namespace TrackConverter.UI.Tools
         private void dataGridView1_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
             isEdited = true;
-            
+
             if (e.ColumnIndex == 1)
                 if ((string)dataGridView1[2, e.RowIndex].FormattedValue != string.Empty)
                     refreshAzimuthsToolStripMenuItem_Click(null, null);
@@ -564,18 +564,20 @@ namespace TrackConverter.UI.Tools
         /// <param name="e"></param>
         private void FormPoints_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (isEdited)
-                if (MessageBox.Show(this, "Точки не сохранены, вы действительно хотите выйти?", "Внимание!", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) == DialogResult.No)
-                {
-                    e.Cancel = true;
-                    return;
-                }
+            if (this == Program.winPoints) //если это часть основного окна, то подтверждение выхода
+                if (isEdited)
+                    if (MessageBox.Show(this, "Точки не сохранены, вы действительно хотите выйти?", "Внимание!", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) == DialogResult.No)
+                    {
+                        e.Cancel = true;
+                        return;
+                    }
 
-            if (endEditWaypointsAction != null)
-            {
-                Points.Source = (DataTable)dataGridView1.DataSource;
-                endEditWaypointsAction.Invoke(Points);
-            }
+            if (this != Program.winPoints) //если это не часть основного окна, то выполняем действие
+                if (endEditWaypointsAction != null)
+                {
+                    Points.Source = (DataTable)dataGridView1.DataSource;
+                    endEditWaypointsAction.Invoke(Points);
+                }
         }
 
         #endregion

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace TrackConverter.Lib.Mathematic.Routing.BranchBoundsElements
 {
-    class MemoryAllocator<T>
+    class MemoryAllocator<T>:IDisposable
     {
         int Cols;
         int Rows;
@@ -66,6 +66,12 @@ namespace TrackConverter.Lib.Mathematic.Routing.BranchBoundsElements
         internal void Dispose()
         {
            // this.stack.Clear();
+        }
+
+        void IDisposable.Dispose()
+        {
+            if (checker != null)
+                checker.Dispose();
         }
     }
 }
