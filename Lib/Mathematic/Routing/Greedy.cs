@@ -96,19 +96,20 @@ namespace TrackConverter.Lib.Mathematic.Routing
                 graph.RemoveCell(jm, im);
                 flag = graph.RemoveCycles();
             }
-
-            int[] result = new int[points.Count];
-            int startPoint = 0;
-            if (isCycled )
+            
+            int startPoint;
+            if (isCycled)
+                startPoint = 0;
+            else
                 startPoint = points.IndexOf(start);
 
             //ОБРАБОТКА ПАР ТОЧЕК МАРШРУТА
-            //добавление первой пары
-            result[0]=startPoint;
-            int oldP = startPoint;
 
             int lim = isCycled ? 0 : 1;
-            int k = 1;
+            int[] result = new int[points.Count];
+            result[0]=startPoint;
+            int oldP = startPoint;
+            int k = 0;
             while (graph.selectedIndexes.Count != lim)
             {
                 int t = graph.selectedIndexes[oldP];

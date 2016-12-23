@@ -752,10 +752,7 @@ namespace TrackConverter.UI.Map
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabelLat;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabelLon;
-        /// <summary>
-        /// область карты
-        /// </summary>
-        public GMap.NET.WindowsForms.GMapControl gmapControlMap;
+      
         private System.Windows.Forms.ToolStripMenuItem tmInternetToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem tmCacheToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem tmInternetCacheToolStripMenuItem;

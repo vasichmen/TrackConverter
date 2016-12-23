@@ -60,7 +60,7 @@ namespace TrackConverter.UI.Converter
                             GeoFile gf = Serializer.DeserializeGeoFile(args[0]);
                             this.Tracks = gf.Routes;
                             Program.winMap.Clear();
-                            Program.winMap.ShowPoints(gf.Waypoints, true, true);
+                            Program.winMap.ShowWaypoints(gf.Waypoints, true, true);
                             OpenFile(null, true);
                         }
                         else
@@ -141,7 +141,7 @@ namespace TrackConverter.UI.Converter
                     {
                         Program.winMain.EndOperation();
                         Program.winMap.Clear();
-                        Program.winMap.ShowPoints(pts, true, true);
+                        Program.winMap.ShowWaypoints(pts, true, true);
                     }));
                 }));
                 ts.Start();
@@ -843,7 +843,7 @@ namespace TrackConverter.UI.Converter
         private void showWaypointsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             foreach (DataGridViewRow r in dataGridView1.SelectedRows)
-                Program.winMap.ShowPoints(Tracks[r.Index], false, true);
+                Program.winMap.ShowWaypoints(Tracks[r.Index], false, true);
         }
 
         /// <summary>

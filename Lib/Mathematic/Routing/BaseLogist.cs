@@ -48,8 +48,8 @@ namespace TrackConverter.Lib.Mathematic.Routing
             }
 
             //добавление последней точки
-            TrackFile last = routes[way[way.Length - 2]][way[way.Length - 1]];
-            res.Add(last[last.Count - 1]);
+            //TrackFile last = routes[way[way.Length - 2]][way[way.Length - 1]];
+            //res.Add(last[last.Count - 1]);
 
             //замыкание маршрута, если надо
             if (isCycled)

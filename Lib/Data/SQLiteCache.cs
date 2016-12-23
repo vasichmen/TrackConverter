@@ -86,6 +86,7 @@ namespace TrackConverter.Lib.Data
         /// </summary>
         /// <param name="track"></param>
         /// <param name="els"></param>
+        /// <param name="callback">действие, выполняемое во время операции</param>
         internal void Put(TrackFile track, List<double> els, Action<string> callback=null)
         {
             //ЭКСПОРТ ДАННЫХ

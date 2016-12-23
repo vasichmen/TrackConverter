@@ -199,7 +199,7 @@ namespace TrackConverter.UI.Tools
             }
             if (!Program.winMap.Visible)
                 Program.winMap.Show();
-            Program.winMap.ShowPoints(Points,false, false);
+            Program.winMap.ShowWaypoints(Points,false, false);
             Program.winMap.Activate();
         }
 
@@ -255,6 +255,8 @@ namespace TrackConverter.UI.Tools
         /// <param name="e"></param>
         private void openConverterToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (this.Points == null || this.Points.Count==0)
+                return;
             this.Points.Source = (DataTable)dataGridView1.DataSource;
             int row = dataGridView1.SelectedCells[0].RowIndex;
             new FormTransformCoordinate(Points[row]).Show();
@@ -375,7 +377,7 @@ namespace TrackConverter.UI.Tools
                 Program.winMap.Show();
             int row = dataGridView1.SelectedCells[0].RowIndex;
             TrackPoint tt = Points[row];
-            Program.winMap.ShowPoint(tt, false);
+            Program.winMap.ShowWaypoint(tt, false);
             Program.winMap.Activate();
         }
 

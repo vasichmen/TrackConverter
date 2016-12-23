@@ -139,6 +139,9 @@
       <DependentUpon>FormContainer.cs</DependentUpon>
     </Compile>
     <Compile Include="Common\TrayIcon.cs" />
+    <Compile Include="Map\FormMapBase.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Tools\FormCalculateDistance.cs">
       <SubType>Form</SubType>
     </Compile>
