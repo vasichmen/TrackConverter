@@ -273,6 +273,7 @@ namespace TrackConverter.Lib.Tracking
         public TrackFile()
         {
             Track = new List<TrackPoint>();
+            IsVisible = false;
         }
 
         /// <summary>
@@ -837,6 +838,11 @@ namespace TrackConverter.Lib.Tracking
                 return false;
             }
         }
+
+        /// <summary>
+        /// если истина,то маршрут виден на карте
+        /// </summary>
+        public bool IsVisible { get; set; }
 
         #endregion
 

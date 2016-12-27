@@ -74,6 +74,16 @@ namespace TrackConverter.UI.Common
         }
 
         /// <summary>
+        /// выход из программы
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        /// <summary>
         /// построение профиля высот
         /// </summary>
         /// <param name="sender"></param>
@@ -252,5 +262,6 @@ namespace TrackConverter.UI.Common
 
         #endregion
 
+  
     }
 }

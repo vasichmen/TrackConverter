@@ -252,6 +252,15 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                 coordinate.ToString("{lat},{lon}", "00.000000"));
             XmlDocument xml = SendXmlRequest(url);
 
+            XmlNode status = xml.GetElementsByTagName("status")[0];
+            if (status.InnerText != "OK")
+            {
+                if (status.InnerText.ToLower() == "zero_results")
+                    throw new ApplicationException("Превышен предел запросов Google");
+                if (status.InnerText.ToLower() == "over_query_limit")
+                    throw new ApplicationException("Превышен предел запросов Google");
+            }
+
             //преобразование адреса к стандартному виду
             XmlNode result = xml.GetElementsByTagName("result")[0];
             XmlNodeList parts = result.ChildNodes;

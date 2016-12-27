@@ -38,7 +38,10 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                 "ru-Ru");
             XmlDocument xml = SendXmlRequest(url);
 
-            XmlNode place = xml.GetElementsByTagName("result")[0];
+            //если ошибка
+            XmlNodeList ers = xml.GetElementsByTagName("error");
+            if (ers.Count == 1)
+                throw new ApplicationException("Nominatim error: "+ers[0].InnerText);
 
             //приведение адреса к стандартному виду
             XmlNode parts = xml.GetElementsByTagName("addressparts")[0];

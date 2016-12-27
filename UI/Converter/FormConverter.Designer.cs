@@ -43,8 +43,6 @@
             this.SaveWikimapiaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.SaveAllSeparateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveAllInOneFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.contextMenuStripDGW = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.informationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -104,9 +102,7 @@
             // 
             this.FileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.загрузитьToolStripMenuItem,
-            this.SaveToolStripMenuItem,
-            this.toolStripSeparator1,
-            this.exitToolStripMenuItem});
+            this.SaveToolStripMenuItem});
             this.FileToolStripMenuItem.Name = "FileToolStripMenuItem";
             this.FileToolStripMenuItem.Size = new System.Drawing.Size(48, 20);
             this.FileToolStripMenuItem.Text = "Файл";
@@ -196,19 +192,6 @@
             this.saveAllInOneFileToolStripMenuItem.Text = "Сохранить все маршруты в один файл";
             this.saveAllInOneFileToolStripMenuItem.ToolTipText = "Сохранить все маршруты в один файл";
             this.saveAllInOneFileToolStripMenuItem.Click += new System.EventHandler(this.saveAllInOneFileToolStripMenuItem_Click);
-            // 
-            // toolStripSeparator1
-            // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(149, 6);
-            // 
-            // exitToolStripMenuItem
-            // 
-            this.exitToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("exitToolStripMenuItem.Image")));
-            this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.exitToolStripMenuItem.Text = "Выход";
-            this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
             // dataGridView1
             // 
@@ -381,7 +364,7 @@
             this.showWaypointsToolStripMenuItem.Tag = "multy";
             this.showWaypointsToolStripMenuItem.Text = "Показать точки на карте";
             this.showWaypointsToolStripMenuItem.ToolTipText = "По";
-            this.showWaypointsToolStripMenuItem.Click += new System.EventHandler(this.showWaypointsToolStripMenuItem_Click);
+            this.showWaypointsToolStripMenuItem.Click += new System.EventHandler(this.showWaypointsOnMapToolStripMenuItem_Click);
             // 
             // showOnMapToolStripMenuItem
             // 
@@ -390,7 +373,7 @@
             this.showOnMapToolStripMenuItem.Size = new System.Drawing.Size(326, 22);
             this.showOnMapToolStripMenuItem.Tag = "multy";
             this.showOnMapToolStripMenuItem.Text = "Маршрут";
-            this.showOnMapToolStripMenuItem.Click += new System.EventHandler(this.showOnMapToolStripMenuItem_Click);
+            this.showOnMapToolStripMenuItem.Click += new System.EventHandler(this.showRouteOnMapToolStripMenuItem_Click);
             // 
             // elevgraphWithIntermediatesToolStripMenuItem
             // 
@@ -490,7 +473,6 @@
         private System.Windows.Forms.ToolStripMenuItem saveAllInOneFileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem SaveWikimapiaToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem SaveFileToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ContextMenuStrip contextMenuStripDGW;
         private System.Windows.Forms.ToolStripMenuItem removeToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem informationToolStripMenuItem;
@@ -499,7 +481,6 @@
         private System.Windows.Forms.ToolStripMenuItem saveYandexContextToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveWikimapiaContextToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem addToJoinToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem изменитьToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem editWaypointsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem editRouteMapToolStripMenuItem;

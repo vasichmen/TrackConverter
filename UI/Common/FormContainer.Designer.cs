@@ -41,6 +41,8 @@
             this.HelpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabelCurrentOperation = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -67,7 +69,9 @@
             this.TransformCoordinateToolStripMenuItem,
             this.consoleToolStripMenuItem,
             this.toolStripSeparator2,
-            this.OptionsToolStripMenuItem});
+            this.OptionsToolStripMenuItem,
+            this.toolStripSeparator1,
+            this.exitToolStripMenuItem});
             this.создатьToolStripMenuItem.Name = "создатьToolStripMenuItem";
             this.создатьToolStripMenuItem.Size = new System.Drawing.Size(95, 20);
             this.создатьToolStripMenuItem.Text = "Инструменты";
@@ -154,6 +158,19 @@
             this.toolStripStatusLabelCurrentOperation.Text = "Выполняется операция";
             this.toolStripStatusLabelCurrentOperation.Visible = false;
             // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(225, 6);
+            // 
+            // exitToolStripMenuItem
+            // 
+            this.exitToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("exitToolStripMenuItem.Image")));
+            this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(228, 22);
+            this.exitToolStripMenuItem.Text = "Выход";
+            this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
+            // 
             // FormContainer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -198,5 +215,7 @@
         /// Строка информации о текущей операции
         /// </summary>
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabelCurrentOperation;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
     }
 }

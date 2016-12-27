@@ -34,7 +34,6 @@ namespace TrackConverter.Lib.Classes.Options {
             this.IsApproximateAltitudes = false;
             this.ApproximateAmount = 60;
             this.MinimumRiseInterval = 2000;
-            this.WinSize = new Size(300,300);
             this.Geosystem = Geosystems.WGS84;
         }
 
@@ -119,11 +118,6 @@ namespace TrackConverter.Lib.Classes.Options {
         /// минимальная длина горки в метрах при поиске точек экстремума
         /// </summary>
         public double MinimumRiseInterval { get; set; }
-
-        /// <summary>
-        /// Размеры окна
-        /// </summary>
-        public Size WinSize { get; set; }
 
         /// <summary>
         /// добавление последнего открытого файла

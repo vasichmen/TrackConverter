@@ -3,4 +3,4 @@
 2. TrackConverter.UI.Map.FormMap.mpProviderToolStripMenuItem_Click()  добавить в оператор switсh
 3. TrackConverter.UI.Map.FormMap.ConfigureGMapControl() добавить в оператор switсh
 4. TrackConverter.Lib.Classes.Options.Map.AllProviders  добавить информацию нового поставщика карты
-5. Добавить в папку Images\maps файл значка карты
+5. Добавить в папку Images\maps файл значка карты с соответствующим именем, как в пункте 4

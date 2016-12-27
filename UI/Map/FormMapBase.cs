@@ -2,12 +2,8 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Net;
-using System.Text;
 using System.Windows.Forms;
 using GMap.NET;
-using GMap.NET.MapProviders;
 using GMap.NET.WindowsForms;
 using TrackConverter.Lib.Classes;
 using TrackConverter.Lib.Classes.StackEdits;
@@ -21,7 +17,7 @@ namespace TrackConverter.UI.Map
     /// <summary>
     /// основные действия, выполняемые с картой
     /// </summary>
-    public class FormMapBase : Form
+    public  class FormMapBase : Form
     {
 
         #region public поля
@@ -60,12 +56,7 @@ namespace TrackConverter.UI.Map
         /// <summary>
         /// область карты
         /// </summary>
-        public GMapControl gmapControlMap=new GMapControl();
-
-        /// <summary>
-        /// список загруженных треков
-        /// </summary>
-        public TrackFileList tracks;
+        public virtual GMapControl gmapControlMap { get; set; }
 
         /// <summary>
         /// список загруженных путевых точек
@@ -128,6 +119,11 @@ namespace TrackConverter.UI.Map
         /// маркер, на котором произошло нажатие(для вывода контекстного меню маркера)
         /// </summary>
         protected MapMarker markerClicked;
+
+        /// <summary>
+        /// маршрут, для которого произошло нажатие (для вывода контекстного меню)
+        /// </summary>
+        protected GMapRoute routeClicked;
 
         /// <summary>
         /// слой выделенной точки
@@ -415,11 +411,7 @@ namespace TrackConverter.UI.Map
         /// <param name="overlay">слой</param>
         protected void ShowRoute(TrackFile route, GMapOverlay overlay)
         {
-            if (tracks == null)
-                tracks = new TrackFileList();
-            if (!tracks.Contains(route))
-                tracks.Add(route);
-            ShowRoute(route, overlay);
+            ShowRoute(route, overlay,true);
         }
 
         /// <summary>
@@ -435,8 +427,11 @@ namespace TrackConverter.UI.Map
             if (route.Color.IsEmpty)
                 route.Color = Vars.Options.Converter.GetColor();
             GMapRoute rr = new GMapRoute(route.GMapPoints, route.Name);
+            rr.IsHitTestVisible = true;
+            rr.IsVisible = true;
             rr.Stroke = new Pen(new SolidBrush(route.Color));
             rr.Stroke.Width = 3;
+            rr.Tag = route;
 
             lay.Routes.Add(rr);
             if (centring)
@@ -444,44 +439,17 @@ namespace TrackConverter.UI.Map
         }
 
         /// <summary>
-        /// удаление маршрута с карты
+        /// удаление заданных точек с карты
         /// </summary>
-        /// <param name="route"></param>
-        protected void DeleteRoute(TrackFile route)
+        /// <param name="tf"></param>
+        protected void DeleteWaypoints(TrackFile tf)
         {
-            if (this.tracks == null || route == null) return;
-            this.tracks.Remove(route);
-            ShowRoutes(tracks, true);
-        }
-
-        /// <summary>
-        /// показать на карте маршруты в базовом слое и добавить в список которых нет
-        /// </summary>
-        /// <param name="tracksList">маршруты</param>
-        /// <param name="isClearBefore">если истина, то перед добавление будут удалены предыдущие маршруты</param>
-        protected void ShowRoutes(TrackFileList tracksList, bool isClearBefore)
-        {
-            if (isClearBefore)
-                baseOverlay.Routes.Clear();
-
-            if (tracks == null)
-                tracks = new TrackFileList();
-
-            foreach (TrackFile tf in tracksList)
-            {
-                if (!tracks.Contains(tf))
-                    tracks.Add(tf);
-                ShowRoute(tf, baseOverlay, false);
-            }
+            foreach (TrackPoint tt in tf)
+                waypoints.Remove(tt);
+            ShowWaypoints(waypoints, true, true);
         }
 
         #endregion
-
-
-        #endregion
-
-        #region конфигурация GMapControlMap
-
 
 
         #endregion

@@ -25,7 +25,6 @@ namespace TrackConverter.Lib.Classes.Options
             this.MapProvider = this.AllProviders[3];
             this.IsFormNavigatorShow = true;
             this.MapLanguange = LanguageType.Russian;
-            this.WinSize = new Size(750,700);
             this.MaxFullSearchNodes = 14;
             this.UseRouterInOptimal = false;
             this.UseBranchBoundsInRecurEnum = false;
@@ -70,7 +69,8 @@ namespace TrackConverter.Lib.Classes.Options
                         new MapProviderRecord(){ Enum = MapProviders.OpenCycleMap, ID=4, Title = "OSM Cycle Map",IconName="\\Images\\maps\\osm_cycle.png" },
                         new MapProviderRecord(){ Enum = MapProviders.YandexHybridMap, ID=5, Title = "Яндекс.Гибрид" ,IconName="\\Images\\maps\\yandex_hibride.png"},
                         new MapProviderRecord(){ Enum = MapProviders.YandexMap, ID=6, Title = "Яндекс.Схема" ,IconName="\\Images\\maps\\yandex_map.png"},
-                        new MapProviderRecord(){ Enum = MapProviders.YandexSatelliteMap, ID=7, Title = "Яндекс.Спутник" ,IconName="\\Images\\maps\\yandex_satellite.png"}
+                        new MapProviderRecord(){ Enum = MapProviders.YandexSatelliteMap, ID=7, Title = "Яндекс.Спутник" ,IconName="\\Images\\maps\\yandex_satellite.png"},
+                        new MapProviderRecord(){ Enum = MapProviders.WikimapiaMap, ID=8, Title = "Карта Викимапии" ,IconName="\\Images\\maps\\wikimapia_map.png"}
                         };
             }
             set { }
@@ -93,11 +93,6 @@ namespace TrackConverter.Lib.Classes.Options
         /// способ построения оптимального маршрута через путевые точки
         /// </summary>
         public OptimalMethodType OptimalRouteMethod { get; set; }
-
-        /// <summary>
-        /// размеры окна
-        /// </summary>
-        public Size WinSize { get; set; }
 
         /// <summary>
         /// максимальное количество узлов, которой можно перебрать полным перебором

@@ -338,7 +338,12 @@ namespace TrackConverter
         /// <summary>
         /// гугл гибрид
         /// </summary>
-        GoogleHybridMap
+        GoogleHybridMap,
+
+        /// <summary>
+        /// карта викимапии
+        /// </summary>
+        WikimapiaMap
     }
 
 

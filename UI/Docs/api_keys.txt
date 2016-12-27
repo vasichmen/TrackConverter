@@ -9,3 +9,5 @@ https://tech.yandex.ru/oauth/doc/dg/tasks/get-oauth-token-docpage/
 Token: AQAAAAAE_Q8AAAOMgZtn3OjmCEJGjMh3rBLSadw
 Life-time: 1 year
 
+Wikimapia Api Key
+244B02D0-CFC2B490-C99B0076-1E8A4D5F-AC77EBE1-7A189E95-DEB54788-778C5624

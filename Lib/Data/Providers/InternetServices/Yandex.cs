@@ -392,7 +392,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         }
 
         /// <summary>
-        /// узнать адрес по координате
+        /// узнать адрес по координате. Если адрес не найден, то null
         /// </summary>
         /// <param name="coordinate"></param>
         /// <returns></returns>
@@ -403,6 +403,10 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                coordinate.Longitude.TotalDegrees.ToString().Replace(Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0], '.') + "," + coordinate.Latitude.TotalDegrees.ToString().Replace(Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0], '.'));
             XmlDocument dc = SendXmlRequest(url);
 
+            XmlNode found = dc.GetElementsByTagName("found")[0];
+            if (found.InnerText == "0")
+                throw new ApplicationException("Яндекс не нашел ни одного объекта");
+
             XmlNode n001 = dc["ymaps"];
             XmlNode n01 = n001["GeoObjectCollection"];
             XmlNode n1 = n01["featureMember"];
@@ -410,8 +414,8 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
             XmlNode n3 = n2["metaDataProperty"];
             XmlNode n4 = n3["GeocoderMetaData"];
             XmlNode n5 = n4["text"];
-
             return n5.InnerText;
+
         }
 
         /// <summary>

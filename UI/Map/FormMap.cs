@@ -58,11 +58,11 @@ namespace TrackConverter.UI.Map
         /// </summary>
         /// <param name="tracksList">список треков для вывода</param>
         /// <param name="waypointsList">списк путевых точек</param>
-        public FormMap(TrackFile waypointsList, TrackFileList tracksList):base()
+        public FormMap(TrackFile waypointsList, TrackFileList tracksList) : base()
         {
             InitializeComponent();
             ConfigureGMapControl();
-           
+
             //запуск таймеров передвижения карты и обновления списка результатов поиск
             moveMapTimer = new System.Timers.Timer(30);
             moveMapTimer.Elapsed += moveMapTimer_Elapsed;
@@ -73,9 +73,6 @@ namespace TrackConverter.UI.Map
             refreshGoToTimer.Elapsed += refreshGoToTimer_Elapsed;
             refreshGoToTimer.AutoReset = true;
             refreshGoToTimer.Start();
-
-            //список отображаемых маршрутов
-            this.tracks = new TrackFileList();
 
             //стек перехода по поиску мест
             this.PositionsStack = new Stack<KeyValuePair<string, Coordinate>>();
@@ -111,20 +108,14 @@ namespace TrackConverter.UI.Map
                 toolStripDropDownButtonMapProvider.DropDownItems.Add(it1);
                 mapProviderToolStripMenuItem.DropDownItems.Add(it2);
             }
-
-            this.tracks = tracksList;
             this.waypoints = waypointsList;
-
-
-            //размеры окна
-            this.Size = Vars.Options.Map.WinSize;
         }
 
 
         /// <summary>
         /// настройки браузера карты
         /// </summary>
-        protected void ConfigureGMapControl()
+        private void ConfigureGMapControl()
         {
 
             #region системные настройки
@@ -181,6 +172,9 @@ namespace TrackConverter.UI.Map
                     break;
                 case MapProviders.YandexSatelliteMap:
                     gmapControlMap.MapProvider = GMapProviders.YandexSatelliteMap;
+                    break;
+                case MapProviders.WikimapiaMap:
+                    gmapControlMap.MapProvider = GMapProviders.WikiMapiaMap;
                     break;
                 default:
                     throw new NotSupportedException("Этот поставщик карты не поддерживается " + Vars.Options.Map.MapProvider.Enum);
@@ -408,7 +402,7 @@ namespace TrackConverter.UI.Map
                         Serializer.Serialize(sf.FileName, gf, FileFormats.KmlFile);
                         break;
                     case 2:
-                        gf = new GeoFile(tracks, waypoints);
+                        gf = new GeoFile(Program.winConverter.Tracks, waypoints);
                         Serializer.Serialize(sf.FileName, gf, FileFormats.KmzFile);
                         break;
                 }
@@ -431,17 +425,14 @@ namespace TrackConverter.UI.Map
             if (Vars.Options.Common.IsSaveDir)
                 of.InitialDirectory = Vars.Options.Common.LastFileLoadDirectory;
 
-            if (of.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            if (of.ShowDialog() == DialogResult.OK)
             {
-                GeoFile gf = new GeoFile(tracks, waypoints);
+                GeoFile gf = new GeoFile();
                 gf = Serializer.DeserializeGeoFile(of.FileName);
                 this.waypoints = gf.Waypoints;
-                this.tracks = gf.Routes;
+                Program.winConverter.AddRouteToList(gf.Routes);
                 Vars.Options.Common.LastFileLoadDirectory = Path.GetDirectoryName(of.FileName);
-                ShowWaypoints(waypoints, baseOverlay, false);
-
-                foreach (TrackFile tf in gf.Routes)
-                    Program.winConverter.AddRouteToList(tf);
+                this.ShowWaypoints(this.waypoints, baseOverlay, false);
             }
         }
 
@@ -476,11 +467,6 @@ namespace TrackConverter.UI.Map
 
                     //вывод на карту
                     this.ShowRoute(this.creatingRoute);
-
-                    //добавление в список маршрутов на карте
-                    if (this.tracks == null)
-                        this.tracks = new TrackFileList();
-                    this.tracks.Add(this.creatingRoute);
                 }
                 else
                     switch (MessageBox.Show(this, "Отменить создание маршрута? Все именения будут потеряны!", "Внимание!", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1))
@@ -603,6 +589,9 @@ namespace TrackConverter.UI.Map
                 case MapProviders.YandexSatelliteMap:
                     gmapControlMap.MapProvider = GMapProviders.YandexSatelliteMap;
                     break;
+                case MapProviders.WikimapiaMap:
+                    gmapControlMap.MapProvider = GMapProviders.WikiMapiaMap;
+                    break;
                 default:
                     throw new NotSupportedException("Этот поставщик карты не поддерживается " + mpr.Enum);
             }
@@ -642,9 +631,6 @@ namespace TrackConverter.UI.Map
             fromToOverlay.Routes.Clear();
             baseOverlay.Routes.Clear();
             selectedRouteOverlay.Routes.Clear();
-
-            if (tracks != null)
-                tracks.Clear();
         }
 
         /// <summary>
@@ -764,8 +750,6 @@ namespace TrackConverter.UI.Map
         {
             if (waypoints == null)
                 waypoints = new TrackFile();
-            if (tracks == null)
-                tracks = new TrackFileList();
             if (waypoints.Count < 2)
             {
                 MessageBox.Show(this, "Необходимо добавить на карту не менее двух точек", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -786,23 +770,16 @@ namespace TrackConverter.UI.Map
         /// <param name="e"></param>
         private void routeToPointsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (tracks == null)
-            {
-                tracks = new TrackFileList();
-                tracks.Add(Vars.currentSelectedTrack);
-            }
-            if (tracks.GetMaxTrack() > 1000)
+            if (Program.winConverter.Tracks.GetMaxTrack() > 1000)
             {
                 MessageBox.Show(this, "Количество точек в маршруте не должно быть больше 1000", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
             if (waypoints == null)
                 waypoints = new TrackFile();
-            foreach (TrackFile tf in tracks)
+            foreach (TrackFile tf in Program.winConverter.Tracks)
                 waypoints.Add(tf);
             ShowWaypoints(waypoints, baseOverlay, false);
-            baseOverlay.Routes.Clear();
-            tracks = null;
         }
 
         /// <summary>
@@ -899,9 +876,7 @@ namespace TrackConverter.UI.Map
                                 //вывод на карту
                                 this.ShowRoute(this.creatingRoute);
                                 //добавление в список маршрутов на карте
-                                if (this.tracks == null)
-                                    this.tracks = new TrackFileList();
-                                this.tracks.Add(tf);
+                                Program.winConverter.AddRouteToList(route);
                             }
                             else
                                 switch (MessageBox.Show(this, "Отменить создание маршрута? Все именения будут потеряны!", "Внимание!", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1))
@@ -916,8 +891,6 @@ namespace TrackConverter.UI.Map
                         else
                         {
                             //если не надо открывать мршрут
-                            if (tracks == null) tracks = new TrackFileList();
-                            tracks.Add(route);
                             Program.winConverter.AddRouteToList(route);
                             ShowRoute(route);
                         }
@@ -940,6 +913,8 @@ namespace TrackConverter.UI.Map
         }
 
 
+
+
         #endregion
 
 
@@ -958,7 +933,15 @@ namespace TrackConverter.UI.Map
         {
             TrackPoint tt = new TrackPoint(pointClicked);
             tt.Icon = IconOffsets.what_there;
-            tt.Name = new GeoCoder(Vars.Options.DataSources.GeoCoderProvider).GetAddress(pointClicked);
+            try
+            {
+                tt.Name = new GeoCoder(Vars.Options.DataSources.GeoCoderProvider).GetAddress(pointClicked);
+            }
+            catch (ApplicationException exx)
+            {
+                MessageBox.Show(this, "Не удалось получить информацию, причина:\r\n" + exx.Message + "\r\nПопробуйте другой геокодер", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                return;
+            }
             ShowWaypoint(tt, baseOverlay, Resources.what_there, MarkerTypes.WhatThere, MarkerTooltipMode.Always);
         }
 
@@ -1077,7 +1060,8 @@ namespace TrackConverter.UI.Map
             if (MessageBox.Show(this, "Вы действительно хотите удалить этот маркер?", "Внимание!", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
             {
                 baseOverlay.Markers.Remove(markerClicked);
-                waypoints.Remove(markerClicked.Tag.Info);
+                if (waypoints != null)
+                    waypoints.Remove(markerClicked.Tag.Info);
 
                 UpdateUndoButton();
                 LastEditsStack.Push(
@@ -1098,6 +1082,31 @@ namespace TrackConverter.UI.Map
 
         #endregion
 
+        #region на маршруте
+
+
+        private void EditRouteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (routeClicked.Tag != null)
+            {
+                TrackFile tf = routeClicked.Tag as TrackFile;
+                BeginEditRoute(tf,
+                    new Action<TrackFile>((track) =>
+                    {
+                        baseOverlay.Routes.Remove(routeClicked);
+                        Program.winConverter.RemoveTrack(tf);
+                        Program.winConverter.AddRouteToList(track);
+                    })
+                    );
+            }
+        }
+
+        private void RemoveRouteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        #endregion
 
         #endregion
 
@@ -1211,12 +1220,16 @@ namespace TrackConverter.UI.Map
             {
                 Vars.Options.Map.LastCenterPoint = gmapControlMap.Position;
                 Vars.Options.Map.IsFormNavigatorShow = !Program.winNavigatorNullOrDisposed;
-                Vars.Options.Map.WinSize = this.Size;
                 this.refreshGoToTimer.Stop();
+                this.moveMapTimer.Stop();
             }
         }
 
-
+        /// <summary>
+        /// загрузка последних маршрутов на карте
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void FormMap_Load(object sender, EventArgs e)
         {
             GeoFile gf = null;
@@ -1232,12 +1245,12 @@ namespace TrackConverter.UI.Map
             }
 
             //обновление списка отображаемых маршрутов
-            if (tracks != null)
-                ShowRoutes(tracks, true);
+            if (Program.winConverter.Tracks != null)
+                this.RefreshData();
             //загрузка сохраненных маршрутов с послденего запуска
             else
              if (gf != null)
-                ShowRoutes(gf.Routes, true);
+                Program.winConverter.AddRouteToList(gf.Routes);
 
             //обновление путевых точек
             if (waypoints != null)
@@ -1578,17 +1591,19 @@ namespace TrackConverter.UI.Map
             //если не происходило перемещение маркера и не происходит создание маршрута и не линейка
             if (!isMarkerMoving && !isCreatingRoute && !isRuling && item.Tag.Type != MarkerTypes.WhatThere && e.Button == MouseButtons.Left)
             {
-                markerClicked = item as MapMarker;
+                markerClicked = item;
                 isMarkerClicked = true;
                 editMarkerToolStripMenuItem_Click(null, e);
+                return;
             }
 
             //открытие контекстного меню по пкм
             //если не передвижение маркера и не создание маршрута и правая кнопка мыши то вывод меню маркера
             if (!isMarkerMoving && item.Tag.Type != MarkerTypes.CreatingRoute && e.Button == MouseButtons.Right)
             {
-                markerClicked = item as MapMarker;
+                markerClicked = item;
                 contextMenuStripMarker.Show(new Point(e.X, e.Y));
+                return;
             }
 
             //выделение нажатого маркера при создании маршрута
@@ -1613,6 +1628,36 @@ namespace TrackConverter.UI.Map
                     }
                 }
             }
+
+        }
+
+        /// <summary>
+        /// нажатие на маршрут
+        /// </summary>
+        /// <param name="item">маршрут, который был нажат</param>
+        /// <param name="e">параметры OnClick</param>
+        private void gmapControlMap_OnRouteClick(GMapRoute item, MouseEventArgs e)
+        {
+            //выделение по лкм
+            if (e.Button == MouseButtons.Left)
+            {
+                if (item.Tag != null)
+                {
+                    TrackFile tf = item.Tag as TrackFile;
+                    Vars.currentSelectedTrack = tf;
+                    Program.RefreshWindows(this);
+                }
+                return;
+            }
+
+            //контекстное меню по правой кнопке
+            if (e.Button == MouseButtons.Right)
+            {
+                routeClicked = item;
+                contextMenuStripRoute.Show(new Point(e.X, e.Y));
+                return;
+            }
+
 
         }
 
@@ -1878,7 +1923,8 @@ namespace TrackConverter.UI.Map
                 //построение маршрута
                 GeoRouter gr = new GeoRouter(Vars.Options.Services.PathRouteProvider);
                 TrackFile rt = gr.CreateRoute(fromPoint.Coordinates, toPoint.Coordinates, IntermediatePoints);
-                if (rt == null) {
+                if (rt == null)
+                {
                     MessageBox.Show("Не удалось проложить маршрут через заданные точки");
                     return;
                 }
@@ -1911,8 +1957,6 @@ namespace TrackConverter.UI.Map
                 else
                 {
                     //если не надо открывать мршрут
-                    if (tracks == null) tracks = new TrackFileList();
-                    tracks.Add(rt);
                     Program.winConverter.AddRouteToList(rt);
                     Vars.currentSelectedTrack = rt;
                     RefreshData();
@@ -1948,21 +1992,21 @@ namespace TrackConverter.UI.Map
         }
 
         /// <summary>
-        /// показать заданный маршрут. Если маршрута нет в списке машрутов карты то добавляет в общий список
+        /// удаление точек из списка путевых точек
         /// </summary>
-        /// <param name="route">маршрут</param>
-        internal new void ShowRoute(TrackFile route)
+        /// <param name="tf"></param>
+        internal new void DeleteWaypoints(TrackFile tf)
         {
-            base.ShowRoute(route);
+            base.DeleteWaypoints(tf);
         }
 
         /// <summary>
-        /// удаление маршрута с карты
+        /// показать заданный маршрут. Если маршрута нет в списке машрутов карты то добавляет в общий список
         /// </summary>
-        /// <param name="route"></param>
-        internal new void DeleteRoute(TrackFile route)
+        /// <param name="route">маршрут</param>
+        private new void ShowRoute(TrackFile route)
         {
-            base.DeleteRoute(route);
+            base.ShowRoute(route);
         }
 
         /// <summary>
@@ -1973,7 +2017,7 @@ namespace TrackConverter.UI.Map
         public void ShowCreatingRoute(GMapOverlay overlay, TrackFile track)
         {
             if (overlay.Id != rulerRouteOverlayID && overlay.Id != creatingRouteOverlayID)
-                throw new ArgumentException("Попытка вывода создаваемого маршрута на чужой слой: "+overlay.Id,"overlay");
+                throw new ArgumentException("Попытка вывода создаваемого маршрута на чужой слой: " + overlay.Id, "overlay");
 
             track.CalculateAll();
             overlay.Clear();
@@ -2043,13 +2087,6 @@ namespace TrackConverter.UI.Map
             if (isCreatingRoute)
                 Program.winRouteEditor.Close();
 
-            //если заднный для редактирования маршрут уже есть на карте, то удаляем
-            if (tracks != null && tracks.Contains(trackFile))
-            {
-                tracks.Remove(trackFile);
-                ShowRoutes(this.tracks, true);
-            }
-
             //открываем маршрут для редактирования
             creatingRoute = trackFile;
             creatingRouteOverlay.Clear();
@@ -2083,7 +2120,7 @@ namespace TrackConverter.UI.Map
         /// </summary>
         public void Clear()
         {
-            clearAllToolStripMenuItem_Click(null,null);
+            clearAllToolStripMenuItem_Click(null, null);
         }
 
         /// <summary>
@@ -2101,6 +2138,11 @@ namespace TrackConverter.UI.Map
                     return true;
                 }
 
+            TrackFileList tracks = new TrackFileList();
+            foreach (TrackFile tf in Program.winConverter.Tracks)
+                if (tf.IsVisible)
+                    tracks.Add(tf);
+
             GeoFile gf = new GeoFile(tracks, waypoints);
             Serializer.Serialize(Application.StartupPath + Resources.saveLast_file, gf, FileFormats.KmlFile);
 
@@ -2108,17 +2150,27 @@ namespace TrackConverter.UI.Map
         }
 
         /// <summary>
-        /// обновление данных выделенного трека
+        /// обновление списка маршрутов и выделенного трека и показываемы маршрутов
         /// </summary>
         public void RefreshData()
         {
             DeselectPoints();
             selectedRouteOverlay.Clear();
+            baseOverlay.Routes.Clear();
+
+            foreach (TrackFile tf in Program.winConverter.showingRoutesList)
+                ShowRoute(tf, baseOverlay, false);
+
             if (Vars.currentSelectedTrack != null)
-                ShowRoute(Vars.currentSelectedTrack, selectedRouteOverlay);
+                ShowRoute(Vars.currentSelectedTrack, selectedRouteOverlay, true);
         }
+
 
         #endregion
 
+        private void contextMenuStripMarker_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            editMarkerToolStripMenuItem.Visible = markerClicked.Tag.Type != MarkerTypes.WhatThere;
+        }
     }
 }

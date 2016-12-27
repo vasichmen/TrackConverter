@@ -456,6 +456,7 @@ namespace TrackConverter.UI.Tools
 
             //Создаем ярлык
             shortcut.Save();
+            MessageBox.Show("Ярлык создан!");
         }
 
         /// <summary>

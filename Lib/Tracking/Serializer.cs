@@ -1553,11 +1553,6 @@ namespace TrackConverter.Lib.Tracking
             XmlDocument xml = new XmlDocument();
             xml.Load(FileName);
             res = KmlHelper.CheckFolder(xml.DocumentElement);
-            foreach (TrackFile tf in res.Routes)
-            {
-                tf.FilePath = FileName;
-                tf.FileName = Path.GetFileNameWithoutExtension(FileName);
-            }
             return res;
         }
 

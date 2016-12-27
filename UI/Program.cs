@@ -166,8 +166,8 @@ namespace TrackConverter.UI
         [STAThread]
         static void Main(string[] args)
         {
-            try
-            {
+            //try
+            //{
                 #region система
 
                 //установка параметров отображения
@@ -262,21 +262,21 @@ namespace TrackConverter.UI
                 //запуск основного окна
                 Application.Run(winMain);
 
-            }
-            catch (Exception ex) //запись ошибки в лог
-            {
-                MessageBox.Show(null, ex.Message, "Ошибка при запуске или неисправимая ошибка приложения", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                string file = Application.StartupPath + Resources.crash_file;
-                StreamWriter sw = new StreamWriter(file, true);
-                sw.WriteLine(ex.Message);
-                sw.WriteLine(ex.StackTrace);
-                sw.WriteLine("Дополнительная информация: " + ex.HelpLink);
-                sw.WriteLine(DateTime.Now.ToString());
-                sw.WriteLine();
-                sw.WriteLine("-------------------------------");
-                sw.Close();
-                return;
-            }
+            //}
+            //catch (Exception ex) //запись ошибки в лог
+            //{
+            //    MessageBox.Show(null, ex.Message, "Ошибка при запуске или неисправимая ошибка приложения", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            //    string file = Application.StartupPath + Resources.crash_file;
+            //    StreamWriter sw = new StreamWriter(file, true);
+            //    sw.WriteLine(ex.Message);
+            //    sw.WriteLine(ex.StackTrace);
+            //    sw.WriteLine("Дополнительная информация: " + ex.HelpLink);
+            //    sw.WriteLine(DateTime.Now.ToString());
+            //    sw.WriteLine();
+            //    sw.WriteLine("-------------------------------");
+            //    sw.Close();
+            //    return;
+            //}
         }
 
         /// <summary>
@@ -291,7 +291,7 @@ namespace TrackConverter.UI
             if (sender != winPoints)
                 winPoints.RefreshData();
             if (sender.GetType() != typeof(FormConverter))
-                winConverter.RefreshSelectedTrack();
+                winConverter.RefreshData();
         }
 
         /// <summary>

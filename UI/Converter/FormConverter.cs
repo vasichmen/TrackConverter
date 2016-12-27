@@ -28,6 +28,17 @@ namespace TrackConverter.UI.Converter
         public TrackFileList Tracks;
 
         /// <summary>
+        /// список маршрутов, выводимый на карте постоянной
+        /// </summary>
+        public TrackFileList showingRoutesList;
+
+        /// <summary>
+        /// список путевый точек, выводимых на карте постоянно
+        /// </summary>
+        private TrackFileList showingWaypointsList;
+
+
+        /// <summary>
         /// открываемый файл при запуске приложения (для асинхронной загрузки файла)
         /// </summary>
         private string openingFile = null;
@@ -39,7 +50,8 @@ namespace TrackConverter.UI.Converter
         {
             InitializeComponent();
             Tracks = new TrackFileList();
-            this.Size = Vars.Options.Converter.WinSize;
+            showingRoutesList = new TrackFileList();
+            showingWaypointsList = new TrackFileList();
             RefreshRecentFiles(); //обновление писка последних загруженных файлов
         }
 
@@ -61,14 +73,14 @@ namespace TrackConverter.UI.Converter
                             this.Tracks = gf.Routes;
                             Program.winMap.Clear();
                             Program.winMap.ShowWaypoints(gf.Waypoints, true, true);
-                            OpenFile(null, true);
+                            RefreshData();
                         }
                         else
                         {
                             if (Path.GetExtension(args[0]) == ".adrs")
                                 openingFile = args[0];
                             else
-                                OpenFile(args[0], false);
+                                OpenFile(args[0]);
                         }
                         Vars.currentSelectedTrack = this.Tracks.Count > 0 ? Tracks[0] : null;
                         Program.RefreshWindows(this);
@@ -95,7 +107,6 @@ namespace TrackConverter.UI.Converter
         {
             Vars.Options.Converter.IsFormMapShow = Program.winMap.Visible;
             Vars.Options.Converter.LastLoadedTracks = this.Tracks.FilePaths;
-            Vars.Options.Converter.WinSize = this.Size;
         }
 
         /// <summary>
@@ -115,7 +126,7 @@ namespace TrackConverter.UI.Converter
             if (this.Tracks == null || this.Tracks.Count == 0)
             {
                 this.Tracks = Serializer.DeserializeTrackFileList(Vars.Options.Converter.LastLoadedTracks);
-                this.OpenFile(null, true);
+                RefreshData();
             }
 
 
@@ -177,14 +188,13 @@ namespace TrackConverter.UI.Converter
                 of.Filter += "|Файл Excel(*.csv)|*.csv";
                 of.Filter += "|Текстовый файл(*.txt)|*.txt";
 
-
                 if (Vars.Options.Common.IsLoadDir)
                     of.InitialDirectory = Vars.Options.Common.LastFileLoadDirectory;
                 of.Multiselect = true;
                 of.RestoreDirectory = false;
                 if (of.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                     foreach (string fn in of.FileNames)
-                        OpenFile(fn, false);
+                        OpenFile(fn);
             }
             catch (Exception ex) { MessageBox.Show(this, ex.Message, "Ошибка!", MessageBoxButtons.OK, MessageBoxIcon.Error); }
         }
@@ -201,10 +211,7 @@ namespace TrackConverter.UI.Converter
                 FormReadText of = new FormReadText(DialogType.ReadText, "Введите ссылку на маршрут: ", "", false, false, false, false);
                 if (of.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 {
-                    TrackFile tf = new TrackFile();
-                    tf = Serializer.DeserializeTrackFile(of.Result);
-                    Tracks.Add(tf);
-                    OpenFile(null, true);
+                    OpenLink(of.Result);
                 }
             }
             catch (Exception ex) { MessageBox.Show(this, ex.Message, "Ошибка!", MessageBoxButtons.OK, MessageBoxIcon.Error); }
@@ -627,31 +634,51 @@ namespace TrackConverter.UI.Converter
             if (sender.GetType() == typeof(ContextMenuStrip))
             {
                 ContextMenuStrip menu = (ContextMenuStrip)sender;
-
                 //если не выделено ни одного элемента, то не выводим меню
                 if (dataGridView1.SelectedRows.Count < 1)
-                    e.Cancel = true;
-
-                foreach (ToolStripMenuItem item in menu.Items)
                 {
-                    if (item.HasDropDownItems) //если у пункта есть дочерние элементы
-                        this.contextMenuStripDGW_Opening(item, null);
-                    if ((string)item.Tag == "single")
-                        item.Visible = dataGridView1.SelectedRows.Count == 1;
+                    e.Cancel = true;
+                    return;
                 }
+                prepareToolStripMenuItemList(menu.Items);
             }
 
             //если элемент - пункт с дочерними элементами, то выбираем пункты
             if (sender.GetType() == typeof(ToolStripMenuItem))
             {
                 ToolStripMenuItem menu = (ToolStripMenuItem)sender;
-                foreach (ToolStripMenuItem item in menu.DropDownItems)
+                prepareToolStripMenuItemList(menu.DropDownItems);
+            }
+        }
+
+        /// <summary>
+        /// подготовка списка пунктов контекстного меню маршрута перед открытием
+        /// </summary>
+        /// <param name="items"></param>
+        private void prepareToolStripMenuItemList(ToolStripItemCollection items)
+        {
+            foreach (ToolStripMenuItem item in items)
+            {
+                if (item.HasDropDownItems)  //если у пункта есть дочерние элементы
                 {
-                    if (item.HasDropDownItems)  //если у пункта есть дочерние элементы
-                        this.contextMenuStripDGW_Opening(item, null);
-                    if ((string)item.Tag == "single")
-                        item.Visible = dataGridView1.SelectedRows.Count == 1;
+                    prepareToolStripMenuItemList(item.DropDownItems);
+                    continue;
                 }
+
+                if ((string)item.Tag == "single")
+                    item.Visible = dataGridView1.SelectedRows.Count == 1;
+
+                if (item.Name == "showWaypointsToolStripMenuItem" || item.Name == "showOnMapToolStripMenuItem")
+                    if (dataGridView1.SelectedRows.Count == 1)
+                    {
+                        TrackFile tf = Tracks[dataGridView1.SelectedRows[0].Index];
+                        if (item.Name == "showWaypointsToolStripMenuItem")
+                            item.Checked = showingWaypointsList.Contains(tf);
+                        if (item.Name == "showOnMapToolStripMenuItem")
+                            item.Checked = showingRoutesList.Contains(tf);
+                    }
+                    else
+                        item.CheckState = CheckState.Indeterminate;
             }
         }
 
@@ -682,10 +709,10 @@ namespace TrackConverter.UI.Converter
             {
                 int row = dgvr.Index;
                 TrackFile tttt = Tracks[row];
-                Program.winMap.DeleteRoute(tttt);
+                this.DeleteRoute(tttt);
                 Tracks.Remove(tttt);
             }
-            OpenFile(null, true);
+            RefreshData();
             if (dataGridView1.SelectedRows.Count > 0)
                 Vars.currentSelectedTrack = Tracks[dataGridView1.SelectedRows[0].Index];
             else
@@ -710,7 +737,7 @@ namespace TrackConverter.UI.Converter
             if (fti.ShowDialog() == DialogResult.OK)
             {
                 Tracks[row] = fti.Result;
-                OpenFile(null, true);
+                RefreshData();
 
                 Vars.currentSelectedTrack = Tracks[row];
                 Program.RefreshWindows(this);
@@ -734,7 +761,7 @@ namespace TrackConverter.UI.Converter
             TrackFile backup = Tracks[row].Clone(); //запоминаем старый маршрут
             TrackFile ed = Tracks[row].Clone(); //новый маршрут для редактирования
             Tracks.RemoveAt(row); //удаление из списка
-            OpenFile(null, true);
+            RefreshData();
             //начало редактирования
             Program.winMap.BeginEditRoute(ed,
                 (tf) =>
@@ -744,8 +771,7 @@ namespace TrackConverter.UI.Converter
                 () =>
                 {
                     backup.CalculateAll();
-                    Tracks.Add(backup);
-                    OpenFile(null, true);
+                    AddRouteToList(backup);
                 }
                 );
             Vars.currentSelectedTrack = null;
@@ -757,15 +783,22 @@ namespace TrackConverter.UI.Converter
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void showOnMapToolStripMenuItem_Click(object sender, EventArgs e)
+        private void showRouteOnMapToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            foreach (DataGridViewRow dgvr in dataGridView1.SelectedRows)
+            foreach (DataGridViewRow r in dataGridView1.SelectedRows)
             {
-                int row = dgvr.Index;
-                TrackFile tf = Tracks[row];
-                if (tf.Color.IsEmpty)
-                    tf.Color = Vars.Options.Converter.GetColor();
-                Program.winMap.ShowRoute(Tracks[row]);
+
+                TrackFile tf = Tracks[r.Index];
+                if (showingRoutesList.Contains(tf))
+                    showingRoutesList.Remove(tf);
+                else
+                {
+                    if (tf.Color.IsEmpty)
+                        tf.Color = Vars.Options.Converter.GetColor();
+                    showingRoutesList.Add(tf);
+                }
+                tf.IsVisible = !tf.IsVisible;
+                Program.winMap.RefreshData();
             }
         }
 
@@ -840,10 +873,22 @@ namespace TrackConverter.UI.Converter
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void showWaypointsToolStripMenuItem_Click(object sender, EventArgs e)
+        private void showWaypointsOnMapToolStripMenuItem_Click(object sender, EventArgs e)
         {
             foreach (DataGridViewRow r in dataGridView1.SelectedRows)
-                Program.winMap.ShowWaypoints(Tracks[r.Index], false, true);
+            {
+                TrackFile tf = Tracks[r.Index];
+                if (showingWaypointsList.Contains(tf))
+                {
+                    showingWaypointsList.Remove(tf);
+                    Program.winMap.DeleteWaypoints(tf);
+                }
+                else
+                {
+                    showingWaypointsList.Add(tf);
+                    Program.winMap.ShowWaypoints(tf, false, true);
+                }
+            }
         }
 
         /// <summary>
@@ -1049,13 +1094,23 @@ namespace TrackConverter.UI.Converter
             {
                 string[] s = (string[])e.Data.GetData(DataFormats.FileDrop, false);
                 foreach (string ss in s)
-                    OpenFile(ss, false);
+                    OpenFile(ss);
             }
             else if (e.Data.GetDataPresent(DataFormats.UnicodeText))
             {
                 string s = (string)e.Data.GetData(DataFormats.UnicodeText, false);
                 this.OpenLink(s);
             }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="tf"></param>
+        internal void RemoveTrack(TrackFile tf)
+        {
+            Tracks.Remove(tf);
+            RefreshData();
         }
 
 
@@ -1186,7 +1241,7 @@ namespace TrackConverter.UI.Converter
             ToolStripMenuItem item = (ToolStripMenuItem)sender;
             try
             {
-                OpenFile((string)item.Tag, false);
+                OpenFile((string)item.Tag);
             }
             catch (Exception ex)
             {
@@ -1195,6 +1250,7 @@ namespace TrackConverter.UI.Converter
                 RefreshRecentFiles();
             }
         }
+
 
         /// <summary>
         /// обновление списка последних загруженных файлов
@@ -1243,32 +1299,61 @@ namespace TrackConverter.UI.Converter
             if (trackFile.Color.IsEmpty)
                 trackFile.Color = Vars.Options.Converter.GetColor();
             Tracks.Add(trackFile);
-            OpenFile(null, true);
+            RefreshData();
+        }
+
+        /// <summary>
+        /// добавление нескольких маршрутов в список
+        /// </summary>
+        /// <param name="routes"></param>
+        internal void AddRouteToList(TrackFileList routes)
+        {
+            foreach (TrackFile tf in routes)
+                AddRouteToList(tf);
+        }
+
+        /// <summary>
+        /// удаление маршрута из списка
+        /// </summary>
+        /// <param name="route"></param>
+        private void DeleteRoute(TrackFile route)
+        {
+            Tracks.Remove(route);
+            Program.RefreshWindows(this);
         }
 
         /// <summary>
         /// завершение редактирования маршрута
         /// </summary>
-        /// <param name="track"></param>
-        public void EndEditRoute(TrackFile track)
+        /// <param name="route"></param>
+        public void EndEditRoute(TrackFile route)
         {
-            if (track == null)
+            if (route == null)
                 return;
-            Tracks.Add(track);
-            OpenFile(null, true);
+            Vars.currentSelectedTrack = route;
+            AddRouteToList(route);
         }
 
         /// <summary>
-        /// обновление информации выделенного трека на Vars.currentSelectedTrack
+        /// обновление информации
         /// </summary>
-        internal void RefreshSelectedTrack()
+        internal void RefreshData()
         {
-            if (dataGridView1.SelectedRows.Count == 1 && Vars.currentSelectedTrack != null)
+            dataGridView1.DataSource = null;
+            dataGridView1.DataSource = Tracks.Source;
+            dataGridView1.Refresh();
+
+            foreach (DataGridViewColumn column in dataGridView1.Columns)
+                column.SortMode = DataGridViewColumnSortMode.NotSortable;
+
+            RefreshRecentFiles(); //обновление списка последних файлов
+            dataGridView1.ClearSelection();
+
+            if (Vars.currentSelectedTrack != null)
             {
-                Vars.currentSelectedTrack.CalculateAll();
-                int ind = dataGridView1.SelectedRows[0].Index;
-                Tracks[ind] = Vars.currentSelectedTrack;
-                OpenFile(null, true);
+                int ind = Tracks.IndexOf(Vars.currentSelectedTrack);
+                if (ind == -1) return;
+                dataGridView1.Rows[ind].Selected = true;
             }
         }
 
@@ -1276,35 +1361,15 @@ namespace TrackConverter.UI.Converter
         /// открытие файла 
         /// </summary>
         /// <param name="FileName"> имя файла</param>
-        /// <param name="OnlyRefreshUI"> Если истина, то будет обновлен только внешний вид, настройки не будут затронуты.
-        /// (при загрузке ссылок)</param>
-        public void OpenFile(string FileName, bool OnlyRefreshUI)
+        public void OpenFile(string FileName)
         {
-            if (!OnlyRefreshUI)
-            {
-                TrackFile tf = new TrackFile();
-                Tracks.AddRange(Serializer.DeserializeTrackFileList(FileName));
-                Vars.Options.Converter.AddRecentFile(FileName);//добавление последнего файла
-                Vars.Options.Common.LastFileLoadDirectory = Path.GetDirectoryName(FileName); //послденяя открытая папка
-            }
-
-            dataGridView1.DataSource = null;
-            dataGridView1.DataSource = Tracks.Source;
-            dataGridView1.Refresh();
-
-            foreach (DataGridViewColumn column in dataGridView1.Columns)
-            {
-                column.SortMode = DataGridViewColumnSortMode.NotSortable;
-            }
-
-            SaveToolStripMenuItem.Enabled = true;
-            RefreshRecentFiles(); //обновление списка последних файлов
-            dataGridView1.ClearSelection();
-
-            if (!OnlyRefreshUI)
-                if (dataGridView1.Rows.Count != 0)
-                    dataGridView1.Rows[Tracks.Count - 1].Selected = true;
-
+            TrackFileList tfl = Serializer.DeserializeTrackFileList(FileName);
+            AddRouteToList(tfl);
+            Vars.Options.Converter.AddRecentFile(FileName);//добавление последнего файла
+            Vars.Options.Common.LastFileLoadDirectory = Path.GetDirectoryName(FileName); //послденяя открытая папка
+            if (tfl.Count > 0)
+                Vars.currentSelectedTrack = tfl[0];
+            RefreshData();
         }
 
         /// <summary>
@@ -1315,8 +1380,7 @@ namespace TrackConverter.UI.Converter
         {
             TrackFile tf = new TrackFile();
             tf = Serializer.DeserializeTrackFile(link);
-            Tracks.Add(tf);
-            OpenFile(null, true);
+            AddRouteToList(tf);
         }
 
         #endregion

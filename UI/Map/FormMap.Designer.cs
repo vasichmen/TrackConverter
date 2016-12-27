@@ -1,4 +1,6 @@
 ﻿using System;
+using GMap.NET.WindowsForms;
+
 namespace TrackConverter.UI.Map
 {
     partial class FormMap
@@ -76,7 +78,7 @@ namespace TrackConverter.UI.Map
             this.editWaypointsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.elevationGraphRouteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.createOptimalRouteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.gmapControlMap = new GMap.NET.WindowsForms.GMapControl();
+            this.gmapControlMapCunstructorField = new GMap.NET.WindowsForms.GMapControl();
             this.contextMenuStripMap = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolStripMenuItemAddWaypoint = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemWhatsThere = new System.Windows.Forms.ToolStripMenuItem();
@@ -105,12 +107,16 @@ namespace TrackConverter.UI.Map
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripButtonRuler = new System.Windows.Forms.ToolStripButton();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.contextMenuStripRoute = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.EditRouteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.RemoveRouteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.contextMenuStripMap.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.contextMenuStripMarker.SuspendLayout();
             this.toolStrip2.SuspendLayout();
+            this.contextMenuStripRoute.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -143,7 +149,7 @@ namespace TrackConverter.UI.Map
             this.saveFileWaypointsRoutesToolStripMenuItem});
             this.сохранитьToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("сохранитьToolStripMenuItem.Image")));
             this.сохранитьToolStripMenuItem.Name = "сохранитьToolStripMenuItem";
-            this.сохранитьToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
+            this.сохранитьToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.сохранитьToolStripMenuItem.Text = "Сохранить";
             // 
             // saveFileWaypointsToolStripMenuItem
@@ -169,7 +175,7 @@ namespace TrackConverter.UI.Map
             this.createRouteToolStripMenuItem});
             this.создатьToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("создатьToolStripMenuItem.Image")));
             this.создатьToolStripMenuItem.Name = "создатьToolStripMenuItem";
-            this.создатьToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
+            this.создатьToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.создатьToolStripMenuItem.Text = "Создать";
             // 
             // createRouteToolStripMenuItem
@@ -187,7 +193,7 @@ namespace TrackConverter.UI.Map
             this.loadWaypointsToolStripMenuItem1});
             this.открытьToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("открытьToolStripMenuItem.Image")));
             this.открытьToolStripMenuItem.Name = "открытьToolStripMenuItem";
-            this.открытьToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
+            this.открытьToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.открытьToolStripMenuItem.Text = "Открыть ";
             // 
             // openFileWaypointsRoutesToolStripMenuItem
@@ -265,6 +271,7 @@ namespace TrackConverter.UI.Map
             this.selParallelogramToolStripMenuItem,
             this.selRouteToolStripMenuItem,
             this.selPolygonToolStripMenuItem});
+            this.selectMapToolStripMenuItem.Enabled = false;
             this.selectMapToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("selectMapToolStripMenuItem.Image")));
             this.selectMapToolStripMenuItem.Name = "selectMapToolStripMenuItem";
             this.selectMapToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
@@ -411,49 +418,50 @@ namespace TrackConverter.UI.Map
     "но попасть только один раз";
             this.createOptimalRouteToolStripMenuItem.Click += new System.EventHandler(this.createOptimalRouteToolStripMenuItem_Click);
             // 
-            // gmapControlMap
+            // gmapControlMapCunstructorField
             // 
-            this.gmapControlMap.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.gmapControlMapCunstructorField.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.gmapControlMap.Bearing = 0F;
-            this.gmapControlMap.CanDragMap = true;
-            this.gmapControlMap.Cursor = System.Windows.Forms.Cursors.Default;
-            this.gmapControlMap.EmptyTileColor = System.Drawing.Color.Lavender;
-            this.gmapControlMap.GrayScaleMode = false;
-            this.gmapControlMap.HelperLineOption = GMap.NET.WindowsForms.HelperLineOptions.DontShow;
-            this.gmapControlMap.LevelsKeepInMemmory = 5;
-            this.gmapControlMap.Location = new System.Drawing.Point(0, 24);
-            this.gmapControlMap.MarkersEnabled = true;
-            this.gmapControlMap.MaxZoom = 21;
-            this.gmapControlMap.MinZoom = 2;
-            this.gmapControlMap.MouseWheelZoomType = GMap.NET.MouseWheelZoomType.MousePositionWithoutCenter;
-            this.gmapControlMap.Name = "gmapControlMap";
-            this.gmapControlMap.NegativeMode = false;
-            this.gmapControlMap.PolygonsEnabled = true;
-            this.gmapControlMap.RetryLoadTile = 0;
-            this.gmapControlMap.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.gmapControlMap.RoutesEnabled = true;
-            this.gmapControlMap.ScaleMode = GMap.NET.WindowsForms.ScaleModes.Fractional;
-            this.gmapControlMap.SelectedAreaFillColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(65)))), ((int)(((byte)(105)))), ((int)(((byte)(225)))));
-            this.gmapControlMap.ShowTileGridLines = false;
-            this.gmapControlMap.Size = new System.Drawing.Size(923, 604);
-            this.gmapControlMap.TabIndex = 0;
-            this.gmapControlMap.Zoom = 5D;
-            this.gmapControlMap.OnMarkerClick += new GMap.NET.WindowsForms.MarkerClick(this.gmapControlMap_OnMarkerClick);
-            this.gmapControlMap.OnSelectionChange += new GMap.NET.WindowsForms.SelectionChange(this.gmapControlMap_OnSelectionChange);
-            this.gmapControlMap.OnMarkerEnter += new GMap.NET.WindowsForms.MarkerEnter(this.gmapControlMap_OnMarkerEnter);
-            this.gmapControlMap.OnMarkerLeave += new GMap.NET.WindowsForms.MarkerLeave(this.gmapControlMap_OnMarkerLeave);
-            this.gmapControlMap.OnPositionChanged += new GMap.NET.PositionChanged(this.gmapControlMap_OnPositionChanged);
-            this.gmapControlMap.OnMapDrag += new GMap.NET.MapDrag(this.gmapControlMap_OnMapDrag);
-            this.gmapControlMap.OnMapZoomChanged += new GMap.NET.MapZoomChanged(this.gmapControlMap_OnMapZoomChanged);
-            this.gmapControlMap.OnMapTypeChanged += new GMap.NET.MapTypeChanged(this.gmapControlMap_OnMapTypeChanged);
-            this.gmapControlMap.KeyUp += new System.Windows.Forms.KeyEventHandler(this.FormMap_KeyUp);
-            this.gmapControlMap.MouseClick += new System.Windows.Forms.MouseEventHandler(this.gmapControlMap_MouseClick);
-            this.gmapControlMap.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.gmapControlMap_MouseDoubleClick);
-            this.gmapControlMap.MouseDown += new System.Windows.Forms.MouseEventHandler(this.gmapControlMap_MouseDown);
-            this.gmapControlMap.MouseMove += new System.Windows.Forms.MouseEventHandler(this.gmapControlMap_MouseMove);
-            this.gmapControlMap.MouseUp += new System.Windows.Forms.MouseEventHandler(this.gmapControlMap_MouseUp);
+            this.gmapControlMapCunstructorField.Bearing = 0F;
+            this.gmapControlMapCunstructorField.CanDragMap = true;
+            this.gmapControlMapCunstructorField.Cursor = System.Windows.Forms.Cursors.Default;
+            this.gmapControlMapCunstructorField.EmptyTileColor = System.Drawing.Color.Lavender;
+            this.gmapControlMapCunstructorField.GrayScaleMode = false;
+            this.gmapControlMapCunstructorField.HelperLineOption = GMap.NET.WindowsForms.HelperLineOptions.DontShow;
+            this.gmapControlMapCunstructorField.LevelsKeepInMemmory = 5;
+            this.gmapControlMapCunstructorField.Location = new System.Drawing.Point(0, 24);
+            this.gmapControlMapCunstructorField.MarkersEnabled = true;
+            this.gmapControlMapCunstructorField.MaxZoom = 21;
+            this.gmapControlMapCunstructorField.MinZoom = 2;
+            this.gmapControlMapCunstructorField.MouseWheelZoomType = GMap.NET.MouseWheelZoomType.MousePositionWithoutCenter;
+            this.gmapControlMapCunstructorField.Name = "gmapControlMapCunstructorField";
+            this.gmapControlMapCunstructorField.NegativeMode = false;
+            this.gmapControlMapCunstructorField.PolygonsEnabled = true;
+            this.gmapControlMapCunstructorField.RetryLoadTile = 0;
+            this.gmapControlMapCunstructorField.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.gmapControlMapCunstructorField.RoutesEnabled = true;
+            this.gmapControlMapCunstructorField.ScaleMode = GMap.NET.WindowsForms.ScaleModes.Fractional;
+            this.gmapControlMapCunstructorField.SelectedAreaFillColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(65)))), ((int)(((byte)(105)))), ((int)(((byte)(225)))));
+            this.gmapControlMapCunstructorField.ShowTileGridLines = false;
+            this.gmapControlMapCunstructorField.Size = new System.Drawing.Size(923, 604);
+            this.gmapControlMapCunstructorField.TabIndex = 0;
+            this.gmapControlMapCunstructorField.Zoom = 5D;
+            this.gmapControlMapCunstructorField.OnMarkerClick += new GMap.NET.WindowsForms.MarkerClick(this.gmapControlMap_OnMarkerClick);
+            this.gmapControlMapCunstructorField.OnRouteClick += new GMap.NET.WindowsForms.RouteClick(this.gmapControlMap_OnRouteClick);
+            this.gmapControlMapCunstructorField.OnSelectionChange += new GMap.NET.WindowsForms.SelectionChange(this.gmapControlMap_OnSelectionChange);
+            this.gmapControlMapCunstructorField.OnMarkerEnter += new GMap.NET.WindowsForms.MarkerEnter(this.gmapControlMap_OnMarkerEnter);
+            this.gmapControlMapCunstructorField.OnMarkerLeave += new GMap.NET.WindowsForms.MarkerLeave(this.gmapControlMap_OnMarkerLeave);
+            this.gmapControlMapCunstructorField.OnPositionChanged += new GMap.NET.PositionChanged(this.gmapControlMap_OnPositionChanged);
+            this.gmapControlMapCunstructorField.OnMapDrag += new GMap.NET.MapDrag(this.gmapControlMap_OnMapDrag);
+            this.gmapControlMapCunstructorField.OnMapZoomChanged += new GMap.NET.MapZoomChanged(this.gmapControlMap_OnMapZoomChanged);
+            this.gmapControlMapCunstructorField.OnMapTypeChanged += new GMap.NET.MapTypeChanged(this.gmapControlMap_OnMapTypeChanged);
+            this.gmapControlMapCunstructorField.KeyUp += new System.Windows.Forms.KeyEventHandler(this.FormMap_KeyUp);
+            this.gmapControlMapCunstructorField.MouseClick += new System.Windows.Forms.MouseEventHandler(this.gmapControlMap_MouseClick);
+            this.gmapControlMapCunstructorField.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.gmapControlMap_MouseDoubleClick);
+            this.gmapControlMapCunstructorField.MouseDown += new System.Windows.Forms.MouseEventHandler(this.gmapControlMap_MouseDown);
+            this.gmapControlMapCunstructorField.MouseMove += new System.Windows.Forms.MouseEventHandler(this.gmapControlMap_MouseMove);
+            this.gmapControlMapCunstructorField.MouseUp += new System.Windows.Forms.MouseEventHandler(this.gmapControlMap_MouseUp);
             // 
             // contextMenuStripMap
             // 
@@ -620,13 +628,14 @@ namespace TrackConverter.UI.Map
             this.editMarkerToolStripMenuItem,
             this.deleteMarkerToolStripMenuItem});
             this.contextMenuStripMarker.Name = "contextMenuStripMarker";
-            this.contextMenuStripMarker.Size = new System.Drawing.Size(129, 48);
+            this.contextMenuStripMarker.Size = new System.Drawing.Size(153, 70);
+            this.contextMenuStripMarker.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStripMarker_Opening);
             // 
             // editMarkerToolStripMenuItem
             // 
             this.editMarkerToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("editMarkerToolStripMenuItem.Image")));
             this.editMarkerToolStripMenuItem.Name = "editMarkerToolStripMenuItem";
-            this.editMarkerToolStripMenuItem.Size = new System.Drawing.Size(128, 22);
+            this.editMarkerToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.editMarkerToolStripMenuItem.Text = "Изменить";
             this.editMarkerToolStripMenuItem.Click += new System.EventHandler(this.editMarkerToolStripMenuItem_Click);
             // 
@@ -634,7 +643,7 @@ namespace TrackConverter.UI.Map
             // 
             this.deleteMarkerToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("deleteMarkerToolStripMenuItem.Image")));
             this.deleteMarkerToolStripMenuItem.Name = "deleteMarkerToolStripMenuItem";
-            this.deleteMarkerToolStripMenuItem.Size = new System.Drawing.Size(128, 22);
+            this.deleteMarkerToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.deleteMarkerToolStripMenuItem.Text = "Удалить";
             this.deleteMarkerToolStripMenuItem.Click += new System.EventHandler(this.deleteMarkerToolStripMenuItem_Click);
             // 
@@ -695,6 +704,28 @@ namespace TrackConverter.UI.Map
             this.toolStripButtonRuler.ToolTipText = "Измерение расстояний";
             this.toolStripButtonRuler.Click += new System.EventHandler(this.toolStripButtonRuler_Click);
             // 
+            // contextMenuStripRoute
+            // 
+            this.contextMenuStripRoute.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.EditRouteToolStripMenuItem,
+            this.RemoveRouteToolStripMenuItem});
+            this.contextMenuStripRoute.Name = "contextMenuStripRoute";
+            this.contextMenuStripRoute.Size = new System.Drawing.Size(155, 48);
+            // 
+            // EditRouteToolStripMenuItem
+            // 
+            this.EditRouteToolStripMenuItem.Name = "EditRouteToolStripMenuItem";
+            this.EditRouteToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
+            this.EditRouteToolStripMenuItem.Text = "Редактировать";
+            this.EditRouteToolStripMenuItem.Click += new System.EventHandler(this.EditRouteToolStripMenuItem_Click);
+            // 
+            // RemoveRouteToolStripMenuItem
+            // 
+            this.RemoveRouteToolStripMenuItem.Name = "RemoveRouteToolStripMenuItem";
+            this.RemoveRouteToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
+            this.RemoveRouteToolStripMenuItem.Text = "Удалить";
+            this.RemoveRouteToolStripMenuItem.Click += new System.EventHandler(this.RemoveRouteToolStripMenuItem_Click);
+            // 
             // FormMap
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -705,7 +736,7 @@ namespace TrackConverter.UI.Map
             this.Controls.Add(this.toolStrip2);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.toolStrip1);
-            this.Controls.Add(this.gmapControlMap);
+            this.Controls.Add(this.gmapControlMapCunstructorField);
             this.Controls.Add(this.menuStrip1);
             this.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
@@ -729,6 +760,7 @@ namespace TrackConverter.UI.Map
             this.contextMenuStripMarker.ResumeLayout(false);
             this.toolStrip2.ResumeLayout(false);
             this.toolStrip2.PerformLayout();
+            this.contextMenuStripRoute.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -752,7 +784,21 @@ namespace TrackConverter.UI.Map
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabelLat;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabelLon;
-      
+
+        /// <summary>
+        /// область карты
+        /// </summary>
+        public override GMapControl gmapControlMap
+        {
+            get
+            {
+                return this.gmapControlMapCunstructorField; 
+            }
+            set
+            {
+                this.gmapControlMapCunstructorField = value;
+            }
+        }
         private System.Windows.Forms.ToolStripMenuItem tmInternetToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem tmCacheToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem tmInternetCacheToolStripMenuItem;
@@ -804,5 +850,9 @@ namespace TrackConverter.UI.Map
         private System.Windows.Forms.ToolStripButton toolStripButtonUndo;
         private System.Windows.Forms.ToolStripMenuItem intermediatePointToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem clearAllToolStripMenuItem;
+        private GMapControl gmapControlMapCunstructorField;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStripRoute;
+        private System.Windows.Forms.ToolStripMenuItem EditRouteToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem RemoveRouteToolStripMenuItem;
     }
 }
