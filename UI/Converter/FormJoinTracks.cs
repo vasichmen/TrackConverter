@@ -40,6 +40,8 @@ namespace TrackConverter.UI.Converter
         {
             if (!tracks.Contains(trackFile))
             {
+                if (trackFile.Name == null)
+                    trackFile.Name = "Имя маршрута";
                 tracks.Add(trackFile);
                 listBoxTracks.Items.Add(trackFile.Name);
             }

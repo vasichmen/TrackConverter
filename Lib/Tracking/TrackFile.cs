@@ -384,12 +384,10 @@ namespace TrackConverter.Lib.Tracking
         /// <returns></returns>
         private TimeSpan CalculateTime()
         {
-            try
-            {
-                //return (Track[Track.Count - 1].Time != null && Track[0].Time != null) ? (Track[Track.Count - 1].Time - Track[0].Time) : TimeSpan.Zero;
+            if (Track.Count <= 1)
+                return new TimeSpan(0);
+            else
                 return Track[Track.Count - 1].Time - Track[0].Time;
-            }
-            catch (Exception) { return new TimeSpan(0); }
         }
 
         #endregion
@@ -404,8 +402,6 @@ namespace TrackConverter.Lib.Tracking
         {
             if (point == null)
                 return;
-            //if (Track.Contains(point))
-            // throw new ApplicationException("Такая точка уже существует!");
             Track.Add(point);
         }
 
@@ -440,17 +436,14 @@ namespace TrackConverter.Lib.Tracking
         /// <summary>
         /// инвертировать трек. Переставить все точки в обратном порядке
         /// </summary>
-        public void Invert()
+        public TrackFile Invert()
         {
             if (this.Count == 0)
-                return;
-            for (int i = 0; i < this.Count / 2; i++)
-            {
-                TrackPoint tt = this[i];
-                this[i] = this[this.Count - i - 1];
-                this[this.Count - 1] = tt;
-            }
-
+                return new TrackFile();
+            TrackFile res = new TrackFile();
+            for (int i =this.Count-1;i>=0; i--)
+                res.Add(this[i]);
+            return res;
         }
 
         /// <summary>
@@ -533,7 +526,7 @@ namespace TrackConverter.Lib.Tracking
         /// Отрезок маршрута между указанными точками
         /// </summary>
         /// <param name="start">номер первой точки</param>
-        /// <param name="end">номр второй точки</param>
+        /// <param name="end">номр последней точки</param>
         /// <returns></returns>
         public TrackFile Subtrack(int start, int end)
         {

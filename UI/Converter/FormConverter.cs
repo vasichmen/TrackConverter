@@ -55,44 +55,6 @@ namespace TrackConverter.UI.Converter
             RefreshRecentFiles(); //обновление писка последних загруженных файлов
         }
 
-        /// <summary>
-        /// Запуск с загрузкой файла
-        /// </summary>
-        /// <param name="args"></param>
-        public FormConverter(string[] args)
-            : this()
-        {
-            try
-            {
-                if (args.Length != 0)
-                    if (File.Exists(args[0]))
-                    {
-                        if (Path.GetExtension(args[0]) == ".kml" || Path.GetExtension(args[0]) == ".kmz")
-                        {
-                            GeoFile gf = Serializer.DeserializeGeoFile(args[0]);
-                            this.Tracks = gf.Routes;
-                            Program.winMap.Clear();
-                            Program.winMap.ShowWaypoints(gf.Waypoints, true, true);
-                            RefreshData();
-                        }
-                        else
-                        {
-                            if (Path.GetExtension(args[0]) == ".adrs")
-                                openingFile = args[0];
-                            else
-                                OpenFile(args[0]);
-                        }
-                        Vars.currentSelectedTrack = this.Tracks.Count > 0 ? Tracks[0] : null;
-                        Program.RefreshWindows(this);
-                    }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(this, ex.Message, "Ошибка!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                Application.Exit(new CancelEventArgs(true));
-            }
-        }
-
 
         #region события
 
@@ -332,6 +294,48 @@ namespace TrackConverter.UI.Converter
                 }
                 Vars.Options.Common.LastFileSaveDirectory = Path.GetDirectoryName(sf.FileName);
                 Vars.Options.Common.LastSaveExtensionNumberSaveOneTrack = sf.FilterIndex;
+            }
+        }
+
+        /// <summary>
+        /// загрузка файлов при запусеке программы из параметров
+        /// </summary>
+        /// <param name="args">параметры командной строки</param>
+        internal void LoadFiles(string[] args)
+        {
+            try
+            {
+                if (args.Length != 0)
+                    foreach(string arg in args)
+                    if (File.Exists(arg))
+                    {
+                        string ext = Path.GetExtension(arg);
+                        switch (ext)
+                        {
+                            case ".kml":
+                            case ".kmz":
+                                GeoFile gf = Serializer.DeserializeGeoFile(arg);
+                                this.Tracks = gf.Routes;
+                                Program.winMap.Clear();
+                                Program.winMap.ShowWaypoints(gf.Waypoints, true, true);
+                                RefreshData();
+                                break;
+                            case ".adrs":
+                                openingFile = arg;
+                                break;
+                            default:
+                                OpenFile(arg);
+                                break;
+                        }
+
+                        Vars.currentSelectedTrack = this.Tracks.Count > 0 ? Tracks[0] : null;
+                        Program.RefreshWindows(this);
+                    }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(this, ex.Message, "Ошибка!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Application.Exit(new CancelEventArgs(true));
             }
         }
 

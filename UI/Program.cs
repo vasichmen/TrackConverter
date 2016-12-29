@@ -222,7 +222,7 @@ namespace TrackConverter.UI
                 winMap = new FormMap() { MdiParent = winMain };
                 winElevVisual = new FormElevVisual(null) { MdiParent = winMain };
                 winPoints = new FormPoints() { MdiParent = winMain };
-                winConverter = new FormConverter(args) { MdiParent = winMain };
+                winConverter = new FormConverter() { MdiParent = winMain };
 
                 //создание окна ожидания
                 winWaiting = new FormWaiting();
@@ -256,6 +256,8 @@ namespace TrackConverter.UI
                 winConverter.Show();
                 winElevVisual.Show();
                 winPoints.Show();
+
+            winConverter.LoadFiles(args);
 
                 #endregion
 

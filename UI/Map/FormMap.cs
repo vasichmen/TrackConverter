@@ -1488,8 +1488,9 @@ namespace TrackConverter.UI.Map
         private void gmapControlMap_MouseMove(object sender, MouseEventArgs e)
         {
             //если курсор за пределами карты, то выход.
-            try { new Coordinate(gmapControlMap.FromLocalToLatLng(e.X, e.Y)); }
-            catch (ArgumentOutOfRangeException) { return; }
+            PointLatLng ll = gmapControlMap.FromLocalToLatLng(e.X, e.Y);
+            if (Math.Abs(ll.Lat) > 90 || Math.Abs(ll.Lng) > 180)
+                return;
 
             //вывод информации о координатах мыши
             Coordinate cr = new Coordinate(gmapControlMap.FromLocalToLatLng(e.X, e.Y));

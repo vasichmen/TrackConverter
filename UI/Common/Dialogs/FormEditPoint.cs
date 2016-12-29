@@ -77,16 +77,10 @@ namespace TrackConverter.UI.Common.Dialogs
                 textBoxAlt.Text = point.MetrAltitude.ToString();
                 textBoxDescription.Text = point.Description;
 
-                try
-                {
+                if (point.Time > dateTimePickerDate.MinDate && point.Time < dateTimePickerDate.MaxDate)
                     dateTimePickerDate.Value = point.Time;
-                }
-                catch (Exception) { }
-                try
-                {
+                if (point.Time > dateTimePickerTime.MinDate && point.Time < dateTimePickerTime.MaxDate)
                     dateTimePickerTime.Value = point.Time;
-                }
-                catch (Exception) { }
             }
         }
 

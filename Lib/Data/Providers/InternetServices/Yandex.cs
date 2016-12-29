@@ -163,34 +163,65 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         /// </summary>
         /// <param name="encodedCoordinates"></param>
         /// <returns></returns>
-        private static TrackFile DecodePolyline2(string encodedCoordinates)
+        public static TrackFile DecodePolyline2(string encodedCoordinates)
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
 
             string key = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_=";
-
+            //encodedCoordinates = encodedCoordinates.Replace("=", "");
             //создание строки бит
             int[] bytes = new int[encodedCoordinates.Length];
             for (int i = 0; i < encodedCoordinates.Length; i++)
-                bytes[i] = key.IndexOf(encodedCoordinates[i]) << 2;
+                bytes[i] = key.IndexOf(encodedCoordinates[i]);
 
             //создание списка . Чтение по 6 бит. Каждые 32 бита добавление в пару lon-lat
-
-
-            //изменение порядка на обратный
-
-            List<List<string>> list = null;
-            //перевод в 10 СС с учетом знака
-            List<List<int>> coords = new List<List<int>>();
-            foreach (List<string> cd in list)
+            int pos = 0;
+            List<int> pairs = new List<int>();
+            int a = 0x00000000;
+            int c = 0;
+            for (int i = 0; i < bytes.Length; i++)
             {
-                List<int> c = new List<int>();
-                foreach (string s in cd)
+                c = bytes[i];
+                if (pos < 26)
                 {
-                    int r = Convert.ToInt32(s, 2);
-                    c.Add(r);
+                    int b = c << 32 - 6 - pos;
+                    a = a | b;
+                    pos += 6;
                 }
-                coords.Add(c);
+                else
+                {
+                    int lendob = 32 - pos;
+                    int lenost = 6 - lendob;
+                    int b = c >> lenost;
+                    a = a | b;
+                    int f = Perest(a);
+                    pairs.Add(a);
+                    a = 0x00000000;
+                    b = c << 32 - lenost;
+                    a = a | c;
+                    pos = lenost;
+                }
+            }
+            if (pos != 32 && pos != 0) //добавление остатка
+            {
+                uint b = 0xFFFFFFFF;
+                c = (int)b >> pos;
+                a = a | c;
+                pairs.Add(a);
+            }
+
+            //перестановка байт местами
+            List<List<int>> coords = new List<List<int>>();
+            for (int i = 0; i < pairs.Count - 1; i += 2)
+            {
+                List<int> r = new List<int>();
+                int lon1 = pairs[i];
+                int lat1 = pairs[i + 1];
+                int lon2 = Perest(lon1);
+                int lat2 = Perest(lat1);
+                r.Add(lon2);
+                r.Add(lat2);
+                coords.Add(r);
             }
 
             //сложение сдвигов 
@@ -207,6 +238,42 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
 
             return res;
         }
+
+        public static int Perest(int inp)
+        {
+            uint a = (uint)Math.Abs(inp);
+
+            uint m = 0xFF000000;
+            uint c;
+            uint b = 0;
+            b = 0x00000000;
+            // 1-й байт на место 4-го
+            c = a & m;
+            c = c >> 24;
+            b = b | c;
+            // 2-й байт на место 3-го
+            m = m >> 8;
+            c = a & m;
+            c = c >> 8;
+            b = b | c;
+            // 3-й байт на место 2-го
+            m = m >> 8;
+            c = a & m;
+            c = c << 8;
+            b = b | c;
+            // 4-й байт на место 1-го
+            m = m >> 8;
+            c = a & m;
+            c = c << 24;
+            b = b | c;
+
+            int d = (int)b;
+            if (inp >= 0)
+                return d;
+            else
+                return -d;
+        }
+
 
         /// <summary>
         /// декодиорвание ломаной.
