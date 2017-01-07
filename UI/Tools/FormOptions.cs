@@ -62,9 +62,11 @@ namespace TrackConverter.UI.Tools
             //эллипсоид
             switch (Vars.Options.Converter.Geosystem)
             {
-                case Geosystems.WGS84: comboBoxEllipsoid.SelectedIndex = 0;
+                case Geosystems.WGS84:
+                    comboBoxEllipsoid.SelectedIndex = 0;
                     break;
-                case Geosystems.PZ90: comboBoxEllipsoid.SelectedIndex = 1;
+                case Geosystems.PZ90:
+                    comboBoxEllipsoid.SelectedIndex = 1;
                     break;
             }
 
@@ -101,7 +103,7 @@ namespace TrackConverter.UI.Tools
             }
 
             //использовать кэш
-            checkBoxUseCacheGeocoder.Checked=Vars.Options.DataSources.UseGeocoderCache ;
+            checkBoxUseCacheGeocoder.Checked = Vars.Options.DataSources.UseGeocoderCache;
 
             //папка ETOPO
             textBoxDBETOPOFolder.Text = Vars.Options.DataSources.ETOPODBFolder;
@@ -157,7 +159,7 @@ namespace TrackConverter.UI.Tools
 
 
             //использование маршрутизации
-           checkBoxUseRouter.Checked =Vars.Options.Map.UseRouterInOptimal;
+            checkBoxUseRouter.Checked = Vars.Options.Map.UseRouterInOptimal;
 
             //метод ветвей и границ для рекурсивного перебора
             checkBoxUseBranchBounds.Checked = Vars.Options.Map.UseBranchBoundsInRecurEnum;
@@ -199,7 +201,8 @@ namespace TrackConverter.UI.Tools
                     break;
             }
 
-
+            //кэш ФС при построении
+            checkBoxUseFSCacheForCreatingRoutes.Checked = Vars.Options.Services.UseFSCacheForCreatingRoutes;
 
             //изменять созданный маршрут
             checkBoxEditAfterPathing.Checked = Vars.Options.Services.ChangePathedRoute;
@@ -215,7 +218,7 @@ namespace TrackConverter.UI.Tools
 
             #endregion
 
- new ToolTip().SetToolTip(buttonAssociateFiles, "Ассоциировать с программой поддерживаемые форматы файлов");
+            new ToolTip().SetToolTip(buttonAssociateFiles, "Ассоциировать с программой поддерживаемые форматы файлов");
             new ToolTip().SetToolTip(checkBoxLastExtension, "При сохранении файлов запоминать последний выбранный формат");
             new ToolTip().SetToolTip(checkBoxLoadPath, "При загрузке файлов запоминать последнюю папку");
             new ToolTip().SetToolTip(checkBoxSavePath, "При сохранении файлов запоминать последнюю папку");
@@ -339,6 +342,9 @@ namespace TrackConverter.UI.Tools
 
             //изменять созданный маршрут
             Vars.Options.Services.ChangePathedRoute = checkBoxEditAfterPathing.Checked;
+
+            //кэш ФС при построении
+            Vars.Options.Services.UseFSCacheForCreatingRoutes = checkBoxUseFSCacheForCreatingRoutes.Checked;
 
             //поставщик сокращения ссылок
             if (comboBoxLinkShorter.SelectedIndex == 0)

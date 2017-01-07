@@ -12,6 +12,9 @@ using TrackConverter.Lib.Data.Interfaces;
 using System.Threading;
 using Newtonsoft.Json.Linq;
 using System.Collections.Concurrent;
+using System.IO;
+using System.Windows.Forms;
+using TrackConverter.Res.Properties;
 
 namespace TrackConverter.Lib.Data.Providers.InternetServices
 {
@@ -24,13 +27,21 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
     class Google : BaseConnection, IRouterProvider, IGeoсoderProvider, IGeoInfoProvider
     {
         /// <summary>
+        /// временная папка для маршрутов
+        /// </summary>
+        private string fold;
+
+        /// <summary>
         ///  минимальное время между запросами
         /// </summary>
         public override TimeSpan MinQueryInterval
         {
             get
             {
-                return TimeSpan.FromMilliseconds(250);
+                //гугл, если с одинаковой частотой подавать запросы, кидает OVER_QUERY_LIMIT. 
+                //для обхода используется рандомная задержка запросов
+                //https://developers.google.com/maps/documentation/directions/usage-limits?hl=ru
+                return TimeSpan.FromMilliseconds(new Random().Next(100)+30);
             }
         }
 
@@ -418,14 +429,21 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
             Action polylinerAction = new Action(() =>
             {
                 Thread.Sleep(2000); //ждем, пока добавятся в очередь ответы сервера
+                fold = "";
+                if (Vars.Options.Services.UseFSCacheForCreatingRoutes)
+                {
+                    fold = Application.StartupPath + Resources.temp_directory + @"\" + Guid.NewGuid().ToString();
+                    Directory.CreateDirectory(fold);
+                }
                 DateTime start1 = DateTime.Now;
                 double N = points.Count * points.Count;
                 double pr = 0;
+                int i = 0;
                 while (pr < N)
                 {
                     //обработка ряда
                     List<TrackFile> row = new List<TrackFile>();
-                    for (int i = 0; i < points.Count; i++)
+                    for (int j = 0; j < points.Count; j++)
                     {
                         XmlDocument xml = null; //ждем добавления ответов в очередь
                         while (queue.IsEmpty || !queue.TryDequeue(out xml))
@@ -436,19 +454,42 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                         {
                             row.Add(null);
                             pr++;
-                            continue; ;
                         }
+                        else //обработка  XML
+                        {
+                            if (Vars.Options.Services.UseFSCacheForCreatingRoutes) //если надо использовать кэш ФС
+                            {
+                                TrackFile res = new TrackFile();
+                                pr++;
 
-                        //обработка XML
-                        TrackFile res = decodeXMLPath(xml);
-                        pr++;
-                        res.Distance = res.CalculateDistance(); //рассчет длины маршрута
-                        row.Add(res);
+                                //получение длины маршрута
+                                XmlNode r1 = xml["DirectionsResponse"]["route"]["leg"]["distance"]["value"];
+                                string routel = r1.InnerText;
+                                double distance = double.Parse(routel);
+                                res.Distance = distance;
+                                row.Add(res);
+
+                                //запись данных маршрута в файл
+                                string textxml = xml.InnerXml;
+                                StreamWriter sw = new StreamWriter(fold + @"\" + i.ToString() + "_" + j.ToString() + ".xml");
+                                sw.Write(textxml);
+                                sw.Close();
+                            }
+                            else
+                            {
+                                //обработка XML
+                                TrackFile res = decodeXMLPath(xml);
+                                pr++;
+                                res.Distance = res.CalculateDistance(); //рассчет длины маршрута
+                                row.Add(res);
+                            }
+                            if (callback != null && isRequestComplete)
+                                callback.BeginInvoke("Построение оптимального маршрута: обработка результатов, завершено " + (pr / N * 100d).ToString("0.0") + "%", null, null);
+
+                        }
                     }
+                    i++;
                     tracks.Add(row);
-                    if (isRequestComplete)
-                        if (callback != null)
-                            callback.Invoke("Построение оптимального маршрута: обработка результатов, завершено " + (pr / N * 100d).ToString("0.0") + "%");
                 }
                 return;
             });
@@ -468,7 +509,8 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                     {
                         XmlDocument jo = CreateRouteXML(points[i].Coordinates, points[j].Coordinates);
                         queue.Enqueue(jo);
-                        callback.BeginInvoke("Построение оптимального маршрута: получение расстояний, завершено " + (k / all * 100d).ToString("0.0") + "%", null, null);
+                        if (callback != null)
+                            callback.BeginInvoke("Построение оптимального маршрута: получение расстояний, завершено " + (k / all * 100d).ToString("0.0") + "%" + ", путей в очереди: " + queue.Count, null, null);
                     }
                     k++;
                 }
@@ -483,6 +525,27 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
             List<List<TrackFile>> trks = tracks.ToList();
             trks.Reverse();
             return trks;
+        }
+
+        /// <summary>
+        /// возвращает маршрут из файлового кэша (вызов при построенни графа маршрутов)
+        /// </summary>
+        /// <param name="i">строка</param>
+        /// <param name="j">столбец</param>
+        /// <returns></returns>
+        public TrackFile GetRouteFromFSCache(int i, int j)
+        {
+            if (string.IsNullOrEmpty(fold))
+                throw new ApplicationException("Отсутствует временная папка");
+
+            string fname = fold + @"\" + i.ToString() + "_" + j.ToString() + ".xml";
+            if (!File.Exists(fname))
+                throw new ApplicationException("Файл " + fname + " не найден во временной папке");
+
+            XmlDocument xml = new  XmlDocument();
+            xml.Load(fname);
+            TrackFile res = decodeXMLPath(xml);
+            return res;
         }
     }
 }

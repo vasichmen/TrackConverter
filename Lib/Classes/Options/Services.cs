@@ -20,6 +20,7 @@ namespace TrackConverter.Lib.Classes.Options
             this.PathRouteMode = PathRouteMode.Walk;
             this.LinkShorterProvider = LinkShorterProvider.Clck;
             this.PathRouteProvider = PathRouteProvider.Yandex;
+            this.UseFSCacheForCreatingRoutes = true;
         }
 
         /// <summary>
@@ -41,5 +42,11 @@ namespace TrackConverter.Lib.Classes.Options
         /// тип прокладываемого маршрута
         /// </summary>
         public PathRouteMode PathRouteMode { get; set; }
+
+        /// <summary>
+        /// если истина, то при построении маршрутов между точками информация JSON будет временно харнить в файлах , 
+        /// а декодироваться только при необходимости
+        /// </summary>
+        public bool UseFSCacheForCreatingRoutes { get; set; }
     }
 }

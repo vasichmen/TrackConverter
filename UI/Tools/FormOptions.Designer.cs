@@ -47,6 +47,8 @@
             this.buttonAssociateFiles = new System.Windows.Forms.Button();
             this.checkBoxLastExtension = new System.Windows.Forms.CheckBox();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.label14 = new System.Windows.Forms.Label();
+            this.comboBoxEllipsoid = new System.Windows.Forms.ComboBox();
             this.label12 = new System.Windows.Forms.Label();
             this.textBoxMinimumRiseInterval = new System.Windows.Forms.TextBox();
             this.labelApproxPower = new System.Windows.Forms.Label();
@@ -78,6 +80,7 @@
             this.label5 = new System.Windows.Forms.Label();
             this.comboBoxLinkShorter = new System.Windows.Forms.ComboBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.checkBoxUseFSCacheForCreatingRoutes = new System.Windows.Forms.CheckBox();
             this.label9 = new System.Windows.Forms.Label();
             this.comboBoxPathRouteMode = new System.Windows.Forms.ComboBox();
             this.label3 = new System.Windows.Forms.Label();
@@ -94,8 +97,6 @@
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.comboBoxEllipsoid = new System.Windows.Forms.ComboBox();
-            this.label14 = new System.Windows.Forms.Label();
             this.groupBox2.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage5.SuspendLayout();
@@ -208,7 +209,7 @@
             this.checkBoxIsLoadETOPOOnStart.AutoSize = true;
             this.checkBoxIsLoadETOPOOnStart.Location = new System.Drawing.Point(13, 73);
             this.checkBoxIsLoadETOPOOnStart.Name = "checkBoxIsLoadETOPOOnStart";
-            this.checkBoxIsLoadETOPOOnStart.Size = new System.Drawing.Size(184, 17);
+            this.checkBoxIsLoadETOPOOnStart.Size = new System.Drawing.Size(178, 17);
             this.checkBoxIsLoadETOPOOnStart.TabIndex = 16;
             this.checkBoxIsLoadETOPOOnStart.Text = "Загружать ETOPO при старте";
             this.toolTip1.SetToolTip(this.checkBoxIsLoadETOPOOnStart, "Выберите, чтобы начинать загрузку базы данных ETOPO при старте программы");
@@ -321,6 +322,27 @@
             this.tabPage1.Text = "Конвертер";
             this.tabPage1.ToolTipText = "Настройки вычислений и преобразования маршрутов";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(8, 9);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(62, 13);
+            this.label14.TabIndex = 15;
+            this.label14.Text = "Эллипсоид";
+            this.toolTip1.SetToolTip(this.label14, "Эллипсоид, использкемый для вычислений координат");
+            // 
+            // comboBoxEllipsoid
+            // 
+            this.comboBoxEllipsoid.FormattingEnabled = true;
+            this.comboBoxEllipsoid.Items.AddRange(new object[] {
+            "WGS 84",
+            "ПЗ-90.11"});
+            this.comboBoxEllipsoid.Location = new System.Drawing.Point(76, 6);
+            this.comboBoxEllipsoid.Name = "comboBoxEllipsoid";
+            this.comboBoxEllipsoid.Size = new System.Drawing.Size(121, 21);
+            this.comboBoxEllipsoid.TabIndex = 14;
             // 
             // label12
             // 
@@ -605,7 +627,7 @@
             this.label8.AutoSize = true;
             this.label8.Location = new System.Drawing.Point(8, 84);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(118, 13);
+            this.label8.Size = new System.Drawing.Size(112, 13);
             this.label8.TabIndex = 12;
             this.label8.Text = "База данных ETOPO";
             this.toolTip1.SetToolTip(this.label8, "Адрес папки с базой данных ETOPO");
@@ -684,7 +706,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(3, 131);
+            this.label5.Location = new System.Drawing.Point(3, 152);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(112, 13);
             this.label5.TabIndex = 8;
@@ -699,7 +721,7 @@
             this.comboBoxLinkShorter.Items.AddRange(new object[] {
             "Clck.ru",
             "QPS.ru"});
-            this.comboBoxLinkShorter.Location = new System.Drawing.Point(138, 128);
+            this.comboBoxLinkShorter.Location = new System.Drawing.Point(138, 149);
             this.comboBoxLinkShorter.Name = "comboBoxLinkShorter";
             this.comboBoxLinkShorter.Size = new System.Drawing.Size(241, 21);
             this.comboBoxLinkShorter.TabIndex = 7;
@@ -708,6 +730,7 @@
             // 
             this.groupBox3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox3.Controls.Add(this.checkBoxUseFSCacheForCreatingRoutes);
             this.groupBox3.Controls.Add(this.label9);
             this.groupBox3.Controls.Add(this.comboBoxPathRouteMode);
             this.groupBox3.Controls.Add(this.label3);
@@ -715,10 +738,22 @@
             this.groupBox3.Controls.Add(this.checkBoxEditAfterPathing);
             this.groupBox3.Location = new System.Drawing.Point(6, 6);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(373, 96);
+            this.groupBox3.Size = new System.Drawing.Size(373, 116);
             this.groupBox3.TabIndex = 4;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Маршрутизация";
+            // 
+            // checkBoxUseFSCacheForCreatingRoutes
+            // 
+            this.checkBoxUseFSCacheForCreatingRoutes.AutoSize = true;
+            this.checkBoxUseFSCacheForCreatingRoutes.Location = new System.Drawing.Point(9, 70);
+            this.checkBoxUseFSCacheForCreatingRoutes.Name = "checkBoxUseFSCacheForCreatingRoutes";
+            this.checkBoxUseFSCacheForCreatingRoutes.Size = new System.Drawing.Size(319, 17);
+            this.checkBoxUseFSCacheForCreatingRoutes.TabIndex = 5;
+            this.checkBoxUseFSCacheForCreatingRoutes.Text = "Использовать файловый кэш при построении маршрутов";
+            this.toolTip1.SetToolTip(this.checkBoxUseFSCacheForCreatingRoutes, "При построении большого количества маршрутов будет использоваться кэш во временно" +
+        "й папке");
+            this.checkBoxUseFSCacheForCreatingRoutes.UseVisualStyleBackColor = true;
             // 
             // label9
             // 
@@ -771,7 +806,7 @@
             this.checkBoxEditAfterPathing.AutoSize = true;
             this.checkBoxEditAfterPathing.Checked = true;
             this.checkBoxEditAfterPathing.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxEditAfterPathing.Location = new System.Drawing.Point(6, 73);
+            this.checkBoxEditAfterPathing.Location = new System.Drawing.Point(9, 93);
             this.checkBoxEditAfterPathing.Name = "checkBoxEditAfterPathing";
             this.checkBoxEditAfterPathing.Size = new System.Drawing.Size(187, 17);
             this.checkBoxEditAfterPathing.TabIndex = 1;
@@ -894,27 +929,6 @@
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.buttonOK_Click);
             // 
-            // comboBoxEllipsoid
-            // 
-            this.comboBoxEllipsoid.FormattingEnabled = true;
-            this.comboBoxEllipsoid.Items.AddRange(new object[] {
-            "WGS 84",
-            "ПЗ-90.11"});
-            this.comboBoxEllipsoid.Location = new System.Drawing.Point(76, 6);
-            this.comboBoxEllipsoid.Name = "comboBoxEllipsoid";
-            this.comboBoxEllipsoid.Size = new System.Drawing.Size(121, 21);
-            this.comboBoxEllipsoid.TabIndex = 14;
-            // 
-            // label14
-            // 
-            this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(8, 9);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(62, 13);
-            this.label14.TabIndex = 15;
-            this.label14.Text = "Эллипсоид";
-            this.toolTip1.SetToolTip(this.label14, "Эллипсоид, использкемый для вычислений координат");
-            // 
             // FormOptions
             // 
             this.AcceptButton = this.buttonOK;
@@ -1026,5 +1040,6 @@
         private System.Windows.Forms.CheckBox checkBoxUseCacheGeocoder;
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.ComboBox comboBoxEllipsoid;
+        private System.Windows.Forms.CheckBox checkBoxUseFSCacheForCreatingRoutes;
     }
 }

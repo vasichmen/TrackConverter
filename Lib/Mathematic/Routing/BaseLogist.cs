@@ -5,6 +5,7 @@ using System.Collections.Concurrent;
 using System.Threading.Tasks;
 using TrackConverter.Lib.Data;
 using TrackConverter.Lib.Tracking;
+using TrackConverter.Lib.Data.Interfaces;
 
 namespace TrackConverter.Lib.Mathematic.Routing
 {
@@ -17,6 +18,11 @@ namespace TrackConverter.Lib.Mathematic.Routing
         /// маршруты между всеми точками
         /// </summary>
         protected List<List<TrackFile>> routes;
+
+        /// <summary>
+        /// роутер для данного экземпляра
+        /// </summary>
+        private GeoRouter router;
 
         /// <summary>
         /// Дейтвие, выполняемое для обновление статусной строки в окне
@@ -40,22 +46,36 @@ namespace TrackConverter.Lib.Mathematic.Routing
         /// <returns></returns>
         protected TrackFile ProcessResult(int[] way, bool isCycled)
         {
-            TrackFile res = new TrackFile();
-            for (int i = 0; i < way.Length - 1; i++)
+            if (Vars.Options.Services.UseFSCacheForCreatingRoutes)
             {
-                TrackFile cur = routes[way[i]][way[i + 1]];
-                res.Add(cur.GetRange(0, cur.Count - 1)); //получаем маршрут без последней точки
+                TrackFile res = new TrackFile();
+                for (int i = 0; i < way.Length - 1; i++)
+                {
+                    TrackFile cur = router.GetRouteFromFSCache(way[i], way[i + 1]);
+                    res.Add(cur.GetRange(0, cur.Count - 1)); //получаем маршрут без последней точки
+                }
+
+                //замыкание маршрута, если надо
+                if (isCycled)
+                    res.Add(router.GetRouteFromFSCache(way[way.Length - 1], way[0]));
+
+                return res;
             }
+            else
+            {
+                TrackFile res = new TrackFile();
+                for (int i = 0; i < way.Length - 1; i++)
+                {
+                    TrackFile cur = routes[way[i]][way[i + 1]];
+                    res.Add(cur.GetRange(0, cur.Count - 1)); //получаем маршрут без последней точки
+                }
 
-            //добавление последней точки
-            //TrackFile last = routes[way[way.Length - 2]][way[way.Length - 1]];
-            //res.Add(last[last.Count - 1]);
+                //замыкание маршрута, если надо
+                if (isCycled)
+                    res.Add(routes[way[way.Length - 1]][way[0]]);
 
-            //замыкание маршрута, если надо
-            if (isCycled)
-                res.Add(routes[way[way.Length - 1]][way[0]]);
-
-            return res;
+                return res;
+            }
         }
 
         /// <summary>
@@ -70,7 +90,7 @@ namespace TrackConverter.Lib.Mathematic.Routing
                 throw new ArgumentOutOfRangeException("points.Count", "Количество точек должно быть меньше 158");
             if (Vars.Options.Map.UseRouterInOptimal)
             {
-                GeoRouter router = new GeoRouter(Vars.Options.Services.PathRouteProvider);
+                router = new GeoRouter(Vars.Options.Services.PathRouteProvider);
                 return router.CreateRoutes(points, CallbackAction);
             }
             List<List<TrackFile>> res = new List<List<TrackFile>>();

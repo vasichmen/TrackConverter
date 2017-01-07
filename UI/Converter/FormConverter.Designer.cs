@@ -65,6 +65,7 @@
             this.addToJoinToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.addComparisonToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.removeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.button1 = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.contextMenuStripDGW.SuspendLayout();
@@ -114,7 +115,7 @@
             this.OpenYandexToolStripMenuItem});
             this.загрузитьToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("загрузитьToolStripMenuItem.Image")));
             this.загрузитьToolStripMenuItem.Name = "загрузитьToolStripMenuItem";
-            this.загрузитьToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.загрузитьToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
             this.загрузитьToolStripMenuItem.Text = "Загрузить";
             // 
             // toolStripMenuItem1
@@ -146,7 +147,7 @@
             this.SaveToolStripMenuItem.Enabled = false;
             this.SaveToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("SaveToolStripMenuItem.Image")));
             this.SaveToolStripMenuItem.Name = "SaveToolStripMenuItem";
-            this.SaveToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.SaveToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
             this.SaveToolStripMenuItem.Text = "Сохранить";
             // 
             // SaveFileToolStripMenuItem
@@ -433,11 +434,23 @@
             this.removeToolStripMenuItem.ToolTipText = "Удаление маршрута из списка загруженных";
             this.removeToolStripMenuItem.Click += new System.EventHandler(this.removeToolStripMenuItem_Click);
             // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(127, 183);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 11;
+            this.button1.Text = "button1";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Visible = false;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
             // FormConverter
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(294, 442);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.labelProgress);
             this.Controls.Add(this.menuStrip1);
             this.Controls.Add(this.dataGridView1);
@@ -494,5 +507,6 @@
         private System.Windows.Forms.ToolStripMenuItem addComparisonToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem approximateAltitudesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem elevgraphToolStripMenuItem;
+        private System.Windows.Forms.Button button1;
     }
 }

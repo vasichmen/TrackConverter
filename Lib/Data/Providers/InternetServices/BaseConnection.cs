@@ -9,7 +9,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
     /// <summary>
     /// базовый класс HTTP запросов к серверу
     /// </summary>
-    abstract class BaseConnection {
+   public abstract class BaseConnection {
 
         /// <summary>
         /// время последнего запроса к сервису

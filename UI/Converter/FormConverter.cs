@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.VisualBasic.Devices;
 using TrackConverter.Lib.Data;
+using TrackConverter.Lib.Data.Providers.InternetServices;
 using TrackConverter.Lib.Mathematic.Assessment;
 using TrackConverter.Lib.Tracking;
 using TrackConverter.UI.Common;
@@ -306,31 +307,31 @@ namespace TrackConverter.UI.Converter
             try
             {
                 if (args.Length != 0)
-                    foreach(string arg in args)
-                    if (File.Exists(arg))
-                    {
-                        string ext = Path.GetExtension(arg);
-                        switch (ext)
+                    foreach (string arg in args)
+                        if (File.Exists(arg))
                         {
-                            case ".kml":
-                            case ".kmz":
-                                GeoFile gf = Serializer.DeserializeGeoFile(arg);
-                                this.Tracks = gf.Routes;
-                                Program.winMap.Clear();
-                                Program.winMap.ShowWaypoints(gf.Waypoints, true, true);
-                                RefreshData();
-                                break;
-                            case ".adrs":
-                                openingFile = arg;
-                                break;
-                            default:
-                                OpenFile(arg);
-                                break;
-                        }
+                            string ext = Path.GetExtension(arg);
+                            switch (ext)
+                            {
+                                case ".kml":
+                                case ".kmz":
+                                    GeoFile gf = Serializer.DeserializeGeoFile(arg);
+                                    this.Tracks = gf.Routes;
+                                    Program.winMap.Clear();
+                                    Program.winMap.ShowWaypoints(gf.Waypoints, true, true);
+                                    RefreshData();
+                                    break;
+                                case ".adrs":
+                                    openingFile = arg;
+                                    break;
+                                default:
+                                    OpenFile(arg);
+                                    break;
+                            }
 
-                        Vars.currentSelectedTrack = this.Tracks.Count > 0 ? Tracks[0] : null;
-                        Program.RefreshWindows(this);
-                    }
+                            Vars.currentSelectedTrack = this.Tracks.Count > 0 ? Tracks[0] : null;
+                            Program.RefreshWindows(this);
+                        }
             }
             catch (Exception ex)
             {
@@ -1389,5 +1390,33 @@ namespace TrackConverter.UI.Converter
 
         #endregion
 
+        private void button1_Click(object sender, EventArgs e)
+        {
+            int d = 75089;
+            int f = Yandex.Perest(d);
+            int ff = Yandex.Perest(f);
+
+
+            string one = "vVg_AmdVUgM="; //length 12
+            //55.727464,37.705918
+
+            string two = "KEc-ApFnUgNoLAEA6GkAAA==";
+            //55.732114,37.635880
+            //55.759226,37.712784   27112   76904    
+
+            string three = "vVg_AmdVUgPKiAAAUiQAAPqoAABdKgAA";
+            //55.727464,37.705918
+            //55.736763,37.740937   9299    35019 
+            //55.747609,37.784196   10846   43259
+
+            string four = "vVg_AmdVUgNoLAEAPhsAAKG___8iO___J7v8_6Hb__8=";
+            //55.727464,37.705918
+            //55.734438,37.782822
+            //55.684040,37.766343
+            //55.674729,37.552109
+
+
+            TrackFile t2 = Yandex.DecodePolyline(one);
+        }
     }
 }

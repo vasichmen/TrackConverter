@@ -1,14 +1,17 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using System.Xml;
 using Newtonsoft.Json.Linq;
 using TrackConverter.Lib.Classes;
 using TrackConverter.Lib.Data.Interfaces;
 using TrackConverter.Lib.Tracking;
+using TrackConverter.Res.Properties;
 
 namespace TrackConverter.Lib.Data.Providers.InternetServices
 {
@@ -18,8 +21,13 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
     /// 
     /// Работа с маршрутихатором организована опытным путем
     /// </summary>
-    class Yandex : BaseConnection, IRouterProvider, IGeoсoderProvider
+    public class Yandex : BaseConnection, IRouterProvider, IGeoсoderProvider
     {
+        /// <summary>
+        /// временная папка для маршрутов
+        /// </summary>
+        private string fold = null;
+
         /// <summary>
         /// минимальное время между запросами
         /// </summary>
@@ -136,7 +144,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         /// <summary>
         /// разбор ответа сервера и выбор маршрута
         /// </summary>
-        /// <param name="jobj"></param>
+        /// <param name="jobj">объект JSON всей информации о маршруте (все, что прислал сервер)</param>
         /// <returns></returns>
         private static TrackFile decodeJSONPath(JObject jobj)
         {
@@ -165,62 +173,79 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         /// <returns></returns>
         public static TrackFile DecodePolyline2(string encodedCoordinates)
         {
-            //throw new NotImplementedException();
-
             string key = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_=";
-            //encodedCoordinates = encodedCoordinates.Replace("=", "");
+            int fgggg = encodedCoordinates.Length;
+            //encodedCoordinates = encodedCoordinates.TrimEnd('=');
             //создание строки бит
             int[] bytes = new int[encodedCoordinates.Length];
             for (int i = 0; i < encodedCoordinates.Length; i++)
                 bytes[i] = key.IndexOf(encodedCoordinates[i]);
 
             //создание списка . Чтение по 6 бит. Каждые 32 бита добавление в пару lon-lat
-            int pos = 0;
-            List<int> pairs = new List<int>();
-            int a = 0x00000000;
-            int c = 0;
+            List<int> pairs = new List<int>(); //список чисел(первые два - базовые координаты, дальше - приращения lon-lat)
+            int pos = 0; //позиция, окуда начинается запись в новое число
+            int a = 0x00000000; //новое число
+            int c = 0; //добавляемые 6 бит из массива
+            int lendob = 0; //длина добавляемой части к концу числа. (2,4,6 бит)
+            int lenost = 0; //длина остатка (2,4,0 бит)
             for (int i = 0; i < bytes.Length; i++)
             {
-                c = bytes[i];
-                if (pos < 26)
+                c = bytes[i]; //очередные 6 бит для записи в новое число
+                if (pos < 32 - 6) // если в число еще влезает 6 бит, то прибавляем и переход к следующему числу
                 {
-                    int b = c << 32 - 6 - pos;
-                    a = a | b;
-                    pos += 6;
+                    int b = c << 32 - 6 - pos; // сдвиг на нужную позицию
+                    a = a | b; //побитовое сложение
+                    pos += 6; //прибавление начальной позиции
+                    continue; //переход к следующему числу
                 }
-                else
+                else //если 6 новых бит надо разделить на 2 числа
                 {
-                    int lendob = 32 - pos;
-                    int lenost = 6 - lendob;
-                    int b = c >> lenost;
-                    a = a | b;
-                    int f = Perest(a);
-                    pairs.Add(a);
-                    a = 0x00000000;
-                    b = c << 32 - lenost;
-                    a = a | c;
-                    pos = lenost;
-                }
-            }
-            if (pos != 32 && pos != 0) //добавление остатка
-            {
-                uint b = 0xFFFFFFFF;
-                c = (int)b >> pos;
-                a = a | c;
-                pairs.Add(a);
-            }
+                    lendob = 32 - pos; //длина добавляемой части
+                    lenost = 6 - lendob; //длина остатка
 
-            //перестановка байт местами
+                    if (lendob != 4 && lendob != 2 && lendob != 6)
+                        throw new Exception("lendob control");
+
+                    //добавление к старому числу первой части
+                    int b = c >> lenost; //сдвиг на нужную позицию
+                    a = a | b; //сложение
+
+                    int f = Perest(a); //инверсия порядка байт
+                    pairs.Add(f); //добавление в список
+
+                    //добавление остатка к новому числу
+                    if (lenost != 0) //если длина остатка больше 0
+                    {
+                        a = 0x00000000; //новое число
+                        b = c << 32 - lenost; // сдвиг на нужную позицию в начале числа
+                        a = a | b; //сложение
+                        pos = lenost; // следующая начальная позиция на размер остатка
+                        continue; //переход к следующему числу
+                    }
+
+                    //сброс нового числа
+                    a = 0x00000000;
+                    pos = 0;
+                }
+            }
+            //if (pos == 4 || pos == 2) //добавление остатка
+            //{
+            //    int b = int.MaxValue;
+            //    int fc = b >> pos;
+            //    a = a | fc;
+            //    int fa = Perest(a);
+            //    pairs.Add(fa);
+            //}
+
+            //создание списка координат
             List<List<int>> coords = new List<List<int>>();
             for (int i = 0; i < pairs.Count - 1; i += 2)
             {
                 List<int> r = new List<int>();
-                int lon1 = pairs[i];
-                int lat1 = pairs[i + 1];
-                int lon2 = Perest(lon1);
-                int lat2 = Perest(lat1);
-                r.Add(lon2);
-                r.Add(lat2);
+                int lon = pairs[i];
+                int lat = pairs[i + 1];
+                r.Add(lon);
+                r.Add(lat);
                 coords.Add(r);
             }
 
@@ -234,44 +259,48 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
             //запись результата
             TrackFile res = new TrackFile();
             foreach (List<int> cd in coords)
-                res.Add(new TrackPoint((double)(cd[1] / 1000000d), (double)(cd[0] / 1000000d)));
+                res.Add(new TrackPoint(cd[1] / 1000000d, cd[0] / 1000000d));
 
             return res;
         }
 
+        /// <summary>
+        /// перестановка байт в обратном порядке
+        /// </summary>
+        /// <param name="inp"></param>
+        /// <returns></returns>
         public static int Perest(int inp)
         {
-            uint a = (uint)Math.Abs(inp);
+            uint a = (uint)inp;
 
             uint m = 0xFF000000;
             uint c;
-            uint b = 0;
-            b = 0x00000000;
+            uint b = 0x00000000;
+
             // 1-й байт на место 4-го
             c = a & m;
             c = c >> 24;
             b = b | c;
+
             // 2-й байт на место 3-го
             m = m >> 8;
             c = a & m;
             c = c >> 8;
             b = b | c;
+
             // 3-й байт на место 2-го
             m = m >> 8;
             c = a & m;
             c = c << 8;
             b = b | c;
+
             // 4-й байт на место 1-го
             m = m >> 8;
             c = a & m;
             c = c << 24;
             b = b | c;
 
-            int d = (int)b;
-            if (inp >= 0)
-                return d;
-            else
-                return -d;
+            return (int)b;
         }
 
 
@@ -281,10 +310,12 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         /// https://tech.yandex.ru/maps/doc/jsapi/1.x/dg/tasks/how-to-add-polyline-docpage/#encoding-polyline-points
         /// Для Python:
         /// https://yandex.ru/blog/mapsapi/16101
+        /// Утилита кодирования:
+        /// https://yandex.github.io/mapsapi-examples-old/html/mappolylineencodepoints.html
         /// </summary>
         /// <param name="encodedCoordinates"></param>
         /// <returns></returns>
-        private static TrackFile DecodePolyline(string encodedCoordinates)
+        public static TrackFile DecodePolyline(string encodedCoordinates)
         {
             string key = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_=";
             encodedCoordinates = encodedCoordinates.Replace("=", "");
@@ -563,15 +594,23 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
             //действие обработки очереди JSON ответов сервера
             Action polylinerAction = new Action(() =>
             {
+                fold = "";
+                if (Vars.Options.Services.UseFSCacheForCreatingRoutes)
+                {
+                    fold = Application.StartupPath + Resources.temp_directory + @"\" + Guid.NewGuid().ToString();
+                    Directory.CreateDirectory(fold);
+                }
+
                 Thread.Sleep(2000); //ждем, пока добавятся в очередь ответы сервера
                 DateTime start1 = DateTime.Now;
                 double N = points.Count * points.Count;
                 double pr = 0;
+                int i = 0;
                 while (pr < N)
                 {
                     //обработка ряда
                     List<TrackFile> row = new List<TrackFile>();
-                    for (int i = 0; i < points.Count; i++)
+                    for (int j = 0; j < points.Count; j++)
                     {
                         JObject jobj = null; //ждем добавления ответов в очередь
                         while (queue.IsEmpty || !queue.TryDequeue(out jobj))
@@ -582,17 +621,40 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                         {
                             row.Add(null);
                             pr++;
-                            continue; ;
                         }
+                        else //обработка JSON
+                        {
+                            if (Vars.Options.Services.UseFSCacheForCreatingRoutes) //если надо использовать кэш ФС
+                            {
+                                TrackFile res = new TrackFile();
+                                pr++;
 
-                        //обработка JSON
-                        TrackFile res = decodeJSONPath(jobj);
-                        pr++;
-                        res.Distance = res.CalculateDistance(); //рассчет длины маршрута
-                        row.Add(res);
-                        if (callback != null && isRequestComplete)
-                            callback.BeginInvoke("Построение оптимального маршрута: обработка результатов, завершено " + (pr / N * 100d).ToString("0.0") + "%", null, null);
+                                //получение длины маршрута
+                                JToken r1 = jobj.SelectToken("data.features[0].properties", true);
+                                JToken route = r1["RouteMetaData"]["Distance"]["value"];
+                                string routel = route.ToString();
+                                double distance = double.Parse(routel);
+                                res.Distance = distance;
+                                row.Add(res);
+
+                                //запись данных маршрута в файл
+                                string textJO = jobj.ToString(Newtonsoft.Json.Formatting.None);
+                                StreamWriter sw = new StreamWriter(fold + @"\" + i.ToString() + "_" + j.ToString() + ".json");
+                                sw.Write(textJO);
+                                sw.Close();
+                            }
+                            else //если надо все хранить в памяти и обрабатывать сразу
+                            {
+                                TrackFile res = decodeJSONPath(jobj);
+                                pr++;
+                                res.Distance = res.CalculateDistance(); //рассчет длины маршрута
+                                row.Add(res);
+                            }
+                            if (callback != null && isRequestComplete)
+                                callback.BeginInvoke("Построение оптимального маршрута: обработка результатов, завершено " + (pr / N * 100d).ToString("0.0") + "%", null, null);
+                        }
                     }
+                    i++;
                     tracks.Add(row);
                 }
                 return;
@@ -631,6 +693,29 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
             List<List<TrackFile>> trks = tracks.ToList();
             trks.Reverse();
             return trks;
+        }
+
+        /// <summary>
+        /// возвращает маршрут из файлового кэша (вызов при построенни графа маршрутов)
+        /// </summary>
+        /// <param name="i">строка</param>
+        /// <param name="j">столбец</param>
+        /// <returns></returns>
+        public TrackFile GetRouteFromFSCache(int i, int j)
+        {
+            if (string.IsNullOrEmpty(fold))
+                throw new ApplicationException("Отсутствует временная папка");
+
+            string fname = fold + @"\" + i.ToString() + "_" + j.ToString() + ".json";
+            if (!File.Exists(fname))
+                throw new ApplicationException("Файл " + fname + " не найден во временной папке");
+
+            StreamReader sr = new StreamReader(fname);
+            string jtext = sr.ReadToEnd();
+            JObject jo = JObject.Parse(jtext);
+            TrackFile res = decodeJSONPath(jo);
+            sr.Close();
+            return res;
         }
     }
 }

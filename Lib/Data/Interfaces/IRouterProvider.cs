@@ -27,5 +27,13 @@ namespace TrackConverter.Lib.Data.Interfaces
         /// <param name="callback">дейстие, выполняемое при построении</param>
         /// <returns></returns>
         List<List<TrackFile>> CreateRoutes(TrackFile points, Action<string> callback);
+
+        /// <summary>
+        /// возвращает маршрут из файлового кэша (вызов при построенни графа маршрутов)
+        /// </summary>
+        /// <param name="i">строка</param>
+        /// <param name="j">столбец</param>
+        /// <returns></returns>
+        TrackFile GetRouteFromFSCache(int i, int j);
     }
 }

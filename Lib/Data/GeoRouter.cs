@@ -34,10 +34,10 @@ namespace TrackConverter.Lib.Data
             switch (pathRouteProvider)
             {
                 case PathRouteProvider.Google:
-                    router= new Google();
+                    router = new Google();
                     break;
                 case PathRouteProvider.Yandex:
-                    router= new Yandex();
+                    router = new Yandex();
                     break;
                 default:
                     throw new ArgumentException("Неизвестный поставщик сервиса прокладки маршрутов");
@@ -57,6 +57,17 @@ namespace TrackConverter.Lib.Data
         }
 
         /// <summary>
+        /// возвращает маршрут из файлового кэша (вызов при построенни графа маршрутов)
+        /// </summary>
+        /// <param name="i">строка</param>
+        /// <param name="j">столбец</param>
+        /// <returns></returns>
+        internal TrackFile GetRouteFromFSCache(int i, int j)
+        {
+            return router.GetRouteFromFSCache(i, j);
+        }
+
+        /// <summary>
         /// построить все пути между точками. В ячейки с одинаковыми индексами записывается null
         /// </summary>
         /// <param name="points">точки, между которыми надо построить маршруты</param>
@@ -64,7 +75,7 @@ namespace TrackConverter.Lib.Data
         /// <returns></returns>
         public List<List<TrackFile>> CreateRoutes(TrackFile points, Action<string> callback)
         {
-            return this.router.CreateRoutes(points,callback);
+            return this.router.CreateRoutes(points, callback);
         }
 
     }

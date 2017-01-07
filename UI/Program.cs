@@ -168,101 +168,101 @@ namespace TrackConverter.UI
         {
             //try
             //{
-                #region система
+            #region система
 
-                //установка параметров отображения
-                Application.SetCompatibleTextRenderingDefault(false);
-                Application.EnableVisualStyles();
+            //установка параметров отображения
+            Application.SetCompatibleTextRenderingDefault(false);
+            Application.EnableVisualStyles();
 
-                //активация иконки в панели задач
-                trayIcon = new TrayIcon(
-                    //действие при двойном нажатии
-                    new Action(() =>
-                    {
-                        winMain.WindowState = FormWindowState.Normal;
-                    }),
+            //активация иконки в панели задач
+            trayIcon = new TrayIcon(
+                //действие при двойном нажатии
+                new Action(() =>
+                {
+                    winMain.WindowState = FormWindowState.Normal;
+                }),
 
-                    //контекстное меню
-                    new ContextMenu(
-                        new MenuItem[] { //элементы меню
+                //контекстное меню
+                new ContextMenu(
+                    new MenuItem[] { //элементы меню
                             new MenuItem( //кнопка выход
                                 "Выход", //заголовок
                                 new EventHandler( //действие при нажатии
                                     new Action<object, EventArgs>((f1, f2) => { winMain.Close(); })
                                     )
                                 )
-                        }
-                        )
-                    );
-                trayIcon.Show();
+                    }
+                    )
+                );
+            trayIcon.Show();
 
-                //обработчик выхода из приложения
-                Application.ApplicationExit += Application_ApplicationExit;
+            //обработчик выхода из приложения
+            Application.ApplicationExit += Application_ApplicationExit;
 
-                //настройки программы
-                Vars.Options = Options.Load(Application.StartupPath + Resources.options_folder);
+            //настройки программы
+            Vars.Options = Options.Load(Application.StartupPath + Resources.options_folder);
 
-                //проверка файлов программы
-                CheckFiles();
+            //проверка файлов программы
+            CheckFiles();
 
-                #endregion
+            #endregion
 
-                #region создание окон
+            #region создание окон
 
-                //создание основного окна
-                winMain = new FormContainer()
-                {
-                    WindowState = Vars.Options.Container.WinState,
-                    Size = Vars.Options.Container.WinSize,
-                    Left = Vars.Options.Container.WinPosition.X,
-                    Top = Vars.Options.Container.WinPosition.Y
-                };
+            //создание основного окна
+            winMain = new FormContainer()
+            {
+                WindowState = Vars.Options.Container.WinState,
+                Size = Vars.Options.Container.WinSize,
+                Left = Vars.Options.Container.WinPosition.X,
+                Top = Vars.Options.Container.WinPosition.Y
+            };
 
-                //дочерние окна
-                winMap = new FormMap() { MdiParent = winMain };
-                winElevVisual = new FormElevVisual(null) { MdiParent = winMain };
-                winPoints = new FormPoints() { MdiParent = winMain };
-                winConverter = new FormConverter() { MdiParent = winMain };
+            //дочерние окна
+            winMap = new FormMap() { MdiParent = winMain };
+            winElevVisual = new FormElevVisual(null) { MdiParent = winMain };
+            winPoints = new FormPoints() { MdiParent = winMain };
+            winConverter = new FormConverter() { MdiParent = winMain };
 
-                //создание окна ожидания
-                winWaiting = new FormWaiting();
+            //создание окна ожидания
+            winWaiting = new FormWaiting();
 
-               
-                #endregion
 
-                #region настройки объектов
+            #endregion
 
-                //открытие БД кэша геокодера
-                Vars.dataCache = new SQLiteCache(Application.StartupPath + Resources.cache_directory + "\\geocoder");
+            #region настройки объектов
 
-                //метод загрузки базы данных ETOPO
-                Vars.TaskLoadingETOPO = GetETOPOLoadingTask();
+            //открытие БД кэша геокодера
+            Vars.dataCache = new SQLiteCache(Application.StartupPath + Resources.cache_directory + "\\geocoder");
 
-                //применение настроек
-                AcceptOptions();
+            //метод загрузки базы данных ETOPO
+            Vars.TaskLoadingETOPO = GetETOPOLoadingTask();
 
-                #endregion
+            //применение настроек
+            AcceptOptions();
 
-                #region открытие окон
+            #endregion
 
-                //открытие окна навигации, если требуется
-                if (Vars.Options.Map.IsFormNavigatorShow)
-                {
-                    winNavigator = new FormMapNavigator();
-                    winNavigator.Show(winMain);
-                }
+            #region открытие окон
 
-                winMap.Show();
-                winConverter.Show();
-                winElevVisual.Show();
-                winPoints.Show();
+            //открытие окна навигации, если требуется
+            if (Vars.Options.Map.IsFormNavigatorShow)
+            {
+                winNavigator = new FormMapNavigator();
+                winNavigator.Show(winMain);
+            }
+
+            winMap.Show();
+            winConverter.Show();
+            winElevVisual.Show();
+            winPoints.Show();
 
             winConverter.LoadFiles(args);
 
-                #endregion
+            #endregion
 
-                //запуск основного окна
-                Application.Run(winMain);
+            //запуск основного окна
+            Application.Run(winMain);
 
             //}
             //catch (Exception ex) //запись ошибки в лог
@@ -303,10 +303,12 @@ namespace TrackConverter.UI
         /// <param name="e"></param>
         private static void Application_ApplicationExit(object sender, EventArgs e)
         {
-            Vars.Options.Save(Application.StartupPath + Resources.options_folder);
+            Vars.Options.Save(Application.StartupPath + Resources.options_folder); //сохранение настроек
             if (Vars.dataCache != null)
-                Vars.dataCache.Dispose();
-            trayIcon.UnShow();
+                Vars.dataCache.Dispose(); //закрытие кэша
+            trayIcon.UnShow(); //иконка трея
+            if (Directory.Exists(Application.StartupPath + Resources.temp_directory))
+                Directory.Delete(Application.StartupPath + Resources.temp_directory, true); //очистка временных файлов
         }
 
         /// <summary>
