@@ -110,6 +110,7 @@
     <Compile Include="Data\Providers\Local\ETOPO\FloatDatabase.cs" />
     <Compile Include="Data\Providers\Local\ETOPO\SQLiteDatabase.cs" />
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="Mathematic\Geodesy\Projection\Mercator.cs" />
     <Compile Include="Mathematic\Geodesy\Systems\IGeosystem.cs" />
     <Compile Include="Mathematic\Assessment\Approximation.cs" />
     <Compile Include="Mathematic\Assessment\ElevationAnalysis.cs" />

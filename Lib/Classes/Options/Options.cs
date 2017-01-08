@@ -117,8 +117,7 @@ namespace TrackConverter.Lib.Classes.Options
 
         }
 
-        #region
-
+        #region сериализация
 
         /// <summary>
         /// сериализация в XML

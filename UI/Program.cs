@@ -17,6 +17,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -98,6 +99,11 @@ namespace TrackConverter.UI
         /// </summary>
         public static FormPoints winPoints;
 
+        /// <summary>
+        /// Окно сохранения карты
+        /// </summary>
+        public static FormSaveMap winSaveMap;
+
         #endregion
 
         #region Свойства окон
@@ -106,6 +112,11 @@ namespace TrackConverter.UI
         /// Истина, если окно конвертера не содано или закрыто
         /// </summary>
         public static bool winConverterNullOrDisposed { get { return winConverter == null || winConverter.IsDisposed; } }
+
+        /// <summary>
+        /// Истина, если окно конвертера не содано или закрыто
+        /// </summary>
+        public static bool winSaveMapNullOrDisposed { get { return winSaveMap == null || winSaveMap.IsDisposed; } }
 
         /// <summary>
         /// Истина, если окно карты не содано или закрыто
@@ -152,6 +163,8 @@ namespace TrackConverter.UI
         /// </summary>
         public static bool winElevVisualNullOrDisposed { get { return winElevVisual == null || winElevVisual.IsDisposed; } }
 
+
+
         #endregion
 
         /// <summary>
@@ -166,8 +179,11 @@ namespace TrackConverter.UI
         [STAThread]
         static void Main(string[] args)
         {
-            //try
-            //{
+#if (!DEBUG)
+            try
+            {
+#endif
+
             #region система
 
             //установка параметров отображения
@@ -264,21 +280,23 @@ namespace TrackConverter.UI
             //запуск основного окна
             Application.Run(winMain);
 
-            //}
-            //catch (Exception ex) //запись ошибки в лог
-            //{
-            //    MessageBox.Show(null, ex.Message, "Ошибка при запуске или неисправимая ошибка приложения", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            //    string file = Application.StartupPath + Resources.crash_file;
-            //    StreamWriter sw = new StreamWriter(file, true);
-            //    sw.WriteLine(ex.Message);
-            //    sw.WriteLine(ex.StackTrace);
-            //    sw.WriteLine("Дополнительная информация: " + ex.HelpLink);
-            //    sw.WriteLine(DateTime.Now.ToString());
-            //    sw.WriteLine();
-            //    sw.WriteLine("-------------------------------");
-            //    sw.Close();
-            //    return;
-            //}
+#if (!DEBUG)
+            }
+            catch (Exception ex) //запись ошибки в лог
+            {
+                MessageBox.Show(null, ex.Message, "Ошибка при запуске или неисправимая ошибка приложения", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                string file = Application.StartupPath + Resources.crash_file;
+                StreamWriter sw = new StreamWriter(file, true);
+                sw.WriteLine(ex.Message);
+                sw.WriteLine(ex.StackTrace);
+                sw.WriteLine("Дополнительная информация: " + ex.HelpLink);
+                sw.WriteLine(DateTime.Now.ToString());
+                sw.WriteLine();
+                sw.WriteLine("-------------------------------");
+                sw.Close();
+                return;
+            }
+#endif
         }
 
         /// <summary>
@@ -303,12 +321,21 @@ namespace TrackConverter.UI
         /// <param name="e"></param>
         private static void Application_ApplicationExit(object sender, EventArgs e)
         {
+            Debug.Print("Application_ApplicationExit");
             Vars.Options.Save(Application.StartupPath + Resources.options_folder); //сохранение настроек
+            Debug.Print("Option saved");
+
             if (Vars.dataCache != null)
                 Vars.dataCache.Dispose(); //закрытие кэша
+            Debug.Print("Cache closed");
+
             trayIcon.UnShow(); //иконка трея
+            Debug.Print("Tray icon off");
+
             if (Directory.Exists(Application.StartupPath + Resources.temp_directory))
                 Directory.Delete(Application.StartupPath + Resources.temp_directory, true); //очистка временных файлов
+            Debug.Print("Temp directory removed");
+
         }
 
         /// <summary>

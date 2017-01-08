@@ -37,12 +37,14 @@
             this.consoleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.OptionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.окнаToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.HelpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
-            this.toolStripStatusLabelCurrentOperation = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.окнаToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.справкаToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.toolStripStatusLabelCurrentOperation = new System.Windows.Forms.ToolStripStatusLabel();
+            this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -53,7 +55,7 @@
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.создатьToolStripMenuItem,
             this.окнаToolStripMenuItem,
-            this.HelpToolStripMenuItem});
+            this.справкаToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.MdiWindowListItem = this.окнаToolStripMenuItem;
             this.menuStrip1.Name = "menuStrip1";
@@ -125,6 +127,19 @@
             this.OptionsToolStripMenuItem.ToolTipText = "Настройки программы";
             this.OptionsToolStripMenuItem.Click += new System.EventHandler(this.OptionsToolStripMenuItem_Click);
             // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(225, 6);
+            // 
+            // exitToolStripMenuItem
+            // 
+            this.exitToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("exitToolStripMenuItem.Image")));
+            this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(228, 22);
+            this.exitToolStripMenuItem.Text = "Выход";
+            this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
+            // 
             // окнаToolStripMenuItem
             // 
             this.окнаToolStripMenuItem.Name = "окнаToolStripMenuItem";
@@ -132,14 +147,15 @@
             this.окнаToolStripMenuItem.Text = "Окна";
             this.окнаToolStripMenuItem.Visible = false;
             // 
-            // HelpToolStripMenuItem
+            // справкаToolStripMenuItem
             // 
-            this.HelpToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("HelpToolStripMenuItem.Image")));
-            this.HelpToolStripMenuItem.Name = "HelpToolStripMenuItem";
-            this.HelpToolStripMenuItem.Size = new System.Drawing.Size(81, 20);
-            this.HelpToolStripMenuItem.Text = "Справка";
-            this.HelpToolStripMenuItem.ToolTipText = "Помощь в использовании программы";
-            this.HelpToolStripMenuItem.Click += new System.EventHandler(this.HelpToolStripMenuItem_Click);
+            this.справкаToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.helpToolStripMenuItem,
+            this.aboutToolStripMenuItem});
+            this.справкаToolStripMenuItem.Name = "справкаToolStripMenuItem";
+            this.справкаToolStripMenuItem.Size = new System.Drawing.Size(65, 20);
+            this.справкаToolStripMenuItem.Text = "Справка";
+            this.справкаToolStripMenuItem.ToolTipText = "Помощь в использовании программы";
             // 
             // statusStrip1
             // 
@@ -158,18 +174,19 @@
             this.toolStripStatusLabelCurrentOperation.Text = "Выполняется операция";
             this.toolStripStatusLabelCurrentOperation.Visible = false;
             // 
-            // toolStripSeparator1
+            // helpToolStripMenuItem
             // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(225, 6);
+            this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.helpToolStripMenuItem.Text = "Помощь";
+            this.helpToolStripMenuItem.Click += new System.EventHandler(this.HelpToolStripMenuItem_Click);
             // 
-            // exitToolStripMenuItem
+            // aboutToolStripMenuItem
             // 
-            this.exitToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("exitToolStripMenuItem.Image")));
-            this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(228, 22);
-            this.exitToolStripMenuItem.Text = "Выход";
-            this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
+            this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.aboutToolStripMenuItem.Text = "О программе";
+            this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
             // FormContainer
             // 
@@ -208,7 +225,7 @@
         private System.Windows.Forms.ToolStripMenuItem TransformCoordinateToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripMenuItem OptionsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem HelpToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem справкаToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem consoleToolStripMenuItem;
         private System.Windows.Forms.StatusStrip statusStrip1;
         /// <summary>
@@ -217,5 +234,7 @@
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabelCurrentOperation;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
     }
 }

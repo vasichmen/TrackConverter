@@ -58,6 +58,15 @@ namespace TrackConverter.UI.Common
         private void HelpToolStripMenuItem_Click(object sender, EventArgs e)
         {
             new FormBrowser().Show();
+        }
+
+        /// <summary>
+        /// вызов окна о программе
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
 
         }
 
@@ -260,8 +269,9 @@ namespace TrackConverter.UI.Common
             }
         }
 
+
         #endregion
 
-  
+      
     }
 }

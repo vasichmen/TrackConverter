@@ -42,18 +42,10 @@
             this.buttonCalculate = new System.Windows.Forms.Button();
             this.labelDistance = new System.Windows.Forms.Label();
             this.labelTrueAzimuth = new System.Windows.Forms.Label();
-            this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.groupBox4 = new System.Windows.Forms.GroupBox();
-            this.radioButtonModGaver = new System.Windows.Forms.RadioButton();
-            this.radioButtonGaversin = new System.Windows.Forms.RadioButton();
-            this.radioButtonSphere = new System.Windows.Forms.RadioButton();
-            this.radioButtonPifagor = new System.Windows.Forms.RadioButton();
             this.labelMagneticAzimuth = new System.Windows.Forms.Label();
             this.labelMagneticDiv = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
-            this.groupBox3.SuspendLayout();
-            this.groupBox4.SuspendLayout();
             this.SuspendLayout();
             // 
             // textBoxLat1
@@ -187,71 +179,6 @@
             this.labelTrueAzimuth.TabIndex = 8;
             this.labelTrueAzimuth.Text = "Истинный азимут:";
             // 
-            // groupBox3
-            // 
-            this.groupBox3.Controls.Add(this.groupBox4);
-            this.groupBox3.Location = new System.Drawing.Point(294, 12);
-            this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(274, 242);
-            this.groupBox3.TabIndex = 9;
-            this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "Настройки";
-            // 
-            // groupBox4
-            // 
-            this.groupBox4.Controls.Add(this.radioButtonModGaver);
-            this.groupBox4.Controls.Add(this.radioButtonGaversin);
-            this.groupBox4.Controls.Add(this.radioButtonSphere);
-            this.groupBox4.Controls.Add(this.radioButtonPifagor);
-            this.groupBox4.Location = new System.Drawing.Point(6, 19);
-            this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(262, 124);
-            this.groupBox4.TabIndex = 5;
-            this.groupBox4.TabStop = false;
-            this.groupBox4.Text = "Способ вычисления расстояний";
-            // 
-            // radioButtonModGaver
-            // 
-            this.radioButtonModGaver.AutoSize = true;
-            this.radioButtonModGaver.Checked = true;
-            this.radioButtonModGaver.Location = new System.Drawing.Point(6, 88);
-            this.radioButtonModGaver.Name = "radioButtonModGaver";
-            this.radioButtonModGaver.Size = new System.Drawing.Size(244, 17);
-            this.radioButtonModGaver.TabIndex = 6;
-            this.radioButtonModGaver.TabStop = true;
-            this.radioButtonModGaver.Text = "модифицированная теорема гаверсинусов";
-            this.radioButtonModGaver.UseVisualStyleBackColor = true;
-            // 
-            // radioButtonGaversin
-            // 
-            this.radioButtonGaversin.AutoSize = true;
-            this.radioButtonGaversin.Location = new System.Drawing.Point(6, 65);
-            this.radioButtonGaversin.Name = "radioButtonGaversin";
-            this.radioButtonGaversin.Size = new System.Drawing.Size(141, 17);
-            this.radioButtonGaversin.TabIndex = 5;
-            this.radioButtonGaversin.Text = "теорема гаверсинусов";
-            this.radioButtonGaversin.UseVisualStyleBackColor = true;
-            // 
-            // radioButtonSphere
-            // 
-            this.radioButtonSphere.AutoSize = true;
-            this.radioButtonSphere.Location = new System.Drawing.Point(6, 42);
-            this.radioButtonSphere.Name = "radioButtonSphere";
-            this.radioButtonSphere.Size = new System.Drawing.Size(182, 17);
-            this.radioButtonSphere.TabIndex = 4;
-            this.radioButtonSphere.Text = "сферическая теорема синусов";
-            this.radioButtonSphere.UseVisualStyleBackColor = true;
-            // 
-            // radioButtonPifagor
-            // 
-            this.radioButtonPifagor.AutoSize = true;
-            this.radioButtonPifagor.Location = new System.Drawing.Point(6, 19);
-            this.radioButtonPifagor.Name = "radioButtonPifagor";
-            this.radioButtonPifagor.Size = new System.Drawing.Size(122, 17);
-            this.radioButtonPifagor.TabIndex = 3;
-            this.radioButtonPifagor.Text = "теорема Пифагора";
-            this.radioButtonPifagor.UseVisualStyleBackColor = true;
-            // 
             // labelMagneticAzimuth
             // 
             this.labelMagneticAzimuth.AutoSize = true;
@@ -275,10 +202,9 @@
             this.AcceptButton = this.buttonCalculate;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(580, 392);
+            this.ClientSize = new System.Drawing.Size(303, 354);
             this.Controls.Add(this.labelMagneticDiv);
             this.Controls.Add(this.labelMagneticAzimuth);
-            this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.labelTrueAzimuth);
             this.Controls.Add(this.labelDistance);
             this.Controls.Add(this.buttonCalculate);
@@ -291,9 +217,6 @@
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
-            this.groupBox3.ResumeLayout(false);
-            this.groupBox4.ResumeLayout(false);
-            this.groupBox4.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -314,13 +237,7 @@
         private System.Windows.Forms.Button buttonCalculate;
         private System.Windows.Forms.Label labelDistance;
         private System.Windows.Forms.Label labelTrueAzimuth;
-        private System.Windows.Forms.GroupBox groupBox3;
-        private System.Windows.Forms.GroupBox groupBox4;
-        private System.Windows.Forms.RadioButton radioButtonGaversin;
-        private System.Windows.Forms.RadioButton radioButtonSphere;
-        private System.Windows.Forms.RadioButton radioButtonPifagor;
         private System.Windows.Forms.Label labelMagneticAzimuth;
         private System.Windows.Forms.Label labelMagneticDiv;
-        private System.Windows.Forms.RadioButton radioButtonModGaver;
     }
 }

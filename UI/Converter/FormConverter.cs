@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
@@ -1392,6 +1393,26 @@ namespace TrackConverter.UI.Converter
 
         private void button1_Click(object sender, EventArgs e)
         {
+            List<bool> ll = new List<bool>();
+            for (byte i = 0; i < 8; i++)
+            {
+                byte xb = (byte)(0x4 & i);
+                byte yb = (byte)(0x2 & i);
+                byte zb = (byte)(0x1 & i);
+
+                bool x = !(xb == 0);
+                bool y = !(yb == 0);
+                bool z = !(zb == 0);
+
+                bool ans = !x & y | x & y;
+                ll.Add(ans);
+            }
+                
+           
+
+
+
+
             int d = 75089;
             int f = Yandex.Perest(d);
             int ff = Yandex.Perest(f);

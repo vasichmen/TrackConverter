@@ -132,12 +132,8 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
             //обработка ответа от сервера
             json = json.Substring(json.IndexOf('{'));
             json = json.TrimEnd(new char[] { ';', ')' });
-            try
-            {
-                jobj = JObject.Parse(json);
-            }
+            try{jobj = JObject.Parse(json);}
             catch (Exception ex) { throw new ApplicationException("Ошибка в парсере JSON. Сервер вернул некорректный объект.", ex); }
-
             return jobj;
         }
 
@@ -600,8 +596,6 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                     fold = Application.StartupPath + Resources.temp_directory + @"\" + Guid.NewGuid().ToString();
                     Directory.CreateDirectory(fold);
                 }
-
-                Thread.Sleep(2000); //ждем, пока добавятся в очередь ответы сервера
                 DateTime start1 = DateTime.Now;
                 double N = points.Count * points.Count;
                 double pr = 0;
@@ -630,18 +624,24 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                                 pr++;
 
                                 //получение длины маршрута
-                                JToken r1 = jobj.SelectToken("data.features[0].properties", true);
-                                JToken route = r1["RouteMetaData"]["Distance"]["value"];
-                                string routel = route.ToString();
-                                double distance = double.Parse(routel);
-                                res.Distance = distance;
-                                row.Add(res);
+                                try
+                                {
+                                    JToken r1 = jobj.SelectToken("data.features[0].properties", true);
+                                    JToken route = r1["RouteMetaData"]["Distance"]["value"];
 
-                                //запись данных маршрута в файл
-                                string textJO = jobj.ToString(Newtonsoft.Json.Formatting.None);
-                                StreamWriter sw = new StreamWriter(fold + @"\" + i.ToString() + "_" + j.ToString() + ".json");
-                                sw.Write(textJO);
-                                sw.Close();
+                                    //сохранения расстояния
+                                    string routel = route.ToString();
+                                    double distance = double.Parse(routel);
+                                    res.Distance = distance;
+                                    row.Add(res);
+
+                                    //запись данных маршрута в файл
+                                    string textJO = jobj.ToString(Newtonsoft.Json.Formatting.None);
+                                    StreamWriter sw = new StreamWriter(fold + @"\" + i.ToString() + "_" + j.ToString() + ".json");
+                                    sw.Write(textJO);
+                                    sw.Close();
+                                }
+                                catch (Exception e) { throw e; }
                             }
                             else //если надо все хранить в памяти и обрабатывать сразу
                             {
@@ -674,17 +674,18 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                     else
                     {
                         JObject jo = GetRouteJSON(points[i].Coordinates, points[j].Coordinates);
-                        jo.SelectToken("data.features[0].features[0].properties.encodedCoordinates", true);
+                        try { jo.SelectToken("data.features[0].features[0].properties.encodedCoordinates", true); }
+                        catch (Exception e) { throw new ApplicationException("Ошибка при построении маршрута: не удалось проложить маршрут через одну или несколько точек.\r\n" + e.Message, e); }
                         queue.Enqueue(jo);
                         if (callback != null)
                             callback.BeginInvoke("Построение оптимального маршрута: получение расстояний, завершено " + (k / all * 100d).ToString("0.0") + "%" + ", путей в очереди: " + queue.Count, null, null);
+                        if (polyliner.Exception != null)
+                            throw new ApplicationException("Yandex error: " + polyliner.Exception.Message, polyliner.Exception);
                     }
                     k++;
                 }
 
             isRequestComplete = true;
-            Thread.Sleep(100);
-
             if (callback != null)
                 callback.Invoke("Построение оптимального маршрута: ожидание завершения обработки... ");
             polyliner.Wait(); //ожидание завершения обработки

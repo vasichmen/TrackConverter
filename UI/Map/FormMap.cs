@@ -240,39 +240,7 @@ namespace TrackConverter.UI.Map
 
         #region главное меню
 
-        #region выделить
 
-        /// <summary>
-        /// прямоугольник
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void selParallelogramToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            gmapControlMap.DisableAltForSelection = true;
-        }
-
-        /// <summary>
-        /// путь
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void selRouteToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        /// <summary>
-        /// многоугольник
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void selPolygonToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        #endregion
 
         #region Окно
 
@@ -447,8 +415,8 @@ namespace TrackConverter.UI.Map
 
             BeginEditRoute(creatingRoute, (tf) =>
             {
-            //ввод названия марщрута
-            readName:
+                //ввод названия марщрута
+                readName:
                 FormReadText fr = new FormReadText(DialogType.ReadText, "Введите название маршрута", "", false, false, false, false);
                 if (fr.ShowDialog(this) == DialogResult.OK)
                 {
@@ -554,6 +522,21 @@ namespace TrackConverter.UI.Map
         #endregion
 
         #region карта
+
+        /// <summary>
+        /// сохранение карты в файл
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void selectMapToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (Program.winSaveMapNullOrDisposed)
+            {
+                Program.winSaveMap = new FormSaveMap();
+                Program.winSaveMap.Show(Program.winMain);
+            }
+            Program.winSaveMap.Activate();
+        }
 
         #region поставщик карты
 
@@ -863,8 +846,8 @@ namespace TrackConverter.UI.Map
                             //если надо открыть маршрут для редактирования
                             BeginEditRoute(route, (tf) =>
                         {
-                        //ввод названия марщрута
-                        readName:
+                            //ввод названия марщрута
+                            readName:
                             FormReadText fr = new FormReadText(DialogType.ReadText, "Введите название маршрута", "", false, false, false, false);
                             if (fr.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
                             {
@@ -923,6 +906,16 @@ namespace TrackConverter.UI.Map
         #region контекстное меню карты
 
         #region на пустой карте
+
+        /// <summary>
+        /// открытие меню карты
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void contextMenuStripMap_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            clearFromtoMarkersToolStripMenuItem.Visible = fromToOverlay.Markers.Count != 0;
+        }
 
         /// <summary>
         /// вывод информации о точке
@@ -990,6 +983,19 @@ namespace TrackConverter.UI.Map
         }
 
         /// <summary>
+        /// очистка откуда куда маркеров
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void clearFromtoMarkersToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            fromToOverlay.Clear();
+            fromPoint = null;
+            toPoint = null;
+            IntermediatePoints = null;
+        }
+
+        /// <summary>
         /// копирование координат под курсором
         /// </summary>
         /// <param name="sender"></param>
@@ -1004,6 +1010,16 @@ namespace TrackConverter.UI.Map
         #endregion
 
         #region на маркере
+
+        /// <summary>
+        /// открытие меню маркера
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void contextMenuStripMarker_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            editMarkerToolStripMenuItem.Visible = markerClicked.Tag.Type != MarkerTypes.WhatThere;
+        }
 
         /// <summary>
         /// изменение маркера
@@ -1497,10 +1513,6 @@ namespace TrackConverter.UI.Map
             toolStripStatusLabelLat.Text = cr.Latitude.ToString("ddºmm'ss.s\"H");
             toolStripStatusLabelLon.Text = cr.Longitude.ToString("ddºmm'ss.s\"H");
 
-            //вывод информации о высоте в этой точке
-            //double alt = new GeoInfo( GeoInfoProvider.Google ).GetElevation( gmapControlMap.FromLocalToLatLng( e.X, e.Y ) );
-            //toolStripStatusLabelAltitude.Text = "Высота: " + alt + " м";
-
             //передвижение маркера
             //Проверка, что нажата левая клавиша мыши и не происходит перемещение карты
             if (currentMarker != null &&
@@ -1679,16 +1691,6 @@ namespace TrackConverter.UI.Map
                 Program.winNavigator.labelZoom.Text = "Zoom: " + gmapControlMap.Zoom;
             toolStripLabelZoom.Text = gmapControlMap.Zoom.ToString();
             Vars.Options.Map.Zoom = gmapControlMap.Zoom;
-        }
-
-        /// <summary>
-        /// действие с выделенной областью
-        /// </summary>
-        /// <param name="Selection">область</param>
-        /// <param name="ZoomToFit"></param>
-        private void gmapControlMap_OnSelectionChange(RectLatLng Selection, bool ZoomToFit)
-        {
-            new FormSelectMapActions(this, Selection).Show(this);
         }
 
         /// <summary>
@@ -1923,22 +1925,19 @@ namespace TrackConverter.UI.Map
 
                 //построение маршрута
                 GeoRouter gr = new GeoRouter(Vars.Options.Services.PathRouteProvider);
-                TrackFile rt = gr.CreateRoute(fromPoint.Coordinates, toPoint.Coordinates, IntermediatePoints);
-                if (rt == null)
+                TrackFile rt = null;
+                try { rt = gr.CreateRoute(fromPoint.Coordinates, toPoint.Coordinates, IntermediatePoints); }
+                catch (Exception e)
                 {
-                    MessageBox.Show("Не удалось проложить маршрут через заданные точки");
-                    return;
-                }
-                rt.Color = Vars.Options.Converter.GetColor();
-                rt.CalculateAll();
-                if (rt == null) //если ошибка, то очищаем слой и точки
-                {
+                    MessageBox.Show(this, e.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    fromToOverlay.Clear();
                     fromPoint = null;
                     toPoint = null;
                     IntermediatePoints = null;
                     return;
                 }
-
+                rt.Color = Vars.Options.Converter.GetColor();
+                rt.CalculateAll();
                 rt.Name = "Новый маршрут";
                 if (Vars.Options.Services.ChangePathedRoute)
                 {
@@ -1963,8 +1962,10 @@ namespace TrackConverter.UI.Map
                     RefreshData();
                     Program.RefreshWindows(this);
                 }
-                fromToOverlay.Markers.Clear();
-                fromToOverlay.Routes.Clear();
+               // fromToOverlay.Clear();
+               // fromPoint = null;
+               // toPoint = null;
+               // IntermediatePoints = null;
             }
         }
 
@@ -2167,11 +2168,11 @@ namespace TrackConverter.UI.Map
         }
 
 
+
+
+
+
         #endregion
 
-        private void contextMenuStripMarker_Opening(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            editMarkerToolStripMenuItem.Visible = markerClicked.Tag.Type != MarkerTypes.WhatThere;
-        }
     }
 }

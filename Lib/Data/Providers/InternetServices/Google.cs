@@ -41,7 +41,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                 //гугл, если с одинаковой частотой подавать запросы, кидает OVER_QUERY_LIMIT. 
                 //для обхода используется рандомная задержка запросов
                 //https://developers.google.com/maps/documentation/directions/usage-limits?hl=ru
-                return TimeSpan.FromMilliseconds(new Random().Next(100)+30);
+                return TimeSpan.FromMilliseconds(new Random().Next(500) + 50);
             }
         }
 
@@ -65,7 +65,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         /// <returns></returns>
         public TrackFile CreateRoute(Coordinate from, Coordinate to, TrackFile waypoints)
         {
-            if (waypoints.Count > 23)
+            if (waypoints != null && waypoints.Count > 23)
                 throw new ArgumentOutOfRangeException("Промежуточных точек может быть не больше 23");
 
             XmlDocument xml = CreateRouteXML(from, to, waypoints);
@@ -125,8 +125,12 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         /// <returns></returns>
         private static TrackFile decodeXMLPath(XmlDocument xml)
         {
-            if (xml.GetElementsByTagName("status")[0].InnerText != "OK")
-                throw new ApplicationException("Произошла ошибка: " + xml.GetElementsByTagName("status")[0].InnerText + "\r\n" + xml.GetElementsByTagName("error_message")[0].InnerText);
+            XmlNode status = xml.GetElementsByTagName("status")[0];
+            if (status.InnerText != "OK")
+                if (status.InnerText == "ZERO_RESULTS")
+                    throw new ApplicationException("Через заданные точки невозможно проложить маршрут");
+                else
+                    throw new ApplicationException("Произошла ошибка: " + status.InnerText);
 
             XmlNode leg = xml.GetElementsByTagName("leg")[0];
             TrackFile res = new TrackFile();
@@ -428,7 +432,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
             //действие обработки очереди XML ответов сервера
             Action polylinerAction = new Action(() =>
             {
-                Thread.Sleep(2000); //ждем, пока добавятся в очередь ответы сервера
+                //Thread.Sleep(2000); //ждем, пока добавятся в очередь ответы сервера
                 fold = "";
                 if (Vars.Options.Services.UseFSCacheForCreatingRoutes)
                 {
@@ -447,7 +451,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                     {
                         XmlDocument xml = null; //ждем добавления ответов в очередь
                         while (queue.IsEmpty || !queue.TryDequeue(out xml))
-                            Thread.Sleep(100);
+                            Thread.Sleep(50);
 
                         //если ответ null, то так и пишем
                         if (xml == null)
@@ -463,6 +467,13 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                                 pr++;
 
                                 //получение длины маршрута
+                                XmlNode status = xml["DirectionsResponse"]["status"];
+                                if (status.InnerText != "OK")
+                                    if (status.InnerText == "ZERO_RESULTS")
+                                        throw new ApplicationException("Не удалось проложить маршрут через одну или несколько точек");
+                                    else
+                                        throw new ApplicationException("Google error: " + status.InnerText);
+
                                 XmlNode r1 = xml["DirectionsResponse"]["route"]["leg"]["distance"]["value"];
                                 string routel = r1.InnerText;
                                 double distance = double.Parse(routel);
@@ -485,7 +496,6 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                             }
                             if (callback != null && isRequestComplete)
                                 callback.BeginInvoke("Построение оптимального маршрута: обработка результатов, завершено " + (pr / N * 100d).ToString("0.0") + "%", null, null);
-
                         }
                     }
                     i++;
@@ -511,12 +521,13 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                         queue.Enqueue(jo);
                         if (callback != null)
                             callback.BeginInvoke("Построение оптимального маршрута: получение расстояний, завершено " + (k / all * 100d).ToString("0.0") + "%" + ", путей в очереди: " + queue.Count, null, null);
+                        if (polyliner.Exception != null)
+                            throw polyliner.Exception;
                     }
                     k++;
                 }
 
             isRequestComplete = true;
-            Thread.Sleep(100);
             if (callback != null)
                 callback.Invoke("Построение оптимального маршрута: ожидание завершения обработки... ");
             polyliner.Wait(); //ожидание завершения обработки
@@ -542,7 +553,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
             if (!File.Exists(fname))
                 throw new ApplicationException("Файл " + fname + " не найден во временной папке");
 
-            XmlDocument xml = new  XmlDocument();
+            XmlDocument xml = new XmlDocument();
             xml.Load(fname);
             TrackFile res = decodeXMLPath(xml);
             return res;

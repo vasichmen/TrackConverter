@@ -43,7 +43,7 @@ namespace TrackConverter.Lib.Mathematic.Routing
                 throw new ArgumentOutOfRangeException("waypoints.Count", "Количество точек должно быть не меньше трёх");
 
             if (CallbackAction != null)
-                CallbackAction.Invoke("Построение оптимального маршрута: рассчет рсстояний");
+                CallbackAction.Invoke("Построение оптимального маршрута: рассчет расстояний");
 
             routes = GetRoutes(points);
             graph = new Graph(points.Count, points.Count);

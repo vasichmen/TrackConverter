@@ -36,7 +36,8 @@ namespace TrackConverter.UI.Common
                     return;
                 }
             }
-            else this.Text = "Просмотр документа";
+            else
+                this.Text = "Просмотр документа";
             webBrowser1.Url = new Uri(FileName);
             webBrowser1.Refresh();
             webBrowser1.Navigated += webBrowser1_Navigated;

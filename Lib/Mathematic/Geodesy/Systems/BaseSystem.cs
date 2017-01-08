@@ -9,7 +9,10 @@ namespace TrackConverter.Lib.Mathematic.Geodesy.Systems
 {
     /// <summary>
     /// Система координат. 
-    /// Вычисления на эллипсоиде: http://www.geokniga.org/bookfiles/geokniga-podshivalov-vp-kurs-lekciy-po-vysshey-geodezii-sferoidicheskaya-geodeziya-2005.pdf
+    /// Вычисления на эллипсоиде: 
+    /// http://www.geokniga.org/bookfiles/geokniga-podshivalov-vp-kurs-lekciy-po-vysshey-geodezii-sferoidicheskaya-geodeziya-2005.pdf
+    /// Теория:
+    /// http://blog.foxylab.com/prakticheskaya-kartografiya/
     /// </summary>
     public abstract class BaseSystem : IGeosystem
     {
@@ -79,7 +82,7 @@ namespace TrackConverter.Lib.Mathematic.Geodesy.Systems
         /// <returns></returns>
         public double CalculateDistance(TrackPoint p1, TrackPoint p2)
         {
-            return CalcDistV4(p1,p2);
+            return CalcDist(p1, p2);
         }
 
         /// <summary>
@@ -149,7 +152,7 @@ namespace TrackConverter.Lib.Mathematic.Geodesy.Systems
         /// <param name="p1"></param>
         /// <param name="p2"></param>
         /// <returns></returns>
-        private double CalcDistV4(TrackPoint p1, TrackPoint p2)
+        private double CalcDist(TrackPoint p1, TrackPoint p2)
         {
             double rad1d = Math.PI / 180;
             double f1 = p1.Coordinates.Latitude.TotalDegrees * rad1d; //широта первой точки в радианах

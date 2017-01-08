@@ -199,7 +199,7 @@ namespace TrackConverter.UI.Tools
             }
             if (!Program.winMap.Visible)
                 Program.winMap.Show();
-            Program.winMap.ShowWaypoints(Points,false, false);
+            Program.winMap.ShowWaypoints(Points, false, false);
             Program.winMap.Activate();
         }
 
@@ -255,7 +255,7 @@ namespace TrackConverter.UI.Tools
         /// <param name="e"></param>
         private void openConverterToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (this.Points == null || this.Points.Count==0)
+            if (this.Points == null || this.Points.Count == 0)
                 return;
             this.Points.Source = (DataTable)dataGridView1.DataSource;
             int row = dataGridView1.SelectedCells[0].RowIndex;
@@ -440,16 +440,6 @@ namespace TrackConverter.UI.Tools
         }
 
         /// <summary>
-        /// перерасчет неизменяемых полей (азимут, склонение)
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void dataGridView1_CellEndEdit(object sender, DataGridViewCellEventArgs e)
-        {
-
-        }
-
-        /// <summary>
         /// выделение нажатой ячейки
         /// </summary>
         /// <param name="sender"></param>
@@ -493,14 +483,15 @@ namespace TrackConverter.UI.Tools
             if (dataGridView1.IsCurrentCellDirty) //если текущая ячейка редактируется
                 if (e.ColumnIndex == 1 || e.ColumnIndex == 2 || e.ColumnIndex == 3) //если это широта, долгота, высота
                     if (((string)e.FormattedValue).Trim() != "") //если не пустое значение
-                        if (!Regex.IsMatch((string)e.FormattedValue, @"^[0-9\.\,\-]+$")) //если есть что-то кроме цифр
-                        {//то отменяем сохранение изменений и выводим сообщение
-                            e.Cancel = true;
-                            dataGridView1[e.ColumnIndex, e.RowIndex].Value = DBNull.Value;
-                            //MessageBox.Show("В это поле можно вводить только цифры");
-                            dataGridView1.Rows[e.RowIndex].ErrorText = "Значение должно быть числом";
-                            return;
-                        }
+                        if (((string)e.FormattedValue).Trim() != "NaN") //если это не NotAvailableNumber
+                            if (!Regex.IsMatch((string)e.FormattedValue, @"^[0-9\.\,\-]+$")) //если есть что-то кроме цифр
+                            {
+                                //то отменяем сохранение изменений и выводим сообщение
+                                e.Cancel = true;
+                                dataGridView1[e.ColumnIndex, e.RowIndex].Value = DBNull.Value;
+                                dataGridView1.Rows[e.RowIndex].ErrorText = "Значение должно быть числом или NaN";
+                                return;
+                            }
 
         }
 
