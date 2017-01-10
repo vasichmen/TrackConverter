@@ -5,7 +5,7 @@ using System.Text;
 using TrackConverter.Lib.Classes;
 using TrackConverter.Lib.Tracking;
 
-namespace TrackConverter.Lib.Mathematic.Geodesy.Systems
+namespace TrackConverter.Lib.Mathematic.Geodesy.Models
 {
     /// <summary>
     /// Система координат. 
@@ -14,7 +14,7 @@ namespace TrackConverter.Lib.Mathematic.Geodesy.Systems
     /// Теория:
     /// http://blog.foxylab.com/prakticheskaya-kartografiya/
     /// </summary>
-    public abstract class BaseSystem : IGeosystem
+    public abstract class BaseModel : IEarthModel
     {
 
         #region параметры эллипсоида
@@ -23,11 +23,6 @@ namespace TrackConverter.Lib.Mathematic.Geodesy.Systems
         /// скорость света в вакууме, м/с
         /// </summary>
         public abstract double LightSpeed { get; }
-
-        /// <summary>
-        /// Геоцентрическая гравитационная постоянная(с учетом атмосферы), м^3/с^2
-        /// </summary>
-        public abstract double f { get; }
 
         /// <summary>
         /// Угловая скорость вращения Земли, рад/с
@@ -82,7 +77,18 @@ namespace TrackConverter.Lib.Mathematic.Geodesy.Systems
         /// <returns></returns>
         public double CalculateDistance(TrackPoint p1, TrackPoint p2)
         {
-            return CalcDist(p1, p2);
+            return CalcDist(p1.Coordinates, p2.Coordinates);
+        }
+
+        /// <summary>
+        /// вычисление расстояния между точками в метрах
+        /// </summary>
+        /// <param name="c1"></param>
+        /// <param name="c2"></param>
+        /// <returns></returns>
+        public double CalculateDistance(Coordinate c1, Coordinate c2)
+        {
+            return CalcDist(c1, c2);
         }
 
         /// <summary>
@@ -144,7 +150,6 @@ namespace TrackConverter.Lib.Mathematic.Geodesy.Systems
 
         #region вычисления на сфере
 
-        #region расстояния
 
         /// <summary>
         /// рассчет расстояния между двумя точками в метрах по модифицированной теореме гаверсинусов.
@@ -152,13 +157,13 @@ namespace TrackConverter.Lib.Mathematic.Geodesy.Systems
         /// <param name="p1"></param>
         /// <param name="p2"></param>
         /// <returns></returns>
-        private double CalcDist(TrackPoint p1, TrackPoint p2)
+        private double CalcDist(Coordinate p1, Coordinate p2)
         {
             double rad1d = Math.PI / 180;
-            double f1 = p1.Coordinates.Latitude.TotalDegrees * rad1d; //широта первой точки в радианах
-            double f2 = p2.Coordinates.Latitude.TotalDegrees * rad1d; //широта второй точки в радианах
-            double l1 = p1.Coordinates.Longitude.TotalDegrees * rad1d; //долгота первой точки в радианах
-            double l2 = p2.Coordinates.Longitude.TotalDegrees * rad1d; //долгота второй точки в радианах
+            double f1 = p1.Latitude.TotalDegrees * rad1d; //широта первой точки в радианах
+            double f2 = p2.Latitude.TotalDegrees * rad1d; //широта второй точки в радианах
+            double l1 = p1.Longitude.TotalDegrees * rad1d; //долгота первой точки в радианах
+            double l2 = p2.Longitude.TotalDegrees * rad1d; //долгота второй точки в радианах
 
             double f_1 = Math.Pow((Math.Cos(f2) * Math.Sin(l2 - l1)), 2) + Math.Pow((Math.Cos(f1) * Math.Sin(f2) - Math.Sin(f1) * Math.Cos(f2) * Math.Cos(l2 - l1)), 2);
 
@@ -173,7 +178,6 @@ namespace TrackConverter.Lib.Mathematic.Geodesy.Systems
             return D;
         }
 
-        #endregion
 
         ///// <summary>
         ///// рассчет угла криволинейного треугольника на сфере. 

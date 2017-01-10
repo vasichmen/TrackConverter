@@ -276,7 +276,7 @@ namespace TrackConverter.Lib.Classes
             /// строковое представление координаты в указанном формате
             /// </summary>
             /// <param name="format">формат записи координаты. 
-            /// Hddmm.mmm     ddmm.mmm,H     Hdd mm.mmm       ddº mm.mmmm' H     ddº mm' ss.sss\" H     ddºmm'ss.s\"H       00.000000 </param>
+            /// Hddmm.mmm     ddmm.mmm,H    dd, mm.mmmm,H     Hdd mm.mmm       ddº mm.mmmm' H     ddº mm' ss.sss\" H     ddºmm'ss.s\"H       00.000000 </param>
             /// <returns></returns>
             /// <exception cref="FormatException">Возникает если заданный формат не поддерживается</exception>
             public string ToString(string format)
@@ -308,6 +308,9 @@ namespace TrackConverter.Lib.Classes
                         break;
                     case "00.000":
                         res = this.TotalDegrees.ToString("00.000").Replace(Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0], '.');
+                        break;
+                    case "dd, mm.mmmm,H":
+                        res = this.Degrees.ToString() +", " + Math.Round((Math.Abs(TotalDegrees) - Degrees) * 60, 4).ToString("00.0000").Replace(Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0], '.') +"," + this.Char.ToString();
                         break;
                     default:
                         throw new FormatException("Неподдерживаемый формат координат");

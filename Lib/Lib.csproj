@@ -74,6 +74,7 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Classes\MapProviderRecord.cs" />
@@ -110,13 +111,14 @@
     <Compile Include="Data\Providers\Local\ETOPO\FloatDatabase.cs" />
     <Compile Include="Data\Providers\Local\ETOPO\SQLiteDatabase.cs" />
     <Compile Include="GlobalSuppressions.cs" />
-    <Compile Include="Mathematic\Geodesy\Projection\Mercator.cs" />
-    <Compile Include="Mathematic\Geodesy\Systems\IGeosystem.cs" />
+    <Compile Include="Mathematic\Geodesy\Projections\IProjection.cs" />
+    <Compile Include="Mathematic\Geodesy\Projections\Mercator.cs" />
+    <Compile Include="Mathematic\Geodesy\Models\IEarthModel.cs" />
     <Compile Include="Mathematic\Assessment\Approximation.cs" />
     <Compile Include="Mathematic\Assessment\ElevationAnalysis.cs" />
-    <Compile Include="Mathematic\Geodesy\Systems\BaseSystem.cs" />
-    <Compile Include="Mathematic\Geodesy\Systems\PZ90.cs" />
-    <Compile Include="Mathematic\Geodesy\Systems\WGS84.cs" />
+    <Compile Include="Mathematic\Geodesy\Models\BaseModel.cs" />
+    <Compile Include="Mathematic\Geodesy\Models\PZ90.cs" />
+    <Compile Include="Mathematic\Geodesy\Models\WGS84.cs" />
     <Compile Include="Mathematic\Routing\BaseLogist.cs" />
     <Compile Include="Mathematic\Routing\BranchBoundsElements\BinaryTree.cs" />
     <Compile Include="Mathematic\Routing\BranchBoundsElements\Graph.cs" />

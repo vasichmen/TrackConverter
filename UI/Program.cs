@@ -27,7 +27,7 @@ using TrackConverter.Lib.Classes;
 using TrackConverter.Lib.Classes.Options;
 using TrackConverter.Lib.Data;
 using TrackConverter.Lib.Data.Providers.Local.ETOPO;
-using TrackConverter.Lib.Mathematic.Geodesy.Systems;
+using TrackConverter.Lib.Mathematic.Geodesy.Models;
 using TrackConverter.Lib.Tracking;
 using TrackConverter.Res.Properties;
 using TrackConverter.UI.Common;

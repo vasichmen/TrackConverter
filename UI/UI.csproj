@@ -240,10 +240,10 @@
     <Compile Include="Common\FormWaiting.Designer.cs">
       <DependentUpon>FormWaiting.cs</DependentUpon>
     </Compile>
-    <Compile Include="Map\FormSaveMap.cs">
+    <Compile Include="Tools\FormSaveMap.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Map\FormSaveMap.Designer.cs">
+    <Compile Include="Tools\FormSaveMap.Designer.cs">
       <DependentUpon>FormSaveMap.cs</DependentUpon>
     </Compile>
     <Compile Include="Map\FormSelectPoint.cs">
@@ -410,7 +410,7 @@
     <EmbeddedResource Include="Common\FormWaiting.resx">
       <DependentUpon>FormWaiting.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Map\FormSaveMap.resx">
+    <EmbeddedResource Include="Tools\FormSaveMap.resx">
       <DependentUpon>FormSaveMap.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Map\FormSelectPoint.resx">

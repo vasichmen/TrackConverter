@@ -2,29 +2,28 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using TrackConverter.Lib.Mathematic.Geodesy.Systems;
 
-namespace TrackConverter.Lib.Mathematic.Geodesy.Systems
+namespace TrackConverter.Lib.Mathematic.Geodesy.Models
 {
     /// <summary>
-    /// параметры СК ПЗ-90.11 
-    /// Источник: http://structure.mil.ru/files/pz-90.pdf
+    /// Эллипсоид WGS84 
+    /// Источник: https://confluence.qps.nl/pages/viewpage.action?pageId=38700159#WorldGeodeticSystem1984(WGS84)-Параметры
     /// </summary>
-   public class PZ90 : BaseSystem
+    public class WGS84 : BaseModel
     {
         /// <summary>
-        /// большая полуось
+        /// большая полуось,м
         /// </summary>
         public override double MaxAxis
         {
             get
             {
-                return 6378136;
+                return 6378137d;
             }
         }
 
         /// <summary>
-        /// скорость света
+        /// скорость света, м/с
         /// </summary>
         public override double LightSpeed
         {
@@ -41,29 +40,19 @@ namespace TrackConverter.Lib.Mathematic.Geodesy.Systems
         {
             get
             {
-                return 1 / 298.25784d;
+                return 1 / 298.257223563d;
             }
         }
 
-        /// <summary>
-        /// гравитационная постоянная
-        /// </summary>
-        public override double f
-        {
-            get
-            {
-                return 398600.4418e9;
-            }
-        }
 
         /// <summary>
-        /// угловая скорость вращения
+        /// угловая скорость врщения
         /// </summary>
         public override double AngleSpeed
         {
             get
             {
-                return 7.292115e-5;
+                return 7292115e-11;
             }
         }
     }

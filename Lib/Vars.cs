@@ -8,7 +8,7 @@ using TrackConverter.Lib.Classes;
 using TrackConverter.Lib.Classes.Options;
 using TrackConverter.Lib.Data;
 using TrackConverter.Lib.Tracking;
-using TrackConverter.Lib.Mathematic.Geodesy.Systems;
+using TrackConverter.Lib.Mathematic.Geodesy.Models;
 
 namespace TrackConverter
 {
@@ -72,6 +72,6 @@ namespace TrackConverter
         /// <summary>
         /// текущая система координат
         /// </summary>
-        public static IGeosystem CurrentGeosystem;
+        public static IEarthModel CurrentGeosystem;
     }
 }

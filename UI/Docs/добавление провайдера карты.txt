@@ -2,7 +2,7 @@
 1. TrackConverter.Lib.Classes.Enums.MapProviders добавить перечисление
 2. TrackConverter.UI.Map.FormMap.mpProviderToolStripMenuItem_Click()  добавить в оператор switсh
 3. TrackConverter.UI.Map.FormMap.ConfigureGMapControl() добавить в оператор switсh
-4. TrackConverter.UI.Tools.FormSaveMap.saver_action() добавить в оператор switсh
+4. TrackConverter.UI.Tools.FormSaveMap.comboBoxSaveMapProvider_SelectedIndexChanged() добавить в оператор switсh
 5. TrackConverter.Lib.Classes.Options.Map.AllProviders  добавить информацию нового поставщика карты
 	ID должен быть порядковым номером поставщика!!! (для работы сохранения карты)
 6. Добавить в папку Images\maps файл значка карты с соответствующим именем, как в пункте 4

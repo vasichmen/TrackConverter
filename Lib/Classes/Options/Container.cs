@@ -20,19 +20,19 @@ namespace TrackConverter.Lib.Classes.Options
         public Container()
         {
             this.WinState = FormWindowState.Maximized;
-            this.WinSize = new Size(1000, 600);
-            this.WinPosition = new Point(50,50);
+            this.WinSize = new System.Drawing.Size(1000, 600);
+            this.WinPosition = new System.Drawing.Point(50,50);
         }
 
         /// <summary>
         /// координаты окна
         /// </summary>
-        public Point WinPosition { get; set; }
+        public System.Drawing.Point WinPosition { get; set; }
 
         /// <summary>
         /// размеры окна
         /// </summary>
-        public Size WinSize { get; set; }
+        public System.Drawing.Size WinSize { get; set; }
 
         /// <summary>
         /// состояние окна

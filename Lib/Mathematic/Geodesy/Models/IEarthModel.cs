@@ -1,19 +1,48 @@
-﻿using TrackConverter.Lib.Tracking;
+﻿using TrackConverter.Lib.Classes;
+using TrackConverter.Lib.Tracking;
 
-namespace TrackConverter.Lib.Mathematic.Geodesy.Systems
+namespace TrackConverter.Lib.Mathematic.Geodesy.Models
 {
     /// <summary>
     /// система координат
     /// </summary>
-    public interface IGeosystem
+    public interface IEarthModel
     {
         /// <summary>
-        /// расчет расстояния между двумя точками в метрах заданным методом
+        /// Средний радиус Земли
+        /// </summary>
+        double AverageRadius { get; }
+
+        /// <summary>
+        /// Большая полуось
+        /// </summary>
+        double MaxAxis { get; }
+
+        /// <summary>
+        /// Малая полуось
+        /// </summary>
+        double MinAxis { get; }
+
+        /// <summary>
+        /// полярное сжатие эллипсоида
+        /// </summary>
+        double Compression { get; }
+
+        /// <summary>
+        /// расчет расстояния между двумя точками в метрах 
         /// </summary>
         /// <param name="p1">первая точка</param>
         /// <param name="p2">вторая точка</param>
         /// <returns></returns>
         double CalculateDistance(TrackPoint p1, TrackPoint p2);
+
+        /// <summary>
+        /// расчет расстояния между двумя координатами в метрах 
+        /// </summary>
+        /// <param name="c1">первая точка</param>
+        /// <param name="c2">вторая точка</param>
+        /// <returns></returns>
+        double CalculateDistance(Coordinate c1, Coordinate c2);
 
         /// <summary>
         /// Вычисление магнитного склонения в заданной точке
