@@ -28,6 +28,7 @@ namespace TrackConverter.Lib.Classes.Options
             this.MaxFullSearchNodes = 14;
             this.UseRouterInOptimal = false;
             this.UseBranchBoundsInRecurEnum = false;
+            this.LastSelectedArea = RectLatLng.Empty;
         }
 
         /// <summary>
@@ -108,5 +109,10 @@ namespace TrackConverter.Lib.Classes.Options
         /// использовать метод ветвей и границ при построении маршрута через группы в рекусивном полном переборе
         /// </summary>
         public bool UseBranchBoundsInRecurEnum { get; set; }
+
+        /// <summary>
+        /// последняя выделенная область карты
+        /// </summary>
+        public RectLatLng LastSelectedArea { get; set; }
     }
 }

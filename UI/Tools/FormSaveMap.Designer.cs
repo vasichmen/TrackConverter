@@ -31,7 +31,7 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormSaveMap));
             this.buttonStart = new System.Windows.Forms.Button();
-            this.buttonCancel = new System.Windows.Forms.Button();
+            this.buttonCancelClose = new System.Windows.Forms.Button();
             this.checkBoxMapLinkingFile = new System.Windows.Forms.CheckBox();
             this.label5 = new System.Windows.Forms.Label();
             this.comboBoxSaveMapProvider = new System.Windows.Forms.ComboBox();
@@ -58,17 +58,17 @@
             this.buttonStart.UseVisualStyleBackColor = true;
             this.buttonStart.Click += new System.EventHandler(this.buttonStart_Click);
             // 
-            // buttonCancel
+            // buttonCancelClose
             // 
-            this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.buttonCancel.Location = new System.Drawing.Point(243, 152);
-            this.buttonCancel.Name = "buttonCancel";
-            this.buttonCancel.Size = new System.Drawing.Size(75, 23);
-            this.buttonCancel.TabIndex = 2;
-            this.buttonCancel.Text = "Отменить";
-            this.buttonCancel.UseVisualStyleBackColor = true;
-            this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
+            this.buttonCancelClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonCancelClose.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.buttonCancelClose.Location = new System.Drawing.Point(243, 152);
+            this.buttonCancelClose.Name = "buttonCancelClose";
+            this.buttonCancelClose.Size = new System.Drawing.Size(75, 23);
+            this.buttonCancelClose.TabIndex = 2;
+            this.buttonCancelClose.Text = "Закрыть";
+            this.buttonCancelClose.UseVisualStyleBackColor = true;
+            this.buttonCancelClose.Click += new System.EventHandler(this.buttonClose_Click);
             // 
             // checkBoxMapLinkingFile
             // 
@@ -102,7 +102,6 @@
             this.comboBoxSaveMapProvider.Name = "comboBoxSaveMapProvider";
             this.comboBoxSaveMapProvider.Size = new System.Drawing.Size(139, 21);
             this.comboBoxSaveMapProvider.TabIndex = 14;
-            this.comboBoxSaveMapProvider.SelectedIndexChanged += new System.EventHandler(this.comboBoxSaveMapProvider_SelectedIndexChanged);
             // 
             // buttonSelectSaveFile
             // 
@@ -147,8 +146,6 @@
             // checkBoxSaveObjects
             // 
             this.checkBoxSaveObjects.AutoSize = true;
-            this.checkBoxSaveObjects.Checked = true;
-            this.checkBoxSaveObjects.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBoxSaveObjects.Location = new System.Drawing.Point(148, 65);
             this.checkBoxSaveObjects.Name = "checkBoxSaveObjects";
             this.checkBoxSaveObjects.Size = new System.Drawing.Size(126, 17);
@@ -189,7 +186,7 @@
             this.AcceptButton = this.buttonStart;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.CancelButton = this.buttonCancel;
+            this.CancelButton = this.buttonCancelClose;
             this.ClientSize = new System.Drawing.Size(327, 187);
             this.Controls.Add(this.checkBoxWLinkingFile);
             this.Controls.Add(this.label1);
@@ -202,7 +199,7 @@
             this.Controls.Add(this.buttonSelectSaveFile);
             this.Controls.Add(this.textBoxSavePath);
             this.Controls.Add(this.label4);
-            this.Controls.Add(this.buttonCancel);
+            this.Controls.Add(this.buttonCancelClose);
             this.Controls.Add(this.buttonStart);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -219,7 +216,7 @@
 
         #endregion
         private System.Windows.Forms.Button buttonStart;
-        private System.Windows.Forms.Button buttonCancel;
+        private System.Windows.Forms.Button buttonCancelClose;
         private System.Windows.Forms.CheckBox checkBoxMapLinkingFile;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.ComboBox comboBoxSaveMapProvider;

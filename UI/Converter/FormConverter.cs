@@ -311,7 +311,7 @@ namespace TrackConverter.UI.Converter
                     foreach (string arg in args)
                         if (File.Exists(arg))
                         {
-                            string ext = Path.GetExtension(arg);
+                            string ext = Path.GetExtension(arg).ToLower();
                             switch (ext)
                             {
                                 case ".kml":
@@ -322,6 +322,7 @@ namespace TrackConverter.UI.Converter
                                     Program.winMap.ShowWaypoints(gf.Waypoints, true, true);
                                     RefreshData();
                                     break;
+                                case ".wpt":
                                 case ".adrs":
                                     openingFile = arg;
                                     break;

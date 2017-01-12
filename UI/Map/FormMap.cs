@@ -1236,6 +1236,7 @@ namespace TrackConverter.UI.Map
             {
                 Vars.Options.Map.LastCenterPoint = gmapControlMap.Position;
                 Vars.Options.Map.IsFormNavigatorShow = !Program.winNavigatorNullOrDisposed;
+                Vars.Options.Map.LastSelectedArea = gmapControlMap.SelectedArea;
                 this.refreshGoToTimer.Stop();
                 this.moveMapTimer.Stop();
             }
@@ -1271,9 +1272,14 @@ namespace TrackConverter.UI.Map
             //обновление путевых точек
             if (waypoints != null)
                 ShowWaypoints(waypoints, baseOverlay, false);
-            //загрузка точек с последнего запкска
+
+            //загрузка точек с последнего запуска
             else if (gf != null)
                 ShowWaypoints(gf.Waypoints, baseOverlay, false);
+
+            //последняя выделенная область карты
+            gmapControlMap.SelectedArea = Vars.Options.Map.LastSelectedArea;
+            gmapControlMap.Refresh();
         }
 
         /// <summary>

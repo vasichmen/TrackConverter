@@ -665,16 +665,19 @@ namespace TrackConverter.Lib.Tracking
             TrackFile res = new TrackFile();
             StreamReader inputS = new StreamReader(FilePath, new UTF8Encoding(false), true);
             inputS.ReadLine(); //заголовок файла  и информация о версии
-            string st = inputS.ReadLine(); //формат координат
+            string st = inputS.ReadLine(); //датум
             if (!st.ToLower().Contains("wgs 84"))
-                throw new Exception("Неверный формат значений координат в файле");
-            st = inputS.ReadLine(); //параметры трека
+                throw new Exception("Неизвестный датум: " + st);
 
-            //0,описание,,цвет
-            string[] arrd = Regex.Split(st, "w*,w*");
-            res.Description = arrd[1]; //описание трека
-            if (arrd[3] != "0")
-                res.Color = Color.FromArgb(int.Parse(arrd[3])); //цвет
+            st = inputS.ReadLine(); //параметры трека
+            if (st.ToLower() != "Reserved 2")
+            {
+                //0,описание,,цвет
+                string[] arrd = Regex.Split(st, "w*,w*");
+                res.Description = arrd[1]; //описание трека
+                if (arrd[3] != "0")
+                    res.Color = Color.FromArgb(int.Parse(arrd[3])); //цвет
+            }
             inputS.ReadLine(); //зарезервированная строка
             while (!inputS.EndOfStream)
             {

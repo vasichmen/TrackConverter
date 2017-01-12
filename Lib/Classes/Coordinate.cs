@@ -310,7 +310,7 @@ namespace TrackConverter.Lib.Classes
                         res = this.TotalDegrees.ToString("00.000").Replace(Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0], '.');
                         break;
                     case "dd, mm.mmmm,H":
-                        res = this.Degrees.ToString() +", " + Math.Round((Math.Abs(TotalDegrees) - Degrees) * 60, 4).ToString("00.0000").Replace(Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0], '.') +"," + this.Char.ToString();
+                        res = this.Degrees.ToString() +", " + Math.Round((Math.Abs(TotalDegrees) - Degrees) * 60, 4).ToString("0.0000").Replace(Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0], '.') +"," + this.Char.ToString();
                         break;
                     default:
                         throw new FormatException("Неподдерживаемый формат координат");
