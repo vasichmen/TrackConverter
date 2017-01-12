@@ -173,8 +173,5 @@ namespace TrackConverter.UI.Common.Dialogs
             Clipboard.SetText(textBox1.Text);
             MessageBox.Show("Ссылка скопирована в буфер обмена");
         }
-
-
-
     }
 }

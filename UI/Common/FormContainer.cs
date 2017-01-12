@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 using System.Windows.Forms;
 using TrackConverter.Lib.Data;
 using TrackConverter.Lib.Data.Providers.Local.ETOPO;
@@ -57,6 +59,10 @@ namespace TrackConverter.UI.Common
         /// <param name="e"></param>
         private void HelpToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            //string lnk = (Application.StartupPath + Res.Properties.Resources.help_doc_file).Replace("#", "%23");
+
+            //Process.Start(lnk);
+
             new FormBrowser().Show();
         }
 
@@ -198,11 +204,11 @@ namespace TrackConverter.UI.Common
 
             //если надо - запускаем загрузку ЕТОРО2
             if (Vars.Options.Common.IsLoadETOPOOnStart)
-                if(GeoInfo.ETOPOProvider==null)
-            {
-                BeginOperation();
-                Vars.TaskLoadingETOPO.Start();
-            }
+                if (GeoInfo.ETOPOProvider == null)
+                {
+                    BeginOperation();
+                    Vars.TaskLoadingETOPO.Start();
+                }
         }
 
         /// <summary>
@@ -272,6 +278,6 @@ namespace TrackConverter.UI.Common
 
         #endregion
 
-      
+
     }
 }

@@ -1018,7 +1018,10 @@ namespace TrackConverter.UI.Map
         /// <param name="e"></param>
         private void contextMenuStripMarker_Opening(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            editMarkerToolStripMenuItem.Visible = markerClicked.Tag.Type != MarkerTypes.WhatThere;
+            if (markerClicked.Tag.Type == MarkerTypes.PathingRoute)
+                e.Cancel = true;
+            else
+                editMarkerToolStripMenuItem.Visible = markerClicked.Tag.Type != MarkerTypes.WhatThere;
         }
 
         /// <summary>
@@ -1968,10 +1971,10 @@ namespace TrackConverter.UI.Map
                     RefreshData();
                     Program.RefreshWindows(this);
                 }
-               // fromToOverlay.Clear();
-               // fromPoint = null;
-               // toPoint = null;
-               // IntermediatePoints = null;
+                // fromToOverlay.Clear();
+                // fromPoint = null;
+                // toPoint = null;
+                // IntermediatePoints = null;
             }
         }
 
