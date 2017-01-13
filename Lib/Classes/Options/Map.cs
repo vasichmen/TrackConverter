@@ -63,21 +63,21 @@ namespace TrackConverter.Lib.Classes.Options
         {
             get
             {
-                return new List<MapProviderRecord>() { 
-                        new MapProviderRecord(){ Enum = MapProviders.GoogleHybridMap, ID=0, Title = "Google.Гибрид",IconName="\\Images\\maps\\google_hibride.png" },
-                        new MapProviderRecord(){ Enum = MapProviders.GoogleMap, ID=1, Title = "Google.Схема" ,IconName="\\Images\\maps\\google_map.png"},
-                        new MapProviderRecord(){ Enum = MapProviders.GoogleSatelliteMap, ID=2, Title = "Google.Спутник" ,IconName="\\Images\\maps\\google_satellite.png"},
-                        new MapProviderRecord(){ Enum = MapProviders.OpenCycleMap, ID=3, Title = "OSM Cycle Map",IconName="\\Images\\maps\\osm_cycle.png" },
-                        new MapProviderRecord(){ Enum = MapProviders.YandexHybridMap, ID=4, Title = "Яндекс.Гибрид" ,IconName="\\Images\\maps\\yandex_hibride.png"},
-                        new MapProviderRecord(){ Enum = MapProviders.YandexMap, ID=5, Title = "Яндекс.Схема" ,IconName="\\Images\\maps\\yandex_map.png"},
-                        new MapProviderRecord(){ Enum = MapProviders.YandexSatelliteMap, ID=6, Title = "Яндекс.Спутник" ,IconName="\\Images\\maps\\yandex_satellite.png"},
-                        new MapProviderRecord(){ Enum = MapProviders.WikimapiaMap, ID=7, Title = "Карта Викимапии" ,IconName="\\Images\\maps\\wikimapia_map.png"}
+                return new List<MapProviderRecord>() {
+                        new MapProviderRecord(){ Enum = MapProviders.GoogleHybridMap, ID=0, Title = "Google.Гибрид",IconName="\\Images\\maps\\google_hibride.png", MaxParallelPool = 4},
+                        new MapProviderRecord(){ Enum = MapProviders.GoogleMap, ID=1, Title = "Google.Схема" ,IconName="\\Images\\maps\\google_map.png", MaxParallelPool = 4},
+                        new MapProviderRecord(){ Enum = MapProviders.GoogleSatelliteMap, ID=2, Title = "Google.Спутник" ,IconName="\\Images\\maps\\google_satellite.png", MaxParallelPool = 4},
+                        new MapProviderRecord(){ Enum = MapProviders.OpenCycleMap, ID=3, Title = "OSM Cycle Map",IconName="\\Images\\maps\\osm_cycle.png" , MaxParallelPool = 4},
+                        new MapProviderRecord(){ Enum = MapProviders.YandexHybridMap, ID=4, Title = "Яндекс.Гибрид" ,IconName="\\Images\\maps\\yandex_hibride.png", MaxParallelPool = 4},
+                        new MapProviderRecord(){ Enum = MapProviders.YandexMap, ID=5, Title = "Яндекс.Схема" ,IconName="\\Images\\maps\\yandex_map.png", MaxParallelPool = 4},
+                        new MapProviderRecord(){ Enum = MapProviders.YandexSatelliteMap, ID=6, Title = "Яндекс.Спутник" ,IconName="\\Images\\maps\\yandex_satellite.png", MaxParallelPool = 4},
+                        new MapProviderRecord(){ Enum = MapProviders.WikimapiaMap, ID=7, Title = "Карта Викимапии" ,IconName="\\Images\\maps\\wikimapia_map.png", MaxParallelPool = 4}
                         };
             }
             set { }
         }
 
-       
+
 
 
         /// <summary>

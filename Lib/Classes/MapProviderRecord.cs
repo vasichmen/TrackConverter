@@ -33,6 +33,11 @@ namespace TrackConverter.Lib.Classes {
         public string IconName { get; set; }
 
         /// <summary>
+        /// максимальное число параллельных запросов к серверу
+        /// </summary>
+        public int MaxParallelPool { get; set; }
+
+        /// <summary>
         /// поставщик карты по ID
         /// </summary>
         /// <param name="id">ID поставщика</param>

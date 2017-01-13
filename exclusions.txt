@@ -1,5 +1,5 @@
 *.gmdb
-*exclusions.txt
+exclusions.txt
 *.sq3
 *.bin
 *.hdr
