@@ -1,1 +1,1 @@
-del /s D:\Clouds\google.vasily.mett\Documents\Projects\C#\TrackConverter\*.gmdb
+del /s D:\Clouds\google.vasily.mett\Documents\Projects\CS\TrackConverter\*.gmdb
