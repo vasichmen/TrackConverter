@@ -33,14 +33,6 @@ namespace TrackConverter.Lib.Classes.Options
             this.Format = OptionsFormat.XML;
         }
 
-        public string GetXmlText()
-        {
-            StreamReader sr = new StreamReader(this.FilePath);
-            string res = sr.ReadToEnd();
-            sr.Close();
-            return res;
-        }
-
         /// <summary>
         /// настройки карты
         /// </summary>

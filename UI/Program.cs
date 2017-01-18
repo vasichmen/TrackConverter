@@ -257,7 +257,7 @@ namespace TrackConverter.UI
 
             //запись статистики
             WebSite site = new WebSite();
-            site.SendStatistic();
+            site.SendStatisticAsync();
 
             //применение настроек
             AcceptOptions();
