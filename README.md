@@ -12,3 +12,5 @@ Apart from file formats program works with links Yandex.ru, Wikimapia.org.
 * Editing waypoints, working with waypoints on map;
 * Generation altitude shape.
 * Exporting static map image
+
+Binaries are available here: https://vasily-mett.github.io/TrackConverter/index.html
