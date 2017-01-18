@@ -26,6 +26,7 @@ using GMap.NET.MapProviders;
 using TrackConverter.Lib.Classes;
 using TrackConverter.Lib.Classes.Options;
 using TrackConverter.Lib.Data;
+using TrackConverter.Lib.Data.Providers.InternetServices;
 using TrackConverter.Lib.Data.Providers.Local.ETOPO;
 using TrackConverter.Lib.Mathematic.Geodesy.Models;
 using TrackConverter.Lib.Tracking;
@@ -254,6 +255,10 @@ namespace TrackConverter.UI
             //метод загрузки базы данных ETOPO
             Vars.TaskLoadingETOPO = GetETOPOLoadingTask();
 
+            //запись статистики
+            WebSite site = new WebSite();
+            site.SendStatistic();
+
             //применение настроек
             AcceptOptions();
 
@@ -276,6 +281,7 @@ namespace TrackConverter.UI
             winConverter.LoadFiles(args);
 
             #endregion
+
 
             //запуск основного окна
             Application.Run(winMain);

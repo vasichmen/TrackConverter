@@ -33,6 +33,14 @@ namespace TrackConverter.Lib.Classes.Options
             this.Format = OptionsFormat.XML;
         }
 
+        public string GetXmlText()
+        {
+            StreamReader sr = new StreamReader(this.FilePath);
+            string res = sr.ReadToEnd();
+            sr.Close();
+            return res;
+        }
+
         /// <summary>
         /// настройки карты
         /// </summary>
@@ -72,6 +80,11 @@ namespace TrackConverter.Lib.Classes.Options
         /// формат сохранения настроек
         /// </summary>
         public OptionsFormat Format { get; set; }
+
+        /// <summary>
+        /// адрес файла
+        /// </summary>
+        public string FilePath { get; set; }
 
         /// <summary>
         /// сохранение настроек в файл
@@ -163,6 +176,7 @@ namespace TrackConverter.Lib.Classes.Options
             if (!File.Exists(FilePath))
                 return new Options();
 
+            
             FileStream fs = new FileStream(FilePath, FileMode.Open);
             XmlSerializer se = new XmlSerializer(typeof(Options));
             try
@@ -170,6 +184,7 @@ namespace TrackConverter.Lib.Classes.Options
                 Options res = (Options)se.Deserialize(fs);
                 res.Format = OptionsFormat.XML;
                 fs.Close();
+                res.FilePath = FilePath;
                 return res;
             }
             catch (Exception)

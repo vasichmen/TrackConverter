@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Win32;
 
 namespace TrackConverter.Lib.Classes.Options
 {
@@ -72,5 +73,35 @@ namespace TrackConverter.Lib.Classes.Options
         ///  послденяя набранная команда в консоли
         /// </summary>
         public string LastConsoleCommand { get; set; }
+
+        /// <summary>
+        /// адрес сайта программы
+        /// </summary>
+        public string SiteAddress { get { return "https://trackconverter.000webhostapp.com"; } }
+
+        /// <summary>
+        /// GUID экземпляра программы
+        /// </summary>
+        public string ApplicationGuid
+        {
+            get
+            {
+#if (DEBUG)
+                return "debug";
+#else
+                RegistryKey key = Registry.CurrentUser.CreateSubKey("Software\\TrackConverter");
+                object guido = key.GetValue("Guid");
+                string guid;
+                if (guido == null)
+                {
+                    guid = Guid.NewGuid().ToString();
+                    key.SetValue("Guid", guid);
+                }
+                else
+                    guid = (string)guido;
+                return guid;
+#endif
+            }
+        }
     }
 }
