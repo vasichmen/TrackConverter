@@ -7,11 +7,11 @@ using System.Resources;
 // набора атрибутов. Измените значения этих атрибутов, чтобы изменить сведения,
 // связанные со сборкой.
 [assembly: AssemblyTitle("TrackConverter")]
-[assembly: AssemblyDescription("Создание, преобразование маршрутов")]
+[assembly: AssemblyDescription("Программа предназначена для создания веломаршрутов с использованием карт Google, Яндекс и OSM CycleMap.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("vasich")]
+[assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("TrackConverter")]
-[assembly: AssemblyCopyright("Copyright ©  2016")]
+[assembly: AssemblyCopyright("Copyright ©  2017")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -33,6 +33,6 @@ using System.Resources;
 // Можно задать все значения или принять номер построения и номер редакции по умолчанию, 
 // используя "*", как показано ниже:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.2.5.0")]
+[assembly: AssemblyVersion("0.3.1.1")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
 [assembly: NeutralResourcesLanguageAttribute("ru")]

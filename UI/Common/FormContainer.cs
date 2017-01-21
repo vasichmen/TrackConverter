@@ -73,7 +73,7 @@ namespace TrackConverter.UI.Common
         /// <param name="e"></param>
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
+            new FormAbout().ShowDialog(this);
         }
 
         /// <summary>

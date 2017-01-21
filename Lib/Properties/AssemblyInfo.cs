@@ -8,9 +8,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("Lib")]
 [assembly: AssemblyDescription("Библиотека форматов маршрутов, сторонних сервисов")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("vasich")]
+[assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("Lib")]
-[assembly: AssemblyCopyright("Copyright ©  2016")]
+[assembly: AssemblyCopyright("Copyright ©  2017")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -32,5 +32,5 @@ using System.Runtime.InteropServices;
 // Можно задать все значения или принять номер построения и номер редакции по умолчанию, 
 // используя "*", как показано ниже:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.0.0.0")]
+[assembly: AssemblyVersion("2.0.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
