@@ -118,12 +118,12 @@ namespace TrackConverter.Res.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Рекурсивный полный перебор
+        ///   Ищет локализованную строку, похожую на Полярный перебор
         ///Делит все точки на группы и строит оптимальный маршрут через группы. Остальные точки присоединяет &quot;жадным&quot; способом. Чем больше групп, тем работа алгоритма больше похожа на работу полного перебора. При малом количестве групп алгоритм похож на &quot;жадный&quot;. Для количества групп, равном 13, расчет занимает примерно 2 минуты..
         /// </summary>
-        public static string DescriptionRecursiveEnum {
+        public static string DescriptionPolarSearch {
             get {
-                return ResourceManager.GetString("DescriptionRecursiveEnum", resourceCulture);
+                return ResourceManager.GetString("DescriptionPolarSearch", resourceCulture);
             }
         }
         

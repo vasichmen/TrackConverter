@@ -46,7 +46,7 @@ namespace TrackConverter.Lib.Mathematic.Routing
         /// <returns></returns>
         protected TrackFile ProcessResult(int[] way, bool isCycled)
         {
-            if (Vars.Options.Services.UseFSCacheForCreatingRoutes)
+            if (Vars.Options.Services.UseFSCacheForCreatingRoutes && router != null)
             {
                 TrackFile res = new TrackFile();
                 for (int i = 0; i < way.Length - 1; i++)

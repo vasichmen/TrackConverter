@@ -266,9 +266,9 @@ namespace TrackConverter
         FullSearch,
 
         /// <summary>
-        /// рекурсивный полный перебор
+        /// полярный перебор
         /// </summary>
-        RecursiveEnum
+        PolarSearch
     }
 
 

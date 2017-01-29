@@ -29,7 +29,6 @@ namespace TrackConverter.Lib.Classes.Options {
             this.NorthPoleLatitude = 85.90000;
             this.NorthPoleLongitude = -147.00000;
             this.MaxRecentFiles = 5;
-            this.IsFormMapShow = false;
             this.TempFolder = Application.StartupPath + Resources.temp_directory;
             this.IsApproximateAltitudes = false;
             this.ApproximateAmount = 60;
@@ -46,11 +45,6 @@ namespace TrackConverter.Lib.Classes.Options {
         /// папка временного хранения файлов
         /// </summary>
         public string TempFolder { get; set; }
-
-        /// <summary>
-        /// Если истина, то при закрытии окна было открыто окно карты
-        /// </summary>
-        public bool IsFormMapShow { get; set; }
 
         /// <summary>
         /// список последних открытых файлов
@@ -91,7 +85,6 @@ namespace TrackConverter.Lib.Classes.Options {
         /// Список файлов, загруженных при выходе из программы
         /// </summary>
         public List<string> LastLoadedTracks { get; set; }
-
 
         /// <summary>
         /// ассоциируемые с программой расширения файлов

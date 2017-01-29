@@ -446,8 +446,6 @@
     <Content Include="Schemes\associate_scheme.reg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <None Include="Data\ETOPO2\Binary\2\ETOPO2v2c_f4_MSB.flt" />
-    <None Include="Data\ETOPO2\Binary\2\ETOPO2v2c_f4_MSB.hdr" />
     <None Include="Data\ETOPO2\SQL\etopo2.sq3">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -515,9 +513,7 @@
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </COMReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Data\ETOPO2\Binary\1\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>

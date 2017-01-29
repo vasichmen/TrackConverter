@@ -799,7 +799,7 @@ namespace TrackConverter.UI.Map
 
             bool isCycled = startPoint == null;
 
-            if (Vars.Options.Map.OptimalRouteMethod == OptimalMethodType.RecursiveEnum && !isCycled)
+            if (Vars.Options.Map.OptimalRouteMethod == OptimalMethodType.PolarSearch && !isCycled)
             {
                 FormSelectPoint fsp1 = new FormSelectPoint(waypoints, startPoint, false, "Выберите конечную точку");
                 if (fsp1.ShowDialog(this) == DialogResult.OK)
@@ -827,8 +827,8 @@ namespace TrackConverter.UI.Map
                         case OptimalMethodType.FullSearch:
                             route = new FullSearch(Program.winMain.setCurrentOperation).Make(waypoints, startPoint, isCycled);
                             break;
-                        case OptimalMethodType.RecursiveEnum:
-                            route = new RecursiveEnum(Program.winMain.setCurrentOperation).Make(waypoints, startPoint, endPoint, isCycled);
+                        case OptimalMethodType.PolarSearch:
+                            route = new PolarSearch(Program.winMain.setCurrentOperation).Make(waypoints, startPoint, endPoint, isCycled);
                             break;
                         default:
                             route = new Greedy(Program.winMain.setCurrentOperation).Make(waypoints, startPoint, isCycled);

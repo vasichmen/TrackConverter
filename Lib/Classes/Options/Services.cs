@@ -17,7 +17,7 @@ namespace TrackConverter.Lib.Classes.Options
         public Services()
         {
             this.ChangePathedRoute = false;
-            this.PathRouteMode = PathRouteMode.Walk;
+            this.PathRouteMode = PathRouteMode.Driving;
             this.LinkShorterProvider = LinkShorterProvider.Clck;
             this.PathRouteProvider = PathRouteProvider.Yandex;
             this.UseFSCacheForCreatingRoutes = true;

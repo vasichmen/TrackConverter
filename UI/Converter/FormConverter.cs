@@ -69,7 +69,6 @@ namespace TrackConverter.UI.Converter
         /// <param name="e"></param>
         private void FormConverter_FormClosed(object sender, FormClosedEventArgs e)
         {
-            Vars.Options.Converter.IsFormMapShow = Program.winMap.Visible;
             Vars.Options.Converter.LastLoadedTracks = this.Tracks.FilePaths;
         }
 
@@ -80,11 +79,13 @@ namespace TrackConverter.UI.Converter
         /// <param name="e"></param>
         private void FormConverter_Load(object sender, EventArgs e)
         {
+#if (DEBUG)
+            this.button1.Visible = true;
+#endif
+
             //открытие окна карты, если оно было открыто при последнем закрытии
             if (Program.winMapNullOrDisposed)
                 Program.winMap = new FormMap();
-            if (!Program.winMap.Visible && Vars.Options.Converter.IsFormMapShow)
-                Program.winMap.Show();
 
             //открытие последних файлов
             if (this.Tracks == null || this.Tracks.Count == 0)
@@ -702,7 +703,7 @@ namespace TrackConverter.UI.Converter
                 return;
             }
             int row = dataGridView1.SelectedCells[0].RowIndex;
-            new FormPoints(Tracks[row]).Show(Program.winMain);
+            new FormPoints(Tracks[row]) { FormBorderStyle = FormBorderStyle.Sizable }.Show(Program.winMain);
         }
 
         /// <summary>
@@ -833,7 +834,7 @@ namespace TrackConverter.UI.Converter
                         foreach (DataGridViewRow row in dataGridView1.SelectedRows)
                         {
                             int rowI = row.Index;
-                            TrackFile tf = Tracks[rowI];
+                            TrackFile tf = Tracks[rowI].Clone();
 
                             double lg = double.Parse(frt.Result);
                             tf = tf.AddIntermediatePoints(lg);
@@ -1408,8 +1409,8 @@ namespace TrackConverter.UI.Converter
                 bool ans = !x & y | x & y;
                 ll.Add(ans);
             }
-                
-           
+
+
 
 
 

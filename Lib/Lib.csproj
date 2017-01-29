@@ -143,8 +143,7 @@
     <Compile Include="Mathematic\Routing\GreedyElements\Cell.cs" />
     <Compile Include="Mathematic\Routing\GreedyElements\Graph.cs" />
     <Compile Include="Data\SQLiteCache.cs" />
-    <Compile Include="Mathematic\Routing\RecursiveEnum.cs" />
-    <Compile Include="Mathematic\Routing\RecursiveEnumElements\Graph.cs" />
+    <Compile Include="Mathematic\Routing\PolarSearch.cs" />
     <Compile Include="Tracking\Helpers\KmlHelper.cs" />
     <Compile Include="Tracking\Helpers\RteHelper.cs" />
     <Compile Include="Tracking\Helpers\XmlHelper.cs" />
@@ -166,7 +165,9 @@
       <Name>Res</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Mathematic\Routing\PolarSearchElements\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>

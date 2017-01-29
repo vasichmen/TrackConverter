@@ -9,7 +9,7 @@ namespace TrackConverter.Lib.Mathematic.Routing
     /// https://habrahabr.ru/post/151151/
 	/// https://habrahabr.ru/post/151954/
     /// </summary>
-    public class RecursiveEnum : BaseLogist
+    public class PolarSearch : BaseLogist
     {
         /// <summary>
         /// начальная матрица расстояний
@@ -33,7 +33,7 @@ namespace TrackConverter.Lib.Mathematic.Routing
         /// Создает новый экземпляр класса с указанным действием вывода информации
         /// </summary>
         /// <param name="CallbackAction"></param>
-        public RecursiveEnum(Action<string> CallbackAction) : base(CallbackAction) { }
+        public PolarSearch(Action<string> CallbackAction) : base(CallbackAction) { }
 
         /// <summary>
         /// построить оптимальный маршрут
@@ -283,7 +283,7 @@ namespace TrackConverter.Lib.Mathematic.Routing
 
             //ПОСТРОЕНИЕ ПУТИ
             int[] res;
-            if (!Vars.Options.Map.UseBranchBoundsInRecurEnum)//путь в матрице matr полным перебором
+            if (!Vars.Options.Map.UseBranchBoundsInPolarSearch)//путь в матрице matr полным перебором
             {
                 for (int i = 0; i < nodes.Length; i++)
                 {

@@ -26,9 +26,11 @@ namespace TrackConverter.Lib.Classes.Options
             this.IsFormNavigatorShow = true;
             this.MapLanguange = LanguageType.Russian;
             this.MaxFullSearchNodes = 14;
-            this.UseRouterInOptimal = false;
-            this.UseBranchBoundsInRecurEnum = false;
+            this.UseRouterInOptimal = true;
+            this.UseBranchBoundsInPolarSearch = false;
             this.LastSelectedArea = RectLatLng.Empty;
+            this.OptimalRouteMethod = OptimalMethodType.PolarSearch;
+            this.RestoreRoutesWaypoints = true;
         }
 
         /// <summary>
@@ -106,9 +108,9 @@ namespace TrackConverter.Lib.Classes.Options
         public bool UseRouterInOptimal { get; set; }
 
         /// <summary>
-        /// использовать метод ветвей и границ при построении маршрута через группы в рекусивном полном переборе
+        /// использовать метод ветвей и границ при построении маршрута через группы в полярном переборе
         /// </summary>
-        public bool UseBranchBoundsInRecurEnum { get; set; }
+        public bool UseBranchBoundsInPolarSearch { get; set; }
 
         /// <summary>
         /// последняя выделенная область карты

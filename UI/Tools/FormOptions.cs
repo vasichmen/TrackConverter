@@ -146,7 +146,7 @@ namespace TrackConverter.UI.Tools
                 case OptimalMethodType.FullSearch:
                     trackBarOptimalMethodType.Value = 0;
                     break;
-                case OptimalMethodType.RecursiveEnum:
+                case OptimalMethodType.PolarSearch:
                     trackBarOptimalMethodType.Value = 1;
                     break;
                 default:
@@ -162,7 +162,7 @@ namespace TrackConverter.UI.Tools
             checkBoxUseRouter.Checked = Vars.Options.Map.UseRouterInOptimal;
 
             //метод ветвей и границ для рекурсивного перебора
-            checkBoxUseBranchBounds.Checked = Vars.Options.Map.UseBranchBoundsInRecurEnum;
+            checkBoxUseBranchBounds.Checked = Vars.Options.Map.UseBranchBoundsInPolarSearch;
 
             #endregion
 
@@ -286,7 +286,7 @@ namespace TrackConverter.UI.Tools
             if (trackBarOptimalMethodType.Value == 0)
                 Vars.Options.Map.OptimalRouteMethod = OptimalMethodType.FullSearch;
             if (trackBarOptimalMethodType.Value == 1)
-                Vars.Options.Map.OptimalRouteMethod = OptimalMethodType.RecursiveEnum;
+                Vars.Options.Map.OptimalRouteMethod = OptimalMethodType.PolarSearch;
 
             //глубина рекурсивного перебора
             Vars.Options.Map.MaxFullSearchNodes = (int)numericUpDownRecursiveDepth.Value;
@@ -295,7 +295,7 @@ namespace TrackConverter.UI.Tools
             Vars.Options.Map.UseRouterInOptimal = checkBoxUseRouter.Checked;
 
             //метод ветвей и границ для рекурсивного перебора
-            Vars.Options.Map.UseBranchBoundsInRecurEnum = checkBoxUseBranchBounds.Checked;
+            Vars.Options.Map.UseBranchBoundsInPolarSearch = checkBoxUseBranchBounds.Checked;
 
 
             #endregion
@@ -505,9 +505,9 @@ namespace TrackConverter.UI.Tools
                     textBoxOptimalMethodDescription.Text = Resources.DescriptionFullSearch;
                     break;
 
-                //рекурсивный перебор
+                //полярный перебор
                 case 1:
-                    textBoxOptimalMethodDescription.Text = Resources.DescriptionRecursiveEnum;
+                    textBoxOptimalMethodDescription.Text = Resources.DescriptionPolarSearch;
                     break;
 
                 //метод ветвей и границ
