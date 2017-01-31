@@ -25,5 +25,10 @@ namespace TrackConverter.Lib.Classes {
         /// Тег
         /// </summary>
         public object Tag { get; set; }
+
+        /// <summary>
+        /// тип точки при прокладке маршрута
+        /// </summary>
+        public PathingType PathingType { get; set; }
     }
 }

@@ -40,7 +40,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         /// </summary>
         /// <param name="url">запрос</param>
         /// <returns></returns>
-        /// <exception cref="Exception">Если произошла ошибка при подключении</exception>
+        /// <exception cref="WebException">Если произошла ошибка при подключении</exception>
         protected string SendStringRequest( string url ) {
             try {
 
@@ -81,7 +81,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                 lastQuery = DateTime.Now;
 
                 return responsereader;
-            } catch ( WebException we ) { throw new Exception( "Ошибка подключения.\r\n"+url, we ); }
+            } catch ( WebException we ) { throw new WebException( "Ошибка подключения.\r\n"+url, we ); }
         }
     }
 }

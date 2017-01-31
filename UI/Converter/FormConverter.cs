@@ -83,10 +83,6 @@ namespace TrackConverter.UI.Converter
             this.button1.Visible = true;
 #endif
 
-            //открытие окна карты, если оно было открыто при последнем закрытии
-            if (Program.winMapNullOrDisposed)
-                Program.winMap = new FormMap();
-
             //открытие последних файлов
             if (this.Tracks == null || this.Tracks.Count == 0)
             {

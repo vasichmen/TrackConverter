@@ -77,7 +77,7 @@ namespace TrackConverter.Lib.Classes.Options
         /// <summary>
         /// адрес сайта программы
         /// </summary>
-        public string SiteAddress { get { return "https://trackconverter.000webhostapp.com"; } }
+        public string SiteAddress { get { return "http://velomapa.ru"; } }
 
         /// <summary>
         /// GUID экземпляра программы

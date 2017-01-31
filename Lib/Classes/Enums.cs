@@ -165,6 +165,32 @@ namespace TrackConverter
     }
 
     /// <summary>
+    /// тип точки при прокладке маршрута
+    /// </summary>
+    public enum PathingType
+    {
+        /// <summary>
+        /// начальная точка
+        /// </summary>
+        Start,
+
+        /// <summary>
+        /// промеуточная точка
+        /// </summary>
+        Intermed,
+
+        /// <summary>
+        /// финишная точка
+        /// </summary>
+        Finish,
+
+        /// <summary>
+        /// Без типа
+        /// </summary>
+        None
+                }
+
+    /// <summary>
     /// Основное окно программы
     /// </summary>
     public enum MainWindowType

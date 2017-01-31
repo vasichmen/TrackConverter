@@ -17,7 +17,7 @@ namespace TrackConverter.UI.Map
     /// <summary>
     /// основные действия, выполняемые с картой
     /// </summary>
-    public  class FormMapBase : Form
+    public class FormMapBase : Form
     {
 
         #region public поля
@@ -241,7 +241,7 @@ namespace TrackConverter.UI.Map
         /// последнее изменение текста в комбобоксе поиска адреса
         /// </summary>
         protected DateTime lastCBGoToChanged = DateTime.Now;
-        
+
         /// <summary>
         /// последний запрос в поиске мест
         /// </summary>
@@ -341,6 +341,20 @@ namespace TrackConverter.UI.Map
         /// <param name="ttMode">тип всплывающей подсказки</param>
         protected void ShowWaypoint(TrackPoint point, GMapOverlay lay, Icon icon, MarkerTypes mType, MarkerTooltipMode ttMode)
         {
+            ShowWaypoint(point, lay, icon, mType, PathingType.None, ttMode);
+        }
+
+        /// <summary>
+        /// показать одну точку с заданной картинкой, на указанном слое, с заданными типами подсказки и маркера
+        /// </summary>
+        /// <param name="point">информация о точке</param>
+        /// <param name="lay">слой</param>
+        /// <param name="icon">картинка</param>
+        /// <param name="mType">тип  маркера</param>
+        /// <param name="pType">тип точки при прокладке маршурта</param>
+        /// <param name="ttMode">тип всплывающей подсказки</param>
+        protected void ShowWaypoint(TrackPoint point, GMapOverlay lay, Icon icon, MarkerTypes mType, PathingType pType, MarkerTooltipMode ttMode)
+        {
             Point offsets = IconOffsets.GetOffset(point.Icon);
             MapMarker mar = new MapMarker(point.Coordinates.GMap, icon, offsets);
 
@@ -348,6 +362,7 @@ namespace TrackConverter.UI.Map
                 point.Name = point.Coordinates.ToString("{lat},{lon}", "00.000");
 
             mar.Tag.Type = mType;
+            mar.Tag.PathingType = pType;
             mar.ToolTipText = point.Name;
             mar.ToolTipMode = ttMode;
             mar.Tag.Info = point;
@@ -411,7 +426,7 @@ namespace TrackConverter.UI.Map
         /// <param name="overlay">слой</param>
         protected void ShowRoute(TrackFile route, GMapOverlay overlay)
         {
-            ShowRoute(route, overlay,true);
+            ShowRoute(route, overlay, true);
         }
 
         /// <summary>

@@ -18,7 +18,7 @@ namespace TrackConverter.UI.Common
             this.labelProductName.Text = AssemblyProduct;
             this.labelVersion.Text = String.Format("Версия {0}", AssemblyVersion);
             this.labelCopyright.Text = AssemblyCopyright;
-            this.linkLabelSite.Text = "https://trackconverter.000webhostapp.com/";
+            this.linkLabelSite.Text = Vars.Options.Common.SiteAddress;
             this.textBoxDescription.Text = AssemblyDescription;
         }
 
@@ -109,7 +109,7 @@ namespace TrackConverter.UI.Common
 
         private void linkLabelSite_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Process.Start("https://trackconverter.000webhostapp.com/");
+            Process.Start(Vars.Options.Common.SiteAddress);
         }
     }
 }

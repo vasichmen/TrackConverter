@@ -1018,10 +1018,8 @@ namespace TrackConverter.UI.Map
         /// <param name="e"></param>
         private void contextMenuStripMarker_Opening(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            if (markerClicked.Tag.Type == MarkerTypes.PathingRoute)
-                e.Cancel = true;
-            else
-                editMarkerToolStripMenuItem.Visible = markerClicked.Tag.Type != MarkerTypes.WhatThere;
+            bool canEdit = markerClicked.Tag.Type != MarkerTypes.WhatThere & markerClicked.Tag.Type != MarkerTypes.PathingRoute;
+            editMarkerToolStripMenuItem.Visible = canEdit;
         }
 
         /// <summary>
@@ -1082,20 +1080,40 @@ namespace TrackConverter.UI.Map
                 if (waypoints != null)
                     waypoints.Remove(markerClicked.Tag.Info);
 
-                UpdateUndoButton();
-                LastEditsStack.Push(
-                    new StackItem(
-                        new MarkerDeleteInfo(markerClicked.Tag.Info, new Action<TrackPoint>(
-                            (oldP) =>
-                            {
-                                waypoints.Add(oldP);
-                                ShowWaypoints(waypoints, baseOverlay, false);
-                            }
+                //если маркер прокладки маршрута, то удаляем его из соответствующей точки
+                if (markerClicked.Tag.Type == MarkerTypes.PathingRoute)
+                {
+                    fromToOverlay.Markers.Remove(markerClicked);
+                    switch (markerClicked.Tag.PathingType)
+                    {
+                        case PathingType.Start:
+                            this.fromPoint = null;
+                            break;
+                        case PathingType.Finish:
+                            this.toPoint = null;
+                            break;
+                        case PathingType.Intermed:
+                            this.IntermediatePoints.Remove(markerClicked.Tag.Info);
+                            break;
+                    }
+                }
+                else
+                {
+                    UpdateUndoButton();
+                    LastEditsStack.Push(
+                        new StackItem(
+                            new MarkerDeleteInfo(markerClicked.Tag.Info, new Action<TrackPoint>(
+                                (oldP) =>
+                                {
+                                    waypoints.Add(oldP);
+                                    ShowWaypoints(waypoints, baseOverlay, false);
+                                }
+                                )
+                                )
                             )
-                            )
-                        )
-                    );
-                UpdateUndoButton();
+                        );
+                    UpdateUndoButton();
+                }
             }
         }
 
@@ -1904,7 +1922,7 @@ namespace TrackConverter.UI.Map
                 {
                     tt.Icon = IconOffsets.marker_start;
                     DeleteWaypoint(fromPoint, fromToOverlay);
-                    ShowWaypoint(tt, fromToOverlay, Resources.marker_start, MarkerTypes.PathingRoute, MarkerTooltipMode.Never);
+                    ShowWaypoint(tt, fromToOverlay, Resources.marker_start, MarkerTypes.PathingRoute, PathingType.Start, MarkerTooltipMode.Never);
                     tt.Name = "from";
                     fromPoint = tt;
                 }
@@ -1912,14 +1930,14 @@ namespace TrackConverter.UI.Map
                 {
                     tt.Icon = IconOffsets.marker_finish;
                     DeleteWaypoint(toPoint, fromToOverlay);
-                    ShowWaypoint(tt, fromToOverlay, Resources.marker_finish, MarkerTypes.PathingRoute, MarkerTooltipMode.Never);
+                    ShowWaypoint(tt, fromToOverlay, Resources.marker_finish, MarkerTypes.PathingRoute, PathingType.Finish, MarkerTooltipMode.Never);
                     tt.Name = "to";
                     toPoint = tt;
                 }
                 if (tag == "intermediate")
                 {
                     tt.Icon = IconOffsets.ZeroOffset;
-                    ShowWaypoint(tt, fromToOverlay, Resources.intermed_point, MarkerTypes.PathingRoute, MarkerTooltipMode.Never);
+                    ShowWaypoint(tt, fromToOverlay, Resources.intermed_point, MarkerTypes.PathingRoute, PathingType.Intermed, MarkerTooltipMode.Never);
                     if (IntermediatePoints == null)
                         IntermediatePoints = new TrackFile();
                     tt.Name = "intermediate";
@@ -2009,6 +2027,20 @@ namespace TrackConverter.UI.Map
         internal new void DeleteWaypoints(TrackFile tf)
         {
             base.DeleteWaypoints(tf);
+        }
+
+        /// <summary>
+        /// показать одну точку с заданной картинкой, на указанном слое, с заданными типами подсказки и маркера
+        /// </summary>
+        /// <param name="point">информация о точке</param>
+        /// <param name="lay">слой</param>
+        /// <param name="icon">картинка</param>
+        /// <param name="mType">тип  маркера</param>
+        /// <param name="pType">тип точки при прокладке маршурта</param>
+        /// <param name="ttMode">тип всплывающей подсказки</param>
+        private new void ShowWaypoint(TrackPoint point, GMapOverlay lay, Icon icon, MarkerTypes mType, PathingType pType, MarkerTooltipMode ttMode)
+        {
+            base.ShowWaypoint(point, lay, icon, mType, pType, ttMode);
         }
 
         /// <summary>
