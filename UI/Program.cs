@@ -258,11 +258,8 @@ namespace TrackConverter.UI
             //запись статистики, проверка версии
             Velomapa site = new Velomapa();
             site.SendStatisticAsync();
-            float actVer = site.GetVersion();
-            float curVer = Vars.Options.Common.Version;
-            if (actVer > curVer)
-                if (MessageBox.Show(null, "Текущая версия " + curVer + ", новая версия " + actVer + ". Загрузить новую версию?", "Доступна новая версия", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
-                    Process.Start(Vars.Options.Common.SiteAddress + "/programs.php?item=TrackConverter");
+           site.GetVersionAsync();
+           
 
             //применение настроек
             AcceptOptions();

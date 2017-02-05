@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -44,12 +45,54 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         /// узнать последнюю версию на сайте
         /// </summary>
         /// <returns></returns>
-        public float GetVersion()
+        private float GetVersion()
         {
-            string site = Vars.Options.Common.SiteAddress;
-            string url = string.Format("{0}/receiver.php?mode=version", site);
-            string ver = this.SendStringRequest(url);
-            return Convert.ToSingle(ver.Replace(".", ""));
+            try
+            {
+                string site = Vars.Options.Common.SiteAddress;
+                string url = string.Format("{0}/receiver.php?mode=version", site);
+                string ver = this.SendStringRequest(url);
+                return Convert.ToSingle(ver.Replace(".", ""));
+            }
+            catch (Exception) { return 0; }
+        }
+
+        /// <summary>
+        /// узнать последнюю версию на сайте
+        /// </summary>
+        /// <returns></returns>
+        public void GetVersionAsync()
+        {
+            Action act = new Action(() =>
+            {
+                bool f = true;
+                int i = 0;
+                while (f && i < 3)
+                {
+                    try
+                    {
+                        string guid = Vars.Options.Common.ApplicationGuid;
+                        string name = Environment.UserName;
+                        float actVer = GetVersion();
+                        float curVer = Vars.Options.Common.Version;
+                        if (actVer > curVer)
+                            if (MessageBox.Show(null, "Текущая версия " + curVer + ", новая версия " + actVer + ". Загрузить новую версию?", "Доступна новая версия", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
+                            {
+                                Process.Start(Vars.Options.Common.SiteAddress + "/programs.php?item=TrackConverter");
+                                return;
+                            }
+                        f = false;
+                        i++;
+                    }
+                    catch (WebException wex)
+                    {
+                        f = true;
+                        Thread.Sleep(2000);
+                    }
+                }
+            });
+            Task ts = new Task(act);
+            ts.Start();
         }
 
         /// <summary>
