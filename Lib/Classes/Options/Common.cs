@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using Microsoft.Win32;
 
 namespace TrackConverter.Lib.Classes.Options
@@ -101,6 +102,18 @@ namespace TrackConverter.Lib.Classes.Options
                     guid = (string)guido;
                 return guid;
 #endif
+            }
+        }
+
+        /// <summary>
+        /// версия приложения
+        /// </summary>
+        public float Version
+        {
+            get
+            {
+                return Convert.ToSingle(Application.ProductVersion.Replace(".",""));
+
             }
         }
     }

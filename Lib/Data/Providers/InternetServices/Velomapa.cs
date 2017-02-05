@@ -6,13 +6,14 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml;
 
 namespace TrackConverter.Lib.Data.Providers.InternetServices
 {
     /// <summary>
     /// Взаимодействие с сайтом TrackConverter
     /// </summary>
-    public class WebSite : BaseConnection
+    public class Velomapa : BaseConnection
     {
         /// <summary>
         /// минимальное время между запросами
@@ -40,6 +41,18 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         }
 
         /// <summary>
+        /// узнать последнюю версию на сайте
+        /// </summary>
+        /// <returns></returns>
+        public float GetVersion()
+        {
+            string site = Vars.Options.Common.SiteAddress;
+            string url = string.Format("{0}/receiver.php?mode=version", site);
+            string ver = this.SendStringRequest(url);
+            return Convert.ToSingle(ver.Replace(".", ""));
+        }
+
+        /// <summary>
         /// отправить статистику на сервер
         /// </summary>
         public void SendStatisticAsync()
@@ -47,8 +60,8 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
             Action act = new Action(() =>
             {
                 bool f = true;
-                //int i = 0;
-                while (f /*&& i < 3*/)
+                int i = 0;
+                while (f && i < 3)
                 {
                     try
                     {
@@ -56,7 +69,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                         string name = Environment.UserName;
                         AttachGuid(guid, name);
                         f = false;
-                        //i++;
+                        i++;
                     }
                     catch (WebException wex)
                     {

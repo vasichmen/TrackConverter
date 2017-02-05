@@ -1,7 +1,0 @@
-*.gmdb
-exclusions.txt
-*.sq3
-*.bin
-*.hdr
-*.flt
-*.gcdb

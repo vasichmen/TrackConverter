@@ -1,0 +1,8 @@
+*.gmdb
+*exclusions_arhive_program.txt
+*exclusions_arhive_project.txt
+*.sq3
+*.bin
+*.hdr
+*.flt
+*.gcdb

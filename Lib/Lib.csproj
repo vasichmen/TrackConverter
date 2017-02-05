@@ -96,7 +96,7 @@
     <Compile Include="Data\Providers\InternetServices\GTOPO30.cs" />
     <Compile Include="Data\Providers\InternetServices\Nominatim.cs" />
     <Compile Include="Data\Providers\InternetServices\Qps.cs" />
-    <Compile Include="Data\Providers\InternetServices\WebSite.cs" />
+    <Compile Include="Data\Providers\InternetServices\Velomapa.cs" />
     <Compile Include="Data\Providers\InternetServices\Yandex.cs" />
     <Compile Include="Data\Interfaces\IRouterProvider.cs" />
     <Compile Include="Data\Providers\Local\ETOPO\BaseGrid.cs" />

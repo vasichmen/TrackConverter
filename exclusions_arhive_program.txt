@@ -1,0 +1,9 @@
+*.gmdb
+*.sq3
+*.bin
+*.hdr
+*.flt
+*.gcdb
+*options.xml
+*options.json
+*.kml
