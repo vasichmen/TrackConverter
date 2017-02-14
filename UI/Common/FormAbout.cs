@@ -9,8 +9,14 @@ using System.Windows.Forms;
 
 namespace TrackConverter.UI.Common
 {
+    /// <summary>
+    /// окно о программе
+    /// </summary>
     partial class FormAbout : Form
     {
+        /// <summary>
+        /// создает новое окно
+        /// </summary>
         public FormAbout()
         {
             InitializeComponent();
@@ -102,11 +108,21 @@ namespace TrackConverter.UI.Common
         }
         #endregion
 
+        /// <summary>
+        /// закрывание окна
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void okButton_Click(object sender, EventArgs e)
         {
             this.Close();
         }
 
+        /// <summary>
+        /// переход на сайт
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void linkLabelSite_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             Process.Start(Vars.Options.Common.SiteAddress);
