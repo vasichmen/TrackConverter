@@ -709,13 +709,19 @@ namespace TrackConverter.UI.Converter
         /// <param name="e"></param>
         private void removeToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            TrackFileList tl = new TrackFileList();
             foreach (DataGridViewRow dgvr in dataGridView1.SelectedRows)
             {
                 int row = dgvr.Index;
                 TrackFile tttt = Tracks[row];
-                this.DeleteRoute(tttt);
-                Tracks.Remove(tttt);
+                tl.Add(tttt);
+
             }
+            foreach (TrackFile tf in tl)
+            {
+                this.DeleteRoute(tf);
+            }
+
             RefreshData();
             if (dataGridView1.SelectedRows.Count > 0)
                 Vars.currentSelectedTrack = Tracks[dataGridView1.SelectedRows[0].Index];
