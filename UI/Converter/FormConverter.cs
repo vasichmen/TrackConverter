@@ -237,7 +237,7 @@ namespace TrackConverter.UI.Converter
                 sf.InitialDirectory = Vars.Options.Common.LastFileSaveDirectory;
             if (Vars.Options.Common.IsExtension)
                 sf.FilterIndex = Vars.Options.Common.LastSaveExtensionNumberSaveOneTrack;
-            sf.FileName = tf.FileName;
+            sf.FileName = tf.Name;
 
 
             if (sf.ShowDialog() == DialogResult.OK)

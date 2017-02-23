@@ -361,7 +361,7 @@ namespace TrackConverter.UI.Map
             if (Vars.Options.Common.IsSaveDir)
                 sf.InitialDirectory = Vars.Options.Common.LastFileSaveDirectory;
 
-            if (sf.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            if (sf.ShowDialog() == DialogResult.OK)
             {
                 switch (sf.FilterIndex)
                 {

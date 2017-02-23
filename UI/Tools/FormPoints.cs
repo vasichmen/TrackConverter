@@ -130,7 +130,7 @@ namespace TrackConverter.UI.Tools
             sf.Filter += "|Файл координат(*.crd)|*.crd";
             sf.Filter += "|Файл GPS координат(*.gpx)|*.gpx";
 
-
+            sf.FileName = Points.Name;
             sf.AddExtension = true;
             if (Vars.Options.Common.IsSaveDir)
                 sf.InitialDirectory = Vars.Options.Common.LastFileSaveDirectory;
