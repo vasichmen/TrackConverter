@@ -66,6 +66,7 @@
             this.addComparisonToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.removeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.button1 = new System.Windows.Forms.Button();
+            this.removeElevationsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.contextMenuStripDGW.SuspendLayout();
@@ -233,7 +234,7 @@
             this.addComparisonToolStripMenuItem,
             this.removeToolStripMenuItem});
             this.contextMenuStripDGW.Name = "contextMenuStripDGW";
-            this.contextMenuStripDGW.Size = new System.Drawing.Size(236, 202);
+            this.contextMenuStripDGW.Size = new System.Drawing.Size(236, 224);
             this.contextMenuStripDGW.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStripDGW_Opening);
             // 
             // informationToolStripMenuItem
@@ -298,9 +299,10 @@
             // изменитьToolStripMenuItem
             // 
             this.изменитьToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.editWaypointsToolStripMenuItem,
             this.editRouteMapToolStripMenuItem,
+            this.editWaypointsToolStripMenuItem,
             this.loadElevationsToolStripMenuItem,
+            this.removeElevationsToolStripMenuItem,
             this.approximateAltitudesToolStripMenuItem});
             this.изменитьToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("изменитьToolStripMenuItem.Image")));
             this.изменитьToolStripMenuItem.Name = "изменитьToolStripMenuItem";
@@ -445,6 +447,15 @@
             this.button1.Visible = false;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
+            // removeElevationsToolStripMenuItem
+            // 
+            this.removeElevationsToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("removeElevationsToolStripMenuItem.Image")));
+            this.removeElevationsToolStripMenuItem.Name = "removeElevationsToolStripMenuItem";
+            this.removeElevationsToolStripMenuItem.Size = new System.Drawing.Size(227, 22);
+            this.removeElevationsToolStripMenuItem.Tag = "multy";
+            this.removeElevationsToolStripMenuItem.Text = "Удалить высоты точек";
+            this.removeElevationsToolStripMenuItem.Click += new System.EventHandler(this.removeElevationsToolStripMenuItem_Click);
+            // 
             // FormConverter
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -508,5 +519,6 @@
         private System.Windows.Forms.ToolStripMenuItem approximateAltitudesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem elevgraphToolStripMenuItem;
         private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.ToolStripMenuItem removeElevationsToolStripMenuItem;
     }
 }

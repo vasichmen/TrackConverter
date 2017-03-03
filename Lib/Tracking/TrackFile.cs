@@ -455,6 +455,15 @@ namespace TrackConverter.Lib.Tracking
         }
 
         /// <summary>
+        /// очистка высот всех точек
+        /// </summary>
+        public void ClearAltitudes()
+        {
+            foreach (TrackPoint t in this)
+                t.MetrAltitude = double.NaN;
+        }
+
+        /// <summary>
         /// создает копию маршрута
         /// </summary>
         /// <returns></returns>
@@ -821,6 +830,8 @@ namespace TrackConverter.Lib.Tracking
             Track.RemoveAt(index);
         }
 
+
+
         /// <summary>
         /// показывает, является ли коллекция доступна только для чтения
         /// </summary>
@@ -836,6 +847,7 @@ namespace TrackConverter.Lib.Tracking
         /// если истина,то маршрут виден на карте
         /// </summary>
         public bool IsVisible { get; set; }
+
 
         #endregion
 

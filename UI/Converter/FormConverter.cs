@@ -717,7 +717,7 @@ namespace TrackConverter.UI.Converter
                 list.Add(tttt);
             }
             DeleteRoute(list);
-            
+
         }
 
         /// <summary>
@@ -952,6 +952,34 @@ namespace TrackConverter.UI.Converter
                 }));
             }));
             ts.Start();
+        }
+
+        /// <summary>
+        /// удалить высоты точек
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void removeElevationsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (MessageBox.Show(this, "Вы действительно хотите очистить высоты точек у выбранных маршрутов?", "Внимание!", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
+            {
+                foreach (DataGridViewRow dgvr in dataGridView1.SelectedRows)
+                {
+                    int row = dgvr.Index;
+                    TrackFile tf = Tracks[row];
+                    tf.ClearAltitudes();
+                }
+
+                //если выделен один маршрут, то обновлям данные в окнах
+                if (dataGridView1.SelectedRows.Count == 1)
+                {
+                    int ind = dataGridView1.SelectedRows[0].Index;
+                    Vars.currentSelectedTrack = this.Tracks[ind];
+                    Program.RefreshWindows(this);
+                }
+            }
+
+
         }
 
         /// <summary>
@@ -1440,5 +1468,7 @@ namespace TrackConverter.UI.Converter
 
             TrackFile t2 = Yandex.DecodePolyline(one);
         }
+
+
     }
 }
