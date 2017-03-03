@@ -114,7 +114,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
             }
             else url = url.Replace("&waypoints=(waypoints)", "");
 
-            XmlDocument xml = SendXmlRequest(url);
+            XmlDocument xml = SendXmlGetRequest(url);
             return xml;
         }
 
@@ -265,7 +265,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
             //https://maps.googleapis.com/maps/api/geocode/json?latlng=40.714224,-73.961452
             string url = string.Format("https://maps.googleapis.com/maps/api/geocode/xml?latlng={0}&languange=ru-Ru",
                 coordinate.ToString("{lat},{lon}", "00.000000"));
-            XmlDocument xml = SendXmlRequest(url);
+            XmlDocument xml = SendXmlGetRequest(url);
 
             XmlNode status = xml.GetElementsByTagName("status")[0];
             if (status.InnerText != "OK")
@@ -311,7 +311,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                "http://maps.googleapis.com/maps/api/geocode/xml?address={0}&sensor=true_or_false&language=ru",
                Uri.EscapeDataString(address));
 
-            XmlDocument dc = SendXmlRequest(url);
+            XmlDocument dc = SendXmlGetRequest(url);
 
             if (dc.GetElementsByTagName("status")[0].ChildNodes[0].InnerText == "OK")
             {
@@ -352,7 +352,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                 coordinate.Longitude.TotalDegrees.ToString().Replace(Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0], '.')
                 );
 
-            XmlDocument xml = SendXmlRequest(url);
+            XmlDocument xml = SendXmlGetRequest(url);
             XmlNode status = xml.GetElementsByTagName("status")[0];
             if (status.InnerText == "OK")
             {
@@ -390,7 +390,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                 string pts = "enc:" + ConvertPolyline(trk);
 
                 string url = string.Format("https://maps.googleapis.com/maps/api/elevation/json?locations={0}", pts);
-                string json = SendStringRequest(url);
+                string json = SendStringGetRequest(url);
 
                 //разбор результата
                 JObject obj = JObject.Parse(json);

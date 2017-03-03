@@ -30,7 +30,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         {
             string enc = HttpUtility.UrlEncode(Link); //кодирование ссылки. Без него точки не сохранятся
             string url = string.Format(@"http://clck.ru/--?url={0}", enc);
-            string ans = base.SendStringRequest(url);
+            string ans = base.SendStringGetRequest(url);
             return ans;
         }
     }

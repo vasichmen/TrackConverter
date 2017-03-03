@@ -52,7 +52,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                 coordinate.Longitude.TotalDegrees.ToString().Replace(Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0],'.')
                 );
 
-            string ans = SendStringRequest(url);
+            string ans = SendStringGetRequest(url);
 
             try
             {

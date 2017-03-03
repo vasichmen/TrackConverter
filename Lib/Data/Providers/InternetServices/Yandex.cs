@@ -82,7 +82,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
 
             //запрос токена. Возвращается текст javascript , со структурой , в которой есть токен. 
             string urlGetToken = "https://api-maps.yandex.ru/2.0/?load=package.standard,package.geoObjects,package.route&lang=ru-RU";
-            string js = SendStringRequest(urlGetToken);
+            string js = SendStringGetRequest(urlGetToken);
 
             //находим токен из javascript
             int start = js.IndexOf("project_data[\"token\"]=\"") + "project_data[\"token\"]=\"".Length;
@@ -127,7 +127,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                 param,
                 sign
                 );
-            json = SendStringRequest(urlGetRoute);
+            json = SendStringGetRequest(urlGetRoute);
 
             //обработка ответа от сервера
             json = json.Substring(json.IndexOf('{'));
@@ -495,7 +495,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
             string url = string.Format(
                "https://geocode-maps.yandex.ru/1.x/?geocode={0}&results=1",
                coordinate.Longitude.TotalDegrees.ToString().Replace(Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0], '.') + "," + coordinate.Latitude.TotalDegrees.ToString().Replace(Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0], '.'));
-            XmlDocument dc = SendXmlRequest(url);
+            XmlDocument dc = SendXmlGetRequest(url);
 
             XmlNode found = dc.GetElementsByTagName("found")[0];
             if (found.InnerText == "0")
@@ -520,7 +520,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         public Dictionary<string, Coordinate> GetAddresses(string query)
         {
             string url = string.Format("https://geocode-maps.yandex.ru/1.x/?geocode={0}", query);
-            XmlDocument dc = SendXmlRequest(url);
+            XmlDocument dc = SendXmlGetRequest(url);
 
             XmlNode root = dc["ymaps"];
             XmlNode collection = root["GeoObjectCollection"];
@@ -560,7 +560,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         {
 
             string url = string.Format("https://geocode-maps.yandex.ru/1.x/?geocode={0}", address);
-            XmlDocument xml = SendXmlRequest(url);
+            XmlDocument xml = SendXmlGetRequest(url);
 
             XmlNode cord = xml.GetElementsByTagName("featureMember")[0];
             if (cord == null)

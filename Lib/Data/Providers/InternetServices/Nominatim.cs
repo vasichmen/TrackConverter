@@ -36,7 +36,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                 coordinate.Latitude.TotalDegrees.ToString().Replace(',', '.'),
                 coordinate.Longitude.TotalDegrees.ToString().Replace(',', '.'),
                 "ru-Ru");
-            XmlDocument xml = SendXmlRequest(url);
+            XmlDocument xml = SendXmlGetRequest(url);
 
             //если ошибка
             XmlNodeList ers = xml.GetElementsByTagName("error");
@@ -64,7 +64,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
             // http://nominatim.openstreetmap.org/search?q=135+pilkington+avenue,+birmingham&format=xml
 
             string url = string.Format("http://nominatim.openstreetmap.org/search?q={0}&format=xml", address);
-            XmlDocument xml = SendXmlRequest(url);
+            XmlDocument xml = SendXmlGetRequest(url);
 
             XmlNodeList places = xml.GetElementsByTagName("place");
             if (places.Count == 0)

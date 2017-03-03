@@ -30,7 +30,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         {
             string l = HttpUtility.UrlEncode(Link);
             string url = string.Format(@"http://qps.ru/api?url={0}", l);
-            string ans = base.SendStringRequest(url);
+            string ans = base.SendStringGetRequest(url);
             return ans;
         }
     }

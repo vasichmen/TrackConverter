@@ -11,8 +11,8 @@ namespace TrackConverter.Lib.Data
     /// <summary>
     /// сокращение ссылок
     /// </summary>
-    public class LinkShorter 
-        {
+    public class LinkShorter
+    {
 
         private LinkShorterProvider provider;
         private ILinkShorterProvider shorter;
@@ -30,7 +30,10 @@ namespace TrackConverter.Lib.Data
                     shorter = new Clck();
                     break;
                 case LinkShorterProvider.Qps:
-                    shorter  =new Qps();
+                    shorter = new Qps();
+                    break;
+                case LinkShorterProvider.Bitly:
+                    shorter = new Bitly();
                     break;
                 default:
                     throw new ApplicationException("Данный поставщик не поддерживается: " + this.provider);

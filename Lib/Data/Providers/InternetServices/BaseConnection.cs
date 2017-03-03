@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Net;
+using System.Text;
 using System.Threading;
 using System.Xml;
 
@@ -28,9 +29,9 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         /// <param name="url">запрос</param>
         /// <exception cref="Exception">Если произошла ошибка при подключении</exception>
         /// <returns></returns>
-        protected XmlDocument SendXmlRequest( string url ) {
+        protected XmlDocument SendXmlGetRequest( string url ) {
             XmlDocument res = new XmlDocument();
-            string ans = SendStringRequest( url );
+            string ans = SendStringGetRequest( url );
             res.LoadXml( ans );
             return res;
         }
@@ -41,7 +42,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         /// <param name="url">запрос</param>
         /// <returns></returns>
         /// <exception cref="WebException">Если произошла ошибка при подключении</exception>
-        protected string SendStringRequest( string url ) {
+        protected string SendStringGetRequest( string url ) {
             try {
 
                 //ожидание времени интервала между запросами
@@ -82,6 +83,40 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
 
                 return responsereader;
             } catch ( WebException we ) { throw new WebException( "Ошибка подключения.\r\n"+url, we ); }
+        }
+
+        /// <summary>
+        /// отправка POST запроса
+        /// </summary>
+        /// <param name="url">адрес</param>
+        /// <param name="data">данные</param>
+        /// <returns></returns>
+        protected string SendStringPostRequest(string url, string data)
+        {
+            HttpWebRequest req = (HttpWebRequest)WebRequest.Create(url);
+            req.Method = "POST";
+            req.Timeout = 100000;
+            req.ContentType = "application/x-www-form-urlencoded";
+            req.UserAgent = "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36";
+            byte[] sentData = Encoding.GetEncoding(1251).GetBytes(data);
+            req.ContentLength = sentData.Length;
+            Stream sendStream = req.GetRequestStream();
+            sendStream.Write(sentData, 0, sentData.Length);
+            sendStream.Close();
+            WebResponse res = req.GetResponse();
+            Stream ReceiveStream = res.GetResponseStream();
+            StreamReader sr = new StreamReader(ReceiveStream, Encoding.UTF8);
+            //Кодировка указывается в зависимости от кодировки ответа сервера
+            Char[] read = new char[256];
+            int count = sr.Read(read, 0, 256);
+            string Out = string.Empty;
+            while (count > 0)
+            {
+                string str = new string(read, 0, count);
+                Out += str;
+                count = sr.Read(read, 0, 256);
+            }
+            return Out;
         }
     }
 }

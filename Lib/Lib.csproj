@@ -91,6 +91,7 @@
     <Compile Include="Data\Interfaces\IGeoInfoProvider.cs" />
     <Compile Include="Data\Interfaces\IGeoсoderProvider.cs" />
     <Compile Include="Data\Interfaces\ILinkShorterProvider.cs" />
+    <Compile Include="Data\Providers\InternetServices\Bitly.cs" />
     <Compile Include="Data\Providers\InternetServices\Clck.cs" />
     <Compile Include="Data\Providers\InternetServices\Google.cs" />
     <Compile Include="Data\Providers\InternetServices\GTOPO30.cs" />

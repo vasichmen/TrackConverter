@@ -36,7 +36,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         {
             string site = Vars.Options.Common.SiteAddress;
             string url = string.Format("{0}/receiver.php?mode=attach&program_guid={1}&user_name={2}", site, guid, name);
-            string ans = this.SendStringRequest(url);
+            string ans = this.SendStringGetRequest(url);
             if (ans != "OK")
                 throw new WebException(ans);
         }
@@ -51,7 +51,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
             {
                 string site = Vars.Options.Common.SiteAddress;
                 string url = string.Format("{0}/receiver.php?mode=version", site);
-                string ver = this.SendStringRequest(url);
+                string ver = this.SendStringGetRequest(url);
                 return Convert.ToSingle(ver.Replace(".", ""));
             }
             catch (Exception) { return 0; }

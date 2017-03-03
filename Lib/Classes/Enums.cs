@@ -81,8 +81,12 @@ namespace TrackConverter
         /// <summary>
         /// QPS
         /// </summary>
-        Qps
+        Qps,
 
+        /// <summary>
+        /// Bitly
+        /// </summary>
+        Bitly
     }
 
     /// <summary>
