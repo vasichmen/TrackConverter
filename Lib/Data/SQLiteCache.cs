@@ -87,7 +87,7 @@ namespace TrackConverter.Lib.Data
         /// <param name="track"></param>
         /// <param name="els"></param>
         /// <param name="callback">действие, выполняемое во время операции</param>
-        internal void Put(TrackFile track, List<double> els, Action<string> callback=null)
+        internal void Put(TrackFile track, List<double> els, Action<string> callback = null)
         {
             //ЭКСПОРТ ДАННЫХ
             this.geocoder_connection.Open();
@@ -154,12 +154,20 @@ namespace TrackConverter.Lib.Data
         /// <param name="addr">адрес</param>
         private void Add(double lat, double lon, double alt, string addr)
         {
-            ExecuteQuery(CreateCommand(lat,lon,alt,addr));
+            ExecuteQuery(CreateCommand(lat, lon, alt, addr));
         }
 
         private string CreateCommand(double lat, double lon, double alt, string addr)
         {
-            string com = string.Format(@"INSERT OR REPLACE INTO '" + table_name + @"'('latitude','longitude','altitude','address') VALUES ({0},{1},{2},{3});",
+            string com = "";
+            //if (double.IsNaN(lat) && double.IsNaN(lon))
+            //    com = string.Format(@"INSERT OR REPLACE INTO '" + table_name + @"'('latitude','longitude','altitude','address') VALUES ({0},{1},{2},{3});",
+            //               Math.Round(lat, decimal_digits).ToString().Replace(',', '.'),
+            //               Math.Round(lon, decimal_digits).ToString().Replace(',', '.'),
+            //               double.IsNaN(alt) ? "NULL" : alt.ToString().Replace(',', '.'),
+            //               string.IsNullOrEmpty(addr) ? "NULL" : "'" + addr + "'");
+            //else
+            com = string.Format(@"INSERT OR REPLACE INTO '" + table_name + @"'('latitude','longitude','altitude','address') VALUES ({0},{1},{2},{3});",
                        Math.Round(lat, decimal_digits).ToString().Replace(',', '.'),
                        Math.Round(lon, decimal_digits).ToString().Replace(',', '.'),
                        double.IsNaN(alt) ? "NULL" : alt.ToString().Replace(',', '.'),
@@ -171,14 +179,15 @@ namespace TrackConverter.Lib.Data
         /// выполнение запроса без результата
         /// </summary>
         /// <param name="query"></param>
-        private void ExecuteQuery(string query)
+        /// <returns></returns>
+        private int ExecuteQuery(string query)
         {
             geocoder_connection.Open();
             SQLiteCommand com = geocoder_connection.CreateCommand();
             com.CommandText = query;
-          int i =  com.ExecuteNonQuery();
+            int i = com.ExecuteNonQuery();
             geocoder_connection.Close();
-            List<Row> r = ExecuteReader("SELECT * FROM "+table_name);
+            return i;
         }
 
         /// <summary>
@@ -296,6 +305,36 @@ namespace TrackConverter.Lib.Data
 
         }
 
+        /// <summary>
+        /// удаление данных геокодера
+        /// </summary>
+        public void ClearGeocoder()
+        {
+            string seln = "UPDATE '" + table_name + "' SET address = NULL";
+            int i = ExecuteQuery(seln);
+            remNulls();
+        }
+
+        /// <summary>
+        /// удаление высот точек
+        /// </summary>
+        public void ClearAltitudes()
+        {
+            string seln = "UPDATE '" + table_name+ "' SET altitude = NULL";
+            int i = ExecuteQuery(seln);   
+            remNulls();
+        }
+
+        /// <summary>
+        /// удаление записей, у которых адрес и высота NULL
+        /// </summary>
+        private void remNulls()
+        {
+            string com = "DELETE FROM '"+table_name+"' WHERE address = NULL AND altitude = NULL";
+            int i = ExecuteQuery(com);
+            string sel = "SELECT * FROM " + table_name;
+            List<Row> all = ExecuteReader(sel);
+        }
 
         #endregion
 

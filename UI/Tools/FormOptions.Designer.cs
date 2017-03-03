@@ -44,7 +44,6 @@
             this.comboBoxOptionsFormat = new System.Windows.Forms.ComboBox();
             this.checkBoxSavePath = new System.Windows.Forms.CheckBox();
             this.checkBoxLoadPath = new System.Windows.Forms.CheckBox();
-            this.buttonAssociateFiles = new System.Windows.Forms.Button();
             this.checkBoxLastExtension = new System.Windows.Forms.CheckBox();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.label14 = new System.Windows.Forms.Label();
@@ -97,6 +96,10 @@
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.buttonAssociateFiles = new System.Windows.Forms.Button();
+            this.checkBoxCacheMap = new System.Windows.Forms.CheckBox();
+            this.checkBoxCacheGeocoder = new System.Windows.Forms.CheckBox();
+            this.checkBoxCacheAltitudes = new System.Windows.Forms.CheckBox();
             this.groupBox2.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage5.SuspendLayout();
@@ -186,6 +189,9 @@
             // 
             // tabPage5
             // 
+            this.tabPage5.Controls.Add(this.checkBoxCacheAltitudes);
+            this.tabPage5.Controls.Add(this.checkBoxCacheGeocoder);
+            this.tabPage5.Controls.Add(this.checkBoxCacheMap);
             this.tabPage5.Controls.Add(this.checkBoxIsLoadETOPOOnStart);
             this.tabPage5.Controls.Add(this.buttonShortcutDesktop);
             this.tabPage5.Controls.Add(this.buttonClearCache);
@@ -227,7 +233,7 @@
             // 
             // buttonClearCache
             // 
-            this.buttonClearCache.Location = new System.Drawing.Point(31, 176);
+            this.buttonClearCache.Location = new System.Drawing.Point(31, 186);
             this.buttonClearCache.Name = "buttonClearCache";
             this.buttonClearCache.Size = new System.Drawing.Size(192, 23);
             this.buttonClearCache.TabIndex = 14;
@@ -279,18 +285,6 @@
             this.checkBoxLoadPath.TabIndex = 9;
             this.checkBoxLoadPath.Text = "Запоминать пути загрузки файлов";
             this.checkBoxLoadPath.UseVisualStyleBackColor = true;
-            // 
-            // buttonAssociateFiles
-            // 
-            this.buttonAssociateFiles.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonAssociateFiles.Enabled = false;
-            this.buttonAssociateFiles.Location = new System.Drawing.Point(31, 205);
-            this.buttonAssociateFiles.Name = "buttonAssociateFiles";
-            this.buttonAssociateFiles.Size = new System.Drawing.Size(212, 23);
-            this.buttonAssociateFiles.TabIndex = 11;
-            this.buttonAssociateFiles.Text = "Ассоциировать форматы файлов";
-            this.buttonAssociateFiles.UseVisualStyleBackColor = true;
             // 
             // checkBoxLastExtension
             // 
@@ -929,6 +923,48 @@
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.buttonOK_Click);
             // 
+            // buttonAssociateFiles
+            // 
+            this.buttonAssociateFiles.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonAssociateFiles.Enabled = false;
+            this.buttonAssociateFiles.Location = new System.Drawing.Point(31, 290);
+            this.buttonAssociateFiles.Name = "buttonAssociateFiles";
+            this.buttonAssociateFiles.Size = new System.Drawing.Size(212, 23);
+            this.buttonAssociateFiles.TabIndex = 11;
+            this.buttonAssociateFiles.Text = "Ассоциировать форматы файлов";
+            this.buttonAssociateFiles.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxCacheMap
+            // 
+            this.checkBoxCacheMap.AutoSize = true;
+            this.checkBoxCacheMap.Location = new System.Drawing.Point(31, 215);
+            this.checkBoxCacheMap.Name = "checkBoxCacheMap";
+            this.checkBoxCacheMap.Size = new System.Drawing.Size(143, 17);
+            this.checkBoxCacheMap.TabIndex = 17;
+            this.checkBoxCacheMap.Text = "Кэш загруженных карт";
+            this.checkBoxCacheMap.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxCacheGeocoder
+            // 
+            this.checkBoxCacheGeocoder.AutoSize = true;
+            this.checkBoxCacheGeocoder.Location = new System.Drawing.Point(31, 238);
+            this.checkBoxCacheGeocoder.Name = "checkBoxCacheGeocoder";
+            this.checkBoxCacheGeocoder.Size = new System.Drawing.Size(103, 17);
+            this.checkBoxCacheGeocoder.TabIndex = 18;
+            this.checkBoxCacheGeocoder.Text = "Кэш геокодера";
+            this.checkBoxCacheGeocoder.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxCacheAltitudes
+            // 
+            this.checkBoxCacheAltitudes.AutoSize = true;
+            this.checkBoxCacheAltitudes.Location = new System.Drawing.Point(31, 261);
+            this.checkBoxCacheAltitudes.Name = "checkBoxCacheAltitudes";
+            this.checkBoxCacheAltitudes.Size = new System.Drawing.Size(81, 17);
+            this.checkBoxCacheAltitudes.TabIndex = 19;
+            this.checkBoxCacheAltitudes.Text = "Кэш высот";
+            this.checkBoxCacheAltitudes.UseVisualStyleBackColor = true;
+            // 
             // FormOptions
             // 
             this.AcceptButton = this.buttonOK;
@@ -1005,7 +1041,6 @@
         private System.Windows.Forms.TabPage tabPage5;
         private System.Windows.Forms.CheckBox checkBoxSavePath;
         private System.Windows.Forms.CheckBox checkBoxLoadPath;
-        private System.Windows.Forms.Button buttonAssociateFiles;
         private System.Windows.Forms.CheckBox checkBoxLastExtension;
         private System.Windows.Forms.TabPage tabPage6;
         private System.Windows.Forms.CheckBox checkBoxXKm;
@@ -1041,5 +1076,9 @@
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.ComboBox comboBoxEllipsoid;
         private System.Windows.Forms.CheckBox checkBoxUseFSCacheForCreatingRoutes;
+        private System.Windows.Forms.CheckBox checkBoxCacheGeocoder;
+        private System.Windows.Forms.CheckBox checkBoxCacheMap;
+        private System.Windows.Forms.Button buttonAssociateFiles;
+        private System.Windows.Forms.CheckBox checkBoxCacheAltitudes;
     }
 }

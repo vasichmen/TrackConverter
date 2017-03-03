@@ -931,6 +931,11 @@ namespace TrackConverter.UI.Map
                 MessageBox.Show(this, "Не удалось получить информацию, причина:\r\n" + exx.Message + "\r\nПопробуйте другой геокодер", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return;
             }
+            catch (WebException we)
+            {
+                MessageBox.Show(this, "Не удалось получить информацию из-за проблем с соединением.\r\n" + we.Message + "\r\nПроверьте соединение с Интернет", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
             ShowWaypoint(tt, baseOverlay, Resources.what_there, MarkerTypes.WhatThere, MarkerTooltipMode.Always);
         }
 

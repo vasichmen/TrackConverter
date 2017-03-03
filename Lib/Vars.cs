@@ -73,5 +73,15 @@ namespace TrackConverter
         /// текущая система координат
         /// </summary>
         public static IEarthModel CurrentGeosystem;
+
+        /// <summary>
+        /// если истина, то после выхода будет очищен кэш карт
+        /// </summary>
+        public static bool clearMapCacheAfterExit = false;
+
+        /// <summary>
+        /// если истина, то при закрытии программа снова будет запущена
+        /// </summary>
+        public static bool needRestart = false;
     }
 }

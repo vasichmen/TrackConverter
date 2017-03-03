@@ -344,6 +344,14 @@ namespace TrackConverter.UI
                 Directory.Delete(Application.StartupPath + Resources.temp_directory, true); //очистка временных файлов
             Debug.Print("Temp directory removed");
 
+            //если требуется - очистка кэша карт
+            if (Vars.clearMapCacheAfterExit)
+                Directory.Delete(Application.StartupPath + Resources.cache_directory+ "\\TileDBv5", true);
+
+            //если требуется перезапуск
+            if (Vars.needRestart)
+                Process.Start(Application.ExecutablePath);
+
         }
 
         /// <summary>

@@ -427,12 +427,22 @@ namespace TrackConverter.UI.Tools
         /// <param name="e"></param>
         private void buttonClearCache_Click(object sender, EventArgs e)
         {
-            try
+            bool doRestart = false;
+            if (checkBoxCacheMap.Checked)
             {
-                Directory.Delete(Application.StartupPath + Resources.cache_directory, true);
+                Vars.clearMapCacheAfterExit = true;
+                if (MessageBox.Show(this, "Кэш карт будет очищен только после перезагрузки программы. Перезагрузить сейчас?", "Очистка", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
+                    doRestart = true;
             }
-            catch (Exception)
-            { }
+            if (checkBoxCacheGeocoder.Checked)
+                Vars.dataCache.ClearGeocoder();
+            if (checkBoxCacheAltitudes.Checked)
+                Vars.dataCache.ClearAltitudes();
+            if (doRestart)
+            {
+                Vars.needRestart = true;
+                Application.Exit();
+            }
             MessageBox.Show("Кэш очищен!");
         }
 
