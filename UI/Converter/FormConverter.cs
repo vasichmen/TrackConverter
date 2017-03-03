@@ -709,25 +709,15 @@ namespace TrackConverter.UI.Converter
         /// <param name="e"></param>
         private void removeToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            TrackFileList tl = new TrackFileList();
+            TrackFileList list = new TrackFileList();
             foreach (DataGridViewRow dgvr in dataGridView1.SelectedRows)
             {
                 int row = dgvr.Index;
                 TrackFile tttt = Tracks[row];
-                tl.Add(tttt);
-
+                list.Add(tttt);
             }
-            foreach (TrackFile tf in tl)
-            {
-                this.DeleteRoute(tf);
-            }
-
-            RefreshData();
-            if (dataGridView1.SelectedRows.Count > 0)
-                Vars.currentSelectedTrack = Tracks[dataGridView1.SelectedRows[0].Index];
-            else
-                Vars.currentSelectedTrack = null;
-            Program.RefreshWindows(this);
+            DeleteRoute(list);
+            
         }
 
         /// <summary>
@@ -767,26 +757,10 @@ namespace TrackConverter.UI.Converter
                 return;
             }
 
-            int row = dataGridView1.SelectedRows[0].Index;
-            TrackFile backup = Tracks[row].Clone(); //запоминаем старый маршрут
-            TrackFile ed = Tracks[row].Clone(); //новый маршрут для редактирования
-            Tracks.RemoveAt(row); //удаление из списка
-            RefreshData();
-            //начало редактирования
-            Program.winMap.BeginEditRoute(ed,
-                (tf) =>
-                {
-                    EndEditRoute(tf);
-                },
-                () =>
-                {
-                    backup.CalculateAll();
-                    AddRouteToList(backup);
-                }
-                );
-            Vars.currentSelectedTrack = null;
-            Program.RefreshWindows(this);
+            BeginEditRoute(Tracks[dataGridView1.SelectedRows[0].Index]);
         }
+
+
 
         /// <summary>
         /// показать маршрут на карте
@@ -1113,16 +1087,6 @@ namespace TrackConverter.UI.Converter
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="tf"></param>
-        internal void RemoveTrack(TrackFile tf)
-        {
-            Tracks.Remove(tf);
-            RefreshData();
-        }
-
 
         /// <summary>
         /// выделение нажатой ячейки
@@ -1326,9 +1290,55 @@ namespace TrackConverter.UI.Converter
         /// удаление маршрута из списка
         /// </summary>
         /// <param name="route"></param>
-        private void DeleteRoute(TrackFile route)
+        public void DeleteRoute(TrackFile route)
         {
-            Tracks.Remove(route);
+            TrackFileList tl = new TrackFileList() { route };
+            DeleteRoute(tl);
+        }
+
+        /// <summary>
+        /// удаление нескольких  маршуртов из списка
+        /// </summary>
+        /// <param name="list"></param>
+        private void DeleteRoute(TrackFileList list)
+        {
+            foreach (TrackFile tf in list)
+                Tracks.Remove(tf);
+
+            if (Tracks.Count > 0)
+                Vars.currentSelectedTrack = Tracks[0];
+            else
+                Vars.currentSelectedTrack = null;
+            this.RefreshData();
+            Program.RefreshWindows(this);
+        }
+
+        /// <summary>
+        /// начало редактирования маршута , который уже есть в списке маршутов
+        /// </summary>
+        /// <param name="route"></param>
+        public void BeginEditRoute(TrackFile route)
+        {
+            if (!this.Tracks.Contains(route))
+                return;
+
+            TrackFile backup = route.Clone(); //запоминаем старый маршрут
+            TrackFile ed = route.Clone(); //новый маршрут для редактирования
+            Tracks.Remove(route); //удаление из списка
+            RefreshData();
+            //начало редактирования
+            Program.winMap.BeginEditRoute(ed,
+                (tf) =>
+                {
+                    EndEditRoute(tf);
+                },
+                () =>
+                {
+                    backup.CalculateAll();
+                    AddRouteToList(backup);
+                }
+                );
+            Vars.currentSelectedTrack = null;
             Program.RefreshWindows(this);
         }
 

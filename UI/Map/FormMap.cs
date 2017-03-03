@@ -413,7 +413,7 @@ namespace TrackConverter.UI.Map
         {
             creatingRoute = new TrackFile();
 
-            BeginEditRoute(creatingRoute, (tf) =>
+            Action<TrackFile> after = new Action<TrackFile>((tf) =>
             {
                 //ввод названия марщрута
                 readName:
@@ -421,12 +421,6 @@ namespace TrackConverter.UI.Map
                 if (fr.ShowDialog(this) == DialogResult.OK)
                 {
                     tf.Name = fr.Result;
-
-                    //добавление в основное окно списка маршрутов
-                    if (Program.winConverterNullOrDisposed)
-                        Program.winConverter = new FormConverter();
-                    if (!Program.winConverter.Visible)
-                        Program.winConverter.Show();
 
                     Program.winConverter.AddRouteToList(tf);
 
@@ -444,11 +438,13 @@ namespace TrackConverter.UI.Map
                             creatingRouteOverlay.Markers.Clear();
                             creatingRoute = null;
                             break;
-                        case System.Windows.Forms.DialogResult.No:
+                        case DialogResult.No:
                             //открываем заново ввод названия
                             goto readName;
                     }
             });
+
+            BeginEditRoute(creatingRoute, after);
         }
 
 
@@ -1121,26 +1117,29 @@ namespace TrackConverter.UI.Map
 
         #region на маршруте
 
-
+        /// <summary>
+        /// редактирование маршурта на карте из контекстного меню карты
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void EditRouteToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (routeClicked.Tag != null)
             {
                 TrackFile tf = routeClicked.Tag as TrackFile;
-                BeginEditRoute(tf,
-                    new Action<TrackFile>((track) =>
-                    {
-                        baseOverlay.Routes.Remove(routeClicked);
-                        Program.winConverter.RemoveTrack(tf);
-                        Program.winConverter.AddRouteToList(track);
-                    })
-                    );
+                if (Program.winConverter.Tracks.Contains(tf))
+                    Program.winConverter.BeginEditRoute(tf);
             }
         }
 
+        /// <summary>
+        /// удаление маршрута из контекстного меню
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void RemoveRouteToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
+            Program.winConverter.DeleteRoute(routeClicked.Tag as TrackFile);
         }
 
         #endregion
@@ -1376,6 +1375,9 @@ namespace TrackConverter.UI.Map
                 !isMarkerMoving && //не происходит движение маркера
                 !isMarkerClicked)
             {
+                //обновление информации в списке точек после перемещения
+                RefreshWaypoints();
+
                 if (isCreatingRoute)
                 {
                     PointLatLng pt = gmapControlMap.FromLocalToLatLng(e.X, e.Y);
@@ -1511,8 +1513,8 @@ namespace TrackConverter.UI.Map
                 return;
             }
 
-            //вывод контекстного меню
-            if (e.Button == MouseButtons.Right && !gmapControlMap.IsDragging)
+            //вывод контекстного меню если не перемещается карта и мышь не на маршурте
+            if (e.Button == MouseButtons.Right && !gmapControlMap.IsDragging && !gmapControlMap.IsMouseOverRoute)
             {
                 if (!gmapControlMap.IsMouseOverMarker)
                 {
@@ -1560,8 +1562,6 @@ namespace TrackConverter.UI.Map
 
                 //Вывод координат маркера в подсказке.
                 currentMarker.ToolTipText = string.Format("{0},{1}", point.Lat.ToString("00.000"), point.Lng.ToString("00.000"));
-
-                //начинаем перемещение маркера
 
 
                 //если создается маршрут, то обновляем длину маршрута
@@ -1678,8 +1678,8 @@ namespace TrackConverter.UI.Map
         /// <param name="e">параметры OnClick</param>
         private void gmapControlMap_OnRouteClick(GMapRoute item, MouseEventArgs e)
         {
-            //выделение по лкм
-            if (e.Button == MouseButtons.Left)
+            //выделение по лкм если не линейка и не создание маршурта
+            if (e.Button == MouseButtons.Left && !isCreatingRoute && !isRuling)
             {
                 if (item.Tag != null)
                 {
@@ -1690,8 +1690,8 @@ namespace TrackConverter.UI.Map
                 return;
             }
 
-            //контекстное меню по правой кнопке
-            if (e.Button == MouseButtons.Right)
+            //контекстное меню по правой кнопке если не линейка и не создание маршурта
+            if (e.Button == MouseButtons.Right && !isCreatingRoute && !isRuling)
             {
                 routeClicked = item;
                 contextMenuStripRoute.Show(new Point(e.X, e.Y));
