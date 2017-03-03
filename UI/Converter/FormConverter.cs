@@ -934,7 +934,9 @@ namespace TrackConverter.UI.Converter
                 catch (Exception ex)
                 {
                     er = -1;
-                    this.Invoke(new Action(() => MessageBox.Show(this, ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error)));
+                    this.Invoke(new Action(() =>
+                        MessageBox.Show(this, "Не удалось получить информацию из-за проблем с соединением.\r\n" + ex.Message + "\r\nПроверьте соединение с Интернет", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    ));
                 }
                 this.Invoke(new Action(() =>
                 {

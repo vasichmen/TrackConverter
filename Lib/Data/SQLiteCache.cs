@@ -330,7 +330,7 @@ namespace TrackConverter.Lib.Data
         /// </summary>
         private void remNulls()
         {
-            string com = "DELETE FROM '"+table_name+"' WHERE address = NULL AND altitude = NULL";
+            string com = "DELETE FROM '"+table_name+"' WHERE address IS NULL AND altitude IS NULL";
             int i = ExecuteQuery(com);
             string sel = "SELECT * FROM " + table_name;
             List<Row> all = ExecuteReader(sel);
