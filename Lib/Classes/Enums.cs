@@ -194,23 +194,6 @@ namespace TrackConverter
         None
                 }
 
-    /// <summary>
-    /// Основное окно программы
-    /// </summary>
-    public enum MainWindowType
-    {
-
-        /// <summary>
-        /// окно конвертера
-        /// </summary>
-        Converter,
-
-        /// <summary>
-        /// окно карты
-        /// </summary>
-        Map
-
-    }
 
     /// <summary>
     /// тип измененной информации
@@ -236,6 +219,27 @@ namespace TrackConverter
         /// удаление маркера
         /// </summary>
         MarkerDelete
+    }
+
+    /// <summary>
+    /// диалог обновления программы
+    /// </summary>
+    public enum UpdateDialogAnswer
+    {
+        /// <summary>
+        /// всегда спрашивать
+        /// </summary>
+        AlwaysAsk,
+
+        /// <summary>
+        /// всегда игнорировать обновления
+        /// </summary>
+        AlwaysIgnore,
+
+        /// <summary>
+        /// всегда принимать обновления
+        /// </summary>
+        AlwaysAccept
     }
 
     #endregion

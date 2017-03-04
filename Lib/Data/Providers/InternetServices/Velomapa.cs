@@ -8,6 +8,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
+using Newtonsoft.Json.Linq;
+using TrackConverter.Lib.Classes;
 
 namespace TrackConverter.Lib.Data.Providers.InternetServices
 {
@@ -45,23 +47,24 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         /// узнать последнюю версию на сайте
         /// </summary>
         /// <returns></returns>
-        private float GetVersion()
+        private VersionInfo GetVersion()
         {
-            try
-            {
-                string site = Vars.Options.Common.SiteAddress;
-                string url = string.Format("{0}/receiver.php?mode=version", site);
-                string ver = this.SendStringGetRequest(url);
-                return Convert.ToSingle(ver.Replace(".", ""));
-            }
-            catch (Exception) { return 0; }
+            string site = Vars.Options.Common.SiteAddress;
+            string url = string.Format("{0}/receiver.php?mode=version&owner_version={1}", site,Vars.Options.Common.VersionInt);
+            JObject jobj = SendJsonGetRequest(url);
+            int version_int = int.Parse(jobj["version_int"].ToString());
+            string version_text = jobj["version_text"].ToString();
+            string chang = jobj["changes"].ToString().Replace("\n","\r\n");
+            string date = jobj["release_date"].ToString();
+            DateTime Date = DateTime.Parse(date);
+            return new VersionInfo() { VersionInt = version_int, Changes = chang, ReleaseDate = Date, VersionText = version_text };
         }
 
         /// <summary>
         /// узнать последнюю версию на сайте
         /// </summary>
         /// <returns></returns>
-        public void GetVersionAsync()
+        public void GetVersionAsync(Action<VersionInfo> after_action)
         {
             Action act = new Action(() =>
             {
@@ -71,20 +74,12 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                 {
                     try
                     {
-                        string guid = Vars.Options.Common.ApplicationGuid;
-                        string name = Environment.UserName;
-                        float actVer = GetVersion();
-                        float curVer = Vars.Options.Common.Version;
-                        if (actVer > curVer)
-                            if (MessageBox.Show(null, "Текущая версия " + curVer + ", новая версия " + actVer + ". Загрузить новую версию?", "Доступна новая версия", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
-                            {
-                                Process.Start(Vars.Options.Common.SiteAddress + "/programs.php?item=TrackConverter");
-                                return;
-                            }
-                        f = false;
                         i++;
+                        VersionInfo actVer = GetVersion();
+                        after_action.Invoke(actVer);
+                        f = false;
                     }
-                    catch (WebException wex)
+                    catch (WebException)
                     {
                         f = true;
                         Thread.Sleep(2000);
@@ -108,13 +103,13 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                 {
                     try
                     {
+                        i++;
                         string guid = Vars.Options.Common.ApplicationGuid;
                         string name = Environment.UserName;
                         AttachGuid(guid, name);
                         f = false;
-                        i++;
                     }
-                    catch (WebException wex)
+                    catch (WebException)
                     {
                         f = true;
                         Thread.Sleep(2000);

@@ -66,7 +66,6 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
             //из ответа берется токен и кладется сюда:
             //https://api-maps.yandex.ru/services/route/2.0/?callback=id_1231233466&lang=ru_RU&token=e32fd59b37713e94086b5f49c8c0abbf&rll=37.03%2C55.045~36.7537%2C54.46247&results=1&snap=rough&sign=769824
 
-            JObject jobj = null;
             string json = null;
 
             //различия параметров в запросах:
@@ -130,11 +129,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
             json = SendStringGetRequest(urlGetRoute);
 
             //обработка ответа от сервера
-            json = json.Substring(json.IndexOf('{'));
-            json = json.TrimEnd(new char[] { ';', ')' });
-            try{jobj = JObject.Parse(json);}
-            catch (Exception ex) { throw new ApplicationException("Ошибка в парсере JSON. Сервер вернул некорректный объект.", ex); }
-            return jobj;
+            return SendJsonGetRequest(urlGetRoute);
         }
 
         /// <summary>

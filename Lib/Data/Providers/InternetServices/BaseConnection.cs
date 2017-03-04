@@ -4,6 +4,7 @@ using System.Net;
 using System.Text;
 using System.Threading;
 using System.Xml;
+using Newtonsoft.Json.Linq;
 
 namespace TrackConverter.Lib.Data.Providers.InternetServices
 {
@@ -83,6 +84,23 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
 
                 return responsereader;
             } catch ( WebException we ) { throw new WebException( "Ошибка подключения.\r\n"+url, we ); }
+        }
+
+        /// <summary>
+        /// отправка запроса с результатом в виде строки
+        /// </summary>
+        /// <param name="url">запрос</param>
+        /// <returns></returns>
+        /// <exception cref="WebException">Если произошла ошибка при подключении</exception>
+        protected JObject SendJsonGetRequest(string url)
+        {
+            JObject jobj;
+            string json = SendStringGetRequest(url);
+            json = json.Substring(json.IndexOf('{'));
+            json = json.TrimEnd(new char[] { ';', ')' });
+            try { jobj = JObject.Parse(json);}
+            catch (Exception ex) { throw new ApplicationException("Ошибка в парсере JSON. Сервер вернул некорректный объект.", ex); }
+            return jobj;
         }
 
         /// <summary>

@@ -88,6 +88,7 @@
     <Compile Include="Classes\StackEdits\Actions.cs" />
     <Compile Include="Classes\StackEdits\IUndoInfo.cs" />
     <Compile Include="Classes\StackEdits\StackItem.cs" />
+    <Compile Include="Classes\VersionInfo.cs" />
     <Compile Include="Data\Interfaces\IGeoInfoProvider.cs" />
     <Compile Include="Data\Interfaces\IGeoсoderProvider.cs" />
     <Compile Include="Data\Interfaces\ILinkShorterProvider.cs" />

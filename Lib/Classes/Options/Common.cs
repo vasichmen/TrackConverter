@@ -78,7 +78,21 @@ namespace TrackConverter.Lib.Classes.Options
         /// <summary>
         /// адрес сайта программы
         /// </summary>
-        public string SiteAddress { get { return "http://velomapa.ru"; } }
+        public string SiteAddress
+        {
+#if DEBUG
+            get { return "http://localhost"; }
+#else
+            get { return "http://velomapa.ru"; }
+#endif
+
+        }
+
+
+        /// <summary>
+        /// поведение диалога обновления программы
+        /// </summary>
+        public UpdateDialogAnswer UpdateMode { get; set; }
 
         /// <summary>
         /// GUID экземпляра программы
@@ -106,15 +120,25 @@ namespace TrackConverter.Lib.Classes.Options
         }
 
         /// <summary>
-        /// версия приложения
+        /// версия приложения число
         /// </summary>
-        public float Version
+        public float VersionInt
         {
             get
             {
-                return Convert.ToSingle(Application.ProductVersion.Replace(".",""));
-
+                return Convert.ToSingle(Application.ProductVersion.Replace(".", ""));
             }
         }
+        /// <summary>
+        /// версия приложения в виде текста
+        /// </summary>
+        public string VersionText
+        {
+            get
+            {
+                return Application.ProductVersion;
+            }
+        }
+
     }
 }

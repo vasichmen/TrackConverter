@@ -32,6 +32,7 @@ using TrackConverter.Lib.Mathematic.Geodesy.Models;
 using TrackConverter.Lib.Tracking;
 using TrackConverter.Res.Properties;
 using TrackConverter.UI.Common;
+using TrackConverter.UI.Common.Dialogs;
 using TrackConverter.UI.Converter;
 using TrackConverter.UI.Map;
 using TrackConverter.UI.Tools;
@@ -247,6 +248,26 @@ namespace TrackConverter.UI
 
             #endregion
 
+            #region запись статистики, проверка версии
+
+            Velomapa site = new Velomapa(); //связь с сайтом
+            site.SendStatisticAsync(); //статистика
+
+            //действие при проверке версии
+            Action<VersionInfo> action = new Action<VersionInfo>((vi) =>
+            {
+                float curVer = Vars.Options.Common.VersionInt;
+                if (vi.VersionInt > curVer)
+                {
+                    FormUpdateDialog fud = new FormUpdateDialog(vi);
+                    if (Vars.Options.Common.UpdateMode != UpdateDialogAnswer.AlwaysIgnore)
+                        winMain.Invoke(new Action(() => fud.ShowDialog()));
+                }
+            });
+            site.GetVersionAsync(action); //проверка версии
+
+            #endregion
+
             #region настройки объектов
 
             //открытие БД кэша геокодера
@@ -255,11 +276,7 @@ namespace TrackConverter.UI
             //метод загрузки базы данных ETOPO
             Vars.TaskLoadingETOPO = GetETOPOLoadingTask();
 
-            //запись статистики, проверка версии
-            Velomapa site = new Velomapa();
-            site.SendStatisticAsync();
-           site.GetVersionAsync();
-           
+
 
             //применение настроек
             AcceptOptions();
@@ -346,7 +363,7 @@ namespace TrackConverter.UI
 
             //если требуется - очистка кэша карт
             if (Vars.clearMapCacheAfterExit)
-                Directory.Delete(Application.StartupPath + Resources.cache_directory+ "\\TileDBv5", true);
+                Directory.Delete(Application.StartupPath + Resources.cache_directory + "\\TileDBv5", true);
 
             //если требуется перезапуск
             if (Vars.needRestart)
@@ -475,6 +492,8 @@ namespace TrackConverter.UI
                  }
              }));
         }
+
     }
+
 }
 

@@ -6,6 +6,9 @@ using System.Drawing;
 using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
+using TrackConverter.Lib.Classes;
+using TrackConverter.Lib.Data.Providers.InternetServices;
+using TrackConverter.UI.Common.Dialogs;
 
 namespace TrackConverter.UI.Common
 {
@@ -127,5 +130,29 @@ namespace TrackConverter.UI.Common
         {
             Process.Start(Vars.Options.Common.SiteAddress);
         }
+
+        /// <summary>
+        /// прверка новой версии
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void buttonUpdate_Click(object sender, EventArgs e)
+        {
+            Velomapa site = new Velomapa();
+            //действие при проверке версии
+            Action<VersionInfo> action = new Action<VersionInfo>((vi) =>
+            {
+                float curVer = Vars.Options.Common.VersionInt;
+                if (vi.VersionInt > curVer)
+                {
+                    FormUpdateDialog fud = new FormUpdateDialog(vi);
+                    this.Invoke(new Action(() => fud.ShowDialog()));
+                }
+                else
+                    this.Invoke(new Action(() => MessageBox.Show(this, "Обновлений нет!", "Обновление", MessageBoxButtons.OK, MessageBoxIcon.Information)));
+            });
+            site.GetVersionAsync(action);
+        }
+
     }
 }
