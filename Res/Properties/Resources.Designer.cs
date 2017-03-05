@@ -61,7 +61,26 @@ namespace TrackConverter.Res.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на \Schemes\associate_scheme.reg.
+        ///   Ищет локализованную строку, похожую на Windows Registry Editor Version 5.00
+        ///
+        ///[HKEY_CLASSES_ROOT\{extension}]
+        ///@=&quot;{name}&quot;
+        ///
+        ///[HKEY_CLASSES_ROOT\{name}]
+        ///@=&quot;{comment}&quot;
+        ///
+        ///[HKEY_CLASSES_ROOT\{name}\CLSID]
+        ///
+        ///[HKEY_CLASSES_ROOT\{name}\DefaultIcon]
+        ///@=&quot;\&quot;{exename}\&quot;,1&quot;
+        ///
+        ///[HKEY_CLASSES_ROOT\{name}\Shell]
+        ///
+        ///[HKEY_CLASSES_ROOT\{name}\Shell\Open]
+        ///@=&quot;Открыть&quot;
+        ///
+        ///[HKEY_CLASSES_ROOT\{name}\Shell\Open\Command]
+        ///@=&quot;\&quot;{exename}\&quot; &quot;%1&quot;&quot;.
         /// </summary>
         public static string associatereg_scheme_file {
             get {
@@ -146,7 +165,15 @@ namespace TrackConverter.Res.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на \Schemes\gpx_schema.xml.
+        ///   Ищет локализованную строку, похожую на &lt;?xml version=&apos;1.0&apos; encoding=&apos;UTF-8&apos; ?&gt;
+        ///&lt;gpx  xmlns=&quot;http://www.topografix.com/GPX/1/1&quot;&gt;
+        ///  &lt;trk&gt;
+        ///    &lt;name&gt;&lt;/name&gt;
+        ///    &lt;trkseg&gt;
+        ///
+        ///	&lt;/trkseg&gt;
+        ///  &lt;/trk&gt;
+        ///&lt;/gpx&gt;.
         /// </summary>
         public static string gpxschema_scheme_file {
             get {
@@ -183,7 +210,26 @@ namespace TrackConverter.Res.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на \Schemes\kml_schema.xml.
+        ///   Ищет локализованную строку, похожую на &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+        ///&lt;kml xmlns=&quot;http://earth.google.com/kml/2.2&quot;&gt;
+        ///  &lt;Document xmlns=&quot;&quot;&gt;
+        ///    &lt;Folder&gt;
+        ///      &lt;Folder&gt;
+        ///        &lt;name&gt;&lt;/name&gt;
+        ///        &lt;open&gt;1&lt;/open&gt;
+        ///        &lt;TimeSpan&gt;
+        ///          &lt;begin&gt;&lt;/begin&gt;
+        ///          &lt;end&gt;&lt;/end&gt;
+        ///        &lt;/TimeSpan&gt;
+        ///        &lt;Style&gt;
+        ///          &lt;ListStyle&gt;
+        ///            &lt;listItemType&gt;check&lt;/listItemType&gt;
+        ///            &lt;bgColor&gt;00ffffff&lt;/bgColor&gt;
+        ///          &lt;/ListStyle&gt;
+        ///        &lt;/Style&gt;
+        ///        &lt;Placemark&gt;
+        ///          &lt;name&gt;&lt;/name&gt;
+        ///          &lt;descri [остаток строки не уместился]&quot;;.
         /// </summary>
         public static string kmlschema_scheme_file {
             get {
@@ -250,7 +296,10 @@ namespace TrackConverter.Res.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на \Schemes\osm_schema.xml.
+        ///   Ищет локализованную строку, похожую на &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; ?&gt;
+        ///&lt;osm version=&apos;0.5&apos; generator=&apos;TrackConverter&apos;&gt;
+        ///  
+        ///&lt;/osm&gt;.
         /// </summary>
         public static string osmxschema_scheme_file {
             get {

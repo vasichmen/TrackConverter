@@ -118,7 +118,26 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="associatereg_scheme_file" xml:space="preserve">
-    <value>\Schemes\associate_scheme.reg</value>
+    <value>Windows Registry Editor Version 5.00
+
+[HKEY_CLASSES_ROOT\{extension}]
+@="{name}"
+
+[HKEY_CLASSES_ROOT\{name}]
+@="{comment}"
+
+[HKEY_CLASSES_ROOT\{name}\CLSID]
+
+[HKEY_CLASSES_ROOT\{name}\DefaultIcon]
+@="\"{exename}\",1"
+
+[HKEY_CLASSES_ROOT\{name}\Shell]
+
+[HKEY_CLASSES_ROOT\{name}\Shell\Open]
+@="Открыть"
+
+[HKEY_CLASSES_ROOT\{name}\Shell\Open\Command]
+@="\"{exename}\" "%1""</value>
     <comment>файл ассоцииации файлов программы в реестре</comment>
   </data>
   <data name="cache_directory" xml:space="preserve">
@@ -138,7 +157,15 @@
     <comment>библиотека компонентов GMap</comment>
   </data>
   <data name="gpxschema_scheme_file" xml:space="preserve">
-    <value>\Schemes\gpx_schema.xml</value>
+    <value>&lt;?xml version='1.0' encoding='UTF-8' ?&gt;
+&lt;gpx  xmlns="http://www.topografix.com/GPX/1/1"&gt;
+  &lt;trk&gt;
+    &lt;name&gt;&lt;/name&gt;
+    &lt;trkseg&gt;
+
+	&lt;/trkseg&gt;
+  &lt;/trk&gt;
+&lt;/gpx&gt;</value>
     <comment>схема файла GPX</comment>
   </data>
   <data name="help_doc_file" xml:space="preserve">
@@ -149,7 +176,41 @@
     <value>..\Resources\Info.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="kmlschema_scheme_file" xml:space="preserve">
-    <value>\Schemes\kml_schema.xml</value>
+    <value>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;kml xmlns="http://earth.google.com/kml/2.2"&gt;
+  &lt;Document xmlns=""&gt;
+    &lt;Folder&gt;
+      &lt;Folder&gt;
+        &lt;name&gt;&lt;/name&gt;
+        &lt;open&gt;1&lt;/open&gt;
+        &lt;TimeSpan&gt;
+          &lt;begin&gt;&lt;/begin&gt;
+          &lt;end&gt;&lt;/end&gt;
+        &lt;/TimeSpan&gt;
+        &lt;Style&gt;
+          &lt;ListStyle&gt;
+            &lt;listItemType&gt;check&lt;/listItemType&gt;
+            &lt;bgColor&gt;00ffffff&lt;/bgColor&gt;
+          &lt;/ListStyle&gt;
+        &lt;/Style&gt;
+        &lt;Placemark&gt;
+          &lt;name&gt;&lt;/name&gt;
+          &lt;description&gt;&lt;/description&gt;
+          &lt;Style&gt;
+            &lt;LineStyle&gt;
+              &lt;color&gt;A60000FF&lt;/color&gt;
+              &lt;width&gt;2&lt;/width&gt;
+            &lt;/LineStyle&gt;
+          &lt;/Style&gt;
+          &lt;LineString&gt;
+            &lt;extrude&gt;1&lt;/extrude&gt;
+            &lt;coordinates&gt;&lt;/coordinates&gt;
+          &lt;/LineString&gt;
+        &lt;/Placemark&gt;
+      &lt;/Folder&gt;
+    &lt;/Folder&gt;
+  &lt;/Document&gt;
+&lt;/kml&gt;</value>
     <comment>схема файла KML</comment>
   </data>
   <data name="lib_dll_file" xml:space="preserve">
@@ -167,7 +228,10 @@
     <comment>папка с файлом настроек</comment>
   </data>
   <data name="osmxschema_scheme_file" xml:space="preserve">
-    <value>\Schemes\osm_schema.xml</value>
+    <value>&lt;?xml version="1.0" encoding="utf-8" ?&gt;
+&lt;osm version='0.5' generator='TrackConverter'&gt;
+  
+&lt;/osm&gt;</value>
     <comment>схема файла OSM</comment>
   </data>
   <data name="saveLast_file" xml:space="preserve">

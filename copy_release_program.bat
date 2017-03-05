@@ -4,7 +4,6 @@ rem очистка папок
 rd "D:\Clouds\GDrive\Походы\Конвертер\Data\ETOPO2\SQL" /Q /S
 rd "D:\Clouds\GDrive\Походы\Конвертер\ru" /Q /S
 rd "D:\Clouds\GDrive\Походы\Конвертер\Images" /Q /S
-rd "D:\Clouds\GDrive\Походы\Конвертер\Schemes" /Q /S
 rd "D:\Clouds\GDrive\Походы\Конвертер\Docs" /Q /S
 rd "D:\Clouds\GDrive\Походы\Конвертер\x64 /Q /S
 rd "D:\Clouds\GDrive\Походы\Конвертер\x86 /Q /S
@@ -25,7 +24,6 @@ del "D:\Clouds\GDrive\Походы\Конвертер\readme.txt"
 rem папки
 xcopy "D:\Clouds\GDrive\Projects\CS\TrackConverter\UI\bin\Release\Images\"*.* "D:\Clouds\GDrive\Походы\Конвертер\Images\" /Y /E 
 xcopy "D:\Clouds\GDrive\Projects\CS\TrackConverter\UI\bin\Release\Docs\"*.* "D:\Clouds\GDrive\Походы\Конвертер\Docs\" /Y
-xcopy "D:\Clouds\GDrive\Projects\CS\TrackConverter\UI\bin\Release\Schemes\"*.* "D:\Clouds\GDrive\Походы\Конвертер\Schemes\" /Y
 xcopy "D:\Clouds\GDrive\Projects\CS\TrackConverter\UI\bin\Release\ru\"*.* "D:\Clouds\GDrive\Походы\Конвертер\ru\" /Y
 xcopy "D:\Clouds\GDrive\Projects\CS\TrackConverter\UI\bin\Release\Data\ETOPO2\SQL\"*.* "D:\Clouds\GDrive\Походы\Конвертер\Data\ETOPO2\SQL\" /Y
 xcopy "D:\Clouds\GDrive\Projects\CS\TrackConverter\UI\bin\Release\x64\"*.* "D:\Clouds\GDrive\Походы\Конвертер\x64\" /Y

@@ -383,56 +383,38 @@ namespace TrackConverter.UI
             if (!File.Exists(Application.StartupPath + Resources.lib_dll_file))
             {
                 MessageBox.Show(null, "Библиотека " + Resources.lib_dll_file + " не была найдена в папке программы!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
+                Application.Exit();
             }
 
             if (!File.Exists(Application.StartupPath + Resources.gmapcore_dll_file))
             {
                 MessageBox.Show(null, "Библиотека " + Resources.gmapcore_dll_file + " не была найдена в папке программы!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
+                Application.Exit();
             }
 
             if (!File.Exists(Application.StartupPath + Resources.gmapwf_dll_file))
             {
                 MessageBox.Show(null, "Библиотека " + Resources.gmapwf_dll_file + " не была найдена в папке программы!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
+                Application.Exit();
             }
 
             if (!File.Exists(Application.StartupPath + Resources.help_doc_file))
             {
                 MessageBox.Show(null, "Файл справки " + Resources.help_doc_file + "  не был найден!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-
-            if (!File.Exists(Application.StartupPath + Resources.gpxschema_scheme_file))
-            {
-                MessageBox.Show(null, "Файл формата GPX " + Resources.gpxschema_scheme_file + " не был найден!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-
-            if (!File.Exists(Application.StartupPath + Resources.kmlschema_scheme_file))
-            {
-                MessageBox.Show(null, "Файл формата KML " + Resources.kmlschema_scheme_file + "  не был найден!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-
-            if (!File.Exists(Application.StartupPath + Resources.osmxschema_scheme_file))
-            {
-                MessageBox.Show(null, "Файл формата OSM " + Resources.osmxschema_scheme_file + " не был найден!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
+                Application.Exit();
             }
 
             if (!File.Exists(Application.StartupPath + Resources.ziplib_dll_file))
             {
                 MessageBox.Show(null, "Библиотека " + Resources.ziplib_dll_file + " не была найдена в папке программы!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
+                Application.Exit();
             }
 
             foreach (MapProviderRecord mpr in Vars.Options.Map.AllProviders)
                 if (!File.Exists(Application.StartupPath + mpr.IconName))
                 {
                     MessageBox.Show(null, "Файл карты " + mpr.IconName + " не был найден в папке " + Application.StartupPath, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
+                    Application.Exit();
                 }
         }
 

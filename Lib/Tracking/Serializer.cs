@@ -900,7 +900,7 @@ namespace TrackConverter.Lib.Tracking
         {
             Directory.CreateDirectory(Path.GetDirectoryName(FileName));
             XmlDocument xmDoc = new XmlDocument();
-            xmDoc.Load(Application.StartupPath + Resources.gpxschema_scheme_file);
+            xmDoc.LoadXml(Resources.gpxschema_scheme_file);
             XmlNode root = xmDoc.GetElementsByTagName("trkseg")[0];
             XmlNode name = xmDoc.GetElementsByTagName("name")[0];
             name.InnerText = Track.Name;
@@ -1082,7 +1082,7 @@ namespace TrackConverter.Lib.Tracking
         {
             Directory.CreateDirectory(Path.GetDirectoryName(FileName));
             XmlDocument doc = new XmlDocument();
-            doc.Load(Application.StartupPath + Resources.osmxschema_scheme_file);
+            doc.LoadXml(Resources.osmxschema_scheme_file);
             int i = -1;
             foreach (TrackPoint tp in Track)
             {
