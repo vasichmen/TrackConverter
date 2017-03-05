@@ -460,6 +460,7 @@ namespace TrackConverter.UI.Map
             this.intermediatePointToolStripMenuItem,
             this.toToolStripMenuItem,
             this.clearFromtoMarkersToolStripMenuItem});
+            this.созданиеМаршрутаToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("созданиеМаршрутаToolStripMenuItem.Image")));
             this.созданиеМаршрутаToolStripMenuItem.Name = "созданиеМаршрутаToolStripMenuItem";
             this.созданиеМаршрутаToolStripMenuItem.Size = new System.Drawing.Size(209, 22);
             this.созданиеМаршрутаToolStripMenuItem.Text = "Создание маршрута";
@@ -493,6 +494,7 @@ namespace TrackConverter.UI.Map
             // 
             // clearFromtoMarkersToolStripMenuItem
             // 
+            this.clearFromtoMarkersToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("clearFromtoMarkersToolStripMenuItem.Image")));
             this.clearFromtoMarkersToolStripMenuItem.Name = "clearFromtoMarkersToolStripMenuItem";
             this.clearFromtoMarkersToolStripMenuItem.Size = new System.Drawing.Size(199, 22);
             this.clearFromtoMarkersToolStripMenuItem.Text = "Сброс маркеров";
@@ -697,7 +699,7 @@ namespace TrackConverter.UI.Map
             this.EditRouteToolStripMenuItem,
             this.RemoveRouteToolStripMenuItem});
             this.contextMenuStripRoute.Name = "contextMenuStripRoute";
-            this.contextMenuStripRoute.Size = new System.Drawing.Size(155, 70);
+            this.contextMenuStripRoute.Size = new System.Drawing.Size(155, 48);
             // 
             // EditRouteToolStripMenuItem
             // 

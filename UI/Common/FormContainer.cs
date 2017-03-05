@@ -59,11 +59,7 @@ namespace TrackConverter.UI.Common
         /// <param name="e"></param>
         private void HelpToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            //string lnk = (Application.StartupPath + Res.Properties.Resources.help_doc_file).Replace("#", "%23");
-
-            //Process.Start(lnk);
-
-            new FormBrowser().Show();
+            new FormBrowser().Show(this);
         }
 
         /// <summary>
@@ -120,7 +116,7 @@ namespace TrackConverter.UI.Common
         /// <param name="e"></param>
         private void CalculateDistanceToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            new FormCalculateDistance().Show();
+            new FormCalculateDistance().Show(this);
         }
 
         /// <summary>
@@ -130,7 +126,7 @@ namespace TrackConverter.UI.Common
         /// <param name="e"></param>
         private void TransformCoordinateToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            new FormTransformCoordinate().Show();
+            new FormTransformCoordinate().Show(this);
         }
 
         /// <summary>
@@ -140,7 +136,7 @@ namespace TrackConverter.UI.Common
         /// <param name="e"></param>
         private void consoleToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            new FormConsole().Show();
+            new FormConsole().Show(this);
         }
 
         /// <summary>

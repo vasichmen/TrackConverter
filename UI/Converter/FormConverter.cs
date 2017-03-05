@@ -819,7 +819,7 @@ namespace TrackConverter.UI.Converter
                             tf.CalculateAll();
                             tfl.Add(tf);
                         }
-                        this.Invoke(new Action(() => new FormElevVisual(tfl) { FormBorderStyle = FormBorderStyle.Sizable }.Show()));
+                        this.Invoke(new Action(() => new FormElevVisual(tfl) { FormBorderStyle = FormBorderStyle.Sizable }.Show(Program.winMain)));
                         Program.winMain.EndOperation();
                     }));
                 pr.Start();
@@ -846,7 +846,7 @@ namespace TrackConverter.UI.Converter
                     tf.CalculateAll();
                     tfl.Add(tf);
                 }
-                this.Invoke(new Action(() => new FormElevVisual(tfl) { FormBorderStyle = FormBorderStyle.Sizable }.Show()));
+                this.Invoke(new Action(() => new FormElevVisual(tfl) { FormBorderStyle = FormBorderStyle.Sizable }.Show(Program.winMain)));
                 Program.winMain.EndOperation();
             }));
             pr.Start();
@@ -885,7 +885,7 @@ namespace TrackConverter.UI.Converter
             if (Program.winJoinTrackNullOrDisposed)
                 Program.winJoinTrack = new FormJoinTracks();
             if (!Program.winJoinTrack.Visible)
-                Program.winJoinTrack.Visible = true;
+                Program.winJoinTrack.Show(Program.winMain);
 
             foreach (DataGridViewRow dgvr in dataGridView1.SelectedRows)
                 Program.winJoinTrack.AddTrack(Tracks[dgvr.Index]);
@@ -903,7 +903,7 @@ namespace TrackConverter.UI.Converter
             if (Program.winCompareTrackNullOrDisposed)
                 Program.winCompareTrack = new FormTrackComparison();
             if (!Program.winCompareTrack.Visible)
-                Program.winCompareTrack.Show();
+                Program.winCompareTrack.Show(Program.winMain);
             foreach (DataGridViewRow dgvr in dataGridView1.SelectedRows)
                 Program.winCompareTrack.AddTrack(Tracks[dgvr.Index]);
             Program.winCompareTrack.CalculateComparison();

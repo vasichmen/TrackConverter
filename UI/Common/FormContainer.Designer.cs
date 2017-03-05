@@ -39,7 +39,6 @@
             this.OptionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.окнаToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.справкаToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -54,10 +53,8 @@
             this.menuStrip1.AllowMerge = false;
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.создатьToolStripMenuItem,
-            this.окнаToolStripMenuItem,
             this.справкаToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
-            this.menuStrip1.MdiWindowListItem = this.окнаToolStripMenuItem;
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(984, 24);
             this.menuStrip1.TabIndex = 1;
@@ -140,13 +137,6 @@
             this.exitToolStripMenuItem.Text = "Выход";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
-            // окнаToolStripMenuItem
-            // 
-            this.окнаToolStripMenuItem.Name = "окнаToolStripMenuItem";
-            this.окнаToolStripMenuItem.Size = new System.Drawing.Size(47, 20);
-            this.окнаToolStripMenuItem.Text = "Окна";
-            this.окнаToolStripMenuItem.Visible = false;
-            // 
             // справкаToolStripMenuItem
             // 
             this.справкаToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -159,6 +149,7 @@
             // 
             // helpToolStripMenuItem
             // 
+            this.helpToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("helpToolStripMenuItem.Image")));
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
             this.helpToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.helpToolStripMenuItem.Text = "Помощь";
@@ -166,6 +157,7 @@
             // 
             // aboutToolStripMenuItem
             // 
+            this.aboutToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("aboutToolStripMenuItem.Image")));
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
             this.aboutToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.aboutToolStripMenuItem.Text = "О программе";
@@ -218,7 +210,6 @@
         #endregion
 
         private System.Windows.Forms.MenuStrip menuStrip1;
-        private System.Windows.Forms.ToolStripMenuItem окнаToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem создатьToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem EditPointFileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem CalculateDistanceToolStripMenuItem;

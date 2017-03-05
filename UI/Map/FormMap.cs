@@ -698,7 +698,7 @@ namespace TrackConverter.UI.Map
                         Program.winMain.BeginOperation();
                         added = new GeoInfo(Vars.Options.DataSources.GeoInfoProvider).GetElevation(added, Program.winMain.setCurrentOperation);
                         added.CalculateAll();
-                        this.Invoke(new Action(() => new FormElevVisual(new TrackFileList() { added }) { FormBorderStyle = FormBorderStyle.Sizable }.Show())); ;
+                        this.Invoke(new Action(() => new FormElevVisual(new TrackFileList() { added }) { FormBorderStyle = FormBorderStyle.Sizable }.Show(Program.winMain))); ;
                         Program.winMain.EndOperation();
                     }));
                     pr.Start();
@@ -768,7 +768,7 @@ namespace TrackConverter.UI.Map
         /// <param name="e"></param>
         private void editWaypointsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            new FormPoints(waypoints, (tt) => { EndEditWaypoints(tt); }) { FormBorderStyle = FormBorderStyle.Sizable }.Show();
+            new FormPoints(waypoints, (tt) => { EndEditWaypoints(tt); }) { FormBorderStyle = FormBorderStyle.Sizable }.Show(Program.winMain);
         }
 
         /// <summary>
@@ -789,7 +789,7 @@ namespace TrackConverter.UI.Map
 
 
             FormSelectPoint fsp = new FormSelectPoint(waypoints, true, "Выберите начальную точку");
-            if (fsp.ShowDialog(this) == DialogResult.OK)
+            if (fsp.ShowDialog(Program.winMain) == DialogResult.OK)
                 startPoint = fsp.Result;
             else return;
 
@@ -798,7 +798,7 @@ namespace TrackConverter.UI.Map
             if (Vars.Options.Map.OptimalRouteMethod == OptimalMethodType.PolarSearch && !isCycled)
             {
                 FormSelectPoint fsp1 = new FormSelectPoint(waypoints, startPoint, false, "Выберите конечную точку");
-                if (fsp1.ShowDialog(this) == DialogResult.OK)
+                if (fsp1.ShowDialog(Program.winMain) == DialogResult.OK)
                     endPoint = fsp1.Result;
                 else return;
             }

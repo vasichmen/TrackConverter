@@ -78,15 +78,16 @@
             // 
             this.сохранитьToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.SaveFileToolStripMenuItem});
+            this.сохранитьToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("сохранитьToolStripMenuItem.Image")));
             this.сохранитьToolStripMenuItem.Name = "сохранитьToolStripMenuItem";
-            this.сохранитьToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
+            this.сохранитьToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.сохранитьToolStripMenuItem.Text = "Сохранить";
             // 
             // SaveFileToolStripMenuItem
             // 
             this.SaveFileToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("SaveFileToolStripMenuItem.Image")));
             this.SaveFileToolStripMenuItem.Name = "SaveFileToolStripMenuItem";
-            this.SaveFileToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
+            this.SaveFileToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.SaveFileToolStripMenuItem.Text = "Файл";
             this.SaveFileToolStripMenuItem.ToolTipText = "Сохранение точек в файл";
             this.SaveFileToolStripMenuItem.Click += new System.EventHandler(this.SaveFileToolStripMenuItem_Click);
@@ -96,15 +97,16 @@
             this.toolStripMenuItem1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripMenuItem2,
             this.toolStripMenuItem3});
+            this.toolStripMenuItem1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripMenuItem1.Image")));
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(132, 22);
-            this.toolStripMenuItem1.Text = "Загрузить";
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
+            this.toolStripMenuItem1.Text = "Открыть";
             // 
             // toolStripMenuItem2
             // 
             this.toolStripMenuItem2.Image = ((System.Drawing.Image)(resources.GetObject("toolStripMenuItem2.Image")));
             this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(116, 22);
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(152, 22);
             this.toolStripMenuItem2.Text = "Файл";
             this.toolStripMenuItem2.ToolTipText = "Загрузка точек из файла ";
             this.toolStripMenuItem2.Click += new System.EventHandler(this.LoadFileToolStripMenuItem_Click);
@@ -113,7 +115,7 @@
             // 
             this.toolStripMenuItem3.Image = ((System.Drawing.Image)(resources.GetObject("toolStripMenuItem3.Image")));
             this.toolStripMenuItem3.Name = "toolStripMenuItem3";
-            this.toolStripMenuItem3.Size = new System.Drawing.Size(116, 22);
+            this.toolStripMenuItem3.Size = new System.Drawing.Size(152, 22);
             this.toolStripMenuItem3.Text = "Ссылка";
             this.toolStripMenuItem3.ToolTipText = "Загрузка точек из ссылки";
             this.toolStripMenuItem3.Click += new System.EventHandler(this.LoadLinkToolStripMenuItem_Click);
@@ -178,7 +180,7 @@
             this.showGoogleToolStripMenuItem,
             this.removeToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(258, 180);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(258, 158);
             // 
             // addToolStripMenuItem
             // 

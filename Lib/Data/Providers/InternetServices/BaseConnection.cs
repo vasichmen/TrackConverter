@@ -78,7 +78,6 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
             catch { return false; }
         }
 
-
         /// <summary>
         /// Минимальное время между запросами к серверу. Значение по умолчанию 200 мс.
         /// Если время между запросами не прошло, SendStringRequest и SendXmlRequest будут ждать
@@ -89,8 +88,6 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         /// проверка подключения к интернет
         /// </summary>
         public bool? InternetReachable { get; set; }
-
-
 
         /// <summary>
         /// отправка запроса с результатом в виде xml
@@ -122,7 +119,6 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
 
             try
             {
-
                 //ожидание времени интервала между запросами
                 while (DateTime.Now - lastQuery < MinQueryInterval)
                     Thread.Sleep(50);
