@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
+using System.Net;
 using System.Reflection;
 using System.Windows.Forms;
 using TrackConverter.Lib.Classes;
@@ -138,10 +139,12 @@ namespace TrackConverter.UI.Common
         /// <param name="e"></param>
         private void buttonUpdate_Click(object sender, EventArgs e)
         {
-            Velomapa site = new Velomapa();
-            //действие при проверке версии
-            Action<VersionInfo> action = new Action<VersionInfo>((vi) =>
+            try
             {
+                Velomapa site = new Velomapa();
+                VersionInfo vi = site.GetVersion();
+                //действие при проверке версии
+
                 float curVer = Vars.Options.Common.VersionInt;
                 if (vi.VersionInt > curVer)
                 {
@@ -149,9 +152,12 @@ namespace TrackConverter.UI.Common
                     this.Invoke(new Action(() => fud.ShowDialog()));
                 }
                 else
-                    this.Invoke(new Action(() => MessageBox.Show(this, "Обновлений нет!", "Обновление", MessageBoxButtons.OK, MessageBoxIcon.Information)));
-            });
-            site.GetVersionAsync(action);
+                    MessageBox.Show(this, "Обновлений нет!", "Обновление", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (WebException we)
+            {
+                MessageBox.Show(this, "Ошибка подключения!\r\n" + we.Message, "Обновление", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
     }

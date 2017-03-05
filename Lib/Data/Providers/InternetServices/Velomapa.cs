@@ -47,7 +47,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         /// узнать последнюю версию на сайте
         /// </summary>
         /// <returns></returns>
-        private VersionInfo GetVersion()
+        public VersionInfo GetVersion()
         {
             string site = Vars.Options.Common.SiteAddress;
             string url = string.Format("{0}/receiver.php?mode=version&owner_version={1}", site,Vars.Options.Common.VersionInt);
@@ -89,6 +89,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
             Task ts = new Task(act);
             ts.Start();
         }
+
 
         /// <summary>
         /// отправить статистику на сервер

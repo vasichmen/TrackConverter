@@ -250,21 +250,25 @@ namespace TrackConverter.UI
 
             #region запись статистики, проверка версии
 
-            Velomapa site = new Velomapa(); //связь с сайтом
-            site.SendStatisticAsync(); //статистика
-
-            //действие при проверке версии
-            Action<VersionInfo> action = new Action<VersionInfo>((vi) =>
+            new Task(new Action(() =>
             {
-                float curVer = Vars.Options.Common.VersionInt;
-                if (vi.VersionInt > curVer)
+                Velomapa site = new Velomapa(); //связь с сайтом
+                site.SendStatisticAsync(); //статистика
+
+                //действие при проверке версии
+                Action<VersionInfo> action = new Action<VersionInfo>((vi) =>
                 {
-                    FormUpdateDialog fud = new FormUpdateDialog(vi);
-                    if (Vars.Options.Common.UpdateMode != UpdateDialogAnswer.AlwaysIgnore)
-                        winMain.Invoke(new Action(() => fud.ShowDialog()));
-                }
-            });
-            site.GetVersionAsync(action); //проверка версии
+                    float curVer = Vars.Options.Common.VersionInt;
+                    if (vi.VersionInt > curVer)
+                    {
+                        FormUpdateDialog fud = new FormUpdateDialog(vi);
+                        if (Vars.Options.Common.UpdateMode != UpdateDialogAnswer.AlwaysIgnore)
+                            winMain.Invoke(new Action(() => fud.ShowDialog()));
+                    }
+                });
+                site.GetVersionAsync(action); //проверка версии
+            })
+            ).Start();
 
             #endregion
 

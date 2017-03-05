@@ -1437,11 +1437,6 @@ namespace TrackConverter.UI.Converter
 
         private void button1_Click(object sender, EventArgs e)
         {
-            LinkShorter ls = new LinkShorter(LinkShorterProvider.Bitly);
-            string sss = ls.Short("https://blog.foolsoft.ru/c-funkcii-post-i-get-zaprosov-gotovye-k-primen/");
-
-
-
 
 
             int d = 75089;
