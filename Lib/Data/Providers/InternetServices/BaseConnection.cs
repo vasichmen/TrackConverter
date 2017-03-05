@@ -25,7 +25,6 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
             lastCheckInet = DateTime.MinValue;
         }
 
-
         /// <summary>
         /// время последнего запроса к сервису
         /// </summary>
@@ -62,7 +61,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                 bool checkStatus = InternetGetConnectedState(ref flags, 0);
                 if (checkStatus)
                 {
-                    string[] serverList = new string[] { @"google.com", @"microsoft.com", @"ibm.com" };
+                    string[] serverList = new string[] { @"google.com"};
                     bool haveAnInternetConnection = false;
                     Ping ping = new Ping();
                     for (int i = 0; i < serverList.Length; i++)
