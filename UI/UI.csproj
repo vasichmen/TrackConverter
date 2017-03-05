@@ -157,6 +157,12 @@
     <Compile Include="Map\FormMapBase.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Map\FormWhatsthere.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Map\FormWhatsthere.Designer.cs">
+      <DependentUpon>FormWhatsthere.cs</DependentUpon>
+    </Compile>
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -389,6 +395,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Common\FormContainer.resx">
       <DependentUpon>FormContainer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Map\FormWhatsthere.resx">
+      <DependentUpon>FormWhatsthere.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

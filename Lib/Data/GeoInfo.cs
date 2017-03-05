@@ -58,7 +58,7 @@ namespace TrackConverter.Lib.Data
         }
 
         /// <summary>
-        /// возвращает высоту по заданной точке
+        /// возвращает высоту по заданной точке в метрах
         /// </summary>
         /// <param name="coordinate">координаты точки</param>
         /// <returns></returns>
@@ -80,7 +80,7 @@ namespace TrackConverter.Lib.Data
         }
 
         /// <summary>
-        ///  возвращает высоту по заданной точке
+        ///  возвращает высоту по заданной точке в метрах
         /// </summary>
         /// <param name="lat">широта</param>
         /// <param name="lon">долгота</param>
@@ -89,7 +89,7 @@ namespace TrackConverter.Lib.Data
         { return GetElevation(lat, lon); }
 
         /// <summary>
-        /// создает новый трек с высотами каждой точки
+        /// создает новый трек с высотами каждой точки в метрах
         /// </summary>
         /// <param name="track">трек</param>
         /// <param name="callback">действие, выполняемое при обработке точек</param>

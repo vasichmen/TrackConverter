@@ -97,6 +97,11 @@ namespace TrackConverter.UI.Map
         /// </summary>
         public Stack<KeyValuePair<string, Coordinate>> PositionsStack { get; set; }
 
+        /// <summary>
+        /// словарь с соответствиями точек и окон "что здесь"
+        /// </summary>
+        public Dictionary<TrackPoint, FormWhatsthere> ActiveWhatThereForms { get; set; }
+
         #endregion
 
         #endregion
@@ -226,6 +231,8 @@ namespace TrackConverter.UI.Map
         /// стек последних изменений на карте
         /// </summary>
         protected Stack<StackItem> LastEditsStack { get; set; }
+
+       
 
         /// <summary>
         /// таймер перемещения карты

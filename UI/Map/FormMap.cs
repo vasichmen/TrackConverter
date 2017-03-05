@@ -13,6 +13,7 @@ using Microsoft.VisualBasic.Devices;
 using TrackConverter.Lib.Classes;
 using TrackConverter.Lib.Classes.StackEdits;
 using TrackConverter.Lib.Data;
+using TrackConverter.Lib.Data.Providers.InternetServices;
 using TrackConverter.Lib.Maping.GMap;
 using TrackConverter.Lib.Mathematic.Routing;
 using TrackConverter.Lib.Tracking;
@@ -920,23 +921,38 @@ namespace TrackConverter.UI.Map
         /// <param name="e"></param>
         private void toolStripMenuItemWhatsThere_Click(object sender, EventArgs e)
         {
-            TrackPoint tt = new TrackPoint(pointClicked);
-            tt.Icon = IconOffsets.what_there;
+            TrackPoint point = new TrackPoint(pointClicked);
+            point.Icon = IconOffsets.what_there;
             try
             {
-                tt.Name = new GeoCoder(Vars.Options.DataSources.GeoCoderProvider).GetAddress(pointClicked);
+                point.CalculateParametres();
+
+                if (BaseConnection.CheckInternet())
+                {
+                    point.Name = new GeoCoder(Vars.Options.DataSources.GeoCoderProvider).GetAddress(point.Coordinates);
+                    point.MetrAltitude = new GeoInfo(Vars.Options.DataSources.GeoInfoProvider).GetElevation(point.Coordinates);
+                }
+                else
+                {
+                    point.Name = "Недоступный адрес";
+                    MessageBox.Show(this, "Не удалось получить всю информацию о точке.\r\nПроверьте подключение к сети.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                }
+
+                FormWhatsthere wt = new FormWhatsthere(point);
+                wt.Show(Program.winMain);
+
+                //добавление в словарь окон
+                if (ActiveWhatThereForms == null)
+                    ActiveWhatThereForms = new Dictionary<TrackPoint, FormWhatsthere>();
+                ActiveWhatThereForms.Add(point, wt);
+
+                //вывод значка на экран
+                ShowWaypoint(point, baseOverlay, Resources.what_there, MarkerTypes.WhatThere, MarkerTooltipMode.OnMouseOver);
             }
-            catch (ApplicationException exx)
+            catch (Exception we)
             {
-                MessageBox.Show(this, "Не удалось получить информацию, причина:\r\n" + exx.Message + "\r\nПопробуйте другой геокодер", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                return;
+                MessageBox.Show(this, "Не удалось получить информацию.\r\n" + we.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            catch (WebException we)
-            {
-                MessageBox.Show(this, "Не удалось получить информацию из-за проблем с соединением.\r\n" + we.Message + "\r\nПроверьте соединение с Интернет", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-            ShowWaypoint(tt, baseOverlay, Resources.what_there, MarkerTypes.WhatThere, MarkerTooltipMode.Always);
         }
 
         /// <summary>
@@ -1633,13 +1649,36 @@ namespace TrackConverter.UI.Map
             MapMarker item = itm as MapMarker;
 
             //изменение инормаци по лкм
-            //если не происходило перемещение маркера и не происходит создание маршрута и не линейка
+            //если не происходило перемещение маркера и не "что здесь"  и не происходит создание маршрута и не линейка
             if (!isMarkerMoving && !isCreatingRoute && !isRuling && item.Tag.Type != MarkerTypes.WhatThere && e.Button == MouseButtons.Left)
             {
                 markerClicked = item;
                 isMarkerClicked = true;
                 editMarkerToolStripMenuItem_Click(null, e);
                 return;
+            }
+
+            //открытие соответствующего окна Что Здесь по маркеру
+            //если не происходило перемещение маркера и не происходит создание маршрута и не линейка и "что здесь"
+            if (!isMarkerMoving && !isCreatingRoute && !isRuling && item.Tag.Type == MarkerTypes.WhatThere && e.Button == MouseButtons.Left)
+            {
+                //если в словаре уже есть такая точка, то открываем окно
+                if (ActiveWhatThereForms.ContainsKey(item.Tag.Info))
+                {
+                    FormWhatsthere fw = ActiveWhatThereForms[item.Tag.Info];
+                    if (!fw.Visible)
+                        fw.Show(Program.winMain);
+                    else
+                        fw.Activate();
+                }
+
+                //если точки нет, то создаем новое окно и заносим в словарь
+                else
+                {
+                    FormWhatsthere fw = new FormWhatsthere(item.Tag.Info);
+                    fw.Show(Program.winMain);
+                    ActiveWhatThereForms.Add(item.Tag.Info, fw);
+                }
             }
 
             //открытие контекстного меню по пкм

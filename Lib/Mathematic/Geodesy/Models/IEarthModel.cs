@@ -1,4 +1,5 @@
-﻿using TrackConverter.Lib.Classes;
+﻿using System;
+using TrackConverter.Lib.Classes;
 using TrackConverter.Lib.Tracking;
 
 namespace TrackConverter.Lib.Mathematic.Geodesy.Models
@@ -45,7 +46,7 @@ namespace TrackConverter.Lib.Mathematic.Geodesy.Models
         double CalculateDistance(Coordinate c1, Coordinate c2);
 
         /// <summary>
-        /// Вычисление магнитного склонения в заданной точке
+        /// Вычисление магнитного склонения в заданной точке в градусах
         /// </summary>
         /// <param name="p1">точка, в которой определяется магнитное склонение</param>
         /// <returns></returns>
@@ -66,5 +67,6 @@ namespace TrackConverter.Lib.Mathematic.Geodesy.Models
         /// <param name="p2">конечная точка</param>
         /// <returns></returns>
         double CalculateTrueAzimuth(TrackPoint p1, TrackPoint p2);
+
     }
 }

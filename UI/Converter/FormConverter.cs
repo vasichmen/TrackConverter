@@ -11,6 +11,7 @@ using Microsoft.VisualBasic.Devices;
 using TrackConverter.Lib.Data;
 using TrackConverter.Lib.Data.Providers.InternetServices;
 using TrackConverter.Lib.Mathematic.Assessment;
+using TrackConverter.Lib.Mathematic.Astronomy;
 using TrackConverter.Lib.Tracking;
 using TrackConverter.UI.Common;
 using TrackConverter.UI.Common.Dialogs;
@@ -1437,6 +1438,7 @@ namespace TrackConverter.UI.Converter
 
         private void button1_Click(object sender, EventArgs e)
         {
+           
             DateTime start = DateTime.Now;
             bool? ffg = new Yandex().InternetReachable;
             TimeSpan ts1 = DateTime.Now - start;

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using TrackConverter.Lib.Classes;
+using TrackConverter.Lib.Mathematic.Astronomy;
 using TrackConverter.Lib.Tracking;
 
 namespace TrackConverter.Lib.Mathematic.Geodesy.Models
@@ -14,7 +15,7 @@ namespace TrackConverter.Lib.Mathematic.Geodesy.Models
     /// Теория:
     /// http://blog.foxylab.com/prakticheskaya-kartografiya/
     /// </summary>
-    public abstract class BaseModel : IEarthModel
+    public abstract class BaseModel : IEarthModel 
     {
 
         #region параметры эллипсоида
@@ -250,6 +251,9 @@ namespace TrackConverter.Lib.Mathematic.Geodesy.Models
 
 
         }
+
+
+
 
         #endregion
 

@@ -53,7 +53,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         /// провекрка подключения к интернету
         /// </summary>
         /// <returns></returns>
-        public bool CheckInternet()
+        public static bool CheckInternet()
         {
             try
             {

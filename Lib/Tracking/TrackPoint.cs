@@ -10,6 +10,7 @@ using TrackConverter.Lib.Classes;
 using TrackConverter.Lib.Mathematic;
 using TrackConverter.Res;
 using TrackConverter.Lib.Mathematic.Geodesy;
+using TrackConverter.Lib.Mathematic.Astronomy;
 
 namespace TrackConverter.Lib.Tracking
 {
@@ -93,6 +94,25 @@ namespace TrackConverter.Lib.Tracking
         public DateTime Time { get; set; }
 
         /// <summary>
+        /// текущее время в этой точке
+        /// </summary>
+        public DateTime CurrentTime
+        {
+            get
+            {
+                if (TimeOffset > 0)
+                    return DateTime.UtcNow + TimeSpan.FromHours(Math.Abs(this.TimeOffset));
+                else
+                    return DateTime.UtcNow - TimeSpan.FromHours(Math.Abs(this.TimeOffset));
+            }
+        }
+
+        /// <summary>
+        /// часовой пояс
+        /// </summary>
+        public double TimeOffset { get; set; }
+
+        /// <summary>
         /// Имя точки
         /// </summary>
         public string Name { get { return name != null ? name.Replace(",", " ").Replace("\r\n", "") : null; } set { name = value; } }
@@ -123,7 +143,7 @@ namespace TrackConverter.Lib.Tracking
         public double MagneticAzimuth { get; set; }
 
         /// <summary>
-        /// Магнитное склонение
+        /// Магнитное склонение в градусах
         /// </summary>
         public double MagneticDeclination { get; set; }
 
@@ -142,9 +162,29 @@ namespace TrackConverter.Lib.Tracking
         /// </summary>
         public int Icon { get; set; }
 
+        /// <summary>
+        /// время восхода GMT+0
+        /// </summary>
+        public DateTime Rise { get; set; }
+
+        /// <summary>
+        /// время заката GMT+0
+        /// </summary>
+        public DateTime Fall { get; set; }
+
+        /// <summary>
+        /// азимут восхода
+        /// </summary>
+        public double RiseAzi { get; set; }
+
+        /// <summary>
+        /// азимут заката
+        /// </summary>
+        public double FallAzi { get; set; }
+
         #endregion
 
-      
+
         /// <summary>
         /// Создает список точек между этой точкой и заданной trackPoint
         /// </summary>
@@ -187,6 +227,19 @@ namespace TrackConverter.Lib.Tracking
         }
 
         /// <summary>
+        /// вычисление параметров точки: склонение, восход, закат, часовой пояс, время
+        /// </summary>
+        public void CalculateParametres()
+        {
+            MagneticDeclination = Vars.CurrentGeosystem.CalculateMagneticDeclination(this);
+            TimeOffset = AstronomyCalculations.CalculateTimeOffset(this);
+            Rise = AstronomyCalculations.CalculateRise(this);
+            Fall = AstronomyCalculations.CalculateFall(this);
+            RiseAzi = AstronomyCalculations.CalculateRiseAzimuth(this);
+            FallAzi = AstronomyCalculations.CalculateFallAzimuth(this);
+    }
+
+        /// <summary>
         /// создает копию точки
         /// </summary>
         /// <returns></returns>
@@ -224,6 +277,8 @@ namespace TrackConverter.Lib.Tracking
         {
             return this.Coordinates.Equals(((TrackPoint)obj).Coordinates);
         }
+
+
 
 
         #endregion
