@@ -10,7 +10,7 @@ namespace TrackConverter.Lib.Mathematic.Astronomy
     /// класс вычисления координат солнца и времени.
     /// Источник: http://lavresearch.com
     /// </summary>
-    public class SunParametres
+    public class SunRiseSet
     {
         /// <summary>
         /// информация о времени
@@ -72,12 +72,83 @@ namespace TrackConverter.Lib.Mathematic.Astronomy
         /// <param name="rise">время восхода в часах</param>
         /// <param name="set">время заката в часах</param>
         /// <returns></returns>
-        internal int SunRiseSet(double time_zone, double latA, double lonA, ref double rise, ref double set)
+        internal int RiseSet(double time_zone, double latA, double lonA, ref double rise, ref double set)
         {
             TimeStruct ts = new TimeStruct(true);
-            return this.SunRiseSet(ts, time_zone, latA, lonA, ref rise, ref set);
+            return this.RiseSet(ts, time_zone, latA, lonA, ref rise, ref set);
         }
 
+        /// <summary>
+        /// Вычисление азимутов восхода и захода солнца сегодня
+        /// </summary>
+        /// <param name="time_zone">временная зона</param>
+        /// <param name="latA">широта в градусах</param>
+        /// <param name="lonA">долгота в градусах</param>
+        /// <param name="rise">азимут восхода</param>
+        /// <param name="set">азимут заката</param>
+        public int Azimuths(double time_zone, double latA, double lonA, ref double rise, ref double set)
+        {
+            TimeStruct ts = new TimeStruct(true);
+            return this.Azimuths(ts, time_zone, latA, lonA, ref rise, ref set);
+        }
+
+        /// <summary>
+        /// Вычисление азимутов восхода и захода солнца в заданную дату
+        /// </summary>
+        /// <param name="ts">дата</param>
+        /// <param name="time_zone">временная зона</param>
+        /// <param name="latA">широта в градусах</param>
+        /// <param name="lonA">долгота в градусах</param>
+        /// <param name="rise">азимут восхода</param>
+        /// <param name="set">азимут заката</param>
+        /// <returns></returns>
+        private int Azimuths(TimeStruct ts, double time_zone, double latA, double lonA, ref double rise, ref double set)
+        {
+            double t = getJG(ts); //перевод даты в юлианское время
+            double e = getE(t); //наклон эклиптики
+            double slon = get_lon(t); //долгота солнца //будущее склонение
+            double slat = 0; //широта солнца //будущее восхождение
+            get_LaLo(ref slat, ref slon, e); // получение восхождения и склонения солнца
+            double r = get_ri(t); //нормированный радиус-вектор
+
+            double fi = latA;// широта
+            double ro = 34.5 / 60.0;// рефракция=35'
+            double R = (961.18 / r) / 3600.0;// угловой радиус солнца ~ 16'
+            double P = (8.794 / r) / 3600.0;// параллакс ~ 9"
+            double d = slon; //склонениeв градусах
+
+            //перевод в радианы
+            double to_rad = Math.PI / 180;
+            ro *= to_rad;
+            R *= to_rad;
+            P *= to_rad;
+            d *= to_rad;
+            fi *= to_rad;
+
+
+            //с учетом рефракции, радиуса солнца, параллакса
+            double arg = Math.PI / 2 + ro + R - P;
+            double chis = Math.Sin(fi) * Math.Cos(arg) - Math.Sin(d);
+            double znam = Math.Cos(fi) * Math.Sin(arg);
+            double cosA = chis / znam;
+
+            //cosA = Math.Tan(fi) * Math.Tan(d); //упрощенная формула
+
+            //если вдруг нет захода и восхода
+            if (cosA > 1)
+                return -1;
+            if (cosA < -1)
+                return -2;
+            double A = Math.Acos(cosA);
+
+            A /= to_rad; //в градусах
+            //восход 180 - А
+            rise = 180 - A;
+
+            //заход 180 + А
+            set = 180 + A;
+            return 1;
+        }
 
         /// <summary>
         /// узнать восход и закат  для заданной даты   
@@ -91,7 +162,7 @@ namespace TrackConverter.Lib.Mathematic.Astronomy
         /// <param name="rise">время восхода в часах</param>
         /// <param name="set">время заката в часах</param>
         /// <returns></returns>
-        internal int SunRiseSet(TimeStruct loc_time, double time_zone, double latA, double lonA, ref double rise, ref double set)
+        internal int RiseSet(TimeStruct loc_time, double time_zone, double latA, double lonA, ref double rise, ref double set)
         {
             double t0;// Юлианское время в гринвичскую полночь
             double t;// текущее Юлианское время
@@ -146,9 +217,9 @@ namespace TrackConverter.Lib.Mathematic.Astronomy
             s0 = (s0 % 360) / 15.0;// перевод в часы
 
             // перевод в радианы
-            lon *= (PI / 180.0);
-            z *= (PI / 180.0);
-            latA *= (PI / 180.0);
+            lon *= (Math.PI / 180.0);
+            z *= (Math.PI / 180.0);
+            latA *= (Math.PI / 180.0);
             cost = (Math.Cos(z) - Math.Sin(latA) * Math.Sin(lon)) / (Math.Cos(latA) * Math.Cos(lon));
             if (cost > 1)// солнце не всходит
                 return -1;
@@ -156,7 +227,7 @@ namespace TrackConverter.Lib.Mathematic.Astronomy
                 return -2;
             // смещения времени от истинного полудня
             double dt = Math.Acos(cost);
-            dt *= (12.0 / PI);// переводим в часы из радиан
+            dt *= (12.0 / Math.PI);// переводим в часы из радиан
             if (dt < 0) dt += 24;
             if (dt <= 12)
             {
@@ -181,8 +252,9 @@ namespace TrackConverter.Lib.Mathematic.Astronomy
 
         #region вычисления
 
-        const double PI = 3.1415926535897932384626433832795;
         const double C_T = 36525.0;
+
+        #region Коэффициенты для определения положения Солнца
 
         // Амплитуды для определения коэффициента SK для Солнца
         double[] AskS = new double[53];
@@ -193,7 +265,7 @@ namespace TrackConverter.Lib.Mathematic.Astronomy
         // Амплитуды для определения коэффициента CR для Солнца
         double[] AcrS = new double[53];
 
-        // Коэффициенты для определения положения Солнца
+
         // Учёт собственных возмущений
         double[] sk1 = new double[245] {//4*5  // всего 49*5
 	0, 0, 0, 0, 0,
@@ -337,7 +409,7 @@ namespace TrackConverter.Lib.Mathematic.Astronomy
 
         }
 
-
+        #endregion
 
         /**************************************************
         *	Перевод эфемеридной даты в Юлианское время
@@ -593,12 +665,12 @@ namespace TrackConverter.Lib.Mathematic.Astronomy
             g4 = retl_Jup(t) - retp_Jup(t);
             // Средняя аномалия Сатурна
             g5 = retl_Sat(t) - retp_Sat(t);
-            l *= PI / 180.0;
-            l1 *= PI / 180.0;
-            g1 *= PI / 180.0;
-            g3 *= PI / 180.0;
-            g4 *= PI / 180.0;
-            g5 *= PI / 180.0;
+            l *= Math.PI / 180.0;
+            l1 *= Math.PI / 180.0;
+            g1 *= Math.PI / 180.0;
+            g3 *= Math.PI / 180.0;
+            g4 *= Math.PI / 180.0;
+            g5 *= Math.PI / 180.0;
             FillAmS(t);
             for (int i = 0; i < 49; i++)
             {
@@ -619,8 +691,8 @@ namespace TrackConverter.Lib.Mathematic.Astronomy
             F = retFJ(t);
             // Разность средних долгот Луны и Солнца
             D = retDJ(t);
-            F *= PI / 180.0;
-            D *= PI / 180.0;
+            F *= Math.PI / 180.0;
+            D *= Math.PI / 180.0;
             for (int i = 0; i < 4; i++)
             {
                 vl += AskS[+i + 49] * Math.Sin((sk2[+i * 4 + 0]) * l +
@@ -629,7 +701,7 @@ namespace TrackConverter.Lib.Mathematic.Astronomy
                     (sk2[+i * 4 + 3]) * D);
             }
             ret = retl_Sl(t);// средняя долгота солнца
-            vl *= 180 / PI;
+            vl *= 180 / Math.PI;
             ret += vl;
             ret = ret % 360;
             if (ret < 0) ret += 360;
@@ -663,12 +735,12 @@ namespace TrackConverter.Lib.Mathematic.Astronomy
             g4 = retl_Jup(t) - retp_Jup(t);
             // Средняя аномалия Сатурна
             g5 = retl_Sat(t) - retp_Sat(t);
-            l *= PI / 180.0;
-            l1 *= PI / 180.0;
-            g1 *= PI / 180.0;
-            g3 *= PI / 180.0;
-            g4 *= PI / 180.0;
-            g5 *= PI / 180.0;
+            l *= Math.PI / 180.0;
+            l1 *= Math.PI / 180.0;
+            g1 *= Math.PI / 180.0;
+            g3 *= Math.PI / 180.0;
+            g4 *= Math.PI / 180.0;
+            g5 *= Math.PI / 180.0;
             FillAmS(t);
             for (int i = 0; i < 49; i++)
             {
@@ -687,8 +759,8 @@ namespace TrackConverter.Lib.Mathematic.Astronomy
             F = retFJ(t);
             // Разность средних долгот Луны и Солнца
             D = retDJ(t);
-            F *= PI / 180.0;
-            D *= PI / 180.0;
+            F *= Math.PI / 180.0;
+            D *= Math.PI / 180.0;
             for (int i = 0; i < 4; i++)
             {
                 vl += AcrS[+i + 49] * Math.Cos((sk2[+i * 4 + 0]) * l +
@@ -711,7 +783,6 @@ namespace TrackConverter.Lib.Mathematic.Astronomy
         * t - Число Юлианских дней от J2000
         * выход: звездное время в часах
         **********************************************/
-
         double star_time(double t)
         {
             double t0 = 0, // Число Юлианских дней до гривнической полуночи
@@ -738,10 +809,10 @@ namespace TrackConverter.Lib.Mathematic.Astronomy
                                                                                                                  // снова считаем число Юл. дней, но уже не от полуночи, а на тек. время
             tmp = t / 36525.0;
             // добавим нутацию
-            //double na1 = (Math.Cos(rete(tmp*36525.0)*PI/180.0)/15.0)*retDfJ(tmp*36525.0);
-            //double na2 = (Math.Cos(rete(tmp*36525.0)*PI/180.0)/15.0)*retdfJ(tmp*36525.0);
-            //so += (Math.Cos(rete(tmp*36525.0)*PI/180.0)/15.0)*retDfJ(tmp*36525.0);
-            //so += (Math.Cos(rete(tmp*36525.0)*PI/180.0)/15.0)*retdfJ(tmp*36525.0);
+            //double na1 = (Math.Cos(rete(tmp*36525.0)*Math.PI/180.0)/15.0)*retDfJ(tmp*36525.0);
+            //double na2 = (Math.Cos(rete(tmp*36525.0)*Math.PI/180.0)/15.0)*retdfJ(tmp*36525.0);
+            //so += (Math.Cos(rete(tmp*36525.0)*Math.PI/180.0)/15.0)*retDfJ(tmp*36525.0);
+            //so += (Math.Cos(rete(tmp*36525.0)*Math.PI/180.0)/15.0)*retdfJ(tmp*36525.0);
             so /= 3600.0; // в часах
             so += M * 1.0027379093;// плюс текущее время от гривнической полуночи
             so = so % 24.0;
@@ -770,21 +841,21 @@ namespace TrackConverter.Lib.Mathematic.Astronomy
             t = 90 - Lo;
             l = La;
 
-            f *= (PI / 180.0);
-            t *= (PI / 180.0);
-            l *= (PI / 180.0);
+            f *= (Math.PI / 180.0);
+            t *= (Math.PI / 180.0);
+            l *= (Math.PI / 180.0);
 
             z = Math.Sin(f) * Math.Sin(l) + Math.Cos(f) * Math.Cos(l) * Math.Cos(t);
             //ASSERT(z>=-1 && z<=1);
             double z1 = Math.Acos(z);
             z1 = Math.Acos(z);// повтор, иначе не работает!!!
-            z1 = z1 * (180.0 / PI);
+            z1 = z1 * (180.0 / Math.PI);
             Lo = 90 - z1;// склонение
             Lo = Lo % 360;
             if (Lo < 0) Lo += 360;
 
             A = Math.Atan2((Math.Cos(l) * Math.Sin(t)), (-Math.Sin(l) * Math.Cos(f) + Math.Cos(l) * Math.Sin(f) * Math.Cos(t)));
-            A *= (180.0 / PI);
+            A *= (180.0 / Math.PI);
             La = 90 - A;
             La = La % 360;
             if (La < 0) La += 360;
