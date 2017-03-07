@@ -61,6 +61,8 @@ namespace TrackConverter.Lib.Mathematic.Astronomy
         {
             double rise = 0, set = 0;
             int ans = new SunRiseSet().Azimuths(trackPoint.TimeOffset, trackPoint.Coordinates.Latitude.TotalDegrees, trackPoint.Coordinates.Longitude.TotalDegrees, ref rise, ref set);
+            if (ans != 1)
+                return double.NaN;
             return rise;
         }
 
@@ -73,6 +75,8 @@ namespace TrackConverter.Lib.Mathematic.Astronomy
         {
             double rise = 0, set = 0;
             int ans = new SunRiseSet().Azimuths(trackPoint.TimeOffset, trackPoint.Coordinates.Latitude.TotalDegrees, trackPoint.Coordinates.Longitude.TotalDegrees, ref rise, ref set);
+            if (ans != 1)
+                return double.NaN;
             return set;
         }
     }

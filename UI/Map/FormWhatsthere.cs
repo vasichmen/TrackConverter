@@ -19,6 +19,7 @@ namespace TrackConverter.UI.Map
     public partial class FormWhatsthere : Form
     {
         TrackPoint point;
+        Timer timer;
 
         /// <summary>
         /// создает новое окно информации о точке с заданными данными
@@ -37,7 +38,7 @@ namespace TrackConverter.UI.Map
         /// <param name="e"></param>
         private void FormWhatsthere_Load(object sender, EventArgs e)
         {
-            this.Text = point.Name;
+            this.Text = point.Name == "Недоступный адрес" ? point.Coordinates.ToString("{lat} {lon}", "ddºmm'ss.s\"H") : point.Name;
             this.labelAddress.Text = point.Name;
             this.labelRise.Text = point.Rise.ToString();
             this.labelRiseAzi.Text = point.RiseAzi.ToString("00.0000") + "º";
@@ -47,8 +48,22 @@ namespace TrackConverter.UI.Map
             this.labelLat.Text = point.Coordinates.Latitude.TotalDegrees.ToString("00.000000") + "º";
             this.labelLon.Text = point.Coordinates.Longitude.TotalDegrees.ToString("00.000000") + "º";
             this.labelAlt.Text = double.IsNaN(point.MetrAltitude) ? "недоступно" : (point.MetrAltitude.ToString() + " м");
-            this.labelLocalTime.Text = point.CurrentTime.ToString();
             this.labelTimeOffset.Text = ((point.TimeOffset >= 0) ? "GMT+" : "GMT") + point.TimeOffset.ToString("00");
+            this.labeldayLength.Text = point.DayLength.ToString();
+
+            //обновление времени
+            timer = new Timer();
+            timer.Interval = 100;
+            timer.Tick += Timer_Tick;
+            timer.Start();
+        }
+
+        private void Timer_Tick(object sender, EventArgs e)
+        {
+            this.Invoke(new Action(() =>
+          this.labelLocalTime.Text = point.CurrentTime.ToString())
+          );
+
         }
 
         /// <summary>
@@ -60,6 +75,7 @@ namespace TrackConverter.UI.Map
         {
             if (Program.winMap.ActiveWhatThereForms.ContainsKey(point))
                 Program.winMap.ActiveWhatThereForms.Remove(point);
+            timer.Stop();
         }
 
         /// <summary>

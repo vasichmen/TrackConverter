@@ -56,6 +56,8 @@
             this.label13 = new System.Windows.Forms.Label();
             this.buttonCenter = new System.Windows.Forms.Button();
             this.buttonClose = new System.Windows.Forms.Button();
+            this.label7 = new System.Windows.Forms.Label();
+            this.labeldayLength = new System.Windows.Forms.Label();
             this.tableLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel3.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
@@ -91,7 +93,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(3, 250);
+            this.label4.Location = new System.Drawing.Point(3, 275);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(119, 13);
             this.label4.TabIndex = 3;
@@ -118,8 +120,8 @@
             // tableLayoutPanel1
             // 
             this.tableLayoutPanel1.ColumnCount = 2;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 132F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 12F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 144F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 8F));
             this.tableLayoutPanel1.Controls.Add(this.tableLayoutPanel3, 1, 0);
             this.tableLayoutPanel1.Controls.Add(this.tableLayoutPanel2, 0, 0);
             this.tableLayoutPanel1.Controls.Add(this.buttonCenter, 0, 1);
@@ -128,30 +130,31 @@
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 2;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 280F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 302F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(314, 324);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(338, 347);
             this.tableLayoutPanel1.TabIndex = 6;
             // 
             // tableLayoutPanel3
             // 
             this.tableLayoutPanel3.ColumnCount = 1;
             this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel3.Controls.Add(this.labelLocalTime, 0, 8);
             this.tableLayoutPanel3.Controls.Add(this.labelAlt, 0, 3);
             this.tableLayoutPanel3.Controls.Add(this.labelTimeOffset, 0, 9);
-            this.tableLayoutPanel3.Controls.Add(this.labelDec, 0, 10);
             this.tableLayoutPanel3.Controls.Add(this.labelAddress, 0, 0);
             this.tableLayoutPanel3.Controls.Add(this.labelFall, 0, 5);
             this.tableLayoutPanel3.Controls.Add(this.labelLat, 0, 1);
             this.tableLayoutPanel3.Controls.Add(this.labelRise, 0, 4);
             this.tableLayoutPanel3.Controls.Add(this.labelLon, 0, 2);
-            this.tableLayoutPanel3.Controls.Add(this.labelRiseAzi, 0, 6);
-            this.tableLayoutPanel3.Controls.Add(this.labelFallAzi, 0, 7);
+            this.tableLayoutPanel3.Controls.Add(this.labeldayLength, 0, 6);
+            this.tableLayoutPanel3.Controls.Add(this.labelRiseAzi, 0, 7);
+            this.tableLayoutPanel3.Controls.Add(this.labelFallAzi, 0, 8);
+            this.tableLayoutPanel3.Controls.Add(this.labelLocalTime, 0, 10);
+            this.tableLayoutPanel3.Controls.Add(this.labelDec, 0, 11);
             this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel3.Location = new System.Drawing.Point(135, 3);
+            this.tableLayoutPanel3.Location = new System.Drawing.Point(147, 3);
             this.tableLayoutPanel3.Name = "tableLayoutPanel3";
-            this.tableLayoutPanel3.RowCount = 11;
+            this.tableLayoutPanel3.RowCount = 12;
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
@@ -163,14 +166,15 @@
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
-            this.tableLayoutPanel3.Size = new System.Drawing.Size(176, 274);
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel3.Size = new System.Drawing.Size(188, 296);
             this.tableLayoutPanel3.TabIndex = 1;
             // 
             // labelLocalTime
             // 
             this.labelLocalTime.AutoEllipsis = true;
             this.labelLocalTime.AutoSize = true;
-            this.labelLocalTime.Location = new System.Drawing.Point(3, 200);
+            this.labelLocalTime.Location = new System.Drawing.Point(3, 250);
             this.labelLocalTime.Name = "labelLocalTime";
             this.labelLocalTime.Size = new System.Drawing.Size(62, 13);
             this.labelLocalTime.TabIndex = 8;
@@ -200,7 +204,7 @@
             // 
             this.labelDec.AutoEllipsis = true;
             this.labelDec.AutoSize = true;
-            this.labelDec.Location = new System.Drawing.Point(3, 250);
+            this.labelDec.Location = new System.Drawing.Point(3, 275);
             this.labelDec.Name = "labelDec";
             this.labelDec.Size = new System.Drawing.Size(62, 13);
             this.labelDec.TabIndex = 3;
@@ -260,7 +264,7 @@
             // 
             this.labelRiseAzi.AutoEllipsis = true;
             this.labelRiseAzi.AutoSize = true;
-            this.labelRiseAzi.Location = new System.Drawing.Point(3, 150);
+            this.labelRiseAzi.Location = new System.Drawing.Point(3, 175);
             this.labelRiseAzi.Name = "labelRiseAzi";
             this.labelRiseAzi.Size = new System.Drawing.Size(62, 13);
             this.labelRiseAzi.TabIndex = 10;
@@ -270,7 +274,7 @@
             // 
             this.labelFallAzi.AutoEllipsis = true;
             this.labelFallAzi.AutoSize = true;
-            this.labelFallAzi.Location = new System.Drawing.Point(3, 175);
+            this.labelFallAzi.Location = new System.Drawing.Point(3, 200);
             this.labelFallAzi.Name = "labelFallAzi";
             this.labelFallAzi.Size = new System.Drawing.Size(62, 13);
             this.labelFallAzi.TabIndex = 9;
@@ -280,21 +284,22 @@
             // 
             this.tableLayoutPanel2.ColumnCount = 1;
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel2.Controls.Add(this.label11, 0, 8);
             this.tableLayoutPanel2.Controls.Add(this.label1, 0, 0);
-            this.tableLayoutPanel2.Controls.Add(this.label4, 0, 10);
             this.tableLayoutPanel2.Controls.Add(this.label8, 0, 3);
             this.tableLayoutPanel2.Controls.Add(this.label6, 0, 5);
             this.tableLayoutPanel2.Controls.Add(this.label2, 0, 1);
             this.tableLayoutPanel2.Controls.Add(this.label5, 0, 4);
             this.tableLayoutPanel2.Controls.Add(this.label3, 0, 2);
-            this.tableLayoutPanel2.Controls.Add(this.label12, 0, 6);
             this.tableLayoutPanel2.Controls.Add(this.label9, 0, 9);
-            this.tableLayoutPanel2.Controls.Add(this.label13, 0, 7);
+            this.tableLayoutPanel2.Controls.Add(this.label7, 0, 6);
+            this.tableLayoutPanel2.Controls.Add(this.label12, 0, 7);
+            this.tableLayoutPanel2.Controls.Add(this.label13, 0, 8);
+            this.tableLayoutPanel2.Controls.Add(this.label11, 0, 10);
+            this.tableLayoutPanel2.Controls.Add(this.label4, 0, 11);
             this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel2.Location = new System.Drawing.Point(3, 3);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
-            this.tableLayoutPanel2.RowCount = 11;
+            this.tableLayoutPanel2.RowCount = 12;
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
@@ -306,13 +311,14 @@
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(126, 274);
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(138, 296);
             this.tableLayoutPanel2.TabIndex = 0;
             // 
             // label11
             // 
             this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(3, 200);
+            this.label11.Location = new System.Drawing.Point(3, 250);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(98, 13);
             this.label11.TabIndex = 9;
@@ -331,7 +337,7 @@
             // 
             this.label12.AutoEllipsis = true;
             this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(3, 150);
+            this.label12.Location = new System.Drawing.Point(3, 175);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(88, 13);
             this.label12.TabIndex = 10;
@@ -350,7 +356,7 @@
             // 
             this.label13.AutoEllipsis = true;
             this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(3, 175);
+            this.label13.Location = new System.Drawing.Point(3, 200);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(82, 13);
             this.label13.TabIndex = 11;
@@ -358,10 +364,10 @@
             // 
             // buttonCenter
             // 
-            this.buttonCenter.Location = new System.Drawing.Point(18, 290);
+            this.buttonCenter.Location = new System.Drawing.Point(18, 312);
             this.buttonCenter.Margin = new System.Windows.Forms.Padding(18, 10, 10, 10);
             this.buttonCenter.Name = "buttonCenter";
-            this.buttonCenter.Size = new System.Drawing.Size(104, 23);
+            this.buttonCenter.Size = new System.Drawing.Size(104, 20);
             this.buttonCenter.TabIndex = 2;
             this.buttonCenter.Text = "На центр карты";
             this.buttonCenter.UseVisualStyleBackColor = true;
@@ -369,24 +375,42 @@
             // 
             // buttonClose
             // 
-            this.buttonClose.Location = new System.Drawing.Point(182, 290);
+            this.buttonClose.Location = new System.Drawing.Point(194, 312);
             this.buttonClose.Margin = new System.Windows.Forms.Padding(50, 10, 10, 10);
             this.buttonClose.Name = "buttonClose";
-            this.buttonClose.Size = new System.Drawing.Size(75, 23);
+            this.buttonClose.Size = new System.Drawing.Size(75, 20);
             this.buttonClose.TabIndex = 3;
             this.buttonClose.Text = "Закрыть";
             this.buttonClose.UseVisualStyleBackColor = true;
             this.buttonClose.Click += new System.EventHandler(this.buttonClose_Click);
             // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(3, 150);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(132, 13);
+            this.label7.TabIndex = 12;
+            this.label7.Text = "Продолжительность дня";
+            // 
+            // labeldayLength
+            // 
+            this.labeldayLength.AutoSize = true;
+            this.labeldayLength.Location = new System.Drawing.Point(3, 150);
+            this.labeldayLength.Name = "labeldayLength";
+            this.labeldayLength.Size = new System.Drawing.Size(119, 13);
+            this.labeldayLength.TabIndex = 11;
+            this.labeldayLength.Text = "Магнитное склонение";
+            // 
             // FormWhatsthere
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(314, 324);
+            this.ClientSize = new System.Drawing.Size(338, 347);
             this.Controls.Add(this.tableLayoutPanel1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.MinimumSize = new System.Drawing.Size(330, 319);
+            this.MinimumSize = new System.Drawing.Size(354, 381);
             this.Name = "FormWhatsthere";
             this.Text = "FormWhatsthere";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.FormWhatsthere_FormClosed);
@@ -429,5 +453,7 @@
         private System.Windows.Forms.Label label13;
         private System.Windows.Forms.Button buttonCenter;
         private System.Windows.Forms.Button buttonClose;
+        private System.Windows.Forms.Label labeldayLength;
+        private System.Windows.Forms.Label label7;
     }
 }

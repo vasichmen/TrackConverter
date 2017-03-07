@@ -66,6 +66,16 @@ namespace TrackConverter.Lib.Mathematic.Astronomy
         }
 
         /// <summary>
+        /// пустая структура SunTime
+        /// </summary>
+        public SunTime()
+        {
+            Hour = -1;
+            Seconds = -1;
+            Minutes = -1;
+        }
+
+        /// <summary>
         /// количество часов
         /// </summary>
         public int Hour { get; set; }
@@ -97,5 +107,12 @@ namespace TrackConverter.Lib.Mathematic.Astronomy
         /// секунды
         /// </summary>
         public int Seconds { get; set; }
+
+        /// <summary>
+        /// истина, если для экземпляра не заданы значения
+        /// </summary>
+        public bool Empty { get {
+                return !(Hour == -1 & Seconds == -1 & Minutes == -1);
+            } }
     }
 }

@@ -182,6 +182,26 @@ namespace TrackConverter.Lib.Tracking
         /// </summary>
         public double FallAzi { get; set; }
 
+        /// <summary>
+        /// продолжительность дня
+        /// </summary>
+        public TimeSpan DayLength { get {
+                if (Rise.Empty)
+                    Rise = AstronomyCalculations.CalculateRise(this);
+                if (Fall.Empty)
+                    Fall = AstronomyCalculations.CalculateFall(this);
+                if (Rise.DayType == SunTime.WOSet.PolarDay)
+                    return TimeSpan.FromHours(24);
+                if (Rise.DayType == SunTime.WOSet.PolarNight)
+                    return TimeSpan.FromHours(0);
+
+                int hours = Fall.Hour - Rise.Hour;
+                int mins = Fall.Minutes = Rise.Minutes;
+                int secs = Fall.Seconds - Rise.Seconds;
+                return new TimeSpan(hours, mins, secs);
+
+            } }
+
         #endregion
 
 
