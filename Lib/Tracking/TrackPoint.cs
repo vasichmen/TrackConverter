@@ -165,12 +165,12 @@ namespace TrackConverter.Lib.Tracking
         /// <summary>
         /// время восхода GMT+0
         /// </summary>
-        public DateTime Rise { get; set; }
+        public SunTime Rise { get; set; }
 
         /// <summary>
         /// время заката GMT+0
         /// </summary>
-        public DateTime Fall { get; set; }
+        public SunTime Fall { get; set; }
 
         /// <summary>
         /// азимут восхода

@@ -39,10 +39,10 @@ namespace TrackConverter.UI.Map
         {
             this.Text = point.Name;
             this.labelAddress.Text = point.Name;
-            this.labelRise.Text = point.Rise.ToString("HH:MM");
+            this.labelRise.Text = point.Rise.ToString();
             this.labelRiseAzi.Text = point.RiseAzi.ToString("00.0000") + "º";
             this.labelFallAzi.Text = point.FallAzi.ToString("00.0000") + "º";
-            this.labelFall.Text = point.Fall.ToString("HH:MM");
+            this.labelFall.Text = point.Fall.ToString();
             this.labelDec.Text = point.MagneticDeclination.ToString("0.0000") + "º";
             this.labelLat.Text = point.Coordinates.Latitude.TotalDegrees.ToString("00.000000") + "º";
             this.labelLon.Text = point.Coordinates.Longitude.TotalDegrees.ToString("00.000000") + "º";

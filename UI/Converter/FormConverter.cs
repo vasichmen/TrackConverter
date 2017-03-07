@@ -1438,12 +1438,9 @@ namespace TrackConverter.UI.Converter
 
         private void button1_Click(object sender, EventArgs e)
         {
-           
-            DateTime start = DateTime.Now;
-            bool? ffg = new Yandex().InternetReachable;
-            TimeSpan ts1 = DateTime.Now - start;
 
-            MessageBox.Show(ts1.ToString());
+            double rise = 0, set = 0;
+           
 
             int d = 75089;
             int f = Yandex.Perest(d);

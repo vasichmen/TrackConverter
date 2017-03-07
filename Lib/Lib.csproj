@@ -116,7 +116,7 @@
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Mathematic\Astronomy\AstronomyCalculations.cs" />
     <Compile Include="Mathematic\Astronomy\SunParametres.cs" />
-    <Compile Include="Mathematic\Astronomy\TimeStruct.cs" />
+    <Compile Include="Mathematic\Astronomy\Time.cs" />
     <Compile Include="Mathematic\Geodesy\MapCalibrations\MapCalibrationOzi.cs" />
     <Compile Include="Mathematic\Geodesy\MapCalibrations\MapCalibrationWorld.cs" />
     <Compile Include="Mathematic\Geodesy\Projections\IProjection.cs" />
