@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("Lib")]
 [assembly: AssemblyDescription("Библиотека форматов маршрутов, сторонних сервисов")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Метт В. Д.")]
+[assembly: AssemblyCompany("vasich")]
 [assembly: AssemblyProduct("Lib")]
 [assembly: AssemblyCopyright("Copyright © vasich,  2017")]
 [assembly: AssemblyTrademark("")]

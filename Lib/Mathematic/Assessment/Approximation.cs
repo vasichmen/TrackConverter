@@ -170,7 +170,7 @@ namespace TrackConverter.Lib.Mathematic.Assessment
         /// <param name="route"></param>
         /// <param name="amount">степень полинома</param>
         /// <returns></returns>
-        public static TrackFile Approximate(TrackFile route, int amount)
+        public static BaseTrack Approximate(BaseTrack route, int amount)
         {
             double[] x = new double[route.Count];
             for (int i = 0; i < route.Count; i++)

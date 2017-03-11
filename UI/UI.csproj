@@ -154,6 +154,12 @@
       <DependentUpon>FormContainer.cs</DependentUpon>
     </Compile>
     <Compile Include="Common\TrayIcon.cs" />
+    <Compile Include="Map\FormEditTrip.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Map\FormEditTrip.Designer.cs">
+      <DependentUpon>FormEditTrip.cs</DependentUpon>
+    </Compile>
     <Compile Include="Map\FormMapBase.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -288,6 +294,7 @@
     <Content Include="Docs\добавление действия для отмены.txt" />
     <Content Include="Docs\добавление иконки маркера.txt" />
     <Content Include="Docs\добавление провайдера карты.txt" />
+    <Content Include="Docs\добавление типа путевой точки.txt" />
     <Content Include="Docs\добавление формата файла.txt" />
     <Content Include="Docs\СК, проекции и прочее.txt" />
     <Content Include="Docs\стандарты.txt" />
@@ -386,15 +393,23 @@
     </Content>
     <EmbeddedResource Include="Common\Dialogs\FormUpdateDialog.resx">
       <DependentUpon>FormUpdateDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Common\FormAbout.resx">
       <DependentUpon>FormAbout.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Common\FormBrowser.resx">
       <DependentUpon>FormBrowser.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Common\FormContainer.resx">
       <DependentUpon>FormContainer.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Map\FormEditTrip.resx">
+      <DependentUpon>FormEditTrip.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Map\FormWhatsthere.resx">
       <DependentUpon>FormWhatsthere.cs</DependentUpon>
@@ -414,18 +429,22 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Converter\FormJoinTracks.resx">
       <DependentUpon>FormJoinTracks.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Map\FormEditRoute.resx">
       <DependentUpon>FormEditRoute.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Common\Dialogs\FormEditPoint.resx">
       <DependentUpon>FormEditPoint.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Tools\FormElevVisual.resx">
       <DependentUpon>FormElevVisual.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Converter\FormConverter.resx">
       <DependentUpon>FormConverter.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Map\FormMap.resx">
       <DependentUpon>FormMap.cs</DependentUpon>
@@ -441,9 +460,11 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Common\Dialogs\FormReadText.resx">
       <DependentUpon>FormReadText.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Converter\FormTrackInformation.resx">
       <DependentUpon>FormTrackInformation.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Tools\FormTrackComparison.resx">
       <DependentUpon>FormTrackComparison.cs</DependentUpon>
@@ -453,6 +474,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Common\FormWaiting.resx">
       <DependentUpon>FormWaiting.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Tools\FormSaveMap.resx">
       <DependentUpon>FormSaveMap.cs</DependentUpon>

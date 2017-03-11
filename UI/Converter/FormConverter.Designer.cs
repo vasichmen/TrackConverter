@@ -52,9 +52,10 @@
             this.saveWikimapiaContextToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.изменитьToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.editWaypointsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.editRouteMapToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.editWaypointsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.loadElevationsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.removeElevationsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.approximateAltitudesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.показатьToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showWaypointsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -66,7 +67,6 @@
             this.addComparisonToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.removeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.button1 = new System.Windows.Forms.Button();
-            this.removeElevationsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.contextMenuStripDGW.SuspendLayout();
@@ -116,7 +116,7 @@
             this.OpenYandexToolStripMenuItem});
             this.загрузитьToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("загрузитьToolStripMenuItem.Image")));
             this.загрузитьToolStripMenuItem.Name = "загрузитьToolStripMenuItem";
-            this.загрузитьToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
+            this.загрузитьToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.загрузитьToolStripMenuItem.Text = "Загрузить";
             // 
             // toolStripMenuItem1
@@ -145,10 +145,9 @@
             this.SaveWikimapiaToolStripMenuItem,
             this.SaveAllSeparateToolStripMenuItem,
             this.saveAllInOneFileToolStripMenuItem});
-            this.SaveToolStripMenuItem.Enabled = false;
             this.SaveToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("SaveToolStripMenuItem.Image")));
             this.SaveToolStripMenuItem.Name = "SaveToolStripMenuItem";
-            this.SaveToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
+            this.SaveToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.SaveToolStripMenuItem.Text = "Сохранить";
             // 
             // SaveFileToolStripMenuItem
@@ -234,7 +233,7 @@
             this.addComparisonToolStripMenuItem,
             this.removeToolStripMenuItem});
             this.contextMenuStripDGW.Name = "contextMenuStripDGW";
-            this.contextMenuStripDGW.Size = new System.Drawing.Size(236, 224);
+            this.contextMenuStripDGW.Size = new System.Drawing.Size(236, 202);
             this.contextMenuStripDGW.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStripDGW_Opening);
             // 
             // informationToolStripMenuItem
@@ -309,6 +308,15 @@
             this.изменитьToolStripMenuItem.Size = new System.Drawing.Size(235, 22);
             this.изменитьToolStripMenuItem.Text = "Изменить";
             // 
+            // editRouteMapToolStripMenuItem
+            // 
+            this.editRouteMapToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("editRouteMapToolStripMenuItem.Image")));
+            this.editRouteMapToolStripMenuItem.Name = "editRouteMapToolStripMenuItem";
+            this.editRouteMapToolStripMenuItem.Size = new System.Drawing.Size(227, 22);
+            this.editRouteMapToolStripMenuItem.Tag = "single";
+            this.editRouteMapToolStripMenuItem.Text = "Редактировать на карте";
+            this.editRouteMapToolStripMenuItem.Click += new System.EventHandler(this.editRouteMapToolStripMenuItem_Click);
+            // 
             // editWaypointsToolStripMenuItem
             // 
             this.editWaypointsToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("editWaypointsToolStripMenuItem.Image")));
@@ -319,15 +327,6 @@
             this.editWaypointsToolStripMenuItem.ToolTipText = "Открыть как последовательность точек";
             this.editWaypointsToolStripMenuItem.Click += new System.EventHandler(this.editWaypointsToolStripMenuItem_Click);
             // 
-            // editRouteMapToolStripMenuItem
-            // 
-            this.editRouteMapToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("editRouteMapToolStripMenuItem.Image")));
-            this.editRouteMapToolStripMenuItem.Name = "editRouteMapToolStripMenuItem";
-            this.editRouteMapToolStripMenuItem.Size = new System.Drawing.Size(227, 22);
-            this.editRouteMapToolStripMenuItem.Tag = "single";
-            this.editRouteMapToolStripMenuItem.Text = "Редактировать на карте";
-            this.editRouteMapToolStripMenuItem.Click += new System.EventHandler(this.editRouteMapToolStripMenuItem_Click);
-            // 
             // loadElevationsToolStripMenuItem
             // 
             this.loadElevationsToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("loadElevationsToolStripMenuItem.Image")));
@@ -337,6 +336,15 @@
             this.loadElevationsToolStripMenuItem.Text = "Загрузить высоты точек";
             this.loadElevationsToolStripMenuItem.ToolTipText = "Записать в маршрут данные высоты";
             this.loadElevationsToolStripMenuItem.Click += new System.EventHandler(this.loadElevationsToolStripMenuItem_Click);
+            // 
+            // removeElevationsToolStripMenuItem
+            // 
+            this.removeElevationsToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("removeElevationsToolStripMenuItem.Image")));
+            this.removeElevationsToolStripMenuItem.Name = "removeElevationsToolStripMenuItem";
+            this.removeElevationsToolStripMenuItem.Size = new System.Drawing.Size(227, 22);
+            this.removeElevationsToolStripMenuItem.Tag = "multy";
+            this.removeElevationsToolStripMenuItem.Text = "Удалить высоты точек";
+            this.removeElevationsToolStripMenuItem.Click += new System.EventHandler(this.removeElevationsToolStripMenuItem_Click);
             // 
             // approximateAltitudesToolStripMenuItem
             // 
@@ -446,15 +454,6 @@
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Visible = false;
             this.button1.Click += new System.EventHandler(this.button1_Click);
-            // 
-            // removeElevationsToolStripMenuItem
-            // 
-            this.removeElevationsToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("removeElevationsToolStripMenuItem.Image")));
-            this.removeElevationsToolStripMenuItem.Name = "removeElevationsToolStripMenuItem";
-            this.removeElevationsToolStripMenuItem.Size = new System.Drawing.Size(227, 22);
-            this.removeElevationsToolStripMenuItem.Tag = "multy";
-            this.removeElevationsToolStripMenuItem.Text = "Удалить высоты точек";
-            this.removeElevationsToolStripMenuItem.Click += new System.EventHandler(this.removeElevationsToolStripMenuItem_Click);
             // 
             // FormConverter
             // 

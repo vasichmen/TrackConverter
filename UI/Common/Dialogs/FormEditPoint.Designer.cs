@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormEditPoint));
             this.textBoxAlt = new System.Windows.Forms.TextBox();
             this.textBoxLon = new System.Windows.Forms.TextBox();
@@ -62,6 +63,10 @@
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripButtonPreview = new System.Windows.Forms.ToolStripButton();
             this.comboBoxSelectImage = new System.Windows.Forms.ComboBox();
+            this.buttonAdditionInfo = new System.Windows.Forms.Button();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.label8 = new System.Windows.Forms.Label();
+            this.comboBoxPointType = new System.Windows.Forms.ComboBox();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -71,7 +76,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxAlt.Location = new System.Drawing.Point(99, 84);
             this.textBoxAlt.Name = "textBoxAlt";
-            this.textBoxAlt.Size = new System.Drawing.Size(220, 20);
+            this.textBoxAlt.Size = new System.Drawing.Size(233, 20);
             this.textBoxAlt.TabIndex = 0;
             // 
             // textBoxLon
@@ -80,7 +85,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxLon.Location = new System.Drawing.Point(99, 58);
             this.textBoxLon.Name = "textBoxLon";
-            this.textBoxLon.Size = new System.Drawing.Size(220, 20);
+            this.textBoxLon.Size = new System.Drawing.Size(233, 20);
             this.textBoxLon.TabIndex = 1;
             // 
             // textBoxLat
@@ -89,7 +94,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxLat.Location = new System.Drawing.Point(99, 32);
             this.textBoxLat.Name = "textBoxLat";
-            this.textBoxLat.Size = new System.Drawing.Size(220, 20);
+            this.textBoxLat.Size = new System.Drawing.Size(233, 20);
             this.textBoxLat.TabIndex = 2;
             // 
             // textBoxName
@@ -98,7 +103,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxName.Location = new System.Drawing.Point(99, 6);
             this.textBoxName.Name = "textBoxName";
-            this.textBoxName.Size = new System.Drawing.Size(220, 20);
+            this.textBoxName.Size = new System.Drawing.Size(233, 20);
             this.textBoxName.TabIndex = 3;
             this.textBoxName.Text = "Имя точки";
             // 
@@ -107,17 +112,18 @@
             this.textBoxDescription.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxDescription.Location = new System.Drawing.Point(15, 193);
+            this.textBoxDescription.Location = new System.Drawing.Point(15, 204);
             this.textBoxDescription.Multiline = true;
             this.textBoxDescription.Name = "textBoxDescription";
             this.textBoxDescription.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBoxDescription.Size = new System.Drawing.Size(393, 91);
+            this.textBoxDescription.Size = new System.Drawing.Size(406, 133);
             this.textBoxDescription.TabIndex = 4;
+            this.toolTip1.SetToolTip(this.textBoxDescription, "Подробное описание точки. Можно использовать HTML");
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 174);
+            this.label1.Location = new System.Drawing.Point(12, 188);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(57, 13);
             this.label1.TabIndex = 7;
@@ -174,26 +180,27 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dateTimePickerDate.Location = new System.Drawing.Point(99, 110);
             this.dateTimePickerDate.Name = "dateTimePickerDate";
-            this.dateTimePickerDate.Size = new System.Drawing.Size(137, 20);
+            this.dateTimePickerDate.Size = new System.Drawing.Size(233, 20);
             this.dateTimePickerDate.TabIndex = 13;
             this.dateTimePickerDate.Value = new System.DateTime(2016, 4, 18, 0, 0, 0, 0);
             // 
             // buttonSave
             // 
             this.buttonSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonSave.Location = new System.Drawing.Point(15, 290);
+            this.buttonSave.Location = new System.Drawing.Point(15, 343);
             this.buttonSave.Name = "buttonSave";
             this.buttonSave.Size = new System.Drawing.Size(75, 23);
             this.buttonSave.TabIndex = 14;
             this.buttonSave.Text = "Сохранить";
+            this.toolTip1.SetToolTip(this.buttonSave, "Сохранить изменения");
             this.buttonSave.UseVisualStyleBackColor = true;
             this.buttonSave.Click += new System.EventHandler(this.buttonSave_Click);
             // 
             // buttonCancel
             // 
-            this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.buttonCancel.Location = new System.Drawing.Point(333, 290);
+            this.buttonCancel.Location = new System.Drawing.Point(341, 343);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 15;
@@ -208,7 +215,7 @@
             this.dateTimePickerTime.Format = System.Windows.Forms.DateTimePickerFormat.Time;
             this.dateTimePickerTime.Location = new System.Drawing.Point(99, 136);
             this.dateTimePickerTime.Name = "dateTimePickerTime";
-            this.dateTimePickerTime.Size = new System.Drawing.Size(137, 20);
+            this.dateTimePickerTime.Size = new System.Drawing.Size(150, 20);
             this.dateTimePickerTime.TabIndex = 17;
             this.dateTimePickerTime.Value = new System.DateTime(2016, 4, 18, 0, 0, 0, 0);
             // 
@@ -225,7 +232,7 @@
             // 
             this.linkLabelGetElevation.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.linkLabelGetElevation.AutoSize = true;
-            this.linkLabelGetElevation.Location = new System.Drawing.Point(325, 87);
+            this.linkLabelGetElevation.Location = new System.Drawing.Point(338, 87);
             this.linkLabelGetElevation.Name = "linkLabelGetElevation";
             this.linkLabelGetElevation.Size = new System.Drawing.Size(83, 13);
             this.linkLabelGetElevation.TabIndex = 18;
@@ -237,24 +244,26 @@
             // 
             this.linkLabelFindCoordinates.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.linkLabelFindCoordinates.AutoSize = true;
-            this.linkLabelFindCoordinates.Location = new System.Drawing.Point(325, 9);
+            this.linkLabelFindCoordinates.Location = new System.Drawing.Point(338, 9);
             this.linkLabelFindCoordinates.Name = "linkLabelFindCoordinates";
             this.linkLabelFindCoordinates.Size = new System.Drawing.Size(71, 13);
             this.linkLabelFindCoordinates.TabIndex = 19;
             this.linkLabelFindCoordinates.TabStop = true;
             this.linkLabelFindCoordinates.Text = "Найти адрес";
+            this.toolTip1.SetToolTip(this.linkLabelFindCoordinates, "На основании используемого геокодера найти адрес координат");
             this.linkLabelFindCoordinates.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelFindCoordinates_LinkClicked);
             // 
             // linkLabelGetLink
             // 
             this.linkLabelGetLink.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.linkLabelGetLink.AutoSize = true;
-            this.linkLabelGetLink.Location = new System.Drawing.Point(326, 46);
+            this.linkLabelGetLink.Location = new System.Drawing.Point(339, 46);
             this.linkLabelGetLink.Name = "linkLabelGetLink";
             this.linkLabelGetLink.Size = new System.Drawing.Size(46, 13);
             this.linkLabelGetLink.TabIndex = 20;
             this.linkLabelGetLink.TabStop = true;
             this.linkLabelGetLink.Text = "Ссылка";
+            this.toolTip1.SetToolTip(this.linkLabelGetLink, "Узнать ссылку на точку в картах");
             this.linkLabelGetLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelGetLink_LinkClicked);
             // 
             // toolStrip1
@@ -275,7 +284,7 @@
             this.toolStripButtonInsLink,
             this.toolStripSeparator3,
             this.toolStripButtonPreview});
-            this.toolStrip1.Location = new System.Drawing.Point(180, 162);
+            this.toolStrip1.Location = new System.Drawing.Point(432, 162);
             this.toolStrip1.Margin = new System.Windows.Forms.Padding(3);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(228, 25);
@@ -398,15 +407,56 @@
             // 
             // comboBoxSelectImage
             // 
+            this.comboBoxSelectImage.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.comboBoxSelectImage.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             this.comboBoxSelectImage.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxSelectImage.FormattingEnabled = true;
             this.comboBoxSelectImage.ItemHeight = 40;
-            this.comboBoxSelectImage.Location = new System.Drawing.Point(242, 110);
+            this.comboBoxSelectImage.Location = new System.Drawing.Point(255, 136);
             this.comboBoxSelectImage.Name = "comboBoxSelectImage";
             this.comboBoxSelectImage.Size = new System.Drawing.Size(77, 46);
             this.comboBoxSelectImage.TabIndex = 23;
+            this.toolTip1.SetToolTip(this.comboBoxSelectImage, "Картинка, которая будет отображаться на карте");
             this.comboBoxSelectImage.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.comboBox1_DrawItem);
+            // 
+            // buttonAdditionInfo
+            // 
+            this.buttonAdditionInfo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.buttonAdditionInfo.Location = new System.Drawing.Point(143, 343);
+            this.buttonAdditionInfo.Name = "buttonAdditionInfo";
+            this.buttonAdditionInfo.Size = new System.Drawing.Size(146, 23);
+            this.buttonAdditionInfo.TabIndex = 24;
+            this.buttonAdditionInfo.Text = "Подробная информация";
+            this.toolTip1.SetToolTip(this.buttonAdditionInfo, "Открыть окно с подробной информацией о точке");
+            this.buttonAdditionInfo.UseVisualStyleBackColor = true;
+            this.buttonAdditionInfo.Click += new System.EventHandler(this.buttonAdditionInfo_Click);
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(12, 165);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(57, 13);
+            this.label8.TabIndex = 25;
+            this.label8.Text = "Тип точки";
+            // 
+            // comboBoxPointType
+            // 
+            this.comboBoxPointType.FormattingEnabled = true;
+            this.comboBoxPointType.Items.AddRange(new object[] {
+            "Старт",
+            "Достопримечательность",
+            "Точка сбора",
+            "Привал",
+            "Место для ночёвки",
+            "Финиш",
+            "Точка"});
+            this.comboBoxPointType.Location = new System.Drawing.Point(99, 162);
+            this.comboBoxPointType.Name = "comboBoxPointType";
+            this.comboBoxPointType.Size = new System.Drawing.Size(150, 21);
+            this.comboBoxPointType.TabIndex = 26;
+            this.toolTip1.SetToolTip(this.comboBoxPointType, "Тип точки в маршруте");
+            this.comboBoxPointType.SelectedIndexChanged += new System.EventHandler(this.comboBoxPointType_SelectedIndexChanged);
             // 
             // FormEditPoint
             // 
@@ -414,7 +464,10 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.buttonCancel;
-            this.ClientSize = new System.Drawing.Size(413, 318);
+            this.ClientSize = new System.Drawing.Size(426, 371);
+            this.Controls.Add(this.comboBoxPointType);
+            this.Controls.Add(this.label8);
+            this.Controls.Add(this.buttonAdditionInfo);
             this.Controls.Add(this.comboBoxSelectImage);
             this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.linkLabelGetLink);
@@ -437,7 +490,7 @@
             this.Controls.Add(this.textBoxLon);
             this.Controls.Add(this.textBoxAlt);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.MinimumSize = new System.Drawing.Size(335, 352);
+            this.MinimumSize = new System.Drawing.Size(442, 377);
             this.Name = "FormEditPoint";
             this.ShowInTaskbar = false;
             this.Text = "Редактирование точки";
@@ -483,5 +536,9 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
         private System.Windows.Forms.ToolStripButton toolStripButtonPreview;
         private System.Windows.Forms.ComboBox comboBoxSelectImage;
+        private System.Windows.Forms.Button buttonAdditionInfo;
+        private System.Windows.Forms.ToolTip toolTip1;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.ComboBox comboBoxPointType;
     }
 }

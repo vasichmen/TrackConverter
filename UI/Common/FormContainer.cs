@@ -59,7 +59,7 @@ namespace TrackConverter.UI.Common
         /// <param name="e"></param>
         private void HelpToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            new FormBrowser().Show(this);
+            new FormBrowser().Show(Program.winMain);
         }
 
         /// <summary>

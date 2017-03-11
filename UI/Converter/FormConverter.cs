@@ -103,7 +103,7 @@ namespace TrackConverter.UI.Converter
             {
                 Task ts = new Task(new Action(() =>
                 {
-                    TrackFile pts = null;
+                    BaseTrack pts = null;
                     Program.winMain.BeginOperation();
                     //метод обновления информации о выполняемой операции
 
@@ -136,7 +136,7 @@ namespace TrackConverter.UI.Converter
             try
             {
                 OpenFileDialog of = new OpenFileDialog();
-                of.Filter = "Все поддерживаемые форматы(*.crd, *.wpt, *.plt, *.rt2, *.kml, *.kmz, *.gpx, *.rte, *.osm, *.nmea, *.csv, *.txt)|*.crd; *.wpt; *.plt; *rt2; *.kml; *.kmz; *.gpx; *.rte; *.osm; *.nmea; *.csv; *.txt";
+                of.Filter = "Все поддерживаемые форматы(*.trr, *.crd, *.wpt, *.plt, *.rt2, *.kml, *.kmz, *.gpx, *.rte, *.osm, *.nmea, *.csv, *.txt)| *.trr; *.crd; *.wpt; *.plt; *rt2; *.kml; *.kmz; *.gpx; *.rte; *.osm; *.nmea; *.csv; *.txt";
                 of.Filter += "|Треки Androzic (*.plt)|*.plt";
                 of.Filter += "|Маршрут Androzic (*.rt2)|*.rt2";
                 of.Filter += "|Путевые точки Ozi(*.wpt)|*.wpt";
@@ -149,12 +149,13 @@ namespace TrackConverter.UI.Converter
                 of.Filter += "|Файл NMEA(*.nmea)|*.nmea";
                 of.Filter += "|Файл Excel(*.csv)|*.csv";
                 of.Filter += "|Текстовый файл(*.txt)|*.txt";
+                of.Filter += "|Маршрут Track Converter(*.trr)|*.trr";
 
                 if (Vars.Options.Common.IsLoadDir)
                     of.InitialDirectory = Vars.Options.Common.LastFileLoadDirectory;
                 of.Multiselect = true;
                 of.RestoreDirectory = false;
-                if (of.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                if (of.ShowDialog() == DialogResult.OK)
                     foreach (string fn in of.FileNames)
                         OpenFile(fn);
             }
@@ -190,7 +191,7 @@ namespace TrackConverter.UI.Converter
         /// <param name="e"></param>
         private void SaveFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            TrackFile tf = null;
+            BaseTrack tf = null;
 
             //если кнопка контекстного меню
             if ((string)(((ToolStripMenuItem)sender).Name) == "saveFileContextToolStripMenuItem1")
@@ -218,7 +219,8 @@ namespace TrackConverter.UI.Converter
 
 
             SaveFileDialog sf = new SaveFileDialog();
-            sf.Filter = "Файл маршрута Androzic (*.rt2)|*.rt2";
+            sf.Filter = "Файл маршрута TrackConverter(*.trr)|*.trr";
+            sf.Filter += "|Файл маршрута Androzic (*.rt2)|*.rt2";
             sf.Filter += "|Треки Androzic (*.plt)|*.plt";
             sf.Filter += "|Путевые точки Ozi(*.wpt)|*.wpt";
             sf.Filter += "|Файл координат(*.crd)|*.crd";
@@ -246,43 +248,43 @@ namespace TrackConverter.UI.Converter
                 tf.FileName = sf.FileName;
                 switch (sf.FilterIndex)
                 {
-                    case 1:
+                    case 2:
                         Serializer.Serialize(sf.FileName, tf, FileFormats.Rt2File);
                         break;
-                    case 2:
+                    case 3:
                         Serializer.Serialize(sf.FileName, tf, FileFormats.PltFile);
                         break;
-                    case 3:
+                    case 4:
                         Serializer.Serialize(sf.FileName, tf, FileFormats.WptFile);
                         break;
-                    case 4:
+                    case 5:
                         Serializer.Serialize(sf.FileName, tf, FileFormats.CrdFile);
                         break;
-                    case 5:
+                    case 6:
                         Serializer.Serialize(sf.FileName, tf, FileFormats.KmlFile);
                         break;
-                    case 6:
+                    case 7:
                         Serializer.Serialize(sf.FileName, tf, FileFormats.GpxFile);
                         break;
-                    case 7:
+                    case 8:
                         Serializer.Serialize(sf.FileName, tf, FileFormats.KmzFile);
                         break;
-                    case 8:
+                    case 9:
                         Serializer.Serialize(sf.FileName, tf, FileFormats.OsmFile);
                         break;
-                    case 9:
+                    case 0:
                         Serializer.Serialize(sf.FileName, tf, FileFormats.NmeaFile);
                         break;
-                    case 10:
+                    case 11:
                         Serializer.Serialize(sf.FileName, tf, FileFormats.CsvFile);
                         break;
-                    case 11:
+                    case 12:
                         Serializer.Serialize(sf.FileName, new TrackFileList() { tf }, FileFormats.RteFile);
                         break;
-                    case 12:
+                    case 13:
                         Serializer.Serialize(sf.FileName, tf, FileFormats.TxtFile);
                         break;
-                    case 13:
+                    case 14:
                         Program.winMain.BeginOperation();
                         Task ts = new Task(new Action(() =>
                             {
@@ -290,6 +292,10 @@ namespace TrackConverter.UI.Converter
                                 Program.winMain.EndOperation();
                             }));
                         ts.Start();
+                        break;
+                    case 1:
+
+                        Serializer.Serialize(sf.FileName, tf, FileFormats.TrrFile);
                         break;
                 }
                 Vars.Options.Common.LastFileSaveDirectory = Path.GetDirectoryName(sf.FileName);
@@ -312,6 +318,11 @@ namespace TrackConverter.UI.Converter
                             string ext = Path.GetExtension(arg).ToLower();
                             switch (ext)
                             {
+                                case ".trr":
+                                    TripRouteFile trr = Serializer.DeserializeTripRouteFile(arg);
+                                    this.AddRouteToList(trr);
+                                    RefreshData();
+                                    break;
                                 case ".kml":
                                 case ".kmz":
                                     GeoFile gf = Serializer.DeserializeGeoFile(arg);
@@ -347,7 +358,7 @@ namespace TrackConverter.UI.Converter
         /// <param name="e"></param>
         private void SaveYandexToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            TrackFile tf = null;
+            BaseTrack tf = null;
 
             if ((string)(((ToolStripMenuItem)sender).Name) == "saveYandexContextToolStripMenuItem")
                 tf = Tracks[dataGridView1.SelectedCells[0].RowIndex];
@@ -395,7 +406,7 @@ namespace TrackConverter.UI.Converter
         /// <param name="e"></param>
         private void SaveWikimapiaToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            TrackFile tf = null;
+            BaseTrack tf = null;
 
             if ((string)(((ToolStripMenuItem)sender).Name) == "saveWikimapiaContextToolStripMenuItem")
                 tf = Tracks[dataGridView1.SelectedCells[0].RowIndex];
@@ -541,7 +552,7 @@ namespace TrackConverter.UI.Converter
                 {
                     FormWaiting fw = new FormWaiting();
                     fw.Show(this);
-                    ParallelLoopResult pr = Parallel.ForEach<TrackFile>(Tracks, new Action<TrackFile>((TrackFile tf) =>
+                    ParallelLoopResult pr = Parallel.ForEach<BaseTrack>(Tracks, new Action<BaseTrack>((BaseTrack tf) =>
                     {
                         string basename = fb.SelectedPath + "\\" + tf.FileName + "_" + Guid.NewGuid().ToString();
                         switch (rt.Result)
@@ -635,6 +646,18 @@ namespace TrackConverter.UI.Converter
         /// <param name="e"></param>
         private void contextMenuStripDGW_Opening(object sender, CancelEventArgs e)
         {
+            //если выделенный маршрут - путешествие, то переименовываем кнопку редактирования
+            if (dataGridView1.SelectedRows.Count == 1)
+            {
+                int ind = dataGridView1.SelectedRows[0].Index;
+                BaseTrack bt = Tracks[ind];
+                if (bt.GetType() == typeof(TripRouteFile))
+                    editRouteMapToolStripMenuItem.Text = "Редактировать путешествие";
+                else
+                    editRouteMapToolStripMenuItem.Text = "Редактировать на карте";
+            }
+
+
             //если элемент - первое контектное меню, то выбираем пункты на основе тегов
             if (sender.GetType() == typeof(ContextMenuStrip))
             {
@@ -654,6 +677,8 @@ namespace TrackConverter.UI.Converter
                 ToolStripMenuItem menu = (ToolStripMenuItem)sender;
                 prepareToolStripMenuItemList(menu.DropDownItems);
             }
+
+
         }
 
         /// <summary>
@@ -676,7 +701,7 @@ namespace TrackConverter.UI.Converter
                 if (item.Name == "showWaypointsToolStripMenuItem" || item.Name == "showOnMapToolStripMenuItem")
                     if (dataGridView1.SelectedRows.Count == 1)
                     {
-                        TrackFile tf = Tracks[dataGridView1.SelectedRows[0].Index];
+                        BaseTrack tf = Tracks[dataGridView1.SelectedRows[0].Index];
                         if (item.Name == "showWaypointsToolStripMenuItem")
                             item.Checked = showingWaypointsList.Contains(tf);
                         if (item.Name == "showOnMapToolStripMenuItem")
@@ -714,7 +739,7 @@ namespace TrackConverter.UI.Converter
             foreach (DataGridViewRow dgvr in dataGridView1.SelectedRows)
             {
                 int row = dgvr.Index;
-                TrackFile tttt = Tracks[row];
+                BaseTrack tttt = Tracks[row];
                 list.Add(tttt);
             }
             DeleteRoute(list);
@@ -757,11 +782,12 @@ namespace TrackConverter.UI.Converter
                 MessageBox.Show(this, "Для этого действия должен быть выделен только один маршрут!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-
-            BeginEditRoute(Tracks[dataGridView1.SelectedRows[0].Index]);
+            BaseTrack bt = Tracks[dataGridView1.SelectedRows[0].Index];
+            if (bt.GetType() == typeof(TrackFile))
+                BeginEditRoute(bt as TrackFile);
+            else
+                BeginEditTrip(bt as TripRouteFile);
         }
-
-
 
         /// <summary>
         /// показать маршрут на карте
@@ -773,7 +799,7 @@ namespace TrackConverter.UI.Converter
             foreach (DataGridViewRow r in dataGridView1.SelectedRows)
             {
 
-                TrackFile tf = Tracks[r.Index];
+                BaseTrack tf = Tracks[r.Index];
                 if (showingRoutesList.Contains(tf))
                     showingRoutesList.Remove(tf);
                 else
@@ -811,7 +837,7 @@ namespace TrackConverter.UI.Converter
                         foreach (DataGridViewRow row in dataGridView1.SelectedRows)
                         {
                             int rowI = row.Index;
-                            TrackFile tf = Tracks[rowI].Clone();
+                            BaseTrack tf = Tracks[rowI].Clone();
 
                             double lg = double.Parse(frt.Result);
                             tf = tf.AddIntermediatePoints(lg);
@@ -841,7 +867,7 @@ namespace TrackConverter.UI.Converter
                 foreach (DataGridViewRow row in dataGridView1.SelectedRows)
                 {
                     int rowI = row.Index;
-                    TrackFile tf = Tracks[rowI];
+                    BaseTrack tf = Tracks[rowI];
 
                     tf = new GeoInfo(Vars.Options.DataSources.GeoInfoProvider).GetElevation(tf, Program.winMain.setCurrentOperation);
                     tf.CalculateAll();
@@ -862,7 +888,7 @@ namespace TrackConverter.UI.Converter
         {
             foreach (DataGridViewRow r in dataGridView1.SelectedRows)
             {
-                TrackFile tf = Tracks[r.Index];
+                BaseTrack tf = Tracks[r.Index];
                 if (showingWaypointsList.Contains(tf))
                 {
                     showingWaypointsList.Remove(tf);
@@ -927,7 +953,7 @@ namespace TrackConverter.UI.Converter
                     foreach (DataGridViewRow dgvr in dataGridView1.SelectedRows)
                     {
                         int row = dgvr.Index;
-                        TrackFile tf = Tracks[row];
+                        BaseTrack tf = Tracks[row];
                         tf = new GeoInfo(Vars.Options.DataSources.GeoInfoProvider).GetElevation(tf, Program.winMain.setCurrentOperation);
                         er = 0;
                     }
@@ -969,7 +995,7 @@ namespace TrackConverter.UI.Converter
                 foreach (DataGridViewRow dgvr in dataGridView1.SelectedRows)
                 {
                     int row = dgvr.Index;
-                    TrackFile tf = Tracks[row];
+                    BaseTrack tf = Tracks[row];
                     tf.ClearAltitudes();
                 }
 
@@ -1007,7 +1033,7 @@ namespace TrackConverter.UI.Converter
                 foreach (DataGridViewRow dgvr in dataGridView1.SelectedRows)
                 {
                     int row = dgvr.Index;
-                    TrackFile tf = Tracks[row];
+                    BaseTrack tf = Tracks[row];
                     tf = Approximator.Approximate(tf, amount);
                 }
                 MessageBox.Show(this, "Обработка завершена", "Выполнено!", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -1035,7 +1061,7 @@ namespace TrackConverter.UI.Converter
                 return;
             }
             int row = dataGridView1.SelectedRows[0].Index;
-            TrackFile tf = Tracks[row];
+            BaseTrack tf = Tracks[row];
 
 
             if (tf.FilePath != null && tf.FilePath.Length > 1)
@@ -1052,7 +1078,7 @@ namespace TrackConverter.UI.Converter
         private void saveToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             int row = dataGridView1.SelectedRows[0].Index;
-            TrackFile tf = Tracks[row];
+            BaseTrack tf = Tracks[row];
 
 
             if (tf.FilePath != null && tf.FilePath.Length > 1)
@@ -1159,7 +1185,7 @@ namespace TrackConverter.UI.Converter
                 int i = 0;
                 foreach (DataGridViewRow dgvr in dataGridView1.Rows)
                 {
-                    TrackFile tf = Tracks[i];
+                    BaseTrack tf = Tracks[i];
                     DataGridViewCell cell = dgvr.Cells["Цвет"];
                     cell.Style = new DataGridViewCellStyle() { BackColor = tf.Color };
                     i++;
@@ -1178,7 +1204,7 @@ namespace TrackConverter.UI.Converter
             if ((e.ColumnIndex == this.dataGridView1.Columns[0].Index) && e.Value != null)
             {
                 DataGridViewCell cell = this.dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex];
-                TrackFile tf = Tracks[e.RowIndex];
+                BaseTrack tf = Tracks[e.RowIndex];
                 string text = "Название: " + tf.Name + "\r\n";
                 text += "Длина: " + tf.Distance.ToString("00.00") + " км\r\n";
                 text += "Количество точек: " + tf.Count + "\r\n";
@@ -1202,7 +1228,7 @@ namespace TrackConverter.UI.Converter
                 return;
             int ind = dataGridView1.SelectedRows[0].Index;
 
-            TrackFile tf = Tracks[ind];
+            BaseTrack tf = Tracks[ind];
 
             Vars.currentSelectedTrack = tf;
             Program.RefreshWindows(this);
@@ -1297,7 +1323,7 @@ namespace TrackConverter.UI.Converter
         /// добавление маршрута в список маршрутов
         /// </summary>
         /// <param name="trackFile"></param>
-        public void AddRouteToList(TrackFile trackFile)
+        public void AddRouteToList(BaseTrack trackFile)
         {
             if (trackFile == null)
                 return;
@@ -1313,7 +1339,7 @@ namespace TrackConverter.UI.Converter
         /// <param name="routes"></param>
         internal void AddRouteToList(TrackFileList routes)
         {
-            foreach (TrackFile tf in routes)
+            foreach (BaseTrack tf in routes)
                 AddRouteToList(tf);
         }
 
@@ -1321,7 +1347,7 @@ namespace TrackConverter.UI.Converter
         /// удаление маршрута из списка
         /// </summary>
         /// <param name="route"></param>
-        public void DeleteRoute(TrackFile route)
+        public void DeleteRoute(BaseTrack route)
         {
             TrackFileList tl = new TrackFileList() { route };
             DeleteRoute(tl);
@@ -1333,7 +1359,7 @@ namespace TrackConverter.UI.Converter
         /// <param name="list"></param>
         private void DeleteRoute(TrackFileList list)
         {
-            foreach (TrackFile tf in list)
+            foreach (BaseTrack tf in list)
                 Tracks.Remove(tf);
 
             if (Tracks.Count > 0)
@@ -1351,17 +1377,46 @@ namespace TrackConverter.UI.Converter
         public void BeginEditRoute(TrackFile route)
         {
             if (!this.Tracks.Contains(route))
-                return;
+                throw new ApplicationException("Маршрута нет в списке");
 
-            TrackFile backup = route.Clone(); //запоминаем старый маршрут
-            TrackFile ed = route.Clone(); //новый маршрут для редактирования
+            BaseTrack backup = route.Clone(); //запоминаем старый маршрут
+            TrackFile ed = route.Clone() as TrackFile; //новый маршрут для редактирования
             Tracks.Remove(route); //удаление из списка
             RefreshData();
             //начало редактирования
             Program.winMap.BeginEditRoute(ed,
                 (tf) =>
                 {
-                    EndEditRoute(tf);
+                    EndEditRouteOrTrip(tf);
+                },
+                () =>
+                {
+                    backup.CalculateAll();
+                    AddRouteToList(backup);
+                }
+                );
+            Vars.currentSelectedTrack = null;
+            Program.RefreshWindows(this);
+        }
+
+        /// <summary>
+        /// начало редактирования путешествия, которое уже есть в списке маршутов
+        /// </summary>
+        /// <param name="tripRouteFile">путешествие для редактирования</param>
+        private void BeginEditTrip(TripRouteFile tripRouteFile)
+        {
+            if (!this.Tracks.Contains(tripRouteFile))
+                throw new ApplicationException("Маршрута нет в списке");
+
+            TripRouteFile backup = tripRouteFile.Clone() as TripRouteFile; //запоминаем старый маршрут
+            TripRouteFile ed = tripRouteFile.Clone() as TripRouteFile; //новый маршрут для редактирования
+            Tracks.Remove(tripRouteFile); //удаление из списка
+            RefreshData();
+            //начало редактирования
+            Program.winMap.BeginEditTrip(ed,
+                (tf) =>
+                {
+                    EndEditRouteOrTrip(tf);
                 },
                 () =>
                 {
@@ -1377,7 +1432,7 @@ namespace TrackConverter.UI.Converter
         /// завершение редактирования маршрута
         /// </summary>
         /// <param name="route"></param>
-        public void EndEditRoute(TrackFile route)
+        public void EndEditRouteOrTrip(BaseTrack route)
         {
             if (route == null)
                 return;
@@ -1414,12 +1469,22 @@ namespace TrackConverter.UI.Converter
         /// <param name="FileName"> имя файла</param>
         public void OpenFile(string FileName)
         {
-            TrackFileList tfl = Serializer.DeserializeTrackFileList(FileName);
-            AddRouteToList(tfl);
-            Vars.Options.Converter.AddRecentFile(FileName);//добавление последнего файла
+            if (Path.GetExtension(FileName).ToLower() == ".trr")
+            {
+                TripRouteFile tr = Serializer.DeserializeTripRouteFile(FileName);
+                AddRouteToList(tr);
+                Program.winMap.Clear();
+                Program.winMap.ShowWaypoints(tr.Waypoints, true, true);
+            }
+            else
+            {
+                TrackFileList tfl = Serializer.DeserializeTrackFileList(FileName);
+                AddRouteToList(tfl);
+            }
+            Vars.Options.Converter.AddRecentFile(FileName); //добавление последнего файла
             Vars.Options.Common.LastFileLoadDirectory = Path.GetDirectoryName(FileName); //послденяя открытая папка
-            if (tfl.Count > 0)
-                Vars.currentSelectedTrack = tfl[0];
+            if (this.Tracks.Count > 0)
+                Vars.currentSelectedTrack = this.Tracks[0];
             RefreshData();
         }
 
@@ -1429,8 +1494,7 @@ namespace TrackConverter.UI.Converter
         /// <param name="link"></param>
         public void OpenLink(string link)
         {
-            TrackFile tf = new TrackFile();
-            tf = Serializer.DeserializeTrackFile(link);
+            BaseTrack tf = Serializer.DeserializeTrackFile(link);
             AddRouteToList(tf);
         }
 
@@ -1439,8 +1503,10 @@ namespace TrackConverter.UI.Converter
         private void button1_Click(object sender, EventArgs e)
         {
 
+
+
             double rise = 0, set = 0;
-           
+
 
             int d = 75089;
             int f = Yandex.Perest(d);

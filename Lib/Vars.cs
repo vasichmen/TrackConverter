@@ -57,7 +57,7 @@ namespace TrackConverter
         /// <summary>
         /// текущий выделенный трек в списке маршрутов для обновления информации во всех окнах
         /// </summary>
-        public static TrackFile currentSelectedTrack { get; set; }
+        public static BaseTrack currentSelectedTrack { get; set; }
 
         /// <summary>
         /// кэш данных из интернет-сервисов

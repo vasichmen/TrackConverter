@@ -26,7 +26,7 @@ namespace TrackConverter.Lib.Data.Interfaces
         /// <param name="points">точки, между которыми надо построить маршруты</param>
         /// <param name="callback">дейстие, выполняемое при построении</param>
         /// <returns></returns>
-        List<List<TrackFile>> CreateRoutes(TrackFile points, Action<string> callback);
+        List<List<TrackFile>> CreateRoutes(BaseTrack points, Action<string> callback);
 
         /// <summary>
         /// возвращает маршрут из файлового кэша (вызов при построенни графа маршрутов)

@@ -22,12 +22,12 @@ namespace TrackConverter.UI.Tools
         /// <summary>
         /// список загруженных точек
         /// </summary>
-        private TrackFile Points;
+        private BaseTrack Points;
 
         /// <summary>
         /// если истина, то при закрытии окна будет вызван метод map.EndEditWaypoints
         /// </summary>
-        private Action<TrackFile> endEditWaypointsAction;
+        private Action<BaseTrack> endEditWaypointsAction;
 
         /// <summary>
         /// если истина, то есть несохраненные изменения
@@ -46,7 +46,7 @@ namespace TrackConverter.UI.Tools
         /// создает экземпляр окна и загружает указанный трек
         /// </summary>
         /// <param name="trackFile">трек для загрузки</param>
-        public FormPoints(TrackFile trackFile)
+        public FormPoints(BaseTrack trackFile)
             : this(trackFile, null) { }
 
         /// <summary>
@@ -54,7 +54,7 @@ namespace TrackConverter.UI.Tools
         /// </summary>
         /// <param name="waypoints">списк путевых точет для открытия</param>
         /// <param name="callEndEditWaypointsOnMap">если истина, то при закрытии окна будет вызван метод map.EndEditWaypoints</param>
-        public FormPoints(TrackFile waypoints, Action<TrackFile> callEndEditWaypointsOnMap)
+        public FormPoints(BaseTrack waypoints, Action<BaseTrack> callEndEditWaypointsOnMap)
         {
             InitializeComponent();
 
@@ -174,8 +174,7 @@ namespace TrackConverter.UI.Tools
                 FormReadText of = new FormReadText(DialogType.ReadText, "Введите ссылку на маршрут: ", "", false, false, false, false);
                 if (of.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 {
-                    TrackFile tf = new TrackFile();
-                    tf = Serializer.DeserializeTrackFile(of.Result);
+                    BaseTrack tf = Serializer.DeserializeTrackFile(of.Result);
                     Points = tf;
                     dataGridView1.DataSource = null;
                     dataGridView1.DataSource = Points.Source;
@@ -606,7 +605,14 @@ namespace TrackConverter.UI.Tools
         internal void RefreshData()
         {
             if (Vars.currentSelectedTrack != null)
-                this.Points = Vars.currentSelectedTrack;
+            {
+                if (Vars.currentSelectedTrack.GetType() == typeof(TripRouteFile))
+                {
+                    this.Points.Clear();
+                }
+                else
+                    this.Points = Vars.currentSelectedTrack;
+            }
             else
                 this.Points.Clear();
 

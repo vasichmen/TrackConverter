@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("Res")]
 [assembly: AssemblyDescription("Ресурсы TrackConverter")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Метт В. Д.")]
+[assembly: AssemblyCompany("vasich")]
 [assembly: AssemblyProduct("Res")]
 [assembly: AssemblyCopyright("Copyright © vasich,  2017")]
 [assembly: AssemblyTrademark("")]

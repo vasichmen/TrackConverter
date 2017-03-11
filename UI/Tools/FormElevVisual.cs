@@ -71,7 +71,7 @@ namespace TrackConverter.UI.Tools
         private bool zedGraph_MouseMoveEvent(ZedGraphControl sender, System.Windows.Forms.MouseEventArgs e)
         {
             //если  нажата кнопка Ctrl, то выход
-            if (Keyboard.IsKeyDown(Key.LeftCtrl) && !Keyboard.IsKeyDown(Key.RightCtrl))
+            if (!Keyboard.IsKeyDown(Key.LeftCtrl) && !Keyboard.IsKeyDown(Key.RightCtrl))
                 return false;
 
             // Сюда будет сохранена кривая, рядом с которой был произведен клик
@@ -125,7 +125,7 @@ namespace TrackConverter.UI.Tools
 
                 int curveIndex = zedGraph.GraphPane.CurveList.IndexOf(curve);
                 int pointIndex = index;
-                TrackFile tf = Vars.currentSelectedTrack;
+                BaseTrack tf = Vars.currentSelectedTrack;
                 TrackPoint pt = tf[pointIndex];
 
                 //if (Program.winMap.tracks.Contains(tf)) //если идет выбор точки из всех треков
@@ -283,7 +283,7 @@ namespace TrackConverter.UI.Tools
             //ДОБАВЛЕНИЕ ТРЕКОВ ИЗ СПИСКА
             if (tracks != null)
             {
-                Parallel.ForEach(tracks, new Action<TrackFile>((tf) =>
+                Parallel.ForEach(tracks, new Action<BaseTrack>((tf) =>
                 {
                     PointPairList list = new PointPairList();
                     string name = tf.Name;
@@ -315,7 +315,7 @@ namespace TrackConverter.UI.Tools
                 if (Vars.currentSelectedTrack != null)
                 {
                     PointPairList list = new PointPairList();
-                    TrackFile selTrack = Vars.currentSelectedTrack;
+                    BaseTrack selTrack = Vars.currentSelectedTrack;
                     string name = selTrack.Name;
                     foreach (TrackPoint tt in selTrack)
                     {

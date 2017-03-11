@@ -35,7 +35,7 @@ namespace TrackConverter.Lib.Mathematic.Routing
         /// <param name="start">начальная точка</param>
         /// <param name="isCycled">Если истина то маршрут выводится замкнутым</param>
         /// <returns></returns>
-        public  TrackFile Make(TrackFile points, TrackPoint start, bool isCycled = false)
+        public  TrackFile Make(BaseTrack points, TrackPoint start, bool isCycled = false)
         {
             #region подготовка данных
 

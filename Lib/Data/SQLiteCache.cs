@@ -87,7 +87,7 @@ namespace TrackConverter.Lib.Data
         /// <param name="track"></param>
         /// <param name="els"></param>
         /// <param name="callback">действие, выполняемое во время операции</param>
-        internal void Put(TrackFile track, List<double> els, Action<string> callback = null)
+        internal void Put(BaseTrack track, List<double> els, Action<string> callback = null)
         {
             //ЭКСПОРТ ДАННЫХ
             this.geocoder_connection.Open();
@@ -334,6 +334,23 @@ namespace TrackConverter.Lib.Data
             int i = ExecuteQuery(com);
             string sel = "SELECT * FROM " + table_name;
             List<Row> all = ExecuteReader(sel);
+        }
+
+        /// <summary>
+        /// попробовать загрузить все высоты из кэша, если все высоты есть, то возвращает истину, а в track запишутся высоты
+        /// </summary>
+        /// <param name="track">маршрут, куда надо загрузить высоты</param>
+        /// <returns></returns>
+        internal bool TryGetElevations(ref BaseTrack track)
+        {
+            foreach (TrackPoint point in track)
+            {
+                double alt = this.GetElevation(point.Coordinates);
+                if (double.IsNaN(alt)) //если такой точки в кэше нет, то выход false
+                    return false;
+                point.MetrAltitude = alt; //если точка есть, от береём следующую
+            }
+            return true;
         }
 
         #endregion

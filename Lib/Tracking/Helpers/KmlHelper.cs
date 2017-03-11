@@ -40,20 +40,19 @@ namespace TrackConverter.Lib.Tracking.Helpers
                 routePoints = routePoints.TrimEnd(new char[] { ' ' });
                 TrackFile oneRoute = ParseLineString(routePoints);
 
-                #region получение времени маршрута
-                try
-                {
-                    string begin = XmlHelper.GetChild(timespan, "begin", false).InnerText;
-                    string end = XmlHelper.GetChild(timespan, "end", false).InnerText;
-                    TimeSpan rest = TimeSpan.Zero;
-                    DateTime bg = DateTime.Parse(begin);
-                    DateTime en = DateTime.Parse(end);
-                    rest = en - bg;
-                    oneRoute.Time = rest;
-                }
-                catch (NullReferenceException) { oneRoute.Time = TimeSpan.Zero; }
-
-                #endregion
+                //#region получение времени маршрута
+                //try
+                //{
+                //    string begin = XmlHelper.GetChild(timespan, "begin", false).InnerText;
+                //    string end = XmlHelper.GetChild(timespan, "end", false).InnerText;
+                //    TimeSpan rest = TimeSpan.Zero;
+                //    DateTime bg = DateTime.Parse(begin);
+                //    DateTime en = DateTime.Parse(end);
+                //    rest = en - bg;
+                //    oneRoute.Time = rest;
+                //}
+                //catch (NullReferenceException) { oneRoute.Time = TimeSpan.Zero; }
+                //#endregion
 
                 //название, описание
                 try { oneRoute.Name = XmlHelper.GetChild(folder, "name", false).InnerText; }
@@ -96,7 +95,7 @@ namespace TrackConverter.Lib.Tracking.Helpers
                             TrackFile tf = ParseLineString(routePoints);
 
                             //время всегда ноль
-                            tf.Time = TimeSpan.Zero;
+                            //tf.Time = TimeSpan.Zero;
 
                             //название, описание
                             try { tf.Name = XmlHelper.GetChild(node, "name", false).InnerText; }

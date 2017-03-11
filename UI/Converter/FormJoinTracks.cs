@@ -36,7 +36,7 @@ namespace TrackConverter.UI.Converter
         /// добавление трека в список
         /// </summary>
         /// <param name="trackFile">трек для добавления</param>
-        public void AddTrack(TrackFile trackFile)
+        public void AddTrack(BaseTrack trackFile)
         {
             if (!tracks.Contains(trackFile))
             {
@@ -63,7 +63,7 @@ namespace TrackConverter.UI.Converter
         {
             if (listBoxTracks.SelectedIndex == -1) return;
             if (listBoxTracks.SelectedIndex == 0) return;
-            TrackFile tm = tracks[listBoxTracks.SelectedIndex];
+            BaseTrack tm = tracks[listBoxTracks.SelectedIndex];
             tracks.Remove(tm);
             listBoxTracks.SelectedIndex--;
             tracks.Insert(listBoxTracks.SelectedIndex, tm);
@@ -79,7 +79,7 @@ namespace TrackConverter.UI.Converter
         {
             if (listBoxTracks.SelectedIndex == -1) return;
             if (listBoxTracks.SelectedIndex == tracks.Count - 1) return;
-            TrackFile tm = tracks[listBoxTracks.SelectedIndex];
+            BaseTrack tm = tracks[listBoxTracks.SelectedIndex];
             tracks.Remove(tm);
             listBoxTracks.SelectedIndex++;
             tracks.Insert(listBoxTracks.SelectedIndex, tm);
@@ -93,7 +93,7 @@ namespace TrackConverter.UI.Converter
         /// <param name="e"></param>
         private void buttonSave_Click(object sender, EventArgs e)
         {
-            TrackFile tf = tracks.JoinTracks();
+            BaseTrack tf = tracks.JoinTracks();
             tf.CalculateAll();
             tf.Color = Vars.Options.Converter.GetColor();
             FormReadText rt = new FormReadText(DialogType.ReadText, "Введите имя нового маршрута", "", false, false, false, false);

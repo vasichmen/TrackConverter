@@ -44,12 +44,12 @@ namespace TrackConverter.UI.Map
         /// <summary>
         /// точки, которые в данный момент выводятся в списке
         /// </summary>
-        private TrackFile points;
+        private BaseTrack points;
 
         /// <summary>
         /// полный список точек, за исключением точки, переданной параметром withoutPoint
         /// </summary>
-        private TrackFile AllPoints;
+        private BaseTrack AllPoints;
 
         #region конструкторы
 
@@ -58,7 +58,7 @@ namespace TrackConverter.UI.Map
         /// Если диалог успешно завершен, то результирующая точка будет в свойстве Result
         /// </summary>
         /// <param name="points">точки для выбора</param>
-        public FormSelectPoint(TrackFile points) : this(points, true) { }
+        public FormSelectPoint(BaseTrack points) : this(points, true) { }
 
         /// <summary>
         /// выводит окно со списком точек для выбора. 
@@ -66,7 +66,7 @@ namespace TrackConverter.UI.Map
         /// </summary>
         /// <param name="points">точки для выбора</param>
         /// <param name="isCycledEnable">если истина, то будет активна точка кругового маршрута</param>
-        public FormSelectPoint(TrackFile points, bool isCycledEnable) : this(points, isCycledEnable, null) { }
+        public FormSelectPoint(BaseTrack points, bool isCycledEnable) : this(points, isCycledEnable, null) { }
 
         /// <summary>
         ///  выводит окно со списком точек для выбора. 
@@ -75,7 +75,7 @@ namespace TrackConverter.UI.Map
         /// <param name="points">список  точек на выбор</param>
         /// <param name="isCycledEnable">если истина, то будет активна точка кругового маршрута</param>
         /// <param name="labelText">текст надписи (какую точку выбирать)</param>
-        public FormSelectPoint(TrackFile points, bool isCycledEnable, string labelText)
+        public FormSelectPoint(BaseTrack points, bool isCycledEnable, string labelText)
             : this(points, null, isCycledEnable, labelText) { }
 
         /// <summary>
@@ -86,7 +86,7 @@ namespace TrackConverter.UI.Map
         /// <param name="withoutPoint">точка, исключаемая из списка</param>
         /// <param name="isCycledEnable">если истина, то будет активна точка кругового маршрута</param>
         /// <param name="labelText">текст надписи (какую точку выбирать)</param>
-        public FormSelectPoint(TrackFile points, TrackPoint withoutPoint, bool isCycledEnable, string labelText)
+        public FormSelectPoint(BaseTrack points, TrackPoint withoutPoint, bool isCycledEnable, string labelText)
         {
             if (points == null || points.Count == 0)
                 throw new ArgumentNullException("Список точек пуст или не существует");
@@ -182,7 +182,7 @@ namespace TrackConverter.UI.Map
         /// заполнение списка указанными элементами
         /// </summary>
         /// <param name="points"></param>
-        private void FillList(TrackFile points)
+        private void FillList(BaseTrack points)
         {
             this.points = points;
             listBoxPoints.Items.Clear();

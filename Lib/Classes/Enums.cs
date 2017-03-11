@@ -6,8 +6,6 @@ using System.Threading.Tasks;
 
 namespace TrackConverter
 {
-
-
     #region InternetServices
 
     /// <summary>
@@ -192,7 +190,7 @@ namespace TrackConverter
         /// Без типа
         /// </summary>
         None
-                }
+    }
 
 
     /// <summary>
@@ -335,6 +333,47 @@ namespace TrackConverter
     #endregion
 
     /// <summary>
+    /// тип точки в маршурте
+    /// </summary>
+    public enum RouteWaypointType
+    {
+        /// <summary>
+        /// Старт
+        /// </summary>
+        Start,
+
+        /// <summary>
+        /// Достопримечательность
+        /// </summary>
+        Interest,
+
+        /// <summary>
+        /// Точка сбора
+        /// </summary>
+        CollectPoint,
+
+        /// <summary>
+        /// Привал
+        /// </summary>
+        Camp,
+
+        /// <summary>
+        /// Место для ночёвки
+        /// </summary>
+        Overnight,
+
+        /// <summary>
+        /// Финиш
+        /// </summary>
+        Finish,
+
+        /// <summary>
+        /// точка без типа
+        /// </summary>
+        None
+    }
+
+    /// <summary>
     /// поставщик карты
     /// </summary>
     public enum MapProviders
@@ -379,7 +418,6 @@ namespace TrackConverter
         /// </summary>
         WikimapiaMap
     }
-
 
     /// <summary>
     /// форматы представления маршрута
@@ -462,9 +500,15 @@ namespace TrackConverter
         AddressList,
 
         /// <summary>
+        /// Файл туристического маршрута TRR
+        /// </summary>
+        TrrFile,
+
+        /// <summary>
         /// неопределенный формат файла
         /// </summary>
         Undefined
+
     }
 
     /// <summary>

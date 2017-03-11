@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
+using Newtonsoft.Json;
 
 namespace TrackConverter.Lib.Mathematic.Astronomy
 {
@@ -111,6 +112,7 @@ namespace TrackConverter.Lib.Mathematic.Astronomy
         /// <summary>
         /// истина, если для экземпляра не заданы значения
         /// </summary>
+        [JsonIgnore]
         public bool Empty { get {
                 return !(Hour == -1 & Seconds == -1 & Minutes == -1);
             } }

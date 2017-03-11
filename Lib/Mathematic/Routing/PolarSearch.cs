@@ -44,7 +44,7 @@ namespace TrackConverter.Lib.Mathematic.Routing
         /// <param name="isCycled">если истина, то маршрут замкнутый</param>
         /// <param name="roundMeters">расстояние в м.  до которого округляется расстояние между точками</param>
         /// <returns></returns>
-        public TrackFile Make(TrackFile waypoints, TrackPoint startPoint, TrackPoint endPoint, bool isCycled, int roundMeters = 10)
+        public TrackFile Make(BaseTrack waypoints, TrackPoint startPoint, TrackPoint endPoint, bool isCycled, int roundMeters = 10)
         {
             #region подготовка
 

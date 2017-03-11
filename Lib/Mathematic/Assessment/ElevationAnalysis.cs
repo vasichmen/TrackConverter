@@ -85,7 +85,7 @@ namespace TrackConverter.Lib.Mathematic.Assessment
             res.Columns.Add("Максимальная крутизна подъема, º", typeof(double)); //самый большой наклон подъема в градусах
             res.Columns.Add("Максимальная крутизна спуска, º", typeof(double)); //самый большой наклон подъема в градусах
 
-            Parallel.ForEach<TrackFile>(Tracks, new Action<TrackFile>((tf) =>
+            Parallel.ForEach<BaseTrack>(Tracks, new Action<BaseTrack>((tf) =>
             {
                 if (Vars.Options.Converter.IsApproximateAltitudes)
                     if (Vars.Options.Converter.ApproximateAmount >= tf.Count)
@@ -151,7 +151,7 @@ namespace TrackConverter.Lib.Mathematic.Assessment
         /// </summary>
         /// <param name="route">маршрут с загруженными высотами</param>
         /// <returns></returns>
-        private static double GetElevDeviation(TrackFile route)
+        private static double GetElevDeviation(BaseTrack route)
         {
             if (route.Count < 3) throw new ArgumentException("Длина маршрута должна быть не меньше трех точек");
 
@@ -227,7 +227,7 @@ namespace TrackConverter.Lib.Mathematic.Assessment
         /// <param name="extrems">точки экстремума</param>
         /// <param name="Measure">единицы измерения углов</param>
         /// <returns></returns>
-        private static double GetMaxRise(TrackFile tf, List<PointInfo> extrems, AngleMeasure Measure)
+        private static double GetMaxRise(BaseTrack tf, List<PointInfo> extrems, AngleMeasure Measure)
         {
             double rad1deg = Math.PI / 180;
 
@@ -267,7 +267,7 @@ namespace TrackConverter.Lib.Mathematic.Assessment
         /// <param name="extrems">точки экстремума</param>
         /// <param name="Measure">единицы измерения углов</param>
         /// <returns></returns>
-        private static double GetMaxDownhill(TrackFile tf, List<PointInfo> extrems, AngleMeasure Measure)
+        private static double GetMaxDownhill(BaseTrack tf, List<PointInfo> extrems, AngleMeasure Measure)
         {
             double rad1deg = Math.PI / 180;
 
@@ -306,7 +306,7 @@ namespace TrackConverter.Lib.Mathematic.Assessment
         /// <param name="tf">трек</param>
         /// <param name="extrems">точки экстремума</param>
         /// <returns></returns>
-        private static double GetRiseLength(TrackFile tf, List<PointInfo> extrems)
+        private static double GetRiseLength(BaseTrack tf, List<PointInfo> extrems)
         {
             double res = 0;
             Dictionary<int, int> climbs = GetClimbs(tf, extrems);
@@ -326,7 +326,7 @@ namespace TrackConverter.Lib.Mathematic.Assessment
         /// <param name="tf">маршрут для расчета</param>
         /// <param name="extrems">точки экстремума</param>
         /// <returns></returns>
-        private static double GetDownhillLength(TrackFile tf, List<PointInfo> extrems)
+        private static double GetDownhillLength(BaseTrack tf, List<PointInfo> extrems)
         {
             double res = 0;
             Dictionary<int, int> climbs = GetDownhills(tf, extrems);
@@ -348,12 +348,12 @@ namespace TrackConverter.Lib.Mathematic.Assessment
         /// <param name="leg">машрут для анализа</param>
         /// <param name="minInterval">заданный интервал в метрах, по достижении которого будут искаться мин и макс значения</param>
         /// <returns></returns>
-        private static List<ElevationAnalysis.PointInfo> GetExtremePoints(TrackFile leg, double minInterval)
+        private static List<PointInfo> GetExtremePoints(BaseTrack leg, double minInterval)
         {
             if (leg.Count < 3) throw new ArgumentException("Длина маршрута должна быть не меньше трех точек");
 
             List<PointInfo> res = new List<PointInfo>();
-            TrackFile tf = leg.Clone();
+            BaseTrack tf = leg.Clone();
 
             tf.CalculateAll();
             TrackFileList intervals = tf.Split(minInterval);
@@ -502,7 +502,7 @@ namespace TrackConverter.Lib.Mathematic.Assessment
         /// </summary>
         /// <param name="tf">маршрут для анализа</param>
         /// <returns></returns>
-        private static List<ElevationAnalysis.PointInfo> GetAllExtremePoints(TrackFile tf)
+        private static List<PointInfo> GetAllExtremePoints(BaseTrack tf)
         {
             if (tf.Count < 3) throw new ArgumentException("Длина маршрута должна быть не меньше трех точек");
 
@@ -545,7 +545,7 @@ namespace TrackConverter.Lib.Mathematic.Assessment
         /// <param name="extrems">точки экстремума</param>
         /// <param name="tf">маршрут для поиска</param>
         /// <returns></returns>
-        private static Dictionary<int, int> GetClimbs(TrackFile tf, List<PointInfo> extrems)
+        private static Dictionary<int, int> GetClimbs(BaseTrack tf, List<PointInfo> extrems)
         {
             Dictionary<int, int> res = new Dictionary<int, int>();
             for (int i = 0; i < extrems.Count - 1; i++)
@@ -570,7 +570,7 @@ namespace TrackConverter.Lib.Mathematic.Assessment
         /// <param name="extrems">точки экстремума</param>
         /// <param name="tf">маршрут для поиска</param>
         /// <returns></returns>
-        private static Dictionary<int, int> GetDownhills(TrackFile tf, List<PointInfo> extrems)
+        private static Dictionary<int, int> GetDownhills(BaseTrack tf, List<PointInfo> extrems)
         {
             Dictionary<int, int> res = new Dictionary<int, int>();
             for (int i = 0; i < extrems.Count - 1; i++)

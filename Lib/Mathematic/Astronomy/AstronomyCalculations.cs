@@ -12,8 +12,6 @@ namespace TrackConverter.Lib.Mathematic.Astronomy
     /// </summary>
     public static class AstronomyCalculations
     {
-
-
         /// <summary>
         /// вычисление часового пояса для точки на основе строгого деления на пояса
         /// </summary>

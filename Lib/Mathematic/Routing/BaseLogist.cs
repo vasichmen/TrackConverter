@@ -84,7 +84,7 @@ namespace TrackConverter.Lib.Mathematic.Routing
         /// </summary>
         /// <param name="points">точки между которыми надо построить маршруты</param>
         /// <returns></returns>
-        protected List<List<TrackFile>> GetRoutes(TrackFile points)
+        protected List<List<TrackFile>> GetRoutes(BaseTrack points)
         {
             if (points.Count > 158)
                 throw new ArgumentOutOfRangeException("points.Count", "Количество точек должно быть меньше 158");

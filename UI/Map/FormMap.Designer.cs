@@ -109,6 +109,7 @@ namespace TrackConverter.UI.Map
             this.contextMenuStripRoute = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.EditRouteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.RemoveRouteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.createTripToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.contextMenuStripMap.SuspendLayout();
             this.toolStrip1.SuspendLayout();
@@ -171,7 +172,8 @@ namespace TrackConverter.UI.Map
             // создатьToolStripMenuItem
             // 
             this.создатьToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.createRouteToolStripMenuItem});
+            this.createRouteToolStripMenuItem,
+            this.createTripToolStripMenuItem});
             this.создатьToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("создатьToolStripMenuItem.Image")));
             this.создатьToolStripMenuItem.Name = "создатьToolStripMenuItem";
             this.создатьToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
@@ -181,8 +183,8 @@ namespace TrackConverter.UI.Map
             // 
             this.createRouteToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("createRouteToolStripMenuItem.Image")));
             this.createRouteToolStripMenuItem.Name = "createRouteToolStripMenuItem";
-            this.createRouteToolStripMenuItem.Size = new System.Drawing.Size(179, 22);
-            this.createRouteToolStripMenuItem.Text = "Маршрут вручную";
+            this.createRouteToolStripMenuItem.Size = new System.Drawing.Size(176, 22);
+            this.createRouteToolStripMenuItem.Text = "Простой маршрут";
             this.createRouteToolStripMenuItem.Click += new System.EventHandler(this.createRouteToolStripMenuItem_Click);
             // 
             // открытьToolStripMenuItem
@@ -717,6 +719,14 @@ namespace TrackConverter.UI.Map
             this.RemoveRouteToolStripMenuItem.Text = "Удалить";
             this.RemoveRouteToolStripMenuItem.Click += new System.EventHandler(this.RemoveRouteToolStripMenuItem_Click);
             // 
+            // createTripToolStripMenuItem
+            // 
+            this.createTripToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("createTripToolStripMenuItem.Image")));
+            this.createTripToolStripMenuItem.Name = "createTripToolStripMenuItem";
+            this.createTripToolStripMenuItem.Size = new System.Drawing.Size(176, 22);
+            this.createTripToolStripMenuItem.Text = "Путешествие";
+            this.createTripToolStripMenuItem.Click += new System.EventHandler(this.createTripToolStripMenuItem_Click);
+            // 
             // FormMap
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -844,5 +854,6 @@ namespace TrackConverter.UI.Map
         private System.Windows.Forms.ToolStripMenuItem intermediatePointToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem clearFromtoMarkersToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem createTripToolStripMenuItem;
     }
 }

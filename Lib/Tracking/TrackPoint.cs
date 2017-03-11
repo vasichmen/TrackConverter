@@ -11,15 +11,25 @@ using TrackConverter.Lib.Mathematic;
 using TrackConverter.Res;
 using TrackConverter.Lib.Mathematic.Geodesy;
 using TrackConverter.Lib.Mathematic.Astronomy;
+using Newtonsoft.Json.Serialization;
+using Newtonsoft.Json;
 
 namespace TrackConverter.Lib.Tracking
 {
+#pragma warning disable CS0659 // Тип переопределяет Object.Equals(object o), но не переопределяет Object.GetHashCode()
     /// <summary>
     /// Информация о точке (Широта, Долгота, Высота, Время)
     /// </summary>
     public class TrackPoint : IComparable
+#pragma warning restore CS0659 // Тип переопределяет Object.Equals(object o), но не переопределяет Object.GetHashCode()
     {
         #region конструкторы
+
+        /// <summary>
+        /// конструктор для сериализации Json
+        /// </summary>
+        private TrackPoint()
+        { }
 
         /// <summary>
         /// создает  экземпляр TrackPoint с заданными координатами
@@ -63,11 +73,13 @@ namespace TrackConverter.Lib.Tracking
             this.TrueAzimuth = double.NaN;
             this.Icon = IconOffsets.ZeroOffset;
             this.MetrAltitude = double.NaN;
+            this.PointType = RouteWaypointType.None;
         }
 
         #endregion
 
         #region поля и свойства
+
 
         private string description;
         private string name;
@@ -81,21 +93,36 @@ namespace TrackConverter.Lib.Tracking
         /// <summary>
         /// высота в метрах
         /// </summary>
-        public double MetrAltitude { get { return metrAltitude; } set { metrAltitude = value == 0 ? double.NaN : value; } }
+        public double MetrAltitude { get { return metrAltitude; } set { metrAltitude = value; } }
 
         /// <summary>
         /// высота в футах
         /// </summary>
-        public double FeetAltitude { get { return MetrAltitude / Constants.In1Feet; } set { MetrAltitude = value * Constants.In1Feet; } }
+        [JsonIgnore]
+        public double FeetAltitude
+        {
+            get { return MetrAltitude / Constants.In1Feet; }
+            set
+            {
+                MetrAltitude = value * Constants.In1Feet;
+            }
+        }
 
         /// <summary>
         /// время создания этой точки
         /// </summary>
         public DateTime Time { get; set; }
 
+
+        /// <summary>
+        /// тип путевой точки 
+        /// </summary>
+        public RouteWaypointType PointType { get; set; }
+
         /// <summary>
         /// текущее время в этой точке
         /// </summary>
+        [JsonIgnore]
         public DateTime CurrentTime
         {
             get
@@ -125,11 +152,13 @@ namespace TrackConverter.Lib.Tracking
         /// <summary>
         /// Скорость в этой точке в км/ч
         /// </summary>
+        [JsonIgnore]
         public double KmphSpeed { get; set; }
 
         /// <summary>
         /// Скорость в этой точке в узлах
         /// </summary>
+        [JsonIgnore]
         public double KnotSpeed { get { return KmphSpeed / Constants.In1Knot; } set { KmphSpeed = value * Constants.In1Knot; } }
 
         /// <summary>
@@ -185,7 +214,13 @@ namespace TrackConverter.Lib.Tracking
         /// <summary>
         /// продолжительность дня
         /// </summary>
-        public TimeSpan DayLength { get {
+        [JsonIgnore]
+        public TimeSpan DayLength
+        {
+            get
+            {
+                if (Rise == null || Fall == null)
+                    return TimeSpan.Zero;
                 if (Rise.Empty)
                     Rise = AstronomyCalculations.CalculateRise(this);
                 if (Fall.Empty)
@@ -200,6 +235,35 @@ namespace TrackConverter.Lib.Tracking
                 int secs = Fall.Seconds - Rise.Seconds;
                 return new TimeSpan(hours, mins, secs);
 
+            }
+        }
+
+        /// <summary>
+        /// Текстовое представление типа точки
+        /// </summary>
+        public string PointTypeString
+        {
+            get
+            {
+                switch (this.PointType)
+                {
+                    case RouteWaypointType.Camp: return "Привал";
+                    case RouteWaypointType.CollectPoint: return "Точка сбора";
+                    case RouteWaypointType.Finish: return "Финиш";
+                    case RouteWaypointType.Interest: return "Достопримечательность";
+                    case RouteWaypointType.None: return "Точка";
+                    case RouteWaypointType.Overnight: return "Ночёвка";
+                    case RouteWaypointType.Start: return "Старт";
+                    default: throw new ApplicationException("неизвестный тип точки " + this.PointType);
+                }
+            }
+        }
+
+        /// <summary>
+        /// координаты в формате GMap
+        /// </summary>
+        public PointLatLng GMap { get {
+                return new PointLatLng(Coordinates.Latitude.TotalDegrees,Coordinates.Longitude.TotalDegrees);
             } }
 
         #endregion
@@ -257,7 +321,7 @@ namespace TrackConverter.Lib.Tracking
             Fall = AstronomyCalculations.CalculateFall(this);
             RiseAzi = AstronomyCalculations.CalculateRiseAzimuth(this);
             FallAzi = AstronomyCalculations.CalculateFallAzimuth(this);
-    }
+        }
 
         /// <summary>
         /// создает копию точки
@@ -271,7 +335,8 @@ namespace TrackConverter.Lib.Tracking
                 Icon = this.Icon,
                 MetrAltitude = this.MetrAltitude,
                 Name = this.Name,
-                Time = this.Time
+                Time = this.Time,
+                PointType = this.PointType
             };
             return res;
         }
@@ -295,7 +360,10 @@ namespace TrackConverter.Lib.Tracking
         /// <returns></returns>
         public override bool Equals(object obj)
         {
-            return this.Coordinates.Equals(((TrackPoint)obj).Coordinates);
+            if (obj.GetType() != typeof(TrackPoint))
+                return false;
+            else
+                return this.Coordinates.Equals(((TrackPoint)obj).Coordinates);
         }
 
 

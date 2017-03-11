@@ -9,25 +9,26 @@ using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.Xml;
 using System.Drawing;
+using Newtonsoft.Json;
 
 namespace TrackConverter.Lib.Tracking
 {
     /// <summary>
     /// представление нескольких маршрутов
     /// </summary>
-    //[Serializable]
-    public class TrackFileList : List<TrackFile>
+    public class TrackFileList : List<BaseTrack>
     {
         /// <summary>
         /// создает новый список маршрутов
         /// </summary>
+        [JsonConstructor]
         public TrackFileList() { }
 
         /// <summary>
         /// создает новый список маршуртов и добавляет первый маршрут
         /// </summary>
         /// <param name="trackFile">маршрут для добавления в список</param>
-        public TrackFileList(TrackFile trackFile)
+        public TrackFileList(BaseTrack trackFile)
         {
             this.Add(trackFile);
         }
@@ -36,7 +37,7 @@ namespace TrackConverter.Lib.Tracking
         /// создает новый список маршрутов на основе существующего
         /// </summary>
         /// <param name="list"></param>
-        public TrackFileList(IEnumerable<TrackFile> list)
+        public TrackFileList(IEnumerable<BaseTrack> list)
         {
             this.Add(list);
         }
@@ -49,7 +50,7 @@ namespace TrackConverter.Lib.Tracking
             get
             {
                 List<string> res = new List<string>();
-                foreach (TrackFile tf in this)
+                foreach (BaseTrack tf in this)
                     if (!string.IsNullOrEmpty(tf.FilePath))
                         res.Add(tf.FilePath);
                 return res;
@@ -77,12 +78,12 @@ namespace TrackConverter.Lib.Tracking
                 res.Columns["Время"].DataType = typeof(TimeSpan);
 
                 res.Columns.Add("Количество точек");
-                res.Columns["Количество точек"].DataType = typeof(Int32);
+                res.Columns["Количество точек"].DataType = typeof(int);
 
                 res.Columns.Add("Цвет");
                 res.Columns["Цвет"].DataType = typeof(string);
 
-                foreach (TrackFile tf in this)
+                foreach (BaseTrack tf in this)
                 {
                     res.LoadDataRow(new object[] {
                     tf.Name,
@@ -105,7 +106,7 @@ namespace TrackConverter.Lib.Tracking
             get
             {
                 int res = 0;
-                foreach (TrackFile tf in this)
+                foreach (BaseTrack tf in this)
                     res += tf.Count;
                 return res;
             }
@@ -131,7 +132,7 @@ namespace TrackConverter.Lib.Tracking
         public TrackFile JoinTracks()
         {
             TrackFile res = new TrackFile();
-            foreach (TrackFile tf in this)
+            foreach (BaseTrack tf in this)
                 foreach (TrackPoint tp in tf)
                     res.Add(tp);
 
@@ -142,7 +143,7 @@ namespace TrackConverter.Lib.Tracking
         /// добавление маршрута в конец списка
         /// </summary>
         /// <param name="item">маршрут для добавления</param>
-        public new void Add(TrackFile item)
+        public new void Add(BaseTrack item)
         {
             if (item == null)
                 return;
@@ -155,12 +156,24 @@ namespace TrackConverter.Lib.Tracking
         /// добавление списка маршрутов
         /// </summary>
         /// <param name="routes">список маршрутов для добавления</param>
-        internal void Add(IEnumerable<TrackFile> routes)
+        internal void Add(IEnumerable<BaseTrack> routes)
         {
             if (routes == null)
                 throw new ArgumentNullException("Аргумент не существует");
-            foreach (TrackFile t in routes)
+            foreach (BaseTrack t in routes)
                 this.Add(t);
+        }
+
+        /// <summary>
+        /// создаёт копию списка треков
+        /// </summary>
+        /// <returns></returns>
+        internal TrackFileList Clone()
+        {
+            TrackFileList res = new TrackFileList();
+            foreach (BaseTrack bt in this)
+                res.Add(bt.Clone());
+            return res;
         }
     }
 }

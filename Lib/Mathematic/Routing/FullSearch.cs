@@ -42,7 +42,7 @@ namespace TrackConverter.Lib.Mathematic.Routing
         /// <param name="start">начальная точка</param>
         /// <param name="isCycled">если истина, маршрут будет замкнутым</param>
         /// <returns></returns>
-        public  TrackFile Make(TrackFile points, TrackPoint start, bool isCycled = false)
+        public  TrackFile Make(BaseTrack points, TrackPoint start, bool isCycled = false)
         {
             #region подготовка
 

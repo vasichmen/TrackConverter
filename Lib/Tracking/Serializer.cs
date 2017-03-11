@@ -3,13 +3,17 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Runtime.Serialization.Json;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
 using System.Xml;
 using ICSharpCode.SharpZipLib.Zip;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using TrackConverter.Lib.Classes;
+using TrackConverter.Lib.Classes.Options;
 using TrackConverter.Lib.Data;
 using TrackConverter.Lib.Tracking.Helpers;
 using TrackConverter.Res.Properties;
@@ -31,7 +35,7 @@ namespace TrackConverter.Lib.Tracking
         /// <param name="format">формат</param>
         /// <param name="callback">действие, выполняемое при сохранении файла</param>
         /// <returns></returns>
-        public static string Serialize(string FileName, TrackFile track, FileFormats format, Action<string> callback = null)
+        public static string Serialize(string FileName, BaseTrack track, FileFormats format, Action<string> callback = null)
         {
             switch (format)
             {
@@ -70,6 +74,9 @@ namespace TrackConverter.Lib.Tracking
                     return null;
                 case FileFormats.AddressList:
                     ExportADRS(FileName, track, callback);
+                    return null;
+                case FileFormats.TrrFile:
+                    ExportTrr(FileName, track);
                     return null;
                 case FileFormats.YandexLink:
                     return ExportYandex(int.Parse(FileName), track);
@@ -127,18 +134,37 @@ namespace TrackConverter.Lib.Tracking
         }
 
         /// <summary>
+        /// экспорт файлов TRR
+        /// </summary>
+        /// <param name="FileName">имя файла</param>
+        /// <param name="geo">маршурт</param>
+        /// <param name="format">формат файла</param>
+        public static void Serialize(string FileName, TripRouteFile geo, FileFormats format)
+        {
+            switch (format)
+            {
+                case FileFormats.TrrFile:
+                    ExportTrr(FileName, geo);
+                    break;
+                default:
+                    throw new NotSupportedException("Этот формат не поддерживается: " + format.ToString());
+
+            }
+        }
+
+        /// <summary>
         /// загрузка трека из файла или ссылки
         /// </summary>
         /// <param name="FileNameOrLink">имя файла или адрес ссылки</param>
         /// <param name="callback">действие при обработке файла</param>
         /// <returns></returns>
-        public static TrackFile DeserializeTrackFile(string FileNameOrLink, Action<string> callback = null)
+        public static BaseTrack DeserializeTrackFile(string FileNameOrLink, Action<string> callback = null)
         {
             if (string.IsNullOrWhiteSpace(FileNameOrLink))
                 throw new ArgumentException("Пустое имя файла");
 
             FileNameOrLink = FileNameOrLink.ToLower();
-            TrackFile res = null;
+            BaseTrack res = null;
             if (FileNameOrLink.Contains("yandex"))
                 res = LoadYandexRoute(FileNameOrLink);
             else
@@ -188,6 +214,9 @@ namespace TrackConverter.Lib.Tracking
                     case ".adrs":
                         res = LoadADRS(FileNameOrLink, callback);
                         break;
+                    case ".trr":
+                        res = LoadTRR(FileNameOrLink);
+                        break;
                     default:
                         throw new Exception("Данный файл не поддерживается: " + FileNameOrLink);
                 }
@@ -204,7 +233,7 @@ namespace TrackConverter.Lib.Tracking
         /// <returns></returns>
         public static TrackFileList DeserializeTrackFileList(string FileName)
         {
-            TrackFileList res;
+            TrackFileList res = new TrackFileList();
             if (!File.Exists(FileName))
                 throw new Exception("Файл не существует:  " + FileName);
 
@@ -221,6 +250,9 @@ namespace TrackConverter.Lib.Tracking
                     break;
                 case "kmz":
                     res = LoadKMZ(FileName);
+                    break;
+                case "trr":
+                    res.Add(LoadTRR(FileName));
                     break;
                 default:
                     res = new TrackFileList();
@@ -263,7 +295,7 @@ namespace TrackConverter.Lib.Tracking
             if (!File.Exists(FileName))
                 throw new Exception("Файл не существует:  " + FileName);
 
-            string extension = Path.GetExtension(FileName);
+            string extension = Path.GetExtension(FileName).ToLower();
 
             switch (extension)
             {
@@ -281,6 +313,21 @@ namespace TrackConverter.Lib.Tracking
                 if (tf.Color.IsEmpty || tf.Color.A == 0)
                     tf.Color = Vars.Options.Converter.GetColor();
             return res;
+        }
+
+        /// <summary>
+        /// загрузка файла TripRouteFile
+        /// </summary>
+        /// <param name="FileName">имя файла</param>
+        /// <returns></returns>
+        public static TripRouteFile DeserializeTripRouteFile(string FileName)
+        {
+            string ext = Path.GetExtension(FileName).ToLower();
+            switch (ext)
+            {
+                case ".trr": return LoadTRR(FileName);
+                default: throw new ApplicationException("расширение не поддерживается " + ext);
+            }
         }
 
 
@@ -870,7 +917,7 @@ namespace TrackConverter.Lib.Tracking
         /// </summary>
         /// <param name="FileName">Имя файла</param>
         /// <param name="Track">трек для экспорта</param>
-        public static void ExportRT2(string FileName, TrackFile Track)
+        public static void ExportRT2(string FileName, BaseTrack Track)
         {
             Directory.CreateDirectory(Path.GetDirectoryName(FileName));
 
@@ -883,7 +930,7 @@ namespace TrackConverter.Lib.Tracking
                 string f1 = "RWPT" + i.ToString();
                 string lat = pt.Coordinates.Latitude.TotalDegrees.ToString().Replace(Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0], '.');
                 string lon = pt.Coordinates.Longitude.TotalDegrees.ToString().Replace(Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0], '.');
-                string f4 = pt.FeetAltitude.ToString();
+                string f4 = pt.FeetAltitude.ToString().Replace(",",".");
                 outputS.WriteLine("{0},{1},{2},{3},{4}", f0, f1, lat, lon, f4);
                 i++;
             }
@@ -896,7 +943,7 @@ namespace TrackConverter.Lib.Tracking
         /// </summary>
         /// <param name="FileName">Путь к файлу</param>
         /// <param name="Track">трек для экспорта</param>
-        public static void ExportGPX(string FileName, TrackFile Track)
+        public static void ExportGPX(string FileName, BaseTrack Track)
         {
             Directory.CreateDirectory(Path.GetDirectoryName(FileName));
             XmlDocument xmDoc = new XmlDocument();
@@ -942,7 +989,7 @@ namespace TrackConverter.Lib.Tracking
         /// <param name="fileName">имя файла</param>
         /// <param name="track">список точек</param>
         /// <param name="callback">действие, выполняемое при сохранении файла</param>
-        private static void ExportADRS(string fileName, TrackFile track, Action<string> callback = null)
+        private static void ExportADRS(string fileName, BaseTrack track, Action<string> callback = null)
         {
             List<string> ads = new List<string>();
             GeoCoder coder = new GeoCoder(Vars.Options.DataSources.GeoCoderProvider);
@@ -966,7 +1013,7 @@ namespace TrackConverter.Lib.Tracking
         /// </summary>
         /// <param name="FileName">Имя файла</param>
         /// <param name="Track">трек для экспорта</param>
-        public static void ExportPLT(string FileName, TrackFile Track)
+        public static void ExportPLT(string FileName, BaseTrack Track)
         {
             Directory.CreateDirectory(Path.GetDirectoryName(FileName));
             StreamWriter outputS = new StreamWriter(FileName, false, new UTF8Encoding(false));
@@ -994,7 +1041,7 @@ namespace TrackConverter.Lib.Tracking
         /// </summary>
         /// <param name="FileName">Имя файла</param>
         /// <param name="Track">трек для экспорта</param>
-        public static void ExportWPT(string FileName, TrackFile Track)
+        public static void ExportWPT(string FileName, BaseTrack Track)
         {
             Directory.CreateDirectory(Path.GetDirectoryName(FileName));
             StreamWriter outputS = new StreamWriter(FileName, false, new UTF8Encoding(false));
@@ -1034,7 +1081,7 @@ namespace TrackConverter.Lib.Tracking
         /// </summary>
         /// <param name="FileName">Имя файла</param>
         /// <param name="Track">трек для экспорта</param>
-        public static void ExportCRD(string FileName, TrackFile Track)
+        public static void ExportCRD(string FileName, BaseTrack Track)
         {
             Directory.CreateDirectory(Path.GetDirectoryName(FileName));
             StreamWriter outputS = new StreamWriter(FileName, false, new UTF8Encoding(false));
@@ -1066,7 +1113,7 @@ namespace TrackConverter.Lib.Tracking
         /// </summary>
         /// <param name="FilePath">Имя файла</param>
         /// <param name="Track">трек для экспорта</param>
-        public static void ExportKML(string FilePath, TrackFile Track)
+        public static void ExportKML(string FilePath, BaseTrack Track)
         {
             GeoFile gf = new GeoFile();
             gf.Routes.Add(Track);
@@ -1078,7 +1125,7 @@ namespace TrackConverter.Lib.Tracking
         /// </summary>
         /// <param name="FileName">Имя файла</param>
         /// <param name="Track">Трек для экспорта</param>
-        public static void ExportOSM(string FileName, TrackFile Track)
+        public static void ExportOSM(string FileName, BaseTrack Track)
         {
             Directory.CreateDirectory(Path.GetDirectoryName(FileName));
             XmlDocument doc = new XmlDocument();
@@ -1136,7 +1183,7 @@ namespace TrackConverter.Lib.Tracking
         /// </summary>
         /// <param name="FileName">Имя файла</param>
         /// <param name="Track">трек для экспорта</param>
-        public static void ExportNMEA(string FileName, TrackFile Track)
+        public static void ExportNMEA(string FileName, BaseTrack Track)
         {
             Directory.CreateDirectory(Path.GetDirectoryName(FileName));
             StreamWriter outputS = new StreamWriter(FileName, false, new UTF8Encoding(false));
@@ -1167,7 +1214,7 @@ namespace TrackConverter.Lib.Tracking
         /// </summary>
         /// <param name="FileName">Имя файла</param>
         /// <param name="Track">трек для экспорта</param>
-        public static void ExportCSV(string FileName, TrackFile Track)
+        public static void ExportCSV(string FileName, BaseTrack Track)
         {
             Directory.CreateDirectory(Path.GetDirectoryName(FileName));
             StreamWriter outputS = new StreamWriter(FileName, false, new UTF8Encoding(false));
@@ -1191,7 +1238,7 @@ namespace TrackConverter.Lib.Tracking
         /// </summary>
         /// <param name="FileName">Имя файла</param>
         /// <param name="Track">трек для экспорта</param>
-        public static void ExportTXT(string FileName, TrackFile Track)
+        public static void ExportTXT(string FileName, BaseTrack Track)
         {
             Directory.CreateDirectory(Path.GetDirectoryName(FileName));
             StreamWriter outputS = new StreamWriter(FileName, false, new UTF8Encoding(false));
@@ -1221,7 +1268,7 @@ namespace TrackConverter.Lib.Tracking
         /// </summary>
         /// <param name="FileName"></param>
         /// <param name="Track">трек для экспорта</param>
-        public static void ExportKMZ(string FileName, TrackFile Track)
+        public static void ExportKMZ(string FileName, BaseTrack Track)
         {
             Directory.CreateDirectory(Path.GetDirectoryName(FileName));
             string tmpf = Vars.Options.Converter.TempFolder + "\\" + Guid.NewGuid();
@@ -1237,7 +1284,7 @@ namespace TrackConverter.Lib.Tracking
         /// <summary>
         /// Экспорт как ссылку яндекса
         /// </summary>
-        public static string ExportYandex(TrackFile Track)
+        public static string ExportYandex(BaseTrack Track)
         {
             if (Track.Count > 100)
                 return ExportYandex(100, Track);
@@ -1264,10 +1311,12 @@ namespace TrackConverter.Lib.Tracking
         /// <param name="count">количество точек в маршруте</param>
         /// <param name="Track">трек для экспорта</param>
         /// <returns></returns>
-        public static string ExportYandex(int count, TrackFile Track)
+        public static string ExportYandex(int count, BaseTrack Track)
         {
-            if (count <= 0 || count > Track.Count)
-                throw new ArgumentOutOfRangeException("Количество точек меньше нуля, равно нулю или больше точек в маршруте");
+            if (count <= 0)
+                throw new ArgumentOutOfRangeException("Количество точек меньше или равно нулю");
+            if (count > Track.Count)
+                count = Track.Count;
             int step = (int)(Track.Count / count);
 
             string lon, lat;
@@ -1298,7 +1347,7 @@ namespace TrackConverter.Lib.Tracking
         /// <summary>
         /// экспорт как ссылка викимапии
         /// </summary>
-        public static string ExportWikimapia(TrackFile Track)
+        public static string ExportWikimapia(BaseTrack Track)
         {
             if (Track.Count > 100)
                 return ExportWikimapia(100, Track);
@@ -1333,10 +1382,12 @@ namespace TrackConverter.Lib.Tracking
         /// <param name="count">количество точек в маршруте</param>
         /// <param name="Track">маршрут для экспорта</param>
         /// <returns>ссылка на машрурт на картах Wikimapia</returns>
-        public static string ExportWikimapia(int count, TrackFile Track)
+        public static string ExportWikimapia(int count, BaseTrack Track)
         {
-            if (count <= 0 || count > Track.Count)
-                throw new ArgumentOutOfRangeException("Количество точек меньше нуля, равно нулю или больше точек в маршруте");
+            if (count <= 0 )
+                throw new ArgumentOutOfRangeException("Количество точек меньше или равно нулю");
+            if (count > Track.Count)
+                count = Track.Count;
 
             int step = (int)(Track.Count / count);
             string lon, lat;
@@ -1528,6 +1579,98 @@ namespace TrackConverter.Lib.Tracking
 
         #endregion
 
+        #region TripRouteFile
+
+        #region загрузка
+
+        /// <summary>
+        /// загрузка файла Trr
+        /// </summary>
+        /// <param name="fileName">имя файла</param>
+        /// <returns></returns>
+        private static TripRouteFile LoadTRR(string fileName)
+        {
+            //формат файла:
+            //Заголовок с информацией о версии
+            //***
+            //информация 
+            //***
+            //массив с маршрутами по дням
+            //***
+            //массив с путевыми точками
+
+            StreamReader sr = new StreamReader(fileName, Encoding.UTF8, true);
+            string header = sr.ReadLine();
+            string version = Regex.Split(header, "w* w*")[4];
+
+            switch (version)
+            {
+                case "1.0":
+                    string allData = sr.ReadToEnd();
+                    string[] parts = Regex.Split(allData, "w*" + TrrHelper.separatorMain + "w*");
+
+                    string info = parts[1];
+                    string routes = parts[2];
+                    string wpts = parts[3];
+
+                    TripRouteFile res = TrrHelper.GetInformation(info);
+                    res.DaysRoutes = TrrHelper.GetRoutes(routes);
+                    res.Waypoints = TrrHelper.GetWaypoints(wpts);
+                    res.FilePath = fileName;
+                    res.FileName = Path.GetFileName(fileName);
+                    sr.Close();
+                    return res;
+                default: throw new ApplicationException("Версия файла " + version + " не поддерживается в этой версии программы. Обновите Track Converter!");
+            }
+        }
+
+        #endregion
+
+        #region экспорт
+
+        /// <summary>
+        /// экспорт в формат туристического маршрта TRR
+        /// </summary>
+        /// <param name="fileName">имя файла</param>
+        /// <param name="tripIns">маршурт</param>
+        private static void ExportTrr(string fileName, BaseTrack tripIns)
+        {
+            TripRouteFile trip;
+            if (tripIns.GetType() == typeof(TrackFile))
+                trip = ((TrackFile)tripIns).ToTripRoute();
+            else
+                trip = tripIns as TripRouteFile;
+
+            //формат файла:
+            //Заголовок с информацией о версии
+            //***
+            //информация 
+            //***
+            //массив с маршрутами по дням
+            //***
+            //массив с путевыми точками
+
+            trip.CalculateAll(); //вычисление всех параметров путешествия
+            string header = TrrHelper.header; //загловок файла с версией
+            string information = TrrHelper.GetInformation(trip); //информация о путешествии
+            string wpts = TrrHelper.GetWaypoints(trip); //путевые точки
+            string rts = TrrHelper.GetRoutes(trip); //маршруты по дням
+
+            StreamWriter sw = new StreamWriter(fileName, false, Encoding.UTF8);
+            sw.WriteLine(header);
+            sw.WriteLine(TrrHelper.separatorMain);
+            sw.WriteLine(information);
+            sw.WriteLine(TrrHelper.separatorMain);
+            sw.WriteLine(rts);
+            sw.WriteLine(TrrHelper.separatorMain);
+            sw.WriteLine(wpts);
+            sw.Close();
+        }
+
+        #endregion
+
+        #endregion
+
         #region GeoFile
 
         #region загрузка разных форматов маршрутов
@@ -1558,7 +1701,6 @@ namespace TrackConverter.Lib.Tracking
             res = KmlHelper.CheckFolder(xml.DocumentElement);
             return res;
         }
-
 
         #endregion
 
@@ -1619,7 +1761,6 @@ namespace TrackConverter.Lib.Tracking
             fz.CreateZip(FileName, tmpf, false, "-y", "-y");
             Directory.Delete(tmpf, true);
         }
-
 
         #endregion
 

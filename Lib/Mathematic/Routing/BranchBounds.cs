@@ -38,7 +38,7 @@ namespace TrackConverter.Lib.Mathematic.Routing
         /// <param name="isCycled">Если истина то маршрут выводится замкнутым</param>
         /// <param name="roundMeters">минимальное расстояние в метрах, до которого идет округление при расчете расстояний</param>
         /// <returns></returns>
-        public  TrackFile Make(TrackFile points, TrackPoint start, bool isCycled = false, int roundMeters = 10)
+        public  TrackFile Make(BaseTrack points, TrackPoint start, bool isCycled = false, int roundMeters = 10)
         {
             #region подготовка
             if (points.Count < 3)

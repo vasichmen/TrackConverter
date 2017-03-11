@@ -248,6 +248,14 @@ namespace TrackConverter.Lib.Mathematic.Routing.BranchBoundsElements
         }
 
         /// <summary>
+        /// коллекция только для чтения
+        /// </summary>
+        public bool IsReadOnly
+        {
+            get;
+        }
+
+        /// <summary>
         /// добавляет новый элемент в коллекцию
         /// </summary>
         /// <param name="item">Добавляемый элемент</param>
@@ -383,16 +391,6 @@ namespace TrackConverter.Lib.Mathematic.Routing.BranchBoundsElements
                 array[arrayIndex++] = value;
         }
 
-        /// <summary>
-        /// если истина, то коллекция только для чтения
-        /// </summary>
-        public virtual bool IsReadOnly
-        {
-            get
-            {
-                return false;
-            }
-        }
 
         /// <summary>
         /// возвращает истину, если указанный элемент есть в коллекции. Равенство проверяется с помощью компаратора

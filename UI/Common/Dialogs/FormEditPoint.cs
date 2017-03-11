@@ -16,6 +16,7 @@ using TrackConverter.Res;
 using TrackConverter.Res.Properties;
 using TrackConverter.UI.Common.Dialogs;
 using TrackConverter.UI.Converter;
+using TrackConverter.UI.Map;
 
 namespace TrackConverter.UI.Common.Dialogs
 {
@@ -68,7 +69,7 @@ namespace TrackConverter.UI.Common.Dialogs
             else
                 comboBoxSelectImage.SelectedIndex = point.Icon;
 
-
+            comboBoxPointType.SelectedIndex = 0;
             if (point != null)
             {
                 textBoxName.Text = string.IsNullOrWhiteSpace(point.Name) ? "Имя точки" : point.Name;
@@ -81,6 +82,32 @@ namespace TrackConverter.UI.Common.Dialogs
                     dateTimePickerDate.Value = point.Time;
                 if (point.Time > dateTimePickerTime.MinDate && point.Time < dateTimePickerTime.MaxDate)
                     dateTimePickerTime.Value = point.Time;
+
+                switch (point.PointType)
+                {
+                    case RouteWaypointType.None:
+                        comboBoxPointType.SelectedIndex = 6;
+                        break;
+                    case RouteWaypointType.Start:
+                        comboBoxPointType.SelectedIndex = 0;
+                        break;
+                    case RouteWaypointType.Interest:
+                        comboBoxPointType.SelectedIndex = 1;
+                        break;
+                    case RouteWaypointType.CollectPoint:
+                        comboBoxPointType.SelectedIndex = 2;
+                        break;
+                    case RouteWaypointType.Camp:
+                        comboBoxPointType.SelectedIndex = 3;
+                        break;
+                    case RouteWaypointType.Overnight:
+                        comboBoxPointType.SelectedIndex = 4;
+                        break;
+                    case RouteWaypointType.Finish:
+                        comboBoxPointType.SelectedIndex = 5;
+                        break;    
+                    default: throw new ApplicationException("неизвестный индекс точки " + comboBoxPointType.SelectedIndex);
+                }
             }
         }
 
@@ -102,15 +129,14 @@ namespace TrackConverter.UI.Common.Dialogs
         /// <param name="e"></param>
         private void buttonSave_Click(object sender, EventArgs e)
         {
-
-        //ожидание ввода коректного имени точки
+            //ожидание ввода коректного имени точки
             if (string.IsNullOrWhiteSpace(textBoxName.Text))
             {
                 MessageBox.Show(this, "Имя точки не может быть пустым", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
-            DialogResult = System.Windows.Forms.DialogResult.OK;
+            DialogResult = DialogResult.OK;
             Result = new TrackPoint(new Coordinate(textBoxLat.Text, textBoxLon.Text))
             {
                 Description = textBoxDescription.Text,
@@ -120,7 +146,56 @@ namespace TrackConverter.UI.Common.Dialogs
             };
             DateTime tm = dateTimePickerDate.Value.Date + dateTimePickerTime.Value.TimeOfDay;
             Result.Time = tm;
+
+            RouteWaypointType type;
+            switch (comboBoxPointType.SelectedIndex)
+            {
+                case 0:
+                    type = RouteWaypointType.Start;
+                    break;
+                case 1:
+                    type = RouteWaypointType.Interest;
+                    break;
+                case 2:
+                    type = RouteWaypointType.CollectPoint;
+                    break;
+                case 3:
+                    type = RouteWaypointType.Camp;
+                    break;
+                case 4:
+                    type = RouteWaypointType.Overnight;
+                    break;
+                case 5:
+                    type = RouteWaypointType.Finish;
+                    break;
+                case 6:
+                    type = RouteWaypointType.None;
+                    break; 
+                default: throw new ApplicationException("неизвестный индекс точки " + comboBoxPointType.SelectedIndex);
+            }
+            Result.PointType = type;
             Close();
+        }
+
+
+        /// <summary>
+        /// подробная информация о точке
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void buttonAdditionInfo_Click(object sender, EventArgs e)
+        {
+            this.editingPoint.CalculateParametres();
+            if (Program.winMap.ActiveWhatThereForms.ContainsKey(this.editingPoint))
+                Program.winMap.ActiveWhatThereForms[this.editingPoint].Activate();
+            else
+            {
+                FormWhatsthere fw = new FormWhatsthere(this.editingPoint);
+                fw.Show(Program.winMain);
+                if (Program.winMap.ActiveWhatThereForms == null)
+                    Program.winMap.ActiveWhatThereForms = new Dictionary<TrackPoint, FormWhatsthere>();
+                Program.winMap.ActiveWhatThereForms.Add(this.editingPoint, fw);
+            }
         }
 
         /// <summary>
@@ -184,10 +259,20 @@ namespace TrackConverter.UI.Common.Dialogs
         /// <param name="e"></param>
         private void linkLabelGetLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            string link = new Coordinate(textBoxLat.Text, textBoxLon.Text).ExportYandex();
-            //сокращение ссылок образает основную ссылку по координаты. Остается только координаты ценра карты
-            //string slink = new LinkShorter( Vars.Options.Map.LinkShorterProvider ).Short( link );
-            new FormReadText(DialogType.ExportText, "Ссылка на точку:", link, false, true, true, true).Show(this);
+            string link = "";
+            switch (Vars.Options.DataSources.GeoCoderProvider)
+            {
+                case GeoCoderProvider.Nominatim:
+                case GeoCoderProvider.Yandex:
+                    link = new Coordinate(textBoxLat.Text, textBoxLon.Text).ExportYandex();
+                    break;
+                case GeoCoderProvider.Google:
+                    link = new Coordinate(textBoxLat.Text, textBoxLon.Text).ExportGoogle();
+                    break;
+                default: throw new ApplicationException("Неподдерживаемый геокодер " + Vars.Options.DataSources.GeoCoderProvider);
+            }
+
+            new FormReadText(DialogType.ExportText, "Ссылка на точку:", link, false, true, true, true).ShowDialog(this);
         }
 
         /// <summary>
@@ -333,8 +418,34 @@ namespace TrackConverter.UI.Common.Dialogs
             File.Delete(file);
         }
 
+
         #endregion
 
-
+        private void comboBoxPointType_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            switch (comboBoxPointType.SelectedIndex)
+            {
+                case 0: comboBoxSelectImage.SelectedIndex = 4; //старт
+                    break;
+                case 1:
+                    comboBoxSelectImage.SelectedIndex = 14; //достопримечательность
+                    break;
+                case 2:
+                    comboBoxSelectImage.SelectedIndex = 3; //точка сбора
+                    break;
+                case 3:
+                    comboBoxSelectImage.SelectedIndex = 16; //привал
+                    break;
+                case 4:
+                    comboBoxSelectImage.SelectedIndex = 9; //место для ночевки
+                    break;
+                case 5:
+                    comboBoxSelectImage.SelectedIndex = 5; //финиш
+                    break;
+                case 6:
+                    comboBoxSelectImage.SelectedIndex = 0; //просто точка
+                    break;
+            }
+        }
     }
 }

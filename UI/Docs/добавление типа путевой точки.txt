@@ -1,0 +1,6 @@
+﻿1. Enums добавить перечисление
+2. FormEditPoint перечисление в конструкторе
+3. FormEditPoint.SaveButtonClick перечисление
+4. FormEditPoint.ComboBoxPointType_SelectedIndexChanged перечисление
+5. добавить иконку в ресурсы (если надо)
+6. TrackPoint.PointTypeString добавить в перечисление

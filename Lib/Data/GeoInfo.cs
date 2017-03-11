@@ -94,31 +94,47 @@ namespace TrackConverter.Lib.Data
         /// <param name="track">трек</param>
         /// <param name="callback">действие, выполняемое при обработке точек</param>
         /// <returns>трек с высотами точек</returns>
-        public TrackFile GetElevation(TrackFile track, Action<string> callback = null)
+        public BaseTrack GetElevation(BaseTrack track, Action<string> callback = null)
         {
-            //еси провайдер поддерживает множетсвенные запроссы высот
-            if (provider == GeoInfoProvider.Google)
-                return ((Google)geoinfo).GetElevations(track, callback);
-
-            //если приходится работать с каждой точкой отдельно
-            TrackFile res = new TrackFile();
-            res.Name = track.Name;
-            res.FileName = track.FileName;
-            res.FilePath = track.FilePath;
-            res.Description = track.Description;
-            res.Color = track.Color;
-            double all = track.Count;
-            double c = 0;
-            foreach (TrackPoint tp in track)
+            //если путешествие, то обрабатываем части
+            if (track.GetType() == typeof(TripRouteFile))
             {
-                if (callback != null)
-                    callback.Invoke("Обрабатывается " + track.Name + ", завершено " + (c / all * 100d).ToString("0.0") + "%");
-                if (double.IsNaN(tp.MetrAltitude))
-                    tp.MetrAltitude = GetElevation(tp.Coordinates);
-                res.Add(tp);
-                c++;
+                TripRouteFile trip = track as TripRouteFile;
+                trip.Waypoints = (TrackFile)GetElevation(trip.Waypoints, callback);
+
+                //дни обрабатываются через копирование для того, чтобы вычислялся TotalTrack
+                TrackFileList days = trip.DaysRoutes.Clone();
+                trip.DaysRoutes.Clear();
+                for (int i = 0; i < days.Count; i++)
+                    trip.AddDay((TrackFile)GetElevation(days[i], callback));
+                return trip;
             }
-            return res;
+            else //если это маршурт
+            {
+                //еси провайдер поддерживает множетсвенные запроссы высот
+                if (provider == GeoInfoProvider.Google)
+                    return ((Google)geoinfo).GetElevations(track, callback);
+
+                //если приходится работать с каждой точкой отдельно
+                TrackFile res = new TrackFile();
+                res.Name = track.Name;
+                res.FileName = track.FileName;
+                res.FilePath = track.FilePath;
+                res.Description = track.Description;
+                res.Color = track.Color;
+                double all = track.Count;
+                double c = 0;
+                foreach (TrackPoint tp in track)
+                {
+                    if (callback != null)
+                        callback.Invoke("Обрабатывается " + track.Name + ", завершено " + (c / all * 100d).ToString("0.0") + "%");
+                    if (double.IsNaN(tp.MetrAltitude))
+                        tp.MetrAltitude = GetElevation(tp.Coordinates);
+                    res.Add(tp);
+                    c++;
+                }
+                return res;
+            }
         }
 
         /// <summary>

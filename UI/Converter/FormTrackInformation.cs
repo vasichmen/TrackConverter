@@ -13,21 +13,24 @@ namespace TrackConverter.UI.Converter {
         /// <summary>
         /// маршрут для которого выводится информация
         /// </summary>
-        private TrackFile trackFile;
+        private BaseTrack trackFile;
 
         /// <summary>
         /// создает окно подробной информации о маршруте
         /// </summary>
         /// <param name="trackFile">маршрут, о котором будет выведена информация</param>
-        public FormTrackInformation( TrackFile trackFile ) {
+        public FormTrackInformation(BaseTrack trackFile ) {
             InitializeComponent();
             this.trackFile = trackFile;
 
             textBoxCount.Text = trackFile.Count.ToString();
             textBoxDescription.Text = trackFile.Description;
             textBoxDistance.Text = trackFile.Distance.ToString();
-            textBoxStart.Text = trackFile[0].Coordinates.ToString( "{lat}\r\n{lon}", "ddºmm'ss.s\"H" );
-            textBoxFinish.Text = trackFile[trackFile.Count - 1].Coordinates.ToString( "{lat}\r\n{lon}", "ddºmm'ss.s\"H" );
+            if (trackFile.Count > 0)
+            {
+                textBoxStart.Text = trackFile[0].Coordinates.ToString("{lat}\r\n{lon}", "ddºmm'ss.s\"H");
+                textBoxFinish.Text = trackFile[trackFile.Count - 1].Coordinates.ToString("{lat}\r\n{lon}", "ddºmm'ss.s\"H");
+            }
             textBoxName.Text = trackFile.Name;
             textBoxSpeed.Text = trackFile.KmphSpeed.ToString();
             textBoxTime.Text = trackFile.Time.ToString();
@@ -37,7 +40,7 @@ namespace TrackConverter.UI.Converter {
         /// <summary>
         /// результат работы диалога
         /// </summary>
-        public TrackFile Result { get; set; }
+        public BaseTrack Result { get; set; }
 
         /// <summary>
         /// открытие маршрута в яндекс

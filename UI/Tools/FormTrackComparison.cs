@@ -39,7 +39,7 @@ namespace TrackConverter.UI.Tools
         /// добавление нового трека в сравнение
         /// </summary>
         /// <param name="trackFile">добавляемый трек</param>
-        public void AddTrack(TrackFile trackFile)
+        public void AddTrack(BaseTrack trackFile)
         {
             this.Tracks.Add(trackFile);
         }

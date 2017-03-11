@@ -576,7 +576,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         /// <param name="points">точки</param>
         /// <param name="callback">метод для вывода информации об операции</param>
         /// <returns></returns>
-        public List<List<TrackFile>> CreateRoutes(TrackFile points, Action<string> callback)
+        public List<List<TrackFile>> CreateRoutes(BaseTrack points, Action<string> callback)
         {
             ConcurrentQueue<JObject> queue = new ConcurrentQueue<JObject>(); //очередь на обработку
             ConcurrentBag<List<TrackFile>> tracks = new ConcurrentBag<List<TrackFile>>(); //результирующая матрица маршрутов
@@ -627,7 +627,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                                     //сохранения расстояния
                                     string routel = route.ToString();
                                     double distance = double.Parse(routel);
-                                    res.Distance = distance;
+                                    res.setDistance(distance);
                                     row.Add(res);
 
                                     //запись данных маршрута в файл
@@ -642,7 +642,6 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                             {
                                 TrackFile res = decodeJSONPath(jobj);
                                 pr++;
-                                res.Distance = res.CalculateDistance(); //рассчет длины маршрута
                                 row.Add(res);
                             }
                             if (callback != null && isRequestComplete)

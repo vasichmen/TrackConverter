@@ -216,7 +216,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         /// </summary>
         /// <param name="trk">маршрут</param>
         /// <returns></returns>
-        private static string ConvertPolyline(TrackFile trk)
+        private static string ConvertPolyline(BaseTrack trk)
         {
             long lastLat = 0;
             long lastLng = 0;
@@ -370,7 +370,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         /// <param name="track">трек, в который надо записать высоты</param>
         /// <param name="callback">Действие, выполняемое при получении высот точек</param>
         /// <returns></returns>
-        public TrackFile GetElevations(TrackFile track, Action<string> callback)
+        public BaseTrack GetElevations(BaseTrack track, Action<string> callback)
         {
             //пример запроса
             //https://maps.googleapis.com/maps/api/elevation/json?locations=40.714728,-73.998672|-34.397,150.644
@@ -384,7 +384,15 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                     callback.Invoke("Обработка " + track.Name + ", завершено " + pers.ToString("0.0") + "%");
                 //трек для текущего запроса
                 int length = track.Count - i < maxptperrequest ? track.Count - i : maxptperrequest;
-                TrackFile trk = track.GetRange(i, length);
+                BaseTrack trk = track.GetRange(i, length);
+
+                //ПОПЫТКА ЗАГРУЗИТЬ ОТРЕЗОК ИЗ КЭША
+                //если удалось загрузить все точки из кэша, то возвращаем результат
+                bool succces = Vars.dataCache.TryGetElevations(ref track);
+                if (succces)
+                    return track;
+
+                //ЕСЛИ НЕ ПОЛУЧИЛОСЬ ЗАГРУЗИТЬ ИЗ КЭША
 
                 //передача точек кодированной линией. Этим способом можно отправлять 500 точек за один раз
                 string pts = "enc:" + ConvertPolyline(trk);
@@ -413,7 +421,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
             //заполнение высот
             for (int i = 0; i < track.Count; i++)
                 track[i].MetrAltitude = els[i];
-            Vars.dataCache.Put(track, els, callback);
+            Vars.dataCache.Put(track, els, callback); //запись в кэш
             return track;
         }
 
@@ -423,7 +431,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         /// <param name="points"></param>
         /// <param name="callback"></param>
         /// <returns></returns>
-        public List<List<TrackFile>> CreateRoutes(TrackFile points, Action<string> callback)
+        public List<List<TrackFile>> CreateRoutes(BaseTrack points, Action<string> callback)
         {
             ConcurrentQueue<XmlDocument> queue = new ConcurrentQueue<XmlDocument>(); //очередь на обработку
             ConcurrentBag<List<TrackFile>> tracks = new ConcurrentBag<List<TrackFile>>(); //результирующая матрица маршрутов
@@ -477,7 +485,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                                 XmlNode r1 = xml["DirectionsResponse"]["route"]["leg"]["distance"]["value"];
                                 string routel = r1.InnerText;
                                 double distance = double.Parse(routel);
-                                res.Distance = distance;
+                                res.setDistance(distance);
                                 row.Add(res);
 
                                 //запись данных маршрута в файл
@@ -491,7 +499,6 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                                 //обработка XML
                                 TrackFile res = decodeXMLPath(xml);
                                 pr++;
-                                res.Distance = res.CalculateDistance(); //рассчет длины маршрута
                                 row.Add(res);
                             }
                             if (callback != null && isRequestComplete)

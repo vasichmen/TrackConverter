@@ -52,6 +52,11 @@ namespace TrackConverter.UI
         public static FormConverter winConverter;
 
         /// <summary>
+        /// окно редактирования путешествия
+        /// </summary>
+        public static FormEditTrip winTripEditor;
+
+        /// <summary>
         /// окно с картой
         /// </summary>
         public static FormMap winMap;

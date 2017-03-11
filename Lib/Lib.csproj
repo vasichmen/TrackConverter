@@ -149,8 +149,10 @@
     <Compile Include="Mathematic\Routing\GreedyElements\Graph.cs" />
     <Compile Include="Data\SQLiteCache.cs" />
     <Compile Include="Mathematic\Routing\PolarSearch.cs" />
+    <Compile Include="Tracking\BaseTrack.cs" />
     <Compile Include="Tracking\Helpers\KmlHelper.cs" />
     <Compile Include="Tracking\Helpers\RteHelper.cs" />
+    <Compile Include="Tracking\Helpers\TrrHelper.cs" />
     <Compile Include="Tracking\Helpers\XmlHelper.cs" />
     <Compile Include="Tracking\Serializer.cs" />
     <Compile Include="Tracking\GeoFile.cs" />
@@ -158,6 +160,7 @@
     <Compile Include="Tracking\TrackFile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tracking\TrackPoint.cs" />
+    <Compile Include="Tracking\TripRouteFile.cs" />
     <Compile Include="Vars.cs" />
   </ItemGroup>
   <ItemGroup>

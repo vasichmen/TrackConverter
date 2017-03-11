@@ -6,7 +6,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-
+using Newtonsoft.Json;
 
 namespace TrackConverter.Lib.Classes
 {
@@ -15,7 +15,9 @@ namespace TrackConverter.Lib.Classes
     /// </summary>
     [Serializable]
 #pragma warning disable CS0659 // Тип переопределяет Object.Equals(object o), но не переопределяет Object.GetHashCode()
+#pragma warning disable CS0661 // Тип определяет оператор == или оператор !=, но не переопределяет Object.GetHashCode()
     public struct Coordinate
+#pragma warning restore CS0661 // Тип определяет оператор == или оператор !=, но не переопределяет Object.GetHashCode()
 #pragma warning restore CS0659 // Тип переопределяет Object.Equals(object o), но не переопределяет Object.GetHashCode()
     {
         private long llon;
@@ -131,6 +133,7 @@ namespace TrackConverter.Lib.Classes
             /// <summary>
             /// целое положительное число градусов в координате
             /// </summary>
+        [JsonIgnore]
             public int Degrees
             {
                 get
@@ -143,6 +146,7 @@ namespace TrackConverter.Lib.Classes
             /// <summary>
             /// целое положительное число минут в координате
             /// </summary>
+        [JsonIgnore]
             public int Minutes
             {
                 get
@@ -156,6 +160,7 @@ namespace TrackConverter.Lib.Classes
             /// <summary>
             /// положительное число секунд в координате
             /// </summary>
+        [JsonIgnore]
             public double Seconds
             {
                 get
@@ -171,16 +176,19 @@ namespace TrackConverter.Lib.Classes
             /// <summary>
             /// знак при координате
             /// </summary>
+        [JsonIgnore]
             public CoordinateChar Char { get; set; }
 
             /// <summary>
             /// тип координаты: Широта/Долгота
             /// </summary>
+        [JsonIgnore]
             public CoordinateKind Kind { get { return Char == CoordinateChar.E || Char == CoordinateChar.W ? CoordinateKind.Longitude : CoordinateKind.Latitude; } }
 
             /// <summary>
             /// если истина, то координата пуста
             /// </summary>
+        [JsonIgnore]
             public bool isEmpty { get { return double.IsNaN(TotalDegrees); } }
 
             /// <summary>
@@ -337,6 +345,7 @@ namespace TrackConverter.Lib.Classes
         /// <summary>
         /// координата в формате GMap
         /// </summary>
+        [JsonIgnore]
         public PointLatLng GMap
         {
             get
@@ -351,11 +360,13 @@ namespace TrackConverter.Lib.Classes
         /// <summary>
         /// пустые координаты
         /// </summary>
+        [JsonIgnore]
         public static Coordinate Empty { get { return new Coordinate(true); } }
 
         /// <summary>
         /// если истина, то координата пуста
         /// </summary>
+        [JsonIgnore]
         public bool isEmpty { get { return this.Latitude.isEmpty || this.Longitude.isEmpty; } }
 
         #endregion
@@ -511,6 +522,9 @@ namespace TrackConverter.Lib.Classes
         /// <returns></returns>
         public override bool Equals(object obj)
         {
+            if (obj.GetType() != typeof(Coordinate))
+                return false;
+
             if (obj == null)
                 return false;
             if (this.isEmpty)

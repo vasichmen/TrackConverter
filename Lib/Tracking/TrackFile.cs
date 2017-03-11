@@ -10,114 +10,66 @@ using System.Windows.Forms;
 using System.Xml;
 using GMap.NET;
 using ICSharpCode.SharpZipLib.Zip;
+using Newtonsoft.Json;
 using TrackConverter.Lib.Classes;
 using TrackConverter.Lib.Mathematic;
 using TrackConverter.Lib.Mathematic.Geodesy;
 
 namespace TrackConverter.Lib.Tracking
 {
+#pragma warning disable CS0660 // Тип определяет оператор == или оператор !=, но не переопределяет Object.Equals(object o)
+#pragma warning disable CS0661 // Тип определяет оператор == или оператор !=, но не переопределяет Object.GetHashCode()
     /// <summary>
     /// Трек
     /// </summary>
-    public class TrackFile : IEnumerable<TrackPoint>, ICollection<TrackPoint>, IComparable, IList<TrackPoint>
+    public class TrackFile : BaseTrack, IList<TrackPoint>, IEnumerable<TrackPoint>, ICollection<TrackPoint>, IComparable
+#pragma warning restore CS0661 // Тип определяет оператор == или оператор !=, но не переопределяет Object.GetHashCode()
+#pragma warning restore CS0660 // Тип определяет оператор == или оператор !=, но не переопределяет Object.Equals(object o)
     {
+
 
         #region поля и свойства
 
-        /// <summary>
-        /// список точек
-        /// </summary>
-        private List<TrackPoint> Track;
 
         /// <summary>
-        /// Описание маршрута
+        /// Возвращает или задает точку с указанным индексом
         /// </summary>
-        public string Description { get; set; }
-
-        /// <summary>
-        /// имя трека
-        /// </summary>
-        public string Name { get; set; }
-
-        /// <summary>
-        /// имя файла (без расширения и адреса)
-        /// </summary>
-        public string FileName { get; set; }
-
-        /// <summary>
-        /// возвращает маршрут, сотоящий из точек , начинающихся с startIndex и имеющий длину length
-        /// </summary>
-        /// <param name="startIndex">индекс первой точки</param>
-        /// <param name="length">количество точек для копирования</param>
+        /// <param name="index">отсчитываемый от нуля индекс точки</param>
         /// <returns></returns>
-        public TrackFile GetRange(int startIndex, int length)
-        {
-            return new TrackFile(this.Track.GetRange(startIndex, length));
-        }
-
-        /// <summary>
-        /// полный путь к файлу
-        /// </summary>
-        public string FilePath { get; set; }
-
-        /// <summary>
-        /// Формат файла, если он загружен из файла
-        /// </summary>
-        public FileFormats Format
+        public override TrackPoint this[int index]
         {
             get
             {
-                if (FilePath == null || FilePath.Length < 2)
-                    return FileFormats.Undefined;
-                string ext = Path.GetExtension(FilePath);
-                switch (ext)
-                {
-                    case ".plt": return FileFormats.PltFile;
-                    case ".crd": return FileFormats.CrdFile;
-                    case ".wpt": return FileFormats.WptFile;
-                    case ".rt2": return FileFormats.Rt2File;
-                    case ".gpx": return FileFormats.GpxFile;
-                    case ".kml": return FileFormats.KmlFile;
-                    case ".kmz": return FileFormats.KmzFile;
-                    case ".osm": return FileFormats.OsmFile;
-                    case ".txt": return FileFormats.TxtFile;
-                    case ".nmea": return FileFormats.NmeaFile;
-                    case ".csv": return FileFormats.CsvFile;
-                    default:
-                        return FileFormats.Undefined;
-                }
+                return Track[index];
+            }
+
+            set
+            {
+                Track[index] = value;
             }
         }
 
-        /// <summary>
-        /// длина трека в километрах
-        /// </summary>
-        public double Distance { get; set; }
 
         /// <summary>
         /// время прохождения трека
         /// </summary>
-        public TimeSpan Time { get; set; }
+        public override TimeSpan Time
+        {
+            get
+            {
+                if (Track.Count <= 1)
+                    return new TimeSpan(0);
+                else
+                    return Track[Track.Count - 1].Time - Track[0].Time;
+            }
+        }
 
-        /// <summary>
-        /// средняя скорость движения в км/ч
-        /// </summary>
-        public double KmphSpeed { get; set; }
-
-        /// <summary>
-        /// средняя скорость движения в узлах
-        /// </summary>
-        public double KnotSpeed { get { return KmphSpeed / Constants.In1Knot; } set { KmphSpeed = value * Constants.In1Knot; } }
-
-        /// <summary>
-        /// цвет на карте
-        /// </summary>
-        public Color Color { get; set; }
 
         /// <summary>
         /// последовательность высот в метрах
         /// </summary>
-        public List<double> AllAltitudes
+        [JsonIgnore]
+        public override List<double> AllAltitudes
         {
             get
             {
@@ -131,7 +83,8 @@ namespace TrackConverter.Lib.Tracking
         /// <summary>
         /// последовательность долгот
         /// </summary>
-        public List<double> AllLongitudes
+        [JsonIgnore]
+        public override List<double> AllLongitudes
         {
             get
             {
@@ -145,7 +98,8 @@ namespace TrackConverter.Lib.Tracking
         /// <summary>
         /// последовательность широт 
         /// </summary>
-        public List<double> AllLatitudes
+        [JsonIgnore]
+        public override List<double> AllLatitudes
         {
             get
             {
@@ -159,12 +113,13 @@ namespace TrackConverter.Lib.Tracking
         /// <summary>
         /// количество точек в треке
         /// </summary>
-        public int Count { get { return Track.Count; } }
+        public override int Count { get { return Track.Count; } }
 
         /// <summary>
         /// возвращает список точек для представления в таблице
         /// </summary>
-        public DataTable Source
+        [JsonIgnore]
+        public override DataTable Source
         {
             get
             {
@@ -251,7 +206,8 @@ namespace TrackConverter.Lib.Tracking
         /// <summary>
         /// точки в формате GMap
         /// </summary>
-        public List<PointLatLng> GMapPoints
+        [JsonIgnore]
+        public override List<PointLatLng> GMapPoints
         {
             get
             {
@@ -310,15 +266,14 @@ namespace TrackConverter.Lib.Tracking
         #region вычисление параметров трека
 
         /// <summary>
-        /// вычисление все параметров и запись их в соответствующие поля
+        /// вычисление времени на весь трек, расстояния в км, средней скорости, скоростей в каждой точке, азумутов  в точках
         /// </summary>
-        public void CalculateAll()
+        public override void CalculateAll()
         {
-            this.Time = CalculateTime();
-            this.Distance = CalculateDistance();
-            this.KmphSpeed = CalculateSpeed();
             CalculatePartSpeedsDistances();
             CalculateAzimuthsDeclination();
+            foreach (TrackPoint tr in this)
+                tr.CalculateParametres();
         }
 
         /// <summary>
@@ -337,7 +292,7 @@ namespace TrackConverter.Lib.Tracking
         /// <summary>
         /// расчет длины трека в километрах
         /// </summary>
-        public double CalculateDistance()
+        protected override double CalculateDistance()
         {
             double distance = 0;
             for (int i = 0; i < Track.Count - 1; i++)
@@ -349,15 +304,6 @@ namespace TrackConverter.Lib.Tracking
             }
             distance = Math.Round(distance / 1000, 3);
             return distance;
-        }
-
-        /// <summary>
-        /// Вычисление скорости
-        /// </summary>
-        /// <returns></returns>
-        private double CalculateSpeed()
-        {
-            return Math.Round(this.Distance / Time.TotalHours, 2);
         }
 
         /// <summary>
@@ -378,17 +324,6 @@ namespace TrackConverter.Lib.Tracking
             }
         }
 
-        /// <summary>
-        /// вычисление времени
-        /// </summary>
-        /// <returns></returns>
-        private TimeSpan CalculateTime()
-        {
-            if (Track.Count <= 1)
-                return new TimeSpan(0);
-            else
-                return Track[Track.Count - 1].Time - Track[0].Time;
-        }
 
         #endregion
 
@@ -398,7 +333,7 @@ namespace TrackConverter.Lib.Tracking
         /// Добавление новой точки в конец трека
         /// </summary>
         /// <param name="point">новая точка</param>
-        public void Add(TrackPoint point)
+        public override void Add(TrackPoint point)
         {
             if (point == null)
                 return;
@@ -409,7 +344,7 @@ namespace TrackConverter.Lib.Tracking
         /// добавление нескольких точек в конец трека
         /// </summary>
         /// <param name="points"></param>
-        public void Add(IEnumerable<TrackPoint> points)
+        public override void Add(IEnumerable<TrackPoint> points)
         {
             foreach (TrackPoint pt in points)
                 this.Add(pt);
@@ -420,17 +355,18 @@ namespace TrackConverter.Lib.Tracking
         /// </summary>
         /// <param name="index">позиция для вставки</param>
         /// <param name="trackPoint">точка</param>
-        public void Insert(int index, TrackPoint trackPoint)
+        public override void Insert(int index, TrackPoint trackPoint)
         {
             Track.Insert(index, trackPoint);
         }
+
 
         /// <summary>
         /// Возвращает истину, если указанная точка уже есть в треке
         /// </summary>
         /// <param name="point"></param>
         /// <returns></returns>
-        public bool Contains(TrackPoint point)
+        public override bool Contains(TrackPoint point)
         { return this.Track.Contains(point); }
 
         /// <summary>
@@ -441,7 +377,7 @@ namespace TrackConverter.Lib.Tracking
             if (this.Count == 0)
                 return new TrackFile();
             TrackFile res = new TrackFile();
-            for (int i =this.Count-1;i>=0; i--)
+            for (int i = this.Count - 1; i >= 0; i--)
                 res.Add(this[i]);
             return res;
         }
@@ -449,7 +385,7 @@ namespace TrackConverter.Lib.Tracking
         /// <summary>
         /// удаление всех точек из трека
         /// </summary>
-        public void Clear()
+        public override void Clear()
         {
             Track.Clear();
         }
@@ -457,7 +393,7 @@ namespace TrackConverter.Lib.Tracking
         /// <summary>
         /// очистка высот всех точек
         /// </summary>
-        public void ClearAltitudes()
+        public override void ClearAltitudes()
         {
             foreach (TrackPoint t in this)
                 t.MetrAltitude = double.NaN;
@@ -467,7 +403,7 @@ namespace TrackConverter.Lib.Tracking
         /// создает копию маршрута
         /// </summary>
         /// <returns></returns>
-        public TrackFile Clone()
+        public override BaseTrack Clone()
         {
             TrackFile res = new TrackFile();
             foreach (TrackPoint t in this)
@@ -476,7 +412,6 @@ namespace TrackConverter.Lib.Tracking
             res.FileName = this.FileName;
             res.FilePath = this.FilePath;
             res.Name = this.Name;
-            res.Time = this.Time;
             return res;
         }
 
@@ -485,7 +420,7 @@ namespace TrackConverter.Lib.Tracking
         /// </summary>
         /// <param name="trackPoint"></param>
         /// <returns></returns>
-        public int IndexOf(TrackPoint trackPoint)
+        public override int IndexOf(TrackPoint trackPoint)
         {
             return Track.IndexOf(trackPoint);
         }
@@ -493,7 +428,7 @@ namespace TrackConverter.Lib.Tracking
         /// <summary>
         /// сортировка точек по полю Name
         /// </summary>
-        public void Sort()
+        public override void Sort()
         {
             Track.Sort();
         }
@@ -506,7 +441,7 @@ namespace TrackConverter.Lib.Tracking
         /// <returns></returns>
         public TrackFile Subtrack(double start, double length)
         {
-            if (start > this.CalculateDistance() * 1000) throw new ArgumentException("Начало отрезка больше длины маршрута");
+            if (start > this.Distance * 1000) throw new ArgumentException("Начало отрезка больше длины маршрута");
 
             TrackPoint startPt = null;
 
@@ -560,7 +495,7 @@ namespace TrackConverter.Lib.Tracking
         /// </summary>
         /// <param name="minInterval">длина отрезка в метрах</param>
         /// <returns></returns>
-        public TrackFileList Split(double minInterval)
+        internal override TrackFileList Split(double minInterval)
         {
             TrackFileList res = new TrackFileList();
 
@@ -597,7 +532,7 @@ namespace TrackConverter.Lib.Tracking
         /// </summary>
         /// <param name="length">расстояние в метрах между промежуточными точками в метрах</param>
         /// <returns>новый трек с добавленными точками</returns>
-        public TrackFile AddIntermediatePoints(double length)
+        public override BaseTrack AddIntermediatePoints(double length)
         {
             TrackFile res = new TrackFile();
             res.Name = this.Name;
@@ -627,17 +562,31 @@ namespace TrackConverter.Lib.Tracking
         }
 
         /// <summary>
-        /// Возвращает или задает точку с указанным индексом
+        /// преобразует TrackFile в TripRouteFile
         /// </summary>
-        /// <param name="index">отсчитываемый от нуля индекс точки</param>
         /// <returns></returns>
-        public TrackPoint this[int index]
+        internal TripRouteFile ToTripRoute()
         {
-            get { return Track[index]; }
-            set { Track[index] = value; }
+            TripRouteFile res = new TripRouteFile();
+            res.AddDay(this.Clone() as TrackFile);
+            res.Name = this.Name;
+            res.Description = this.Description;
+            res.Color = this.Color;
+            res.FileName = this.FileName;
+            //FilePath не копируется
+            return res;
         }
 
-
+        /// <summary>
+        /// возвращает часть маршурта
+        /// </summary>
+        /// <param name="i">индекс первой точки в маршурте</param>
+        /// <param name="length">количество копируемых точек</param>
+        /// <returns></returns>
+        internal override TrackFile GetRange(int i, int length)
+        {
+            return new TrackFile(Track.GetRange(i, length));
+        }
 
         #region операторы
 
@@ -742,24 +691,6 @@ namespace TrackConverter.Lib.Tracking
 
         #region реализации интерфейсов .NET
 
-        /// <summary>
-        /// хэш-функция. Возвращает object.GetHashCode()
-        /// </summary>
-        /// <returns></returns>
-        public override int GetHashCode()
-        {
-            return base.GetHashCode();
-        }
-
-        /// <summary>
-        /// object.Equals(obj)
-        /// </summary>
-        /// <param name="obj">объект-параметр</param>
-        /// <returns></returns>
-        public override bool Equals(object obj)
-        {
-            return base.Equals(obj);
-        }
 
         /// <summary>
         /// реализация интерфейса IEnumerable
@@ -784,7 +715,7 @@ namespace TrackConverter.Lib.Tracking
         /// </summary>
         /// <param name="array"></param>
         /// <param name="arrayIndex"></param>
-        public void CopyTo(TrackPoint[] array, int arrayIndex)
+        public override void CopyTo(TrackPoint[] array, int arrayIndex)
         {
             Track.CopyTo(array, arrayIndex);
         }
@@ -793,7 +724,7 @@ namespace TrackConverter.Lib.Tracking
         /// удаление указанного элемента
         /// </summary>
         /// <param name="point"></param>
-        public bool Remove(TrackPoint point)
+        public override bool Remove(TrackPoint point)
         {
             if (point == null)
                 return false;
@@ -804,7 +735,7 @@ namespace TrackConverter.Lib.Tracking
         /// удаление элемента с указанным индексом
         /// </summary>
         /// <param name="index">индекс удаляемой точки</param>
-        public bool Remove(int index)
+        public override bool Remove(int index)
         {
             if (index >= Track.Count)
                 return false;
@@ -825,17 +756,26 @@ namespace TrackConverter.Lib.Tracking
         /// удаление элемента с указаным индексом
         /// </summary>
         /// <param name="index"></param>
-        public void RemoveAt(int index)
+        public override void RemoveAt(int index)
         {
             Track.RemoveAt(index);
         }
 
 
+        /// <summary>
+        /// перечислитель
+        /// </summary>
+        /// <returns></returns>
+        public override IEnumerator<TrackPoint> GetEnumerator()
+        {
+            return Track.GetEnumerator();
+        }
+
 
         /// <summary>
         /// показывает, является ли коллекция доступна только для чтения
         /// </summary>
-        public bool IsReadOnly
+        public new bool IsReadOnly
         {
             get
             {
@@ -846,7 +786,9 @@ namespace TrackConverter.Lib.Tracking
         /// <summary>
         /// если истина,то маршрут виден на карте
         /// </summary>
-        public bool IsVisible { get; set; }
+        public new bool IsVisible { get; set; }
+
+
 
 
         #endregion

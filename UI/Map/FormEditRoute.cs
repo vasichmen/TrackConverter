@@ -40,8 +40,9 @@ namespace TrackConverter.UI.Map
         /// <param name="overlay">слой для вывода редактируемого маршрута</param>
         /// <param name="route">редактируемый маршрут</param>
         /// <param name="Title">Заголовок окна редактирования</param>
-        public FormEditRoute(string Title,TrackFile route,GMapOverlay overlay, Action<TrackFile> actionAfter, Action cancelAction)
+        public FormEditRoute(string Title, TrackFile route,GMapOverlay overlay, Action<TrackFile> actionAfter, Action cancelAction)
         {
+            
             InitializeComponent();
             this.actionAfter = actionAfter;
             this.cancelAction = cancelAction;
