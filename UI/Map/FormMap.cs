@@ -32,6 +32,7 @@ namespace TrackConverter.UI.Map
     /// </summary>
     public partial class FormMap : FormMapBase
     {
+       
         #region Конструкторы
 
         /// <summary>
@@ -1373,6 +1374,12 @@ namespace TrackConverter.UI.Map
             if (new Keyboard().CtrlKeyDown)
                 if (e.KeyCode == Keys.N)
                     createRouteToolStripMenuItem.PerformClick();
+
+            //Escape (отмена выбора точки на карте)
+            if (e.KeyCode == Keys.Escape)
+                if (isSelectingPoint)
+                    if (this.CancelSelectPointAction != null)
+                        this.CancelSelectPointAction.Invoke();
         }
 
         /// <summary>
@@ -1483,9 +1490,6 @@ namespace TrackConverter.UI.Map
                     TrackPoint newPoint = fep.Result;
                     this.AfterSelectPointAction.Invoke(newPoint);
                 }
-                isSelectingPoint = false;
-                gmapControlMap.DragButton = MouseButtons.Left;
-                gmapControlMap.Cursor = Cursors.Arrow;
             }
 
             #endregion
@@ -2307,7 +2311,7 @@ namespace TrackConverter.UI.Map
         /// начало выбора точки на карте
         /// </summary>
         /// <param name="after"></param>
-        internal void BeginSelectPoint(Action<TrackPoint> after)
+        internal void BeginSelectPoint(Action<TrackPoint> after, Action cancelAct)
         {
             this.isSelectingPoint = true;
             gmapControlMap.DragButton = MouseButtons.Right;
@@ -2315,6 +2319,7 @@ namespace TrackConverter.UI.Map
             if (isCreatingRoute)
                 Program.winRouteEditor.Close();
             this.AfterSelectPointAction = after;
+            this.CancelSelectPointAction = cancelAct;
         }
 
         /// <summary>
@@ -2378,10 +2383,6 @@ namespace TrackConverter.UI.Map
                 ShowRoute(Vars.currentSelectedTrack, selectedRouteOverlay, true);
 
         }
-
-
-
-
 
 
         #endregion

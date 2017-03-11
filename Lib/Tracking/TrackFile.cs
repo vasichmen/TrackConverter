@@ -412,6 +412,8 @@ namespace TrackConverter.Lib.Tracking
             res.FileName = this.FileName;
             res.FilePath = this.FilePath;
             res.Name = this.Name;
+            res.Color = this.Color;
+            res.CalculateAll();
             return res;
         }
 

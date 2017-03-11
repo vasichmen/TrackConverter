@@ -19,11 +19,12 @@ namespace TrackConverter.Lib.Mathematic.Astronomy
         /// <returns></returns>
         public static double CalculateTimeOffset(TrackPoint trackPoint)
         {
-            //double lat = trackPoint.Coordinates.Latitude.TotalDegrees;
-            //double in1ho = 180d / 12d;
-            //double offset = lat / in1ho;
-            //return offset;
-            return (DateTime.Now- DateTime.UtcNow).Hours;
+            double lat = trackPoint.Coordinates.Latitude.TotalDegrees;
+            double in1ho = 180d / 12d;
+            double offset = lat / in1ho;
+            return (int)offset;
+           // return offset;
+            //return (DateTime.Now- DateTime.UtcNow).Hours;
         }
 
         /// <summary>

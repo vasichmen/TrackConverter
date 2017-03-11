@@ -159,7 +159,10 @@ namespace TrackConverter.UI.Map
             if (fti.ShowDialog() == DialogResult.OK)
             {
                 selectedTrack = fti.Result;
-                trip.setDayRoute(row - 1, selectedTrack as TrackFile);
+                if (row == 0)
+                    trip = selectedTrack as TripRouteFile;
+                else
+                    trip.setDayRoute(row - 1, selectedTrack as TrackFile);
                 FillDGV(trip);
             }
         }
@@ -346,9 +349,50 @@ namespace TrackConverter.UI.Map
                 this.trip.AddDay(tfl);
                 FillDGV(trip);
             });
-            Program.winMap.BeginEditRoute(newt, afterAct);
+            Action canc = new Action(() =>
+            {
+                this.WindowState = FormWindowState.Normal;
+            });
+            Program.winMap.BeginEditRoute(newt, afterAct, canc);
         }
 
+        /// <summary>
+        /// добавить маршрут из файла
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void buttonAddDayFromFile_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                OpenFileDialog of = new OpenFileDialog();
+                of.Filter = "Все поддерживаемые форматы(*.crd, *.wpt, *.plt, *.rt2, *.gpx, *.osm, *.nmea, *.csv, *.txt)| *.crd; *.wpt; *.plt; *rt2; *.gpx; *.osm; *.nmea; *.csv; *.txt";
+                of.Filter += "|Треки Androzic (*.plt)|*.plt";
+                of.Filter += "|Маршрут Androzic (*.rt2)|*.rt2";
+                of.Filter += "|Путевые точки Ozi(*.wpt)|*.wpt";
+                of.Filter += "|Файл координат(*.crd)|*.crd";
+                of.Filter += "|Файл GPS координат(*.gpx)|*.gpx";
+                of.Filter += "|Файл OpenStreetMaps(*.osm)|*.osm";
+                of.Filter += "|Файл NMEA(*.nmea)|*.nmea";
+                of.Filter += "|Файл Excel(*.csv)|*.csv";
+                of.Filter += "|Текстовый файл(*.txt)|*.txt";
+
+                if (Vars.Options.Common.IsLoadDir)
+                    of.InitialDirectory = Vars.Options.Common.LastFileLoadDirectory;
+                of.Multiselect = false;
+                of.RestoreDirectory = false;
+                if (of.ShowDialog() == DialogResult.OK)
+                {
+                    TrackFile tf = Serializer.DeserializeTrackFile(of.FileName) as TrackFile;
+                    tf.CalculateAll();
+                    this.selectedTrack = tf;
+                    this.trip.AddDay(tf);
+                    FillDGV(trip);
+                }
+            }
+            catch (Exception ex) { MessageBox.Show(this, ex.Message, "Ошибка!", MessageBoxButtons.OK, MessageBoxIcon.Error); }
+
+        }
 
         /// <summary>
         /// добавление путевой точки
@@ -364,9 +408,52 @@ namespace TrackConverter.UI.Map
                 this.trip.Waypoints.Add(point);
                 FillDGV(trip);
             });
-            Program.winMap.BeginSelectPoint(after);
+
+            Action canc = new Action(() =>
+            {
+                Program.winMap.isSelectingPoint = false;
+                this.WindowState = FormWindowState.Normal;
+                Program.winMap.gmapControlMap.DragButton = MouseButtons.Left;
+                Program.winMap.gmapControlMap.Cursor = Cursors.Arrow;
+            });
+            Program.winMap.BeginSelectPoint(after, canc);
         }
 
+        /// <summary>
+        /// загрузить путевые точки из файла
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void buttonWptFromFile_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                OpenFileDialog of = new OpenFileDialog();
+                of.Filter = "Все поддерживаемые форматы(*.crd, *.wpt, *.plt, *.rt2, *.gpx, *.osm, *.nmea, *.csv, *.txt)| *.crd; *.wpt; *.plt; *rt2; *.gpx; *.osm; *.nmea; *.csv; *.txt";
+                of.Filter += "|Треки Androzic (*.plt)|*.plt";
+                of.Filter += "|Маршрут Androzic (*.rt2)|*.rt2";
+                of.Filter += "|Путевые точки Ozi(*.wpt)|*.wpt";
+                of.Filter += "|Файл координат(*.crd)|*.crd";
+                of.Filter += "|Файл GPS координат(*.gpx)|*.gpx";
+                of.Filter += "|Файл OpenStreetMaps(*.osm)|*.osm";
+                of.Filter += "|Файл NMEA(*.nmea)|*.nmea";
+                of.Filter += "|Файл Excel(*.csv)|*.csv";
+                of.Filter += "|Текстовый файл(*.txt)|*.txt";
+
+                if (Vars.Options.Common.IsLoadDir)
+                    of.InitialDirectory = Vars.Options.Common.LastFileLoadDirectory;
+                of.Multiselect = false;
+                of.RestoreDirectory = false;
+                if (of.ShowDialog() == DialogResult.OK)
+                {
+                    TrackFile tf = Serializer.DeserializeTrackFile(of.FileName) as TrackFile;
+                    this.trip.Waypoints.Add(tf);
+                    FillDGV(trip);
+                }
+            }
+            catch (Exception ex) { MessageBox.Show(this, ex.Message, "Ошибка!", MessageBoxButtons.OK, MessageBoxIcon.Error); }
+
+        }
 
         /// <summary>
         /// сохранение путешествия
@@ -513,10 +600,10 @@ namespace TrackConverter.UI.Map
             dataGridViewDays.Rows[e.RowIndex].Selected = true;
         }
 
-        #endregion
 
         #endregion
 
+        #endregion
 
     }
 }

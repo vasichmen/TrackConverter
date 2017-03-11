@@ -1230,7 +1230,7 @@ namespace TrackConverter.UI.Converter
 
             BaseTrack tf = Tracks[ind];
 
-            Vars.currentSelectedTrack = tf;
+            Vars.currentSelectedTrack = tf.Clone();
             Program.RefreshWindows(this);
         }
 

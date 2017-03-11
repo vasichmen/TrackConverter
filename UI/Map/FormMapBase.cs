@@ -35,6 +35,11 @@ namespace TrackConverter.UI.Map
         public bool isCreatingRoute;
 
         /// <summary>
+        /// если истина, то при нажатии на карту ЛКМ надо открыть меню редактирования точки и вызвать this.AfterSelectPointAction
+        /// </summary>
+        public bool isSelectingPoint = false;
+
+        /// <summary>
         /// если истина, то идет измерение расстояния
         /// </summary>
         public bool isRuling;
@@ -190,14 +195,14 @@ namespace TrackConverter.UI.Map
         #region флаги, передача параметров
 
         /// <summary>
-        /// если истина, то при нажатии на карту ЛКМ надо открыть меню редактирования точки и вызвать this.AfterSelectPointAction
-        /// </summary>
-        protected bool isSelectingPoint = false;
-
-        /// <summary>
         /// действие, которое выполняется после выбора и редактирования точки (при редактировании путешествия)
         /// </summary>
         protected Action<TrackPoint> AfterSelectPointAction;
+
+        /// <summary>
+        /// действие, выполняемое при отмене выбора точки на карте при создании путешествия
+        /// </summary>
+        protected Action CancelSelectPointAction;
 
         /// <summary>
         /// координаты маркера до перемещения. (для отмены действия)

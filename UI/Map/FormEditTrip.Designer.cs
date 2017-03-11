@@ -56,12 +56,19 @@
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.buttonAddWaypoint = new System.Windows.Forms.Button();
             this.buttonAddDay = new System.Windows.Forms.Button();
+            this.buttonAddDayFromFile = new System.Windows.Forms.Button();
+            this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
+            this.flowLayoutPanel3 = new System.Windows.Forms.FlowLayoutPanel();
+            this.buttonWptFromFile = new System.Windows.Forms.Button();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewDays)).BeginInit();
             this.contextMenuStripDays.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewWaypoints)).BeginInit();
             this.contextMenuStripWaypoints.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
+            this.flowLayoutPanel2.SuspendLayout();
+            this.flowLayoutPanel3.SuspendLayout();
             this.SuspendLayout();
             // 
             // buttonCancel
@@ -72,6 +79,7 @@
             this.buttonCancel.Size = new System.Drawing.Size(75, 32);
             this.buttonCancel.TabIndex = 0;
             this.buttonCancel.Text = "Отмена";
+            this.toolTip1.SetToolTip(this.buttonCancel, "Отменить изменения");
             this.buttonCancel.UseVisualStyleBackColor = true;
             this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
             // 
@@ -83,6 +91,7 @@
             this.buttonSave.Size = new System.Drawing.Size(75, 32);
             this.buttonSave.TabIndex = 1;
             this.buttonSave.Text = "Сохранить";
+            this.toolTip1.SetToolTip(this.buttonSave, "Сохранить в списке маршрутов");
             this.buttonSave.UseVisualStyleBackColor = true;
             this.buttonSave.Click += new System.EventHandler(this.buttonSave_Click);
             // 
@@ -191,7 +200,7 @@
             this.insertPointНовуюToolStripMenuItem,
             this.removePointToolStripMenuItem1});
             this.contextMenuStripWaypoints.Name = "contextMenuStripWaypoints";
-            this.contextMenuStripWaypoints.Size = new System.Drawing.Size(162, 136);
+            this.contextMenuStripWaypoints.Size = new System.Drawing.Size(162, 114);
             this.contextMenuStripWaypoints.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStripWaypoints_Opening);
             // 
             // informationPointToolStripMenuItem
@@ -269,8 +278,8 @@
             this.tableLayoutPanel1.Controls.Add(this.dataGridViewWaypoints, 1, 1);
             this.tableLayoutPanel1.Controls.Add(this.flowLayoutPanel1, 2, 1);
             this.tableLayoutPanel1.Controls.Add(this.dataGridViewDays, 0, 1);
-            this.tableLayoutPanel1.Controls.Add(this.buttonAddWaypoint, 1, 2);
-            this.tableLayoutPanel1.Controls.Add(this.buttonAddDay, 0, 2);
+            this.tableLayoutPanel1.Controls.Add(this.flowLayoutPanel2, 0, 2);
+            this.tableLayoutPanel1.Controls.Add(this.flowLayoutPanel3, 1, 2);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
@@ -294,11 +303,12 @@
             // 
             this.buttonAddWaypoint.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.buttonAddWaypoint.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.buttonAddWaypoint.Location = new System.Drawing.Point(290, 322);
+            this.buttonAddWaypoint.Location = new System.Drawing.Point(3, 3);
             this.buttonAddWaypoint.Name = "buttonAddWaypoint";
             this.buttonAddWaypoint.Size = new System.Drawing.Size(107, 32);
             this.buttonAddWaypoint.TabIndex = 61;
             this.buttonAddWaypoint.Text = "Добавить";
+            this.toolTip1.SetToolTip(this.buttonAddWaypoint, "Добавить точку на карте");
             this.buttonAddWaypoint.UseVisualStyleBackColor = true;
             this.buttonAddWaypoint.Click += new System.EventHandler(this.buttonAddWaypoint_Click);
             // 
@@ -306,13 +316,60 @@
             // 
             this.buttonAddDay.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.buttonAddDay.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.buttonAddDay.Location = new System.Drawing.Point(60, 322);
+            this.buttonAddDay.Location = new System.Drawing.Point(3, 3);
             this.buttonAddDay.Name = "buttonAddDay";
             this.buttonAddDay.Size = new System.Drawing.Size(108, 32);
             this.buttonAddDay.TabIndex = 62;
             this.buttonAddDay.Text = "Добавить";
+            this.toolTip1.SetToolTip(this.buttonAddDay, "Создать маршрут на карте");
             this.buttonAddDay.UseVisualStyleBackColor = true;
             this.buttonAddDay.Click += new System.EventHandler(this.buttonAddDay_Click);
+            // 
+            // buttonAddDayFromFile
+            // 
+            this.buttonAddDayFromFile.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.buttonAddDayFromFile.Location = new System.Drawing.Point(117, 3);
+            this.buttonAddDayFromFile.Name = "buttonAddDayFromFile";
+            this.buttonAddDayFromFile.Size = new System.Drawing.Size(109, 32);
+            this.buttonAddDayFromFile.TabIndex = 2;
+            this.buttonAddDayFromFile.Text = "Из файла";
+            this.toolTip1.SetToolTip(this.buttonAddDayFromFile, "Загрузить дневной маршурт из файла");
+            this.buttonAddDayFromFile.UseVisualStyleBackColor = true;
+            this.buttonAddDayFromFile.Click += new System.EventHandler(this.buttonAddDayFromFile_Click);
+            // 
+            // flowLayoutPanel2
+            // 
+            this.flowLayoutPanel2.Controls.Add(this.buttonAddDay);
+            this.flowLayoutPanel2.Controls.Add(this.buttonAddDayFromFile);
+            this.flowLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.flowLayoutPanel2.Location = new System.Drawing.Point(0, 319);
+            this.flowLayoutPanel2.Margin = new System.Windows.Forms.Padding(0);
+            this.flowLayoutPanel2.Name = "flowLayoutPanel2";
+            this.flowLayoutPanel2.Size = new System.Drawing.Size(229, 38);
+            this.flowLayoutPanel2.TabIndex = 62;
+            // 
+            // flowLayoutPanel3
+            // 
+            this.flowLayoutPanel3.Controls.Add(this.buttonAddWaypoint);
+            this.flowLayoutPanel3.Controls.Add(this.buttonWptFromFile);
+            this.flowLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.flowLayoutPanel3.Location = new System.Drawing.Point(229, 319);
+            this.flowLayoutPanel3.Margin = new System.Windows.Forms.Padding(0);
+            this.flowLayoutPanel3.Name = "flowLayoutPanel3";
+            this.flowLayoutPanel3.Size = new System.Drawing.Size(229, 38);
+            this.flowLayoutPanel3.TabIndex = 63;
+            // 
+            // buttonWptFromFile
+            // 
+            this.buttonWptFromFile.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.buttonWptFromFile.Location = new System.Drawing.Point(116, 3);
+            this.buttonWptFromFile.Name = "buttonWptFromFile";
+            this.buttonWptFromFile.Size = new System.Drawing.Size(109, 32);
+            this.buttonWptFromFile.TabIndex = 62;
+            this.buttonWptFromFile.Text = "Из файла";
+            this.toolTip1.SetToolTip(this.buttonWptFromFile, "Загрузить список путевых точек из файла");
+            this.buttonWptFromFile.UseVisualStyleBackColor = true;
+            this.buttonWptFromFile.Click += new System.EventHandler(this.buttonWptFromFile_Click);
             // 
             // FormEditTrip
             // 
@@ -333,6 +390,8 @@
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
             this.flowLayoutPanel1.ResumeLayout(false);
+            this.flowLayoutPanel2.ResumeLayout(false);
+            this.flowLayoutPanel3.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -362,5 +421,10 @@
         private System.Windows.Forms.ToolStripMenuItem upDayToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem upPointToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem downPointToolStripMenuItem;
+        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel2;
+        private System.Windows.Forms.Button buttonAddDayFromFile;
+        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel3;
+        private System.Windows.Forms.Button buttonWptFromFile;
+        private System.Windows.Forms.ToolTip toolTip1;
     }
 }
