@@ -49,15 +49,20 @@ namespace TrackConverter.Lib.Tracking
         /// <summary>
         /// список отрезков пути по дням
         /// </summary>
-        public TrackFileList DaysRoutes { get { return daysRoutes; } set {
+        public TrackFileList DaysRoutes
+        {
+            get { return daysRoutes; }
+            set
+            {
                 daysRoutes = value;
                 totalTrack = daysRoutes.JoinTracks();
-            } }
+            }
+        }
 
         /// <summary>
         /// список путевых точек маршурта
         /// </summary>
-        public TrackFile Waypoints { get;  set; }
+        public TrackFile Waypoints { get; set; }
 
         /// <summary>
         /// создает маршрут всего путешествия для GMap
@@ -82,7 +87,7 @@ namespace TrackConverter.Lib.Tracking
                         tf.Name,
                         tf.Distance
                     }
-                    ,true
+                    , true
                     );
             }
             return baseTable;
@@ -137,6 +142,34 @@ namespace TrackConverter.Lib.Tracking
             daysRoutes.RemoveAt(v);
             totalTrack = daysRoutes.JoinTracks();
             totalTrack.CalculateAll();
+        }
+
+        /// <summary>
+        /// перемещаение дня с обдной позиции на другую
+        /// </summary>
+        /// <param name="oldPos"></param>
+        /// <param name="newPos"></param>
+        public void MoveDay(int oldPos, int newPos)
+        {
+            if (oldPos == newPos) return; //если двигать не надо, то выход
+            if (oldPos > newPos) //если движение вверх
+            {
+                if (oldPos == 0) return; //двигать вверх нельзя, если это первый день
+                TrackFile buf = (TrackFile)this.daysRoutes[oldPos];
+                daysRoutes.Remove(buf);
+                daysRoutes.Insert(newPos, buf);
+                totalTrack = daysRoutes.JoinTracks();
+                return;
+            }
+            if (oldPos < newPos) //если движение вниз
+            {
+                if (oldPos == daysRoutes.Count - 1) return; //двигать вниз нельзя, если это последний день
+                TrackFile buf = (TrackFile)this.daysRoutes[oldPos];
+                daysRoutes.Remove(buf);
+                daysRoutes.Insert(newPos, buf);
+                totalTrack = daysRoutes.JoinTracks();
+                return;
+            }
         }
 
         #region реализация базового класса BaseTrack
@@ -213,7 +246,7 @@ namespace TrackConverter.Lib.Tracking
                 return totalTrack.AllLatitudes;
             }
         }
-        
+
         /// <summary>
         /// установить в указанном индексе указанный маршурт в днях
         /// </summary>
@@ -305,6 +338,7 @@ namespace TrackConverter.Lib.Tracking
             foreach (TrackFile tf in this.DaysRoutes)
                 tf.CalculateAll();
         }
+
 
         /// <summary>
         /// вычисляет длину трека

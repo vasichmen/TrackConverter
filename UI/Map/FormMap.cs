@@ -470,9 +470,15 @@ namespace TrackConverter.UI.Map
                     creatingTripOverlay.Clear();
                 }
                 );
-
-
-            BeginEditTrip(trip, after);
+            Action canc = new Action(() =>
+            {
+                creatingTripOverlay.Clear();
+                Vars.currentSelectedTrack = null;
+                Program.RefreshWindows(this);
+                RefreshData();
+            });
+            
+            BeginEditTrip(trip, after, canc);
         }
 
 

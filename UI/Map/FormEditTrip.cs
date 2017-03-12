@@ -223,7 +223,10 @@ namespace TrackConverter.UI.Map
         /// <param name="e"></param>
         private void downDayToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
+            int oldPos = trip.DaysRoutes.IndexOf(selectedTrack);
+            int newPos = oldPos + 1;
+            trip.MoveDay(oldPos, newPos);
+            FillDGV(trip);
         }
 
         /// <summary>
@@ -233,7 +236,10 @@ namespace TrackConverter.UI.Map
         /// <param name="e"></param>
         private void upDayToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
+            int oldPos = trip.DaysRoutes.IndexOf(selectedTrack);
+            int newPos = oldPos - 1;
+            trip.MoveDay(oldPos,newPos);
+            FillDGV(trip);
         }
 
 
