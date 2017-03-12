@@ -112,6 +112,7 @@ namespace TrackConverter.UI.Map
                 if (cancelAction != null)
                     cancelAction.Invoke();
             }
+            Program.winMap.creatingTripOverlay.Clear();
         }
 
 
@@ -538,6 +539,18 @@ namespace TrackConverter.UI.Map
             dataGridViewWaypoints.Rows[e.RowIndex].Selected = true;
         }
 
+        /// <summary>
+        /// нажатие кнопки
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void dataGridViewWaypoints_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (dataGridViewWaypoints.RowCount == 0) return;
+            if (e.KeyData != Keys.Delete) return;
+            removePointToolStripMenuItem1_Click(null, null);
+        }
+
         #endregion
 
         #region дни
@@ -600,10 +613,22 @@ namespace TrackConverter.UI.Map
             dataGridViewDays.Rows[e.RowIndex].Selected = true;
         }
 
+        /// <summary>
+        /// нажатие кнопки
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void dataGridViewDays_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (dataGridViewDays.RowCount == 0) return;
+            if (e.KeyData != Keys.Delete) return;
+            removeDayToolStripMenuItem_Click(null, null);
+        }
 
         #endregion
 
         #endregion
+
 
     }
 }

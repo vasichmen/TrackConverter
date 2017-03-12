@@ -54,11 +54,11 @@
             this.label2 = new System.Windows.Forms.Label();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
-            this.buttonAddWaypoint = new System.Windows.Forms.Button();
+            this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
             this.buttonAddDay = new System.Windows.Forms.Button();
             this.buttonAddDayFromFile = new System.Windows.Forms.Button();
-            this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
             this.flowLayoutPanel3 = new System.Windows.Forms.FlowLayoutPanel();
+            this.buttonAddWaypoint = new System.Windows.Forms.Button();
             this.buttonWptFromFile = new System.Windows.Forms.Button();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewDays)).BeginInit();
@@ -111,6 +111,7 @@
             this.dataGridViewDays.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewDays_CellDoubleClick);
             this.dataGridViewDays.CellMouseDown += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dataGridViewDays_CellMouseDown);
             this.dataGridViewDays.SelectionChanged += new System.EventHandler(this.dataGridViewDays_SelectionChanged);
+            this.dataGridViewDays.KeyDown += new System.Windows.Forms.KeyEventHandler(this.dataGridViewDays_KeyDown);
             // 
             // contextMenuStripDays
             // 
@@ -190,6 +191,7 @@
             this.dataGridViewWaypoints.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewWaypoints_CellDoubleClick);
             this.dataGridViewWaypoints.CellMouseDown += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dataGridViewWaypoints_CellMouseDown);
             this.dataGridViewWaypoints.SelectionChanged += new System.EventHandler(this.dataGridViewWaypoints_SelectionChanged);
+            this.dataGridViewWaypoints.KeyDown += new System.Windows.Forms.KeyEventHandler(this.dataGridViewWaypoints_KeyDown);
             // 
             // contextMenuStripWaypoints
             // 
@@ -299,18 +301,16 @@
             this.flowLayoutPanel1.Size = new System.Drawing.Size(80, 293);
             this.flowLayoutPanel1.TabIndex = 60;
             // 
-            // buttonAddWaypoint
+            // flowLayoutPanel2
             // 
-            this.buttonAddWaypoint.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.buttonAddWaypoint.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.buttonAddWaypoint.Location = new System.Drawing.Point(3, 3);
-            this.buttonAddWaypoint.Name = "buttonAddWaypoint";
-            this.buttonAddWaypoint.Size = new System.Drawing.Size(107, 32);
-            this.buttonAddWaypoint.TabIndex = 61;
-            this.buttonAddWaypoint.Text = "Добавить";
-            this.toolTip1.SetToolTip(this.buttonAddWaypoint, "Добавить точку на карте");
-            this.buttonAddWaypoint.UseVisualStyleBackColor = true;
-            this.buttonAddWaypoint.Click += new System.EventHandler(this.buttonAddWaypoint_Click);
+            this.flowLayoutPanel2.Controls.Add(this.buttonAddDay);
+            this.flowLayoutPanel2.Controls.Add(this.buttonAddDayFromFile);
+            this.flowLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.flowLayoutPanel2.Location = new System.Drawing.Point(0, 319);
+            this.flowLayoutPanel2.Margin = new System.Windows.Forms.Padding(0);
+            this.flowLayoutPanel2.Name = "flowLayoutPanel2";
+            this.flowLayoutPanel2.Size = new System.Drawing.Size(229, 38);
+            this.flowLayoutPanel2.TabIndex = 62;
             // 
             // buttonAddDay
             // 
@@ -337,17 +337,6 @@
             this.buttonAddDayFromFile.UseVisualStyleBackColor = true;
             this.buttonAddDayFromFile.Click += new System.EventHandler(this.buttonAddDayFromFile_Click);
             // 
-            // flowLayoutPanel2
-            // 
-            this.flowLayoutPanel2.Controls.Add(this.buttonAddDay);
-            this.flowLayoutPanel2.Controls.Add(this.buttonAddDayFromFile);
-            this.flowLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flowLayoutPanel2.Location = new System.Drawing.Point(0, 319);
-            this.flowLayoutPanel2.Margin = new System.Windows.Forms.Padding(0);
-            this.flowLayoutPanel2.Name = "flowLayoutPanel2";
-            this.flowLayoutPanel2.Size = new System.Drawing.Size(229, 38);
-            this.flowLayoutPanel2.TabIndex = 62;
-            // 
             // flowLayoutPanel3
             // 
             this.flowLayoutPanel3.Controls.Add(this.buttonAddWaypoint);
@@ -358,6 +347,19 @@
             this.flowLayoutPanel3.Name = "flowLayoutPanel3";
             this.flowLayoutPanel3.Size = new System.Drawing.Size(229, 38);
             this.flowLayoutPanel3.TabIndex = 63;
+            // 
+            // buttonAddWaypoint
+            // 
+            this.buttonAddWaypoint.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.buttonAddWaypoint.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.buttonAddWaypoint.Location = new System.Drawing.Point(3, 3);
+            this.buttonAddWaypoint.Name = "buttonAddWaypoint";
+            this.buttonAddWaypoint.Size = new System.Drawing.Size(107, 32);
+            this.buttonAddWaypoint.TabIndex = 61;
+            this.buttonAddWaypoint.Text = "Добавить";
+            this.toolTip1.SetToolTip(this.buttonAddWaypoint, "Добавить точку на карте");
+            this.buttonAddWaypoint.UseVisualStyleBackColor = true;
+            this.buttonAddWaypoint.Click += new System.EventHandler(this.buttonAddWaypoint_Click);
             // 
             // buttonWptFromFile
             // 
