@@ -110,13 +110,18 @@ namespace TrackConverter.UI.Map
         {
             if (cancel)
             {
-                DialogResult = DialogResult.Cancel;
-                if (cancelAction != null)
-                    cancelAction.Invoke();
+                DialogResult msg = MessageBox.Show(this, "Вы действительно хотите отменить изменения?", "Внимание!", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                if (msg == DialogResult.OK)
+                {
+                    DialogResult = DialogResult.Yes;
+                    if (cancelAction != null)
+                        cancelAction.Invoke();
+                    Program.winMap.creatingTripOverlay.Clear();
+                }
+                if (msg == DialogResult.No)
+                    e.Cancel = true;
             }
-            Program.winMap.creatingTripOverlay.Clear();
         }
-
 
         #region контекстное меню списка маршуртов
 
@@ -415,6 +420,9 @@ namespace TrackConverter.UI.Map
             Action<TrackPoint> after = new Action<TrackPoint>((point) =>
             {
                 this.WindowState = FormWindowState.Normal;
+                Program.winMap.isSelectingPoint = false;
+                Program.winMap.gmapControlMap.DragButton = MouseButtons.Left;
+                Program.winMap.gmapControlMap.Cursor = Cursors.Arrow;
                 this.trip.Waypoints.Add(point);
                 FillDGV(trip);
             });

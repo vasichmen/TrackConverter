@@ -462,7 +462,7 @@ namespace TrackConverter.UI.Map
         /// <param name="route">маршрут</param>
         /// <param name="lay">слой</param>
         /// <param name="centring">если истина, то после отрисовки карта будет подогнана под маршрут по центру и масштбу</param>
-        protected void ShowRoute(BaseTrack route, GMapOverlay lay, bool centring = true)
+        protected void ShowRoute(BaseTrack route, GMapOverlay lay, bool centring)
         {
             if (route.GetType() == typeof(TrackFile))
                 ShowTrackFile(route as TrackFile, lay, centring);
@@ -500,14 +500,14 @@ namespace TrackConverter.UI.Map
         /// <param name="route"></param>
         /// <param name="lay"></param>
         /// <param name="centring"></param>
-        private void ShowTripRoute(TripRouteFile route, GMapOverlay lay, bool centring = true)
+        private void ShowTripRoute(TripRouteFile route, GMapOverlay lay, bool centring)
         {
             //вывод маршрутов
             foreach (TrackFile tf in route.DaysRoutes)
                 ShowTrackFile(tf, lay, false);
 
             //вывод путевых точек
-            ShowWaypoints(route.Waypoints, lay, true, false);
+            ShowWaypoints(route.Waypoints, lay, false, false);
 
             //если требуется центровка
             if (centring)

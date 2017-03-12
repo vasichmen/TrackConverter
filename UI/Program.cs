@@ -485,6 +485,4 @@ namespace TrackConverter.UI
         }
 
     }
-
 }
-
