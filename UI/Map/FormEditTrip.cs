@@ -46,8 +46,8 @@ namespace TrackConverter.UI.Map
             this.trip = tripFile;
             this.afterAction = afterAction;
             this.cancelAction = cancelAction;
-            dataGridViewDays.Rows[0].Selected = true;
             FillDGV(tripFile);
+            dataGridViewDays.Rows[0].Selected = true;
         }
 
         /// <summary>
