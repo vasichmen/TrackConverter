@@ -212,10 +212,16 @@ namespace TrackConverter.UI.Map
         /// <param name="e"></param>
         private void invertToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            TrackFile buf = selectedTrack as TrackFile;
-            int ind = trip.DaysRoutes.IndexOf(buf);
-            buf = buf.Invert();
-            trip.setDayRoute(ind, buf);
+            foreach (DataGridViewRow r in dataGridViewDays.SelectedRows)
+                if (r.Index == 0)
+                    continue;
+                else
+                {
+                    TrackFile buf = trip.DaysRoutes[r.Index - 1] as TrackFile;
+                    int ind = trip.DaysRoutes.IndexOf(buf);
+                    buf = buf.Invert();
+                    trip.setDayRoute(ind, buf);
+                }
             FillDGV(trip);
         }
 
@@ -258,7 +264,7 @@ namespace TrackConverter.UI.Map
         {
             int oldPos = trip.DaysRoutes.IndexOf(selectedTrack);
             int newPos = oldPos - 1;
-            trip.MoveDay(oldPos,newPos);
+            trip.MoveDay(oldPos, newPos);
             FillDGV(trip);
         }
 

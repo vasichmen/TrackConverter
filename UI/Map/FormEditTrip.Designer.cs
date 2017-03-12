@@ -122,9 +122,9 @@
             this.upDayToolStripMenuItem,
             this.downDayToolStripMenuItem,
             this.editDayToolStripMenuItem,
+            this.invertToolStripMenuItem,
             this.insertDayToolStripMenuItem,
-            this.removeDayToolStripMenuItem,
-            this.invertToolStripMenuItem});
+            this.removeDayToolStripMenuItem});
             this.contextMenuStripDays.Name = "contextMenuStripDays";
             this.contextMenuStripDays.Size = new System.Drawing.Size(162, 180);
             this.contextMenuStripDays.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStripDays_Opening);
@@ -389,6 +389,7 @@
             // 
             // invertToolStripMenuItem
             // 
+            this.invertToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("invertToolStripMenuItem.Image")));
             this.invertToolStripMenuItem.Name = "invertToolStripMenuItem";
             this.invertToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
             this.invertToolStripMenuItem.Text = "Инвертировать";
