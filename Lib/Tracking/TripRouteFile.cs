@@ -377,12 +377,15 @@ namespace TrackConverter.Lib.Tracking
         /// создаёт копию путешествия TripRouteFile
         /// </summary>
         /// <returns></returns>
-        public override BaseTrack Clone()
+        public override BaseTrack Clone(bool addPoints = true)
         {
             TripRouteFile res = new TripRouteFile();
-            res.DaysRoutes = this.DaysRoutes.Clone();
-            res.Waypoints = (TrackFile)this.Waypoints.Clone();
-            res.totalTrack = (TrackFile)this.totalTrack.Clone();
+            if (addPoints)
+            {
+                res.DaysRoutes = this.DaysRoutes.Clone();
+                res.Waypoints = (TrackFile)this.Waypoints.Clone();
+                res.totalTrack = (TrackFile)this.totalTrack.Clone();
+            }
             res.Name = this.Name;
             res.Color = this.Color;
             res.Description = this.Description;

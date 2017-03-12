@@ -132,6 +132,7 @@ namespace TrackConverter.UI.Map
         /// <param name="e"></param>
         private void contextMenuStripDays_Opening(object sender, CancelEventArgs e)
         {
+            invertToolStripMenuItem.Visible = !dataGridViewDays.Rows[0].Selected;
             if (dataGridViewDays.SelectedRows.Count == 1)
             {
                 int ind = dataGridViewDays.SelectedRows[0].Index;
@@ -202,6 +203,20 @@ namespace TrackConverter.UI.Map
         private void insertDayToolStripMenuItem_Click(object sender, EventArgs e)
         {
 
+        }
+
+        /// <summary>
+        /// инвертирование маршурта
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void invertToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            TrackFile buf = selectedTrack as TrackFile;
+            int ind = trip.DaysRoutes.IndexOf(buf);
+            buf = buf.Invert();
+            trip.setDayRoute(ind, buf);
+            FillDGV(trip);
         }
 
         /// <summary>
@@ -676,5 +691,6 @@ namespace TrackConverter.UI.Map
             }));
             ts.Start();
         }
+
     }
 }

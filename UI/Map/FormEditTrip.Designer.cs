@@ -62,6 +62,7 @@
             this.buttonAddWaypoint = new System.Windows.Forms.Button();
             this.buttonWptFromFile = new System.Windows.Forms.Button();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.invertToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewDays)).BeginInit();
             this.contextMenuStripDays.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewWaypoints)).BeginInit();
@@ -122,9 +123,10 @@
             this.downDayToolStripMenuItem,
             this.editDayToolStripMenuItem,
             this.insertDayToolStripMenuItem,
-            this.removeDayToolStripMenuItem});
+            this.removeDayToolStripMenuItem,
+            this.invertToolStripMenuItem});
             this.contextMenuStripDays.Name = "contextMenuStripDays";
-            this.contextMenuStripDays.Size = new System.Drawing.Size(162, 136);
+            this.contextMenuStripDays.Size = new System.Drawing.Size(162, 180);
             this.contextMenuStripDays.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStripDays_Opening);
             // 
             // informationDayToolStripMenuItem
@@ -385,6 +387,14 @@
             this.buttonWptFromFile.UseVisualStyleBackColor = true;
             this.buttonWptFromFile.Click += new System.EventHandler(this.buttonWptFromFile_Click);
             // 
+            // invertToolStripMenuItem
+            // 
+            this.invertToolStripMenuItem.Name = "invertToolStripMenuItem";
+            this.invertToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
+            this.invertToolStripMenuItem.Text = "Инвертировать";
+            this.invertToolStripMenuItem.ToolTipText = "Инвертировать маршрут";
+            this.invertToolStripMenuItem.Click += new System.EventHandler(this.invertToolStripMenuItem_Click);
+            // 
             // FormEditTrip
             // 
             this.AcceptButton = this.buttonSave;
@@ -441,5 +451,6 @@
         private System.Windows.Forms.Button buttonWptFromFile;
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.Button buttonLoadElevations;
+        private System.Windows.Forms.ToolStripMenuItem invertToolStripMenuItem;
     }
 }

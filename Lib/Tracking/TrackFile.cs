@@ -376,7 +376,8 @@ namespace TrackConverter.Lib.Tracking
         {
             if (this.Count == 0)
                 return new TrackFile();
-            TrackFile res = new TrackFile();
+            TrackFile res = this.Clone(false) as TrackFile;
+            res.Track.Clear();
             for (int i = this.Count - 1; i >= 0; i--)
                 res.Add(this[i]);
             return res;
@@ -403,11 +404,12 @@ namespace TrackConverter.Lib.Tracking
         /// создает копию маршрута
         /// </summary>
         /// <returns></returns>
-        public override BaseTrack Clone()
+        public override BaseTrack Clone(bool addPoints = true)
         {
             TrackFile res = new TrackFile();
-            foreach (TrackPoint t in this)
-                res.Add(t.Clone());
+            if (addPoints)
+                foreach (TrackPoint t in this)
+                    res.Add(t.Clone());
             res.Description = this.Description;
             res.FileName = this.FileName;
             res.FilePath = this.FilePath;

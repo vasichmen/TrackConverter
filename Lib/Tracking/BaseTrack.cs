@@ -206,7 +206,7 @@ namespace TrackConverter.Lib.Tracking
         /// создает копию маршрута
         /// </summary>
         /// <returns></returns>
-        public abstract BaseTrack Clone();
+        public abstract BaseTrack Clone(bool addPoints = true);
 
         #region интерфейсы .NET
 
