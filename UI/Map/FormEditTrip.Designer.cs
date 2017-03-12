@@ -54,6 +54,7 @@
             this.label2 = new System.Windows.Forms.Label();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
+            this.buttonLoadElevations = new System.Windows.Forms.Button();
             this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
             this.buttonAddDay = new System.Windows.Forms.Button();
             this.buttonAddDayFromFile = new System.Windows.Forms.Button();
@@ -123,7 +124,7 @@
             this.insertDayToolStripMenuItem,
             this.removeDayToolStripMenuItem});
             this.contextMenuStripDays.Name = "contextMenuStripDays";
-            this.contextMenuStripDays.Size = new System.Drawing.Size(162, 136);
+            this.contextMenuStripDays.Size = new System.Drawing.Size(162, 158);
             this.contextMenuStripDays.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStripDays_Opening);
             // 
             // informationDayToolStripMenuItem
@@ -295,11 +296,22 @@
             // flowLayoutPanel1
             // 
             this.flowLayoutPanel1.Controls.Add(this.buttonSave);
+            this.flowLayoutPanel1.Controls.Add(this.buttonLoadElevations);
             this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel1.Location = new System.Drawing.Point(461, 23);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
             this.flowLayoutPanel1.Size = new System.Drawing.Size(80, 293);
             this.flowLayoutPanel1.TabIndex = 60;
+            // 
+            // buttonLoadElevations
+            // 
+            this.buttonLoadElevations.Location = new System.Drawing.Point(3, 38);
+            this.buttonLoadElevations.Name = "buttonLoadElevations";
+            this.buttonLoadElevations.Size = new System.Drawing.Size(75, 38);
+            this.buttonLoadElevations.TabIndex = 2;
+            this.buttonLoadElevations.Text = "Загрузить высоты";
+            this.buttonLoadElevations.UseVisualStyleBackColor = true;
+            this.buttonLoadElevations.Click += new System.EventHandler(this.buttonLoadElevations_Click);
             // 
             // flowLayoutPanel2
             // 
@@ -428,5 +440,6 @@
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel3;
         private System.Windows.Forms.Button buttonWptFromFile;
         private System.Windows.Forms.ToolTip toolTip1;
+        private System.Windows.Forms.Button buttonLoadElevations;
     }
 }

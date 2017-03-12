@@ -6,8 +6,10 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.VisualBasic.Devices;
+using TrackConverter.Lib.Data;
 using TrackConverter.Lib.Tracking;
 using TrackConverter.UI.Common.Dialogs;
 using TrackConverter.UI.Converter;
@@ -209,8 +211,9 @@ namespace TrackConverter.UI.Map
                     continue;
                 else
                     trip.RemoveDay(r.Index - 1);
-
             FillDGV(trip);
+            Vars.currentSelectedTrack = null;
+            Program.RefreshWindows(this); //обновление времени для того, чтобы убрать выделенный трек скарты
         }
 
         /// <summary>
@@ -625,10 +628,39 @@ namespace TrackConverter.UI.Map
             removeDayToolStripMenuItem_Click(null, null);
         }
 
-        #endregion
 
         #endregion
 
+        #endregion
 
+        /// <summary>
+        /// загрузить высоты
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void buttonLoadElevations_Click(object sender, EventArgs e)
+        {
+            Program.winMain.BeginOperation();
+            Task ts = new Task(new Action(() =>
+            {
+                try
+                {
+                    trip = (TripRouteFile)new GeoInfo(Vars.Options.DataSources.GeoInfoProvider).GetElevation(trip, Program.winMain.setCurrentOperation);
+                }
+                catch (Exception ex)
+                {
+                    this.Invoke(new Action(() =>
+                        MessageBox.Show(this, "Не удалось получить информацию из-за проблем с соединением.\r\n" + ex.Message + "\r\nПроверьте соединение с Интернет", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    ));
+                }
+                this.Invoke(new Action(() =>
+                {
+                    dataGridViewDays.ClearSelection();
+                    dataGridViewDays.Rows[0].Selected = true;
+                    Program.winMain.EndOperation();
+                }));
+            }));
+            ts.Start();
+        }
     }
 }
