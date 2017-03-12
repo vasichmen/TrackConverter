@@ -1408,7 +1408,7 @@ namespace TrackConverter.UI.Converter
             if (!this.Tracks.Contains(tripRouteFile))
                 throw new ApplicationException("Маршрута нет в списке");
 
-            TripRouteFile backup = tripRouteFile.Clone() as TripRouteFile; //запоминаем старый маршрут
+            BaseTrack backup = tripRouteFile.Clone(); //запоминаем старый маршрут
             TripRouteFile ed = tripRouteFile.Clone() as TripRouteFile; //новый маршрут для редактирования
             Tracks.Remove(tripRouteFile); //удаление из списка
             RefreshData();

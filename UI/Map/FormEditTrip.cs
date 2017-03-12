@@ -111,7 +111,7 @@ namespace TrackConverter.UI.Map
             if (cancel)
             {
                 DialogResult msg = MessageBox.Show(this, "Вы действительно хотите отменить изменения?", "Внимание!", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                if (msg == DialogResult.OK)
+                if (msg == DialogResult.Yes)
                 {
                     DialogResult = DialogResult.Yes;
                     if (cancelAction != null)
