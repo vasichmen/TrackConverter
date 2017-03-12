@@ -57,6 +57,7 @@ namespace TrackConverter.UI.Tools
             sf.AddExtension = true;
             sf.Filter = "Файл JPEG (*.jpg)|*.jpg";
             sf.Filter += "|Точечный рисунок BMP (*.bmp)|*.bmp";
+            sf.Filter += "|Рисунок TIFF (*.tiff)|*.tiff";
             if (sf.ShowDialog(this) == DialogResult.OK)
             {
                 textBoxSavePath.Text = sf.FileName;
@@ -152,7 +153,7 @@ namespace TrackConverter.UI.Tools
 
             //формат изображения
             ImageFormat format;
-            switch (Path.GetExtension(fname))
+            switch (Path.GetExtension(fname).ToLower())
             {
                 case ".jpeg":
                 case ".jpg":
@@ -160,6 +161,9 @@ namespace TrackConverter.UI.Tools
                     break;
                 case ".bmp":
                     format = ImageFormat.Bmp;
+                    break;
+                case ".tiff":
+                    format = ImageFormat.Tiff;
                     break;
                 default: throw new ApplicationException("Формат не поддерживатся");
             }

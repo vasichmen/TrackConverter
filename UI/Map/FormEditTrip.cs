@@ -46,7 +46,7 @@ namespace TrackConverter.UI.Map
             this.trip = tripFile;
             this.afterAction = afterAction;
             this.cancelAction = cancelAction;
-            this.selectedTrack = tripFile;
+            dataGridViewDays.Rows[0].Selected = true;
             FillDGV(tripFile);
         }
 
@@ -185,9 +185,12 @@ namespace TrackConverter.UI.Map
         {
             if (selectedTrack.GetType() == typeof(TripRouteFile))
                 return;
-
+            this.WindowState = FormWindowState.Minimized;
+            Vars.currentSelectedTrack = null;
+            Program.RefreshWindows(this);
             Action<TrackFile> after = new Action<TrackFile>((tr) =>
             {
+                this.WindowState = FormWindowState.Normal;
                 int ind = trip.DaysRoutes.IndexOf(selectedTrack);
                 trip.setDayRoute(ind, tr.Clone() as TrackFile);
                 this.FillDGV(trip);
@@ -239,7 +242,7 @@ namespace TrackConverter.UI.Map
                     trip.RemoveDay(r.Index - 1);
             FillDGV(trip);
             Vars.currentSelectedTrack = null;
-            Program.RefreshWindows(this); //обновление времени для того, чтобы убрать выделенный трек скарты
+            Program.RefreshWindows(this); //обновление окон для того, чтобы убрать выделенный трек с карты
         }
 
         /// <summary>
