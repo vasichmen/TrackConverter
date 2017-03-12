@@ -65,8 +65,8 @@
             this.comboBoxSelectImage = new System.Windows.Forms.ComboBox();
             this.buttonAdditionInfo = new System.Windows.Forms.Button();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.label8 = new System.Windows.Forms.Label();
             this.comboBoxPointType = new System.Windows.Forms.ComboBox();
+            this.label8 = new System.Windows.Forms.Label();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -431,15 +431,6 @@
             this.buttonAdditionInfo.UseVisualStyleBackColor = true;
             this.buttonAdditionInfo.Click += new System.EventHandler(this.buttonAdditionInfo_Click);
             // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(12, 165);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(57, 13);
-            this.label8.TabIndex = 25;
-            this.label8.Text = "Тип точки";
-            // 
             // comboBoxPointType
             // 
             this.comboBoxPointType.FormattingEnabled = true;
@@ -457,6 +448,15 @@
             this.comboBoxPointType.TabIndex = 26;
             this.toolTip1.SetToolTip(this.comboBoxPointType, "Тип точки в маршруте");
             this.comboBoxPointType.SelectedIndexChanged += new System.EventHandler(this.comboBoxPointType_SelectedIndexChanged);
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(12, 165);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(57, 13);
+            this.label8.TabIndex = 25;
+            this.label8.Text = "Тип точки";
             // 
             // FormEditPoint
             // 

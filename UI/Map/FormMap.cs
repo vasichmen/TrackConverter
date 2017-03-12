@@ -32,7 +32,7 @@ namespace TrackConverter.UI.Map
     /// </summary>
     public partial class FormMap : FormMapBase
     {
-       
+
         #region Конструкторы
 
         /// <summary>
@@ -1479,7 +1479,7 @@ namespace TrackConverter.UI.Map
 
             #region выбор точки при редактировании путешествия
             //если идёт выбор точки, не идёт создание маршурта и не линейка и клик не на маркере
-            if (this.isSelectingPoint && !(isCreatingRoute || isRuling) && !isMarkerClicked)
+            if (this.isSelectingPoint && !(isCreatingRoute || isRuling) && !isMarkerClicked && !gmapControlMap.IsDragging)
             {
                 PointLatLng pt = gmapControlMap.FromLocalToLatLng(e.X, e.Y);
                 TrackPoint newpt = new TrackPoint(pt);
@@ -1490,6 +1490,9 @@ namespace TrackConverter.UI.Map
                     TrackPoint newPoint = fep.Result;
                     this.AfterSelectPointAction.Invoke(newPoint);
                 }
+                if (res == DialogResult.Cancel)
+                    if (this.CancelSelectPointAction != null)
+                        this.CancelSelectPointAction.Invoke();
             }
 
             #endregion
@@ -2116,7 +2119,7 @@ namespace TrackConverter.UI.Map
         /// <param name="clearBefore">очистить перед добавлением</param>
         internal void ShowWaypoints(TrackFile waypoints, GMapOverlay lay, bool addWaypoints, bool clearBefore)
         {
-            base.ShowWaypoints(waypoints, lay,clearBefore, addWaypoints);
+            base.ShowWaypoints(waypoints, lay, clearBefore, addWaypoints);
         }
 
         /// <summary>
@@ -2167,7 +2170,7 @@ namespace TrackConverter.UI.Map
         /// <param name="route">маршрут</param>
         /// <param name="centring">если истина, то карта переместится на маршрут</param>
         /// <param name="lay">слой для вывода</param>
-        public new void ShowRoute(BaseTrack route, GMapOverlay lay,bool centring)
+        public new void ShowRoute(BaseTrack route, GMapOverlay lay, bool centring)
         {
             base.ShowRoute(route, lay, centring);
         }

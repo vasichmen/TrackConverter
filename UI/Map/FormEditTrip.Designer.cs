@@ -75,7 +75,7 @@
             // buttonCancel
             // 
             this.buttonCancel.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.buttonCancel.Location = new System.Drawing.Point(463, 322);
+            this.buttonCancel.Location = new System.Drawing.Point(463, 261);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 32);
             this.buttonCancel.TabIndex = 0;
@@ -106,7 +106,7 @@
             this.dataGridViewDays.Location = new System.Drawing.Point(3, 23);
             this.dataGridViewDays.Name = "dataGridViewDays";
             this.dataGridViewDays.ReadOnly = true;
-            this.dataGridViewDays.Size = new System.Drawing.Size(223, 293);
+            this.dataGridViewDays.Size = new System.Drawing.Size(223, 232);
             this.dataGridViewDays.TabIndex = 2;
             this.dataGridViewDays.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewDays_CellClick);
             this.dataGridViewDays.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewDays_CellDoubleClick);
@@ -124,7 +124,7 @@
             this.insertDayToolStripMenuItem,
             this.removeDayToolStripMenuItem});
             this.contextMenuStripDays.Name = "contextMenuStripDays";
-            this.contextMenuStripDays.Size = new System.Drawing.Size(162, 158);
+            this.contextMenuStripDays.Size = new System.Drawing.Size(162, 136);
             this.contextMenuStripDays.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStripDays_Opening);
             // 
             // informationDayToolStripMenuItem
@@ -186,7 +186,7 @@
             this.dataGridViewWaypoints.Location = new System.Drawing.Point(232, 23);
             this.dataGridViewWaypoints.Name = "dataGridViewWaypoints";
             this.dataGridViewWaypoints.ReadOnly = true;
-            this.dataGridViewWaypoints.Size = new System.Drawing.Size(223, 293);
+            this.dataGridViewWaypoints.Size = new System.Drawing.Size(223, 232);
             this.dataGridViewWaypoints.TabIndex = 54;
             this.dataGridViewWaypoints.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewWaypoints_CellClick);
             this.dataGridViewWaypoints.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewWaypoints_CellDoubleClick);
@@ -276,13 +276,13 @@
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 86F));
             this.tableLayoutPanel1.Controls.Add(this.label1, 0, 0);
-            this.tableLayoutPanel1.Controls.Add(this.buttonCancel, 2, 2);
             this.tableLayoutPanel1.Controls.Add(this.label2, 1, 0);
             this.tableLayoutPanel1.Controls.Add(this.dataGridViewWaypoints, 1, 1);
             this.tableLayoutPanel1.Controls.Add(this.flowLayoutPanel1, 2, 1);
             this.tableLayoutPanel1.Controls.Add(this.dataGridViewDays, 0, 1);
             this.tableLayoutPanel1.Controls.Add(this.flowLayoutPanel2, 0, 2);
             this.tableLayoutPanel1.Controls.Add(this.flowLayoutPanel3, 1, 2);
+            this.tableLayoutPanel1.Controls.Add(this.buttonCancel, 2, 2);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
@@ -290,7 +290,7 @@
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 38F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(544, 357);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(544, 296);
             this.tableLayoutPanel1.TabIndex = 60;
             // 
             // flowLayoutPanel1
@@ -300,7 +300,7 @@
             this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel1.Location = new System.Drawing.Point(461, 23);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(80, 293);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(80, 232);
             this.flowLayoutPanel1.TabIndex = 60;
             // 
             // buttonLoadElevations
@@ -318,7 +318,7 @@
             this.flowLayoutPanel2.Controls.Add(this.buttonAddDay);
             this.flowLayoutPanel2.Controls.Add(this.buttonAddDayFromFile);
             this.flowLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flowLayoutPanel2.Location = new System.Drawing.Point(0, 319);
+            this.flowLayoutPanel2.Location = new System.Drawing.Point(0, 258);
             this.flowLayoutPanel2.Margin = new System.Windows.Forms.Padding(0);
             this.flowLayoutPanel2.Name = "flowLayoutPanel2";
             this.flowLayoutPanel2.Size = new System.Drawing.Size(229, 38);
@@ -354,7 +354,7 @@
             this.flowLayoutPanel3.Controls.Add(this.buttonAddWaypoint);
             this.flowLayoutPanel3.Controls.Add(this.buttonWptFromFile);
             this.flowLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flowLayoutPanel3.Location = new System.Drawing.Point(229, 319);
+            this.flowLayoutPanel3.Location = new System.Drawing.Point(229, 258);
             this.flowLayoutPanel3.Margin = new System.Windows.Forms.Padding(0);
             this.flowLayoutPanel3.Name = "flowLayoutPanel3";
             this.flowLayoutPanel3.Size = new System.Drawing.Size(229, 38);
@@ -390,7 +390,7 @@
             this.AcceptButton = this.buttonSave;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(544, 357);
+            this.ClientSize = new System.Drawing.Size(544, 296);
             this.Controls.Add(this.tableLayoutPanel1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MinimumSize = new System.Drawing.Size(404, 162);

@@ -25,20 +25,19 @@ namespace TrackConverter.UI.Common.Dialogs
     /// </summary>
     public partial class FormEditPoint : Form
     {
-
         /// <summary>
         /// редактируемая точка
         /// </summary>
-        TrackPoint editingPoint;
+       private TrackPoint editingPoint;
 
         /// <summary>
         /// создает окно для редактирования точки
         /// </summary>
         /// <param name="point"></param>
+        /// <param name="cancelAction">действие при отмене редактирования</param>
         public FormEditPoint(TrackPoint point)
         {
             InitializeComponent();
-
             editingPoint = point;
 
             //заполнение иконок в выборе значка на карте
@@ -301,6 +300,38 @@ namespace TrackConverter.UI.Common.Dialogs
 
         }
 
+        /// <summary>
+        /// измененеи картинки точки в зависимости от типа
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void comboBoxPointType_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            switch (comboBoxPointType.SelectedIndex)
+            {
+                case 0:
+                    comboBoxSelectImage.SelectedIndex = 4; //старт
+                    break;
+                case 1:
+                    comboBoxSelectImage.SelectedIndex = 14; //достопримечательность
+                    break;
+                case 2:
+                    comboBoxSelectImage.SelectedIndex = 3; //точка сбора
+                    break;
+                case 3:
+                    comboBoxSelectImage.SelectedIndex = 16; //привал
+                    break;
+                case 4:
+                    comboBoxSelectImage.SelectedIndex = 9; //место для ночевки
+                    break;
+                case 5:
+                    comboBoxSelectImage.SelectedIndex = 5; //финиш
+                    break;
+                case 6:
+                    comboBoxSelectImage.SelectedIndex = 0; //просто точка
+                    break;
+            }
+        }
 
         #region Панель инструментов описания
         private void toolStripButtonBold_Click(object sender, EventArgs e)
@@ -421,31 +452,7 @@ namespace TrackConverter.UI.Common.Dialogs
 
         #endregion
 
-        private void comboBoxPointType_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            switch (comboBoxPointType.SelectedIndex)
-            {
-                case 0: comboBoxSelectImage.SelectedIndex = 4; //старт
-                    break;
-                case 1:
-                    comboBoxSelectImage.SelectedIndex = 14; //достопримечательность
-                    break;
-                case 2:
-                    comboBoxSelectImage.SelectedIndex = 3; //точка сбора
-                    break;
-                case 3:
-                    comboBoxSelectImage.SelectedIndex = 16; //привал
-                    break;
-                case 4:
-                    comboBoxSelectImage.SelectedIndex = 9; //место для ночевки
-                    break;
-                case 5:
-                    comboBoxSelectImage.SelectedIndex = 5; //финиш
-                    break;
-                case 6:
-                    comboBoxSelectImage.SelectedIndex = 0; //просто точка
-                    break;
-            }
-        }
+
+
     }
 }
