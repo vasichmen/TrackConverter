@@ -1,4 +1,5 @@
 chcp 1251
+rem call rem_cache.bat
 set day=%DATE:~0,2%
 set month=%DATE:~3,2%
 set year=%DATE:~6,4%

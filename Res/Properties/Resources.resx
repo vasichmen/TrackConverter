@@ -235,7 +235,7 @@
     <comment>схема файла OSM</comment>
   </data>
   <data name="saveLast_file" xml:space="preserve">
-    <value>\saveRoutes.kml</value>
+    <value>\saveRoutes.trr</value>
     <comment>файл сохранения последних марршрутов и точек карты</comment>
   </data>
   <data name="marker_start" type="System.Resources.ResXFileRef, System.Windows.Forms">
@@ -284,5 +284,9 @@
   <data name="DescriptionPolarSearch" xml:space="preserve">
     <value>Полярный перебор
 Делит все точки на группы и строит оптимальный маршрут через группы. Остальные точки присоединяет "жадным" способом. Чем больше групп, тем работа алгоритма больше похожа на работу полного перебора. При малом количестве групп алгоритм похож на "жадный". Для количества групп, равном 13, расчет занимает примерно 2 минуты.</value>
+  </data>
+  <data name="VK_access_token" xml:space="preserve">
+    <value>7a9588127a9588127aca2bb0b07acffa5f77a957a958812225c2a32c3c076b4a82f95c8</value>
+    <comment>ключ доступа к приложению ВК. Для сокращения ссылок</comment>
   </data>
 </root>

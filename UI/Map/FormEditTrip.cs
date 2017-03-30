@@ -4,8 +4,10 @@ using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.VisualBasic.Devices;
@@ -195,7 +197,11 @@ namespace TrackConverter.UI.Map
                 trip.setDayRoute(ind, tr.Clone() as TrackFile);
                 this.FillDGV(trip);
             });
-            Program.winMap.BeginEditRoute(selectedTrack as TrackFile, after);
+            Action canc = new Action(() =>
+            {
+                this.WindowState = FormWindowState.Normal;
+            });
+            Program.winMap.BeginEditRoute(selectedTrack as TrackFile, after, canc);
         }
 
         /// <summary>
@@ -459,6 +465,162 @@ namespace TrackConverter.UI.Map
                 Program.winMap.gmapControlMap.Cursor = Cursors.Arrow;
             });
             Program.winMap.BeginSelectPoint(after, canc);
+        }
+
+        /// <summary>
+        /// экспорт дневных маршртов
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void buttonExportDays_Click(object sender, EventArgs e)
+        {
+            FormReadText rt = new FormReadText(DialogType.ReadExtension, "Bведите формат файлов (wpt,crd,plt,rt2,gpx,kml,kmz,osm,nmea,txt,csv)", Vars.Options.Common.IsExtension ? Vars.Options.Common.LastSaveSeparateExtension : "", false, false, false, false);
+            if (rt.ShowDialog() == DialogResult.OK)
+            {
+                FolderBrowserDialog fb = new FolderBrowserDialog();
+                fb.ShowNewFolderButton = true;
+
+                if (Vars.Options.Common.IsSaveDir)
+                    fb.SelectedPath = Vars.Options.Common.LastFileSaveDirectory;
+                if (fb.ShowDialog() == DialogResult.OK)
+                {
+                    ParallelLoopResult pr = Parallel.ForEach(trip.DaysRoutes, new Action<BaseTrack>((BaseTrack tf) =>
+                    {
+                        string nm = "";
+                        if (string.IsNullOrEmpty(tf.Name))
+                            if (string.IsNullOrEmpty(tf.FileName))
+                                nm = Guid.NewGuid().ToString();
+                            else
+                                nm = tf.FileName;
+                        else
+                            nm = tf.Name;
+
+                        string basename = fb.SelectedPath + "\\"+ nm;
+                        switch (rt.Result)
+                        {
+                            case "wpt":
+                                Serializer.Serialize(basename + ".wpt", tf, FileFormats.WptFile);
+                                break;
+                            case "crd":
+                                Serializer.Serialize(basename + ".crd", tf, FileFormats.CrdFile);
+                                break;
+                            case "plt":
+                                Serializer.Serialize(basename + ".plt", tf, FileFormats.PltFile);
+                                break;
+                            case "rt2":
+                                Serializer.Serialize(basename + ".rt2", tf, FileFormats.Rt2File);
+                                break;
+                            case "gpx":
+                                Serializer.Serialize(basename + ".gpx", tf, FileFormats.GpxFile);
+                                break;
+                            case "kml":
+                                Serializer.Serialize(basename + ".kml", tf, FileFormats.KmlFile);
+                                break;
+                            case "kmz":
+                                Serializer.Serialize(basename + ".kmz", tf, FileFormats.KmzFile);
+                                break;
+                            case "osm":
+                                Serializer.Serialize(basename + ".osm", tf, FileFormats.OsmFile);
+                                break;
+                            case "nmea":
+                                Serializer.Serialize(basename + ".nmea", tf, FileFormats.NmeaFile);
+                                break;
+                            case "csv":
+                                Serializer.Serialize(basename + ".csv", tf, FileFormats.CsvFile);
+                                break;
+                            case "txt":
+                                Serializer.Serialize(basename + ".txt", tf, FileFormats.TxtFile);
+                                break;
+                            default:
+                                MessageBox.Show(this, "Данный формат не поддерживается: " + rt.Result, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                return;
+                        }
+                        Vars.Options.Common.LastSaveSeparateExtension = rt.Result;
+                    }));
+                }
+            }
+            MessageBox.Show("Файлы сoхранены");
+        }
+
+        /// <summary>
+        /// экспорт всех точек
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void buttonExportWaypoints_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog sf = new SaveFileDialog();
+            sf.Filter = "Файл маршрута Androzic (*.rt2)|*.rt2";
+            sf.Filter += "|Треки Androzic (*.plt)|*.plt";
+            sf.Filter += "|Путевые точки Ozi(*.wpt)|*.wpt";
+            sf.Filter += "|Файл координат(*.crd)|*.crd";
+            sf.Filter += "|Файл координат(*.kml)|*.kml";
+            sf.Filter += "|Файл GPS координат(*.gpx)|*.gpx";
+            sf.Filter += "|Файл координат(*.kmz)|*.kmz";
+            sf.Filter += "|Файл OpenStreetMaps(*.osm)|*.osm";
+            sf.Filter += "|Файл NMEA(*.nmea)|*.nmea";
+            sf.Filter += "|Файл Excel(*.csv)|*.csv";
+            sf.Filter += "|Текстовый файл(*.txt)|*.txt";
+            sf.Filter += "|Список адресов(*.adrs)|*.adrs";
+
+            sf.AddExtension = true;
+
+            if (Vars.Options.Common.IsSaveDir)
+                sf.InitialDirectory = Vars.Options.Common.LastFileSaveDirectory;
+            if (Vars.Options.Common.IsExtension)
+                sf.FilterIndex = Vars.Options.Common.LastSaveExtensionNumberSaveOneTrack;
+            sf.FileName = Path.GetFileNameWithoutExtension(trip.Waypoints.FileName);
+
+            if (sf.ShowDialog() == DialogResult.OK)
+            {
+                switch (sf.FilterIndex)
+                {
+                    case 1:
+                        Serializer.Serialize(sf.FileName, trip.Waypoints, FileFormats.Rt2File);
+                        break;
+                    case 2:
+                        Serializer.Serialize(sf.FileName, trip.Waypoints, FileFormats.PltFile);
+                        break;
+                    case 3:
+                        Serializer.Serialize(sf.FileName, trip.Waypoints, FileFormats.WptFile);
+                        break;
+                    case 4:
+                        Serializer.Serialize(sf.FileName, trip.Waypoints, FileFormats.CrdFile);
+                        break;
+                    case 5:
+                        Serializer.Serialize(sf.FileName, trip.Waypoints, FileFormats.KmlFile);
+                        break;
+                    case 6:
+                        Serializer.Serialize(sf.FileName, trip.Waypoints, FileFormats.GpxFile);
+                        break;
+                    case 7:
+                        Serializer.Serialize(sf.FileName, trip.Waypoints, FileFormats.KmzFile);
+                        break;
+                    case 8:
+                        Serializer.Serialize(sf.FileName, trip.Waypoints, FileFormats.OsmFile);
+                        break;
+                    case 9:
+                        Serializer.Serialize(sf.FileName, trip.Waypoints, FileFormats.NmeaFile);
+                        break;
+                    case 10:
+                        Serializer.Serialize(sf.FileName, trip.Waypoints, FileFormats.CsvFile);
+                        break;
+                    case 11:
+                        Serializer.Serialize(sf.FileName, trip.Waypoints, FileFormats.TxtFile);
+                        break;
+                    case 12:
+                        Program.winMain.BeginOperation();
+                        Action act = new Action(() =>
+                        {
+                            Serializer.Serialize(sf.FileName, trip.Waypoints, FileFormats.AddressList, Program.winMain.setCurrentOperation);
+                            Program.winMain.EndOperation();
+                        });
+                        new Task(act).Start();
+                        break;
+                }
+            }
+            Vars.Options.Common.LastFileSaveDirectory = Path.GetDirectoryName(sf.FileName);
+            Vars.Options.Common.LastSaveExtensionNumberSaveOneTrack = sf.FilterIndex;
         }
 
         /// <summary>

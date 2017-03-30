@@ -32,7 +32,6 @@ namespace TrackConverter.UI.Map
     /// </summary>
     public partial class FormMap : FormMapBase
     {
-
         #region Конструкторы
 
         /// <summary>
@@ -1323,16 +1322,16 @@ namespace TrackConverter.UI.Map
         /// <param name="e"></param>
         private void FormMap_Load(object sender, EventArgs e)
         {
-            GeoFile gf = null;
+            TripRouteFile gf = null;
             try
             {
                 if (Vars.Options.Map.RestoreRoutesWaypoints && File.Exists(Application.StartupPath + Resources.saveLast_file))
-                    gf = Serializer.DeserializeGeoFile(Application.StartupPath + Resources.saveLast_file);
+                    gf = Serializer.DeserializeTripRouteFile(Application.StartupPath + Resources.saveLast_file);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 Vars.Options.Map.RestoreRoutesWaypoints = false;
-                MessageBox.Show("Произошла ошибка при восстановлении точек или маршрутов. Восстановление отключено.");
+                MessageBox.Show("Произошла ошибка при восстановлении точек или маршрутов.\r\n"+ex.Message+"\r\nВосстановление отключено.");
             }
 
             //обновление списка отображаемых маршрутов
@@ -1341,7 +1340,7 @@ namespace TrackConverter.UI.Map
             //загрузка сохраненных маршрутов с послденего запуска
             else
              if (gf != null)
-                Program.winConverter.AddRouteToList(gf.Routes);
+                Program.winConverter.AddRouteToList(gf.DaysRoutes);
 
             //обновление путевых точек
             if (waypoints != null)
@@ -1850,6 +1849,7 @@ namespace TrackConverter.UI.Map
 
         #endregion
 
+        #region внутренние методы работы интерфейса
 
         /// <summary>
         /// обновление списка точек после перемещения точки
@@ -2102,6 +2102,7 @@ namespace TrackConverter.UI.Map
             }
         }
 
+        #endregion
 
         #region взаимодействие
 
@@ -2320,6 +2321,7 @@ namespace TrackConverter.UI.Map
         /// начало выбора точки на карте
         /// </summary>
         /// <param name="after"></param>
+        /// <param name="cancelAct">действие при отмене выделения точки</param>
         internal void BeginSelectPoint(Action<TrackPoint> after, Action cancelAct)
         {
             this.isSelectingPoint = true;
@@ -2337,7 +2339,7 @@ namespace TrackConverter.UI.Map
         /// <param name="wpts"></param>
         public void EndEditWaypoints(BaseTrack wpts)
         {
-            waypoints = wpts;
+            waypoints = wpts as TrackFile;
             this.DeselectPoints();
             this.ShowWaypoints(waypoints, true, false);
         }
@@ -2365,14 +2367,16 @@ namespace TrackConverter.UI.Map
                     return true;
                 }
 
-            TrackFileList tracks = new TrackFileList();
-            foreach (BaseTrack tf in Program.winConverter.Tracks)
-                if (tf.IsVisible)
-                    tracks.Add(tf);
+            if (waypoints != null && waypoints.Count > 0 && Program.winConverter.Tracks != null && Program.winConverter.Tracks.Count > 0)
+            {
+                TrackFileList tracks = new TrackFileList();
+                foreach (BaseTrack tf in Program.winConverter.Tracks)
+                    if (tf.IsVisible)
+                        tracks.Add(tf);
 
-            GeoFile gf = new GeoFile(tracks, waypoints);
-            Serializer.Serialize(Application.StartupPath + Resources.saveLast_file, gf, FileFormats.KmlFile);
-
+                TripRouteFile gf = new TripRouteFile(tracks, waypoints);
+                Serializer.Serialize(Application.StartupPath + Resources.saveLast_file, gf, FileFormats.TrrFile);
+            }
             return false;
         }
 

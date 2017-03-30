@@ -30,6 +30,18 @@ namespace TrackConverter.Lib.Tracking
         }
 
         /// <summary>
+        /// создаёт путешествие с заданными точками и маршрутами
+        /// </summary>
+        /// <param name="tracks">маршруты</param>
+        /// <param name="waypoints">путевые точки</param>
+        public TripRouteFile(TrackFileList tracks, TrackFile waypoints)
+        {
+            Track = new List<TrackPoint>();
+            this.DaysRoutes = tracks;
+            this.Waypoints = waypoints;
+        }
+
+        /// <summary>
         /// весь трек
         /// </summary>
         public TrackFile TotalTrack { get { return totalTrack; } }
@@ -519,6 +531,11 @@ namespace TrackConverter.Lib.Tracking
         {
             return ((IEnumerable<TrackPoint>)this.totalTrack).GetEnumerator();
         }
+
+        /// <summary>
+        /// перечислитель
+        /// </summary>
+        /// <returns></returns>
         public override IEnumerator<TrackPoint> GetEnumerator()
         {
             return totalTrack.GetEnumerator();

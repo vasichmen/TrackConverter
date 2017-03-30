@@ -35,6 +35,9 @@ namespace TrackConverter.Lib.Data
                 case LinkShorterProvider.Bitly:
                     shorter = new Bitly();
                     break;
+                case LinkShorterProvider.VK:
+                    shorter = new VK();
+                    break;
                 default:
                     throw new ApplicationException("Данный поставщик не поддерживается: " + this.provider);
             }

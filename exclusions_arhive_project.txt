@@ -6,3 +6,4 @@
 *.hdr
 *.flt
 *.gcdb
+*TrackConverter_*.zip

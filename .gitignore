@@ -245,6 +245,7 @@ ModelManifest.xml
 *.flt
 *.sq3
 *.hdr
+*TrackConverter*.zip
 *topo2.bin
 *der.gcdb
 *ata.gmdb

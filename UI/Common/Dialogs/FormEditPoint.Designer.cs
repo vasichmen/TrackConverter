@@ -441,7 +441,9 @@
             "Привал",
             "Место для ночёвки",
             "Финиш",
-            "Точка"});
+            "Точка",
+            "Магазин",
+            "Источник воды"});
             this.comboBoxPointType.Location = new System.Drawing.Point(99, 162);
             this.comboBoxPointType.Name = "comboBoxPointType";
             this.comboBoxPointType.Size = new System.Drawing.Size(150, 21);

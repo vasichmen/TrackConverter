@@ -20,6 +20,10 @@ namespace TrackConverter.Lib.Tracking
         /// список точек
         /// </summary>
         protected List<TrackPoint> Track;
+
+        /// <summary>
+        /// длина маршурта в км или NaN, если длина еще не вычислена
+        /// </summary>
         protected double distance = double.NaN;
 
 
@@ -308,6 +312,10 @@ namespace TrackConverter.Lib.Tracking
             this.distance = newDist;
         }
 
+        /// <summary>
+        /// перечислитель
+        /// </summary>
+        /// <returns></returns>
         public abstract IEnumerator<TrackPoint> GetEnumerator();
 
         IEnumerator IEnumerable.GetEnumerator()

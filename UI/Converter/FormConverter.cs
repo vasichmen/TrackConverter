@@ -114,7 +114,7 @@ namespace TrackConverter.UI.Converter
                     {
                         Program.winMain.EndOperation();
                         Program.winMap.Clear();
-                        Program.winMap.ShowWaypoints(pts, true, true);
+                        Program.winMap.ShowWaypoints(pts, false, false);
                     }));
                 }));
                 ts.Start();
@@ -328,7 +328,7 @@ namespace TrackConverter.UI.Converter
                                     GeoFile gf = Serializer.DeserializeGeoFile(arg);
                                     this.Tracks = gf.Routes;
                                     Program.winMap.Clear();
-                                    Program.winMap.ShowWaypoints(gf.Waypoints, true, true);
+                                    Program.winMap.ShowWaypoints(gf.Waypoints, false, false);
                                     RefreshData();
                                     break;
                                 case ".wpt":
@@ -554,41 +554,50 @@ namespace TrackConverter.UI.Converter
                     fw.Show(this);
                     ParallelLoopResult pr = Parallel.ForEach<BaseTrack>(Tracks, new Action<BaseTrack>((BaseTrack tf) =>
                     {
-                        string basename = fb.SelectedPath + "\\" + tf.FileName + "_" + Guid.NewGuid().ToString();
+                        string nm = "";
+                        if (string.IsNullOrEmpty(tf.Name))
+                            if (string.IsNullOrEmpty(tf.FileName))
+                                nm = Guid.NewGuid().ToString();
+                            else
+                                nm = tf.FileName;
+                        else
+                            nm = tf.Name;
+
+                        string basename = fb.SelectedPath + "\\" + nm;
                         switch (rt.Result)
                         {
                             case "wpt":
                                 Serializer.Serialize(basename + ".wpt", tf, FileFormats.WptFile);
                                 break;
                             case "crd":
-                                Serializer.Serialize(basename + ".wpt", tf, FileFormats.CrdFile);
+                                Serializer.Serialize(basename + ".crd", tf, FileFormats.CrdFile);
                                 break;
                             case "plt":
-                                Serializer.Serialize(basename + ".wpt", tf, FileFormats.PltFile);
+                                Serializer.Serialize(basename + ".plt", tf, FileFormats.PltFile);
                                 break;
                             case "rt2":
-                                Serializer.Serialize(basename + ".wpt", tf, FileFormats.Rt2File);
+                                Serializer.Serialize(basename + ".rt2", tf, FileFormats.Rt2File);
                                 break;
                             case "gpx":
-                                Serializer.Serialize(basename + ".wpt", tf, FileFormats.GpxFile);
+                                Serializer.Serialize(basename + ".gpx", tf, FileFormats.GpxFile);
                                 break;
                             case "kml":
-                                Serializer.Serialize(basename + ".wpt", tf, FileFormats.KmlFile);
+                                Serializer.Serialize(basename + ".kml", tf, FileFormats.KmlFile);
                                 break;
                             case "kmz":
-                                Serializer.Serialize(basename + ".wpt", tf, FileFormats.KmzFile);
+                                Serializer.Serialize(basename + ".kmz", tf, FileFormats.KmzFile);
                                 break;
                             case "osm":
-                                Serializer.Serialize(basename + ".wpt", tf, FileFormats.OsmFile);
+                                Serializer.Serialize(basename + ".osm", tf, FileFormats.OsmFile);
                                 break;
                             case "nmea":
-                                Serializer.Serialize(basename + ".wpt", tf, FileFormats.NmeaFile);
+                                Serializer.Serialize(basename + ".nmea", tf, FileFormats.NmeaFile);
                                 break;
                             case "csv":
-                                Serializer.Serialize(basename + ".wpt", tf, FileFormats.CsvFile);
+                                Serializer.Serialize(basename + ".csv", tf, FileFormats.CsvFile);
                                 break;
                             case "txt":
-                                Serializer.Serialize(basename + ".wpt", tf, FileFormats.TxtFile);
+                                Serializer.Serialize(basename + ".txt", tf, FileFormats.TxtFile);
                                 break;
                             default:
                                 MessageBox.Show(this, "Данный формат не поддерживается: " + rt.Result, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -1502,7 +1511,6 @@ namespace TrackConverter.UI.Converter
 
         private void button1_Click(object sender, EventArgs e)
         {
-
 
 
             double rise = 0, set = 0;

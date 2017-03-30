@@ -66,7 +66,7 @@ namespace TrackConverter.UI.Map
         /// <summary>
         /// список загруженных путевых точек
         /// </summary>
-        public BaseTrack waypoints;
+        public TrackFile waypoints;
 
         /// <summary>
         /// создаваемый маршрут

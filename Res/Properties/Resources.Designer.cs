@@ -328,7 +328,7 @@ namespace TrackConverter.Res.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на \saveRoutes.kml.
+        ///   Ищет локализованную строку, похожую на \saveRoutes.trr.
         /// </summary>
         public static string saveLast_file {
             get {
@@ -352,6 +352,15 @@ namespace TrackConverter.Res.Properties {
         public static string temp_directory {
             get {
                 return ResourceManager.GetString("temp_directory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на 7a9588127a9588127aca2bb0b07acffa5f77a957a958812225c2a32c3c076b4a82f95c8.
+        /// </summary>
+        public static string VK_access_token {
+            get {
+                return ResourceManager.GetString("VK_access_token", resourceCulture);
             }
         }
         

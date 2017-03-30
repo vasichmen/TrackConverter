@@ -98,7 +98,6 @@
             this.linkLabelOpenBrowser.TabStop = true;
             this.linkLabelOpenBrowser.Text = "Открыть в браузере";
             this.linkLabelOpenBrowser.Visible = false;
-            this.linkLabelOpenBrowser.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelOpenBrowser_LinkClicked);
             // 
             // buttonShortLink
             // 

@@ -84,7 +84,12 @@ namespace TrackConverter
         /// <summary>
         /// Bitly
         /// </summary>
-        Bitly
+        Bitly,
+
+        /// <summary>
+        /// сокращение ссылок вконтакте
+        /// </summary>
+        VK
     }
 
     /// <summary>
@@ -370,7 +375,17 @@ namespace TrackConverter
         /// <summary>
         /// точка без типа
         /// </summary>
-        None
+        None,
+
+        /// <summary>
+        /// магазин
+        /// </summary>
+        Shop,
+
+        /// <summary>
+        /// источник воды
+        /// </summary>
+        WaterSource
     }
 
     /// <summary>

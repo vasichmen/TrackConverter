@@ -127,6 +127,7 @@
             this.Controls.Add(this.textBoxChanges);
             this.Controls.Add(this.buttonUpdate);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MinimumSize = new System.Drawing.Size(324, 329);
             this.Name = "FormUpdateDialog";
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;

@@ -199,6 +199,13 @@ namespace TrackConverter.UI.Tools
                 case LinkShorterProvider.Qps:
                     comboBoxLinkShorter.SelectedIndex = 1;
                     break;
+                case LinkShorterProvider.VK:
+                    comboBoxLinkShorter.SelectedIndex = 2;
+                    break;
+                case LinkShorterProvider.Bitly:
+                    comboBoxLinkShorter.SelectedIndex = 3;
+                    break;
+                default: throw new ApplicationException("неизвестный поставщик поиска " + Vars.Options.Services.LinkShorterProvider);
             }
 
             //кэш ФС при построении
@@ -351,6 +358,10 @@ namespace TrackConverter.UI.Tools
                 Vars.Options.Services.LinkShorterProvider = LinkShorterProvider.Clck;
             if (comboBoxLinkShorter.SelectedIndex == 1)
                 Vars.Options.Services.LinkShorterProvider = LinkShorterProvider.Qps;
+            if (comboBoxLinkShorter.SelectedIndex == 2)
+                Vars.Options.Services.LinkShorterProvider = LinkShorterProvider.VK;
+            if (comboBoxLinkShorter.SelectedIndex == 3)
+                Vars.Options.Services.LinkShorterProvider = LinkShorterProvider.Bitly;
 
 
             #endregion

@@ -1,4 +1,5 @@
 ﻿1. Enums добавить перечисление
+2. FormEditPoint comboBoxPointType добавить в Items
 2. FormEditPoint перечисление в конструкторе
 3. FormEditPoint.SaveButtonClick перечисление
 4. FormEditPoint.ComboBoxPointType_SelectedIndexChanged перечисление

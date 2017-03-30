@@ -34,7 +34,6 @@ namespace TrackConverter.UI.Common.Dialogs
         /// создает окно для редактирования точки
         /// </summary>
         /// <param name="point"></param>
-        /// <param name="cancelAction">действие при отмене редактирования</param>
         public FormEditPoint(TrackPoint point)
         {
             InitializeComponent();
@@ -104,7 +103,13 @@ namespace TrackConverter.UI.Common.Dialogs
                         break;
                     case RouteWaypointType.Finish:
                         comboBoxPointType.SelectedIndex = 5;
-                        break;    
+                        break;
+                    case RouteWaypointType.WaterSource:
+                        comboBoxPointType.SelectedIndex = 6;
+                        break;
+                    case RouteWaypointType.Shop:
+                        comboBoxPointType.SelectedIndex = 7;
+                        break;
                     default: throw new ApplicationException("неизвестный индекс точки " + comboBoxPointType.SelectedIndex);
                 }
             }
@@ -169,7 +174,13 @@ namespace TrackConverter.UI.Common.Dialogs
                     break;
                 case 6:
                     type = RouteWaypointType.None;
-                    break; 
+                    break;
+                case 7:
+                    type = RouteWaypointType.Shop;
+                    break;
+                case 8:
+                    type = RouteWaypointType.WaterSource;
+                    break;
                 default: throw new ApplicationException("неизвестный индекс точки " + comboBoxPointType.SelectedIndex);
             }
             Result.PointType = type;
@@ -329,6 +340,12 @@ namespace TrackConverter.UI.Common.Dialogs
                     break;
                 case 6:
                     comboBoxSelectImage.SelectedIndex = 0; //просто точка
+                    break;
+                case 7:
+                    comboBoxSelectImage.SelectedIndex = 22; //магазин
+                    break;
+                case 8:
+                    comboBoxSelectImage.SelectedIndex = 20; //источник воды
                     break;
             }
         }

@@ -254,6 +254,8 @@ namespace TrackConverter.Lib.Tracking
                     case RouteWaypointType.None: return "Точка";
                     case RouteWaypointType.Overnight: return "Ночёвка";
                     case RouteWaypointType.Start: return "Старт";
+                    case RouteWaypointType.WaterSource: return "Источник воды";
+                    case RouteWaypointType.Shop: return "Магазин";
                     default: throw new ApplicationException("неизвестный тип точки " + this.PointType);
                 }
             }
