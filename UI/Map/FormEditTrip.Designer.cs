@@ -54,37 +54,37 @@
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
-            this.buttonLoadElevations = new System.Windows.Forms.Button();
-            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
-            this.flowLayoutPanel3 = new System.Windows.Forms.FlowLayoutPanel();
-            this.flowLayoutPanel4 = new System.Windows.Forms.FlowLayoutPanel();
-            this.buttonWptFromFile = new System.Windows.Forms.Button();
-            this.buttonAddWaypoint = new System.Windows.Forms.Button();
-            this.buttonExportWaypoints = new System.Windows.Forms.Button();
-            this.buttonAddDay = new System.Windows.Forms.Button();
-            this.buttonAddDayFromFile = new System.Windows.Forms.Button();
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
             this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
             this.flowLayoutPanel5 = new System.Windows.Forms.FlowLayoutPanel();
+            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
+            this.buttonLoadElevations = new System.Windows.Forms.Button();
+            this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
+            this.flowLayoutPanel3 = new System.Windows.Forms.FlowLayoutPanel();
+            this.buttonWptFromFile = new System.Windows.Forms.Button();
+            this.flowLayoutPanel4 = new System.Windows.Forms.FlowLayoutPanel();
+            this.buttonAddWaypoint = new System.Windows.Forms.Button();
+            this.buttonExportWaypoints = new System.Windows.Forms.Button();
             this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
-            this.flowLayoutPanel6 = new System.Windows.Forms.FlowLayoutPanel();
             this.flowLayoutPanel7 = new System.Windows.Forms.FlowLayoutPanel();
+            this.buttonAddDayFromFile = new System.Windows.Forms.Button();
+            this.flowLayoutPanel6 = new System.Windows.Forms.FlowLayoutPanel();
+            this.buttonAddDay = new System.Windows.Forms.Button();
             this.buttonExportDays = new System.Windows.Forms.Button();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewDays)).BeginInit();
             this.contextMenuStripDays.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewWaypoints)).BeginInit();
             this.contextMenuStripWaypoints.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
+            this.tableLayoutPanel3.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
             this.flowLayoutPanel3.SuspendLayout();
             this.flowLayoutPanel4.SuspendLayout();
-            this.tableLayoutPanel3.SuspendLayout();
             this.tableLayoutPanel4.SuspendLayout();
-            this.flowLayoutPanel6.SuspendLayout();
             this.flowLayoutPanel7.SuspendLayout();
+            this.flowLayoutPanel6.SuspendLayout();
             this.SuspendLayout();
             // 
             // buttonCancel
@@ -319,6 +319,35 @@
             this.tableLayoutPanel1.Size = new System.Drawing.Size(582, 354);
             this.tableLayoutPanel1.TabIndex = 60;
             // 
+            // tableLayoutPanel3
+            // 
+            this.tableLayoutPanel3.ColumnCount = 2;
+            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel3.Controls.Add(this.flowLayoutPanel2, 1, 0);
+            this.tableLayoutPanel3.Controls.Add(this.flowLayoutPanel5, 0, 0);
+            this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel3.Location = new System.Drawing.Point(499, 3);
+            this.tableLayoutPanel3.Name = "tableLayoutPanel3";
+            this.tableLayoutPanel3.RowCount = 1;
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel3.Size = new System.Drawing.Size(80, 14);
+            this.tableLayoutPanel3.TabIndex = 64;
+            // 
+            // flowLayoutPanel2
+            // 
+            this.flowLayoutPanel2.Location = new System.Drawing.Point(43, 3);
+            this.flowLayoutPanel2.Name = "flowLayoutPanel2";
+            this.flowLayoutPanel2.Size = new System.Drawing.Size(34, 8);
+            this.flowLayoutPanel2.TabIndex = 0;
+            // 
+            // flowLayoutPanel5
+            // 
+            this.flowLayoutPanel5.Location = new System.Drawing.Point(3, 3);
+            this.flowLayoutPanel5.Name = "flowLayoutPanel5";
+            this.flowLayoutPanel5.Size = new System.Drawing.Size(34, 8);
+            this.flowLayoutPanel5.TabIndex = 1;
+            // 
             // flowLayoutPanel1
             // 
             this.flowLayoutPanel1.Controls.Add(this.buttonSave);
@@ -363,16 +392,6 @@
             this.flowLayoutPanel3.Size = new System.Drawing.Size(115, 54);
             this.flowLayoutPanel3.TabIndex = 0;
             // 
-            // flowLayoutPanel4
-            // 
-            this.flowLayoutPanel4.Controls.Add(this.buttonAddWaypoint);
-            this.flowLayoutPanel4.Controls.Add(this.buttonExportWaypoints);
-            this.flowLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flowLayoutPanel4.Location = new System.Drawing.Point(3, 3);
-            this.flowLayoutPanel4.Name = "flowLayoutPanel4";
-            this.flowLayoutPanel4.Size = new System.Drawing.Size(115, 54);
-            this.flowLayoutPanel4.TabIndex = 1;
-            // 
             // buttonWptFromFile
             // 
             this.buttonWptFromFile.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
@@ -384,6 +403,17 @@
             this.buttonWptFromFile.Text = "Добавить из файла";
             this.toolTip1.SetToolTip(this.buttonWptFromFile, "Загрузить список путевых точек из файла");
             this.buttonWptFromFile.UseVisualStyleBackColor = true;
+            this.buttonWptFromFile.Click += new System.EventHandler(this.buttonWptFromFile_Click);
+            // 
+            // flowLayoutPanel4
+            // 
+            this.flowLayoutPanel4.Controls.Add(this.buttonAddWaypoint);
+            this.flowLayoutPanel4.Controls.Add(this.buttonExportWaypoints);
+            this.flowLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.flowLayoutPanel4.Location = new System.Drawing.Point(3, 3);
+            this.flowLayoutPanel4.Name = "flowLayoutPanel4";
+            this.flowLayoutPanel4.Size = new System.Drawing.Size(115, 54);
+            this.flowLayoutPanel4.TabIndex = 1;
             // 
             // buttonAddWaypoint
             // 
@@ -397,6 +427,7 @@
             this.buttonAddWaypoint.Text = "Добавить";
             this.toolTip1.SetToolTip(this.buttonAddWaypoint, "Добавить точку на карте");
             this.buttonAddWaypoint.UseVisualStyleBackColor = true;
+            this.buttonAddWaypoint.Click += new System.EventHandler(this.buttonAddWaypoint_Click);
             // 
             // buttonExportWaypoints
             // 
@@ -411,60 +442,6 @@
             this.toolTip1.SetToolTip(this.buttonExportWaypoints, "Добавить точку на карте");
             this.buttonExportWaypoints.UseVisualStyleBackColor = true;
             this.buttonExportWaypoints.Click += new System.EventHandler(this.buttonExportWaypoints_Click);
-            // 
-            // buttonAddDay
-            // 
-            this.buttonAddDay.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.buttonAddDay.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.buttonAddDay.Location = new System.Drawing.Point(2, 2);
-            this.buttonAddDay.Margin = new System.Windows.Forms.Padding(2);
-            this.buttonAddDay.Name = "buttonAddDay";
-            this.buttonAddDay.Size = new System.Drawing.Size(108, 23);
-            this.buttonAddDay.TabIndex = 74;
-            this.buttonAddDay.Text = "Добавить";
-            this.toolTip1.SetToolTip(this.buttonAddDay, "Создать маршрут на карте");
-            this.buttonAddDay.UseVisualStyleBackColor = true;
-            // 
-            // buttonAddDayFromFile
-            // 
-            this.buttonAddDayFromFile.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.buttonAddDayFromFile.Location = new System.Drawing.Point(2, 2);
-            this.buttonAddDayFromFile.Margin = new System.Windows.Forms.Padding(2);
-            this.buttonAddDayFromFile.Name = "buttonAddDayFromFile";
-            this.buttonAddDayFromFile.Size = new System.Drawing.Size(109, 49);
-            this.buttonAddDayFromFile.TabIndex = 73;
-            this.buttonAddDayFromFile.Text = "Добавить из файла";
-            this.toolTip1.SetToolTip(this.buttonAddDayFromFile, "Загрузить дневной маршурт из файла");
-            this.buttonAddDayFromFile.UseVisualStyleBackColor = true;
-            // 
-            // tableLayoutPanel3
-            // 
-            this.tableLayoutPanel3.ColumnCount = 2;
-            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel3.Controls.Add(this.flowLayoutPanel2, 1, 0);
-            this.tableLayoutPanel3.Controls.Add(this.flowLayoutPanel5, 0, 0);
-            this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel3.Location = new System.Drawing.Point(499, 3);
-            this.tableLayoutPanel3.Name = "tableLayoutPanel3";
-            this.tableLayoutPanel3.RowCount = 1;
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel3.Size = new System.Drawing.Size(80, 14);
-            this.tableLayoutPanel3.TabIndex = 64;
-            // 
-            // flowLayoutPanel2
-            // 
-            this.flowLayoutPanel2.Location = new System.Drawing.Point(43, 3);
-            this.flowLayoutPanel2.Name = "flowLayoutPanel2";
-            this.flowLayoutPanel2.Size = new System.Drawing.Size(34, 8);
-            this.flowLayoutPanel2.TabIndex = 0;
-            // 
-            // flowLayoutPanel5
-            // 
-            this.flowLayoutPanel5.Location = new System.Drawing.Point(3, 3);
-            this.flowLayoutPanel5.Name = "flowLayoutPanel5";
-            this.flowLayoutPanel5.Size = new System.Drawing.Size(34, 8);
-            this.flowLayoutPanel5.TabIndex = 1;
             // 
             // tableLayoutPanel4
             // 
@@ -481,6 +458,28 @@
             this.tableLayoutPanel4.Size = new System.Drawing.Size(242, 60);
             this.tableLayoutPanel4.TabIndex = 65;
             // 
+            // flowLayoutPanel7
+            // 
+            this.flowLayoutPanel7.Controls.Add(this.buttonAddDayFromFile);
+            this.flowLayoutPanel7.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.flowLayoutPanel7.Location = new System.Drawing.Point(124, 3);
+            this.flowLayoutPanel7.Name = "flowLayoutPanel7";
+            this.flowLayoutPanel7.Size = new System.Drawing.Size(115, 54);
+            this.flowLayoutPanel7.TabIndex = 1;
+            // 
+            // buttonAddDayFromFile
+            // 
+            this.buttonAddDayFromFile.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.buttonAddDayFromFile.Location = new System.Drawing.Point(2, 2);
+            this.buttonAddDayFromFile.Margin = new System.Windows.Forms.Padding(2);
+            this.buttonAddDayFromFile.Name = "buttonAddDayFromFile";
+            this.buttonAddDayFromFile.Size = new System.Drawing.Size(109, 49);
+            this.buttonAddDayFromFile.TabIndex = 73;
+            this.buttonAddDayFromFile.Text = "Добавить из файла";
+            this.toolTip1.SetToolTip(this.buttonAddDayFromFile, "Загрузить дневной маршурт из файла");
+            this.buttonAddDayFromFile.UseVisualStyleBackColor = true;
+            this.buttonAddDayFromFile.Click += new System.EventHandler(this.buttonAddDayFromFile_Click);
+            // 
             // flowLayoutPanel6
             // 
             this.flowLayoutPanel6.Controls.Add(this.buttonAddDay);
@@ -491,14 +490,19 @@
             this.flowLayoutPanel6.Size = new System.Drawing.Size(115, 54);
             this.flowLayoutPanel6.TabIndex = 0;
             // 
-            // flowLayoutPanel7
+            // buttonAddDay
             // 
-            this.flowLayoutPanel7.Controls.Add(this.buttonAddDayFromFile);
-            this.flowLayoutPanel7.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flowLayoutPanel7.Location = new System.Drawing.Point(124, 3);
-            this.flowLayoutPanel7.Name = "flowLayoutPanel7";
-            this.flowLayoutPanel7.Size = new System.Drawing.Size(115, 54);
-            this.flowLayoutPanel7.TabIndex = 1;
+            this.buttonAddDay.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.buttonAddDay.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.buttonAddDay.Location = new System.Drawing.Point(2, 2);
+            this.buttonAddDay.Margin = new System.Windows.Forms.Padding(2);
+            this.buttonAddDay.Name = "buttonAddDay";
+            this.buttonAddDay.Size = new System.Drawing.Size(108, 23);
+            this.buttonAddDay.TabIndex = 74;
+            this.buttonAddDay.Text = "Добавить";
+            this.toolTip1.SetToolTip(this.buttonAddDay, "Создать маршрут на карте");
+            this.buttonAddDay.UseVisualStyleBackColor = true;
+            this.buttonAddDay.Click += new System.EventHandler(this.buttonAddDay_Click);
             // 
             // buttonExportDays
             // 
@@ -532,14 +536,14 @@
             this.contextMenuStripWaypoints.ResumeLayout(false);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
+            this.tableLayoutPanel3.ResumeLayout(false);
             this.flowLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel2.ResumeLayout(false);
             this.flowLayoutPanel3.ResumeLayout(false);
             this.flowLayoutPanel4.ResumeLayout(false);
-            this.tableLayoutPanel3.ResumeLayout(false);
             this.tableLayoutPanel4.ResumeLayout(false);
-            this.flowLayoutPanel6.ResumeLayout(false);
             this.flowLayoutPanel7.ResumeLayout(false);
+            this.flowLayoutPanel6.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }

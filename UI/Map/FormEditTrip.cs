@@ -495,7 +495,7 @@ namespace TrackConverter.UI.Map
                         else
                             nm = tf.Name;
 
-                        string basename = fb.SelectedPath + "\\"+ nm;
+                        string basename = fb.SelectedPath + "\\" + nm;
                         switch (rt.Result)
                         {
                             case "wpt":
@@ -537,9 +537,9 @@ namespace TrackConverter.UI.Map
                         }
                         Vars.Options.Common.LastSaveSeparateExtension = rt.Result;
                     }));
+                    MessageBox.Show("Файлы сoхранены");
                 }
             }
-            MessageBox.Show("Файлы сoхранены");
         }
 
         /// <summary>
@@ -618,9 +618,9 @@ namespace TrackConverter.UI.Map
                         new Task(act).Start();
                         break;
                 }
+                Vars.Options.Common.LastFileSaveDirectory = Path.GetDirectoryName(sf.FileName);
+                Vars.Options.Common.LastSaveExtensionNumberSaveOneTrack = sf.FilterIndex;
             }
-            Vars.Options.Common.LastFileSaveDirectory = Path.GetDirectoryName(sf.FileName);
-            Vars.Options.Common.LastSaveExtensionNumberSaveOneTrack = sf.FilterIndex;
         }
 
         /// <summary>

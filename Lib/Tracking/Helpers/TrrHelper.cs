@@ -135,7 +135,7 @@ namespace TrackConverter.Lib.Tracking.Helpers
             List<info> infs = JsonConvert.DeserializeObject<List<info>>(data[1]);
 
             if (array.Count != infs.Count)
-                throw new ApplicationException("В файле не фватает информации о дневных маршрутах");
+                throw new ApplicationException("В файле не хватает информации о дневных маршрутах");
             for (int i = 0; i < array.Count; i++)
             {
                 array[i].Color = infs[i].Color;
