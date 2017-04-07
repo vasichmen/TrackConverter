@@ -128,7 +128,7 @@ namespace TrackConverter.Lib.Tracking.Helpers
             if (data.Length != 2)
                 throw new ApplicationException("Файл поврежден");
 
-            //маршурты
+            //маршруты
             List<TrackFile> array = JsonConvert.DeserializeObject<List<TrackFile>>(data[0]);
 
             //информация

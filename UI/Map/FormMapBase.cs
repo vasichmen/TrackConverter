@@ -383,7 +383,7 @@ namespace TrackConverter.UI.Map
         /// <param name="lay">слой</param>
         /// <param name="icon">картинка</param>
         /// <param name="mType">тип  маркера</param>
-        /// <param name="pType">тип точки при прокладке маршурта</param>
+        /// <param name="pType">тип точки при прокладке маршрута</param>
         /// <param name="ttMode">тип всплывающей подсказки</param>
         protected void ShowWaypoint(TrackPoint point, GMapOverlay lay, Icon icon, MarkerTypes mType, PathingType pType, MarkerTooltipMode ttMode)
         {

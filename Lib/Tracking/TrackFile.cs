@@ -582,9 +582,9 @@ namespace TrackConverter.Lib.Tracking
         }
 
         /// <summary>
-        /// возвращает часть маршурта
+        /// возвращает часть маршрута
         /// </summary>
-        /// <param name="i">индекс первой точки в маршурте</param>
+        /// <param name="i">индекс первой точки в маршруте</param>
         /// <param name="length">количество копируемых точек</param>
         /// <returns></returns>
         internal override TrackFile GetRange(int i, int length)

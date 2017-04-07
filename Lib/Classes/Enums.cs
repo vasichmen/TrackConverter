@@ -338,7 +338,7 @@ namespace TrackConverter
     #endregion
 
     /// <summary>
-    /// тип точки в маршурте
+    /// тип точки в маршруте
     /// </summary>
     public enum RouteWaypointType
     {

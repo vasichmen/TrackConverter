@@ -125,7 +125,7 @@ namespace TrackConverter.UI.Map
             }
         }
 
-        #region контекстное меню списка маршуртов
+        #region контекстное меню списка маршрутов
 
         /// <summary>
         /// перед открытием
@@ -215,7 +215,7 @@ namespace TrackConverter.UI.Map
         }
 
         /// <summary>
-        /// инвертирование маршурта
+        /// инвертирование маршрута
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -376,7 +376,7 @@ namespace TrackConverter.UI.Map
         #region обработчики кнопок
 
         /// <summary>
-        /// добавление маршурта 
+        /// добавление маршрута 
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>

@@ -902,7 +902,7 @@ namespace TrackConverter.UI.Map
                         });
                         else
                         {
-                            //если не надо открывать мршрут
+                            //если не надо открывать маршрут
                             Program.winConverter.AddRouteToList(route);
                             ShowRoute(route);
                         }
@@ -1171,7 +1171,7 @@ namespace TrackConverter.UI.Map
         #region на маршруте
 
         /// <summary>
-        /// редактирование маршурта на карте из контекстного меню карты
+        /// редактирование маршрута на карте из контекстного меню карты
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -1483,7 +1483,7 @@ namespace TrackConverter.UI.Map
             #endregion
 
             #region выбор точки при редактировании путешествия
-            //если идёт выбор точки, не идёт создание маршурта и не линейка и клик не на маркере
+            //если идёт выбор точки, не идёт создание маршрута и не линейка и клик не на маркере
             if (this.isSelectingPoint && !(isCreatingRoute || isRuling) && !isMarkerClicked && !gmapControlMap.IsDragging)
             {
                 PointLatLng pt = gmapControlMap.FromLocalToLatLng(e.X, e.Y);
@@ -1595,7 +1595,7 @@ namespace TrackConverter.UI.Map
                 return;
             }
 
-            //вывод контекстного меню если не перемещается карта и мышь не на маршурте
+            //вывод контекстного меню если не перемещается карта и мышь не на маршруте
             if (e.Button == MouseButtons.Right && !gmapControlMap.IsDragging && !gmapControlMap.IsMouseOverRoute)
             {
                 if (!gmapControlMap.IsMouseOverMarker)
@@ -1783,7 +1783,7 @@ namespace TrackConverter.UI.Map
         /// <param name="e">параметры OnClick</param>
         private void gmapControlMap_OnRouteClick(GMapRoute item, MouseEventArgs e)
         {
-            //выделение по лкм если не линейка и не создание маршурта
+            //выделение по лкм если не линейка и не создание маршрута
             if (e.Button == MouseButtons.Left && !isCreatingRoute && !isRuling)
             {
                 if (item.Tag != null)
@@ -1795,7 +1795,7 @@ namespace TrackConverter.UI.Map
                 return;
             }
 
-            //контекстное меню по правой кнопке если не линейка и не создание маршурта
+            //контекстное меню по правой кнопке если не линейка и не создание маршрута
             if (e.Button == MouseButtons.Right && !isCreatingRoute && !isRuling)
             {
                 routeClicked = item;
@@ -2089,7 +2089,7 @@ namespace TrackConverter.UI.Map
                 }
                 else
                 {
-                    //если не надо открывать мршрут
+                    //если не надо открывать маршрут
                     Program.winConverter.AddRouteToList(rt);
                     Vars.currentSelectedTrack = rt;
                     RefreshData();
@@ -2155,7 +2155,7 @@ namespace TrackConverter.UI.Map
         /// <param name="lay">слой</param>
         /// <param name="icon">картинка</param>
         /// <param name="mType">тип  маркера</param>
-        /// <param name="pType">тип точки при прокладке маршурта</param>
+        /// <param name="pType">тип точки при прокладке маршрута</param>
         /// <param name="ttMode">тип всплывающей подсказки</param>
         private new void ShowWaypoint(TrackPoint point, GMapOverlay lay, Icon icon, MarkerTypes mType, PathingType pType, MarkerTooltipMode ttMode)
         {
@@ -2243,7 +2243,7 @@ namespace TrackConverter.UI.Map
         }
 
         /// <summary>
-        /// редактирование мршрута
+        /// редактирование маршрута
         /// </summary>
         /// <param name="trackFile">редактируемый маршрут</param>
         /// <param name="afterAction">Действие, выполняемое после нажатия кнопки сохранить</param>
@@ -2286,7 +2286,7 @@ namespace TrackConverter.UI.Map
         }
 
         /// <summary>
-        /// редактирование мршрута
+        /// редактирование маршрута
         /// </summary>
         /// <param name="trackFile">редактируемый маршрут</param>
         /// <param name="afterAction">Действие, выполняемое после нажатия кнопки сохранить</param>

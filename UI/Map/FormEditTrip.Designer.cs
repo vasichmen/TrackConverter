@@ -476,7 +476,7 @@
             this.buttonAddDayFromFile.Size = new System.Drawing.Size(109, 49);
             this.buttonAddDayFromFile.TabIndex = 73;
             this.buttonAddDayFromFile.Text = "Добавить из файла";
-            this.toolTip1.SetToolTip(this.buttonAddDayFromFile, "Загрузить дневной маршурт из файла");
+            this.toolTip1.SetToolTip(this.buttonAddDayFromFile, "Загрузить дневной маршрут из файла");
             this.buttonAddDayFromFile.UseVisualStyleBackColor = true;
             this.buttonAddDayFromFile.Click += new System.EventHandler(this.buttonAddDayFromFile_Click);
             // 

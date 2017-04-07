@@ -127,7 +127,7 @@ namespace TrackConverter.Lib.Mathematic.Routing.FullSearchElements
             //            res &= false;
             //            return res;
             //        }
-            //        cur.Add(newStart, current); //добавление ребра в текущий маршурт
+            //        cur.Add(newStart, current); //добавление ребра в текущий маршрут
             //    }
 
             //    // если есть цепочка, начинающаяся с этого ребра, длиной больше одного ребра

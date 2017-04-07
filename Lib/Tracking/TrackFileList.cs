@@ -25,7 +25,7 @@ namespace TrackConverter.Lib.Tracking
         public TrackFileList() { }
 
         /// <summary>
-        /// создает новый список маршуртов и добавляет первый маршрут
+        /// создает новый список маршрутов и добавляет первый маршрут
         /// </summary>
         /// <param name="trackFile">маршрут для добавления в список</param>
         public TrackFileList(BaseTrack trackFile)

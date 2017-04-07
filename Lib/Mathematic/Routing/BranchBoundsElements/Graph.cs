@@ -302,7 +302,7 @@ namespace TrackConverter.Lib.Mathematic.Routing.BranchBoundsElements
                 {
                     int newStart = current; //ищем начало следующего ребра
                     current = selectedIndexes[current]; //конец следующего ребра
-                    cur.Add(newStart, current); //добавление ребра в текущий маршурт
+                    cur.Add(newStart, current); //добавление ребра в текущий маршрут
                 }
 
                 // если есть цепочка, начинающаяся с этого ребра, длиной больше одного ребра

@@ -109,7 +109,7 @@ namespace TrackConverter.Lib.Data
                     trip.AddDay((TrackFile)GetElevation(days[i], callback));
                 return trip;
             }
-            else //если это маршурт
+            else //если это маршрут
             {
                 //еси провайдер поддерживает множетсвенные запроссы высот
                 if (provider == GeoInfoProvider.Google)

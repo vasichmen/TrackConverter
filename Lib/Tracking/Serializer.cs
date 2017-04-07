@@ -137,7 +137,7 @@ namespace TrackConverter.Lib.Tracking
         /// экспорт файлов TRR
         /// </summary>
         /// <param name="FileName">имя файла</param>
-        /// <param name="geo">маршурт</param>
+        /// <param name="geo">маршрут</param>
         /// <param name="format">формат файла</param>
         public static void Serialize(string FileName, TripRouteFile geo, FileFormats format)
         {
@@ -1632,7 +1632,7 @@ namespace TrackConverter.Lib.Tracking
         /// экспорт в формат туристического маршрта TRR
         /// </summary>
         /// <param name="fileName">имя файла</param>
-        /// <param name="tripIns">маршурт</param>
+        /// <param name="tripIns">маршрут</param>
         private static void ExportTrr(string fileName, BaseTrack tripIns)
         {
             TripRouteFile trip;

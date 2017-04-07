@@ -72,7 +72,7 @@ namespace TrackConverter.Lib.Tracking
         }
 
         /// <summary>
-        /// список путевых точек маршурта
+        /// список путевых точек маршрута
         /// </summary>
         public TrackFile Waypoints { get; set; }
 
@@ -260,9 +260,9 @@ namespace TrackConverter.Lib.Tracking
         }
 
         /// <summary>
-        /// установить в указанном индексе указанный маршурт в днях
+        /// установить в указанном индексе указанный маршрут в днях
         /// </summary>
-        /// <param name="ind">номер, по которому надо установить маршурт</param>
+        /// <param name="ind">номер, по которому надо установить маршрут</param>
         /// <param name="tr"></param>
         public void setDayRoute(int ind, TrackFile tr)
         {
@@ -298,7 +298,7 @@ namespace TrackConverter.Lib.Tracking
             {
                 totalTrack[index] = value;
 
-                //запись в маршурты по дням
+                //запись в маршруты по дням
                 int i = 0;
                 while (index > DaysRoutes[i].Count)
                 {
@@ -407,7 +407,7 @@ namespace TrackConverter.Lib.Tracking
         }
 
         /// <summary>
-        /// возвращает истину,если точка есть в маршурте
+        /// возвращает истину,если точка есть в маршруте
         /// </summary>
         /// <param name="point"></param>
         /// <returns></returns>

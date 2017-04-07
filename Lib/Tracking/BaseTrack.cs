@@ -11,7 +11,7 @@ using TrackConverter.Lib.Mathematic.Geodesy;
 namespace TrackConverter.Lib.Tracking
 {
     /// <summary>
-    /// основные свойства треков и маршуртов
+    /// основные свойства треков и маршрутов
     /// </summary>
     public abstract class BaseTrack : IEnumerable<TrackPoint>
     {
@@ -22,7 +22,7 @@ namespace TrackConverter.Lib.Tracking
         protected List<TrackPoint> Track;
 
         /// <summary>
-        /// длина маршурта в км или NaN, если длина еще не вычислена
+        /// длина маршрута в км или NaN, если длина еще не вычислена
         /// </summary>
         protected double distance = double.NaN;
 
@@ -114,7 +114,7 @@ namespace TrackConverter.Lib.Tracking
         public Color Color { get; set; }
 
         /// <summary>
-        /// если истина, то маршурт виден на карте
+        /// если истина, то маршрут виден на карте
         /// </summary>
         public bool IsVisible { get; set; }
 
@@ -133,7 +133,7 @@ namespace TrackConverter.Lib.Tracking
         #region свойства
 
         /// <summary>
-        /// чтение или запись точки в маршурт
+        /// чтение или запись точки в маршрут
         /// </summary>
         /// <param name="index"></param>
         /// <returns></returns>
@@ -155,7 +155,7 @@ namespace TrackConverter.Lib.Tracking
         public abstract List<double> AllLongitudes { get; }
 
         /// <summary>
-        /// количество точек в маршурте
+        /// количество точек в маршруте
         /// </summary>
         public abstract int Count { get; }
 
@@ -170,7 +170,7 @@ namespace TrackConverter.Lib.Tracking
         public abstract DataTable Source { get; set; }
 
         /// <summary>
-        /// время на весь маршурт
+        /// время на весь маршрут
         /// </summary>
         public abstract TimeSpan Time { get; }
 
@@ -197,7 +197,7 @@ namespace TrackConverter.Lib.Tracking
         protected abstract double CalculateDistance();
 
         /// <summary>
-        /// очистка всего маршурта
+        /// очистка всего маршрута
         /// </summary>
         public abstract void Clear();
 
@@ -306,7 +306,7 @@ namespace TrackConverter.Lib.Tracking
         /// <summary>
         /// запись поля только для чтения Distance
         /// </summary>
-        /// <param name="newDist">расстояние маршурта в километрах</param>
+        /// <param name="newDist">расстояние маршрута в километрах</param>
         public void setDistance(double newDist)
         {
             this.distance = newDist;

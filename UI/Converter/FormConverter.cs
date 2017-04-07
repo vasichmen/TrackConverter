@@ -1363,7 +1363,7 @@ namespace TrackConverter.UI.Converter
         }
 
         /// <summary>
-        /// удаление нескольких  маршуртов из списка
+        /// удаление нескольких  маршрутов из списка
         /// </summary>
         /// <param name="list"></param>
         private void DeleteRoute(TrackFileList list)
