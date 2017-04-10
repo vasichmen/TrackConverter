@@ -279,7 +279,10 @@ namespace TrackConverter.UI.Converter
                         Serializer.Serialize(sf.FileName, tf, FileFormats.CsvFile);
                         break;
                     case 12:
-                        Serializer.Serialize(sf.FileName, new TrackFileList() { tf }, FileFormats.RteFile);
+                        if (tf.GetType() == typeof(TripRouteFile))
+                            Serializer.Serialize(sf.FileName,(tf as TripRouteFile).DaysRoutes,FileFormats.RteFile);
+                        else
+                            Serializer.Serialize(sf.FileName, new TrackFileList() { tf }, FileFormats.RteFile);
                         break;
                     case 13:
                         Serializer.Serialize(sf.FileName, tf, FileFormats.TxtFile);
@@ -540,7 +543,7 @@ namespace TrackConverter.UI.Converter
         /// <param name="e"></param>
         private void SaveAllSeparateToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FormReadText rt = new FormReadText(DialogType.ReadExtension, "Bведите формат файла (wpt,crd,plt,rt2,gpx,kml,kmz,osm,nmea,txt,csv)", Vars.Options.Common.IsExtension ? Vars.Options.Common.LastSaveSeparateExtension : "", false, false, false, false);
+            FormReadText rt = new FormReadText(DialogType.ReadExtension, "Bведите формат файла (wpt,crd,plt,rt2,gpx,kml,kmz,osm,nmea,txt,csv,rte)", Vars.Options.Common.IsExtension ? Vars.Options.Common.LastSaveSeparateExtension : "", false, false, false, false);
             if (rt.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 FolderBrowserDialog fb = new FolderBrowserDialog();
@@ -598,6 +601,9 @@ namespace TrackConverter.UI.Converter
                                 break;
                             case "txt":
                                 Serializer.Serialize(basename + ".txt", tf, FileFormats.TxtFile);
+                                break;
+                            case "rte":
+                                Serializer.Serialize(basename + ".rte", tf, FileFormats.RteFile);
                                 break;
                             default:
                                 MessageBox.Show(this, "Данный формат не поддерживается: " + rt.Result, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);

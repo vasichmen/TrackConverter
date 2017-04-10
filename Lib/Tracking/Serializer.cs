@@ -78,12 +78,16 @@ namespace TrackConverter.Lib.Tracking
                 case FileFormats.TrrFile:
                     ExportTrr(FileName, track);
                     return null;
+                case FileFormats.RteFile:
+                    ExportRTE(FileName, new TrackFileList( track));
+                    return null;
                 case FileFormats.YandexLink:
                     return ExportYandex(int.Parse(FileName), track);
                 case FileFormats.WikimapiaLink:
                     return ExportWikimapia(int.Parse(FileName), track);
+                default:  throw new NotSupportedException("Неподдерживаемый формат " + format.ToString());
             }
-            throw new NotSupportedException("Неподдерживаемый формат " + format.ToString());
+           
         }
 
         /// <summary>
@@ -1541,7 +1545,7 @@ namespace TrackConverter.Lib.Tracking
             outputS.WriteLine("R,  0,R0              ,,255");
 
             int i = 1;
-            foreach (TrackFile tf in track)
+            foreach (BaseTrack tf in track)
             {
                 RteHelper.WriteTrackToRTEFile(tf, i, outputS);
                 i++;

@@ -474,7 +474,7 @@ namespace TrackConverter.UI.Map
         /// <param name="e"></param>
         private void buttonExportDays_Click(object sender, EventArgs e)
         {
-            FormReadText rt = new FormReadText(DialogType.ReadExtension, "Bведите формат файлов (wpt,crd,plt,rt2,gpx,kml,kmz,osm,nmea,txt,csv)", Vars.Options.Common.IsExtension ? Vars.Options.Common.LastSaveSeparateExtension : "", false, false, false, false);
+            FormReadText rt = new FormReadText(DialogType.ReadExtension, "Bведите формат файлов (wpt,crd,plt,rt2,gpx,kml,kmz,osm,nmea,txt,csv,rte)", Vars.Options.Common.IsExtension ? Vars.Options.Common.LastSaveSeparateExtension : "", false, false, false, false);
             if (rt.ShowDialog() == DialogResult.OK)
             {
                 FolderBrowserDialog fb = new FolderBrowserDialog();

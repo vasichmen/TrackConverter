@@ -126,6 +126,8 @@ namespace TrackConverter.UI.Map
 
             //порядок получения данных 
             GMaps.Instance.Mode = Vars.Options.Map.AccessMode;
+            GMaps.Instance.CacheOnIdleRead = true;
+            GMaps.Instance.BoostCacheEngine = true;
 
             //zoom
             gmapControlMap.Zoom = Vars.Options.Map.Zoom;

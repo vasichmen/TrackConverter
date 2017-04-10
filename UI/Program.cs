@@ -20,8 +20,10 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using GMap.NET;
 using GMap.NET.MapProviders;
 using TrackConverter.Lib.Classes;
 using TrackConverter.Lib.Classes.Options;
@@ -355,6 +357,7 @@ namespace TrackConverter.UI
         /// <param name="e"></param>
         private static void Application_ApplicationExit(object sender, EventArgs e)
         {
+            GMaps.Instance.CancelTileCaching();
             Debug.Print("Application_ApplicationExit");
             Vars.Options.Save(Application.StartupPath + Resources.options_folder); //сохранение настроек
             Debug.Print("Option saved");
@@ -373,6 +376,8 @@ namespace TrackConverter.UI
             //если требуется - очистка кэша карт
             if (Vars.clearMapCacheAfterExit)
                 Directory.Delete(Application.StartupPath + Resources.cache_directory + "\\TileDBv5", true);
+            else
+                GMaps.Instance.OptimizeMapDb(null);
 
             //если требуется перезапуск
             if (Vars.needRestart)

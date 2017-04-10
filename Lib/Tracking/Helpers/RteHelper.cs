@@ -18,7 +18,7 @@ namespace TrackConverter.Lib.Tracking.Helpers
         /// <param name="tf">трек, который надо записать</param>
         /// <param name="number">номер маршрута по порядку</param>
         /// <param name="outputS">объект StreamWriter, куда произвдится запись</param>
-        public static void WriteTrackToRTEFile(TrackFile tf, int number, StreamWriter outputS)
+        public static void WriteTrackToRTEFile(BaseTrack tf, int number, StreamWriter outputS)
         {
             //заголовок
             //<номер маршрута>,<имя маршрута>,<описание маршрута>,<цвет маршрута>

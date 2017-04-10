@@ -233,7 +233,7 @@
             this.addComparisonToolStripMenuItem,
             this.removeToolStripMenuItem});
             this.contextMenuStripDGW.Name = "contextMenuStripDGW";
-            this.contextMenuStripDGW.Size = new System.Drawing.Size(236, 202);
+            this.contextMenuStripDGW.Size = new System.Drawing.Size(236, 224);
             this.contextMenuStripDGW.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStripDGW_Opening);
             // 
             // informationToolStripMenuItem
