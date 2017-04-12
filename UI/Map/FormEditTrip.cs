@@ -573,42 +573,42 @@ namespace TrackConverter.UI.Map
 
             if (sf.ShowDialog() == DialogResult.OK)
             {
-                switch (sf.FilterIndex)
+                switch (Path.GetExtension(sf.FileName).ToLower())
                 {
-                    case 1:
+                    case ".rt2":
                         Serializer.Serialize(sf.FileName, trip.Waypoints, FileFormats.Rt2File);
                         break;
-                    case 2:
+                    case ".plt":
                         Serializer.Serialize(sf.FileName, trip.Waypoints, FileFormats.PltFile);
                         break;
-                    case 3:
+                    case ".wpt":
                         Serializer.Serialize(sf.FileName, trip.Waypoints, FileFormats.WptFile);
                         break;
-                    case 4:
+                    case ".crd":
                         Serializer.Serialize(sf.FileName, trip.Waypoints, FileFormats.CrdFile);
                         break;
-                    case 5:
+                    case ".kml":
                         Serializer.Serialize(sf.FileName, trip.Waypoints, FileFormats.KmlFile);
                         break;
-                    case 6:
+                    case ".gpx":
                         Serializer.Serialize(sf.FileName, trip.Waypoints, FileFormats.GpxFile);
                         break;
-                    case 7:
+                    case ".kmz":
                         Serializer.Serialize(sf.FileName, trip.Waypoints, FileFormats.KmzFile);
                         break;
-                    case 8:
+                    case ".osm":
                         Serializer.Serialize(sf.FileName, trip.Waypoints, FileFormats.OsmFile);
                         break;
-                    case 9:
+                    case ".nmea":
                         Serializer.Serialize(sf.FileName, trip.Waypoints, FileFormats.NmeaFile);
                         break;
-                    case 10:
+                    case ".csv":
                         Serializer.Serialize(sf.FileName, trip.Waypoints, FileFormats.CsvFile);
                         break;
-                    case 11:
+                    case ".txt":
                         Serializer.Serialize(sf.FileName, trip.Waypoints, FileFormats.TxtFile);
                         break;
-                    case 12:
+                    case ".adrs":
                         Program.winMain.BeginOperation();
                         Action act = new Action(() =>
                         {

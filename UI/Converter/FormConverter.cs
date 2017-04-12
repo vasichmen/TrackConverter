@@ -246,48 +246,48 @@ namespace TrackConverter.UI.Converter
             if (sf.ShowDialog() == DialogResult.OK)
             {
                 tf.FileName = sf.FileName;
-                switch (sf.FilterIndex)
+                switch (Path.GetExtension(sf.FileName).ToLower())
                 {
-                    case 2:
+                    case ".rt2":
                         Serializer.Serialize(sf.FileName, tf, FileFormats.Rt2File);
                         break;
-                    case 3:
+                    case ".plt":
                         Serializer.Serialize(sf.FileName, tf, FileFormats.PltFile);
                         break;
-                    case 4:
+                    case ".wpt":
                         Serializer.Serialize(sf.FileName, tf, FileFormats.WptFile);
                         break;
-                    case 5:
+                    case ".crd":
                         Serializer.Serialize(sf.FileName, tf, FileFormats.CrdFile);
                         break;
-                    case 6:
+                    case ".kml":
                         Serializer.Serialize(sf.FileName, tf, FileFormats.KmlFile);
                         break;
-                    case 7:
+                    case ".gpx":
                         Serializer.Serialize(sf.FileName, tf, FileFormats.GpxFile);
                         break;
-                    case 8:
+                    case ".kmz":
                         Serializer.Serialize(sf.FileName, tf, FileFormats.KmzFile);
                         break;
-                    case 9:
+                    case ".osm":
                         Serializer.Serialize(sf.FileName, tf, FileFormats.OsmFile);
                         break;
-                    case 0:
+                    case ".nmea":
                         Serializer.Serialize(sf.FileName, tf, FileFormats.NmeaFile);
                         break;
-                    case 11:
+                    case ".csv":
                         Serializer.Serialize(sf.FileName, tf, FileFormats.CsvFile);
                         break;
-                    case 12:
+                    case ".rte":
                         if (tf.GetType() == typeof(TripRouteFile))
                             Serializer.Serialize(sf.FileName,(tf as TripRouteFile).DaysRoutes,FileFormats.RteFile);
                         else
                             Serializer.Serialize(sf.FileName, new TrackFileList() { tf }, FileFormats.RteFile);
                         break;
-                    case 13:
+                    case ".txt":
                         Serializer.Serialize(sf.FileName, tf, FileFormats.TxtFile);
                         break;
-                    case 14:
+                    case ".adrs":
                         Program.winMain.BeginOperation();
                         Task ts = new Task(new Action(() =>
                             {
@@ -296,8 +296,7 @@ namespace TrackConverter.UI.Converter
                             }));
                         ts.Start();
                         break;
-                    case 1:
-
+                    case ".trr":
                         Serializer.Serialize(sf.FileName, tf, FileFormats.TrrFile);
                         break;
                 }
@@ -492,7 +491,7 @@ namespace TrackConverter.UI.Converter
             sf.AddExtension = true;
             sf.InitialDirectory = Application.StartupPath;
 
-            if (sf.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            if (sf.ShowDialog() == DialogResult.OK)
             {
                 if (Program.winWaitingNullOrDisposed)
                     Program.winWaiting = new FormWaiting();
@@ -503,15 +502,15 @@ namespace TrackConverter.UI.Converter
                 {
                     Task pr = new Task(new Action(() =>
                     {
-                        switch (sf.FilterIndex)
+                        switch (Path.GetExtension(sf.FileName).ToLower())
                         {
-                            case 1:
+                            case ".rte":
                                 Serializer.Serialize(sf.FileName, tfs, FileFormats.RteFile);
                                 break;
-                            case 2:
+                            case ".kml":
                                 Serializer.Serialize(sf.FileName, tfs, FileFormats.KmlFile);
                                 break;
-                            case 3:
+                            case ".kmz":
                                 Serializer.Serialize(sf.FileName, tfs, FileFormats.KmzFile);
                                 break;
                         }

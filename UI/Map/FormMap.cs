@@ -298,44 +298,44 @@ namespace TrackConverter.UI.Map
 
 
 
-            if (sf.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            if (sf.ShowDialog() == DialogResult.OK)
             {
-                switch (sf.FilterIndex)
+                switch (Path.GetExtension(sf.FileName).ToLower())
                 {
-                    case 1:
+                    case ".rt2":
                         Serializer.Serialize(sf.FileName, waypoints, FileFormats.Rt2File);
                         break;
-                    case 2:
+                    case ".plt":
                         Serializer.Serialize(sf.FileName, waypoints, FileFormats.PltFile);
                         break;
-                    case 3:
+                    case ".wpt":
                         Serializer.Serialize(sf.FileName, waypoints, FileFormats.WptFile);
                         break;
-                    case 4:
+                    case ".crd":
                         Serializer.Serialize(sf.FileName, waypoints, FileFormats.CrdFile);
                         break;
-                    case 5:
+                    case ".kml":
                         Serializer.Serialize(sf.FileName, waypoints, FileFormats.KmlFile);
                         break;
-                    case 6:
+                    case "gpx":
                         Serializer.Serialize(sf.FileName, waypoints, FileFormats.GpxFile);
                         break;
-                    case 7:
+                    case "kmz":
                         Serializer.Serialize(sf.FileName, waypoints, FileFormats.KmzFile);
                         break;
-                    case 8:
+                    case ".osm":
                         Serializer.Serialize(sf.FileName, waypoints, FileFormats.OsmFile);
                         break;
-                    case 9:
+                    case "nmea":
                         Serializer.Serialize(sf.FileName, waypoints, FileFormats.NmeaFile);
                         break;
-                    case 10:
+                    case "csv":
                         Serializer.Serialize(sf.FileName, waypoints, FileFormats.CsvFile);
                         break;
-                    case 11:
+                    case ".txt":
                         Serializer.Serialize(sf.FileName, waypoints, FileFormats.TxtFile);
                         break;
-                    case 12:
+                    case ".adrs":
                         Program.winMain.BeginOperation();
                         Action act = new Action(() =>
                         {
@@ -369,13 +369,13 @@ namespace TrackConverter.UI.Map
 
             if (sf.ShowDialog() == DialogResult.OK)
             {
-                switch (sf.FilterIndex)
+                switch (Path.GetExtension(sf.FileName).ToLower())
                 {
-                    case 1:
+                    case ".kml":
                         GeoFile gf = new GeoFile(Program.winConverter.Tracks, waypoints);
                         Serializer.Serialize(sf.FileName, gf, FileFormats.KmlFile);
                         break;
-                    case 2:
+                    case ".kmz":
                         gf = new GeoFile(Program.winConverter.Tracks, waypoints);
                         Serializer.Serialize(sf.FileName, gf, FileFormats.KmzFile);
                         break;
