@@ -127,6 +127,7 @@ namespace TrackConverter.UI.Map
             GMaps.Instance.Mode = Vars.Options.Map.AccessMode;
             GMaps.Instance.CacheOnIdleRead = true;
             GMaps.Instance.BoostCacheEngine = true;
+            GMaps.Instance.MemoryCache.Capacity = 100; //максимальный размер кэша в МБ
 
             //zoom
             gmapControlMap.Zoom = Vars.Options.Map.Zoom;
@@ -1841,6 +1842,9 @@ namespace TrackConverter.UI.Map
         /// <param name="type"></param>
         private void gmapControlMap_OnMapTypeChanged(GMapProvider type)
         {
+            //очистка кэша
+            GMaps.Instance.MemoryCache.Clear();
+
             if (type.MaxZoom == null)
                 gmapControlMap.MaxZoom = 21;
             else
