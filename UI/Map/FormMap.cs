@@ -30,7 +30,7 @@ namespace TrackConverter.UI.Map
     /// <summary>
     /// окно карты
     /// </summary>
-    public partial class FormMap : FormMapBase
+    public partial class FormMap:Form
     {
         #region Конструкторы
 
@@ -111,7 +111,6 @@ namespace TrackConverter.UI.Map
             }
             this.waypoints = waypointsList;
         }
-
 
 
         /// <summary>
@@ -2107,82 +2106,6 @@ namespace TrackConverter.UI.Map
         #endregion
 
         #region взаимодействие
-
-        /// <summary>
-        /// показать путевые точки на карте в базовом слое
-        /// </summary>
-        /// <param name="points">точки для показа</param>
-        /// <param name="addToWaypoints">если true , то точки будут добавлены в список путевых точек</param>
-        /// <param name="isClearBefore">если истина, перед добавлением будет произведена очитска слоя от точек</param>
-        internal new void ShowWaypoints(BaseTrack points, bool isClearBefore, bool addToWaypoints)
-        {
-            base.ShowWaypoints(points, isClearBefore, addToWaypoints);
-        }
-
-        /// <summary>
-        /// аоказать точки на заданном слое
-        /// </summary>
-        /// <param name="waypoints">точки</param>
-        /// <param name="lay">слой</param>
-        /// <param name="addWaypoints">добавить в путевые точки</param>
-        /// <param name="clearBefore">очистить перед добавлением</param>
-        internal void ShowWaypoints(TrackFile waypoints, GMapOverlay lay, bool addWaypoints, bool clearBefore)
-        {
-            base.ShowWaypoints(waypoints, lay, clearBefore, addWaypoints);
-        }
-
-        /// <summary>
-        /// показать заданную точку на базовом слое
-        /// </summary>
-        /// <param name="point">точка</param>
-        /// <param name="addToWaypoint">еси истина, то точка будет добавлена к путевым точкам</param>
-        internal new void ShowWaypoint(TrackPoint point, bool addToWaypoint)
-        {
-            base.ShowWaypoint(point, addToWaypoint);
-        }
-
-        /// <summary>
-        /// удаление точек из списка путевых точек
-        /// </summary>
-        /// <param name="tf"></param>
-        internal new void DeleteWaypoints(BaseTrack tf)
-        {
-            base.DeleteWaypoints(tf);
-        }
-
-        /// <summary>
-        /// показать одну точку с заданной картинкой, на указанном слое, с заданными типами подсказки и маркера
-        /// </summary>
-        /// <param name="point">информация о точке</param>
-        /// <param name="lay">слой</param>
-        /// <param name="icon">картинка</param>
-        /// <param name="mType">тип  маркера</param>
-        /// <param name="pType">тип точки при прокладке маршрута</param>
-        /// <param name="ttMode">тип всплывающей подсказки</param>
-        private new void ShowWaypoint(TrackPoint point, GMapOverlay lay, Icon icon, MarkerTypes mType, PathingType pType, MarkerTooltipMode ttMode)
-        {
-            base.ShowWaypoint(point, lay, icon, mType, pType, ttMode);
-        }
-
-        /// <summary>
-        /// показать заданный маршрут. Если маршрута нет в списке машрутов карты то добавляет в общий список
-        /// </summary>
-        /// <param name="route">маршрут</param>
-        private new void ShowRoute(BaseTrack route)
-        {
-            base.ShowRoute(route);
-        }
-
-        /// <summary>
-        /// показать заданный маршрут
-        /// </summary>
-        /// <param name="route">маршрут</param>
-        /// <param name="centring">если истина, то карта переместится на маршрут</param>
-        /// <param name="lay">слой для вывода</param>
-        public new void ShowRoute(BaseTrack route, GMapOverlay lay, bool centring)
-        {
-            base.ShowRoute(route, lay, centring);
-        }
 
         /// <summary>
         /// вывод создаваемого маршрута и его маркеров 

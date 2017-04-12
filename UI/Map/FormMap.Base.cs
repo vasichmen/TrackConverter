@@ -17,7 +17,7 @@ namespace TrackConverter.UI.Map
     /// <summary>
     /// основные действия, выполняемые с картой
     /// </summary>
-    public class FormMapBase : Form
+    partial class FormMap
     {
 
         #region public поля
@@ -57,11 +57,7 @@ namespace TrackConverter.UI.Map
         #endregion
 
         #region карта, слои, маршруты
-
-        /// <summary>
-        /// область карты
-        /// </summary>
-        public virtual GMapControl gmapControlMap { get; set; }
+        
 
         /// <summary>
         /// список загруженных путевых точек
@@ -293,7 +289,7 @@ namespace TrackConverter.UI.Map
         /// </summary>
         /// <param name="trackPoint">точка</param>
         /// <param name="lay">слой</param>
-        protected void DeleteWaypoint(TrackPoint trackPoint, GMapOverlay lay)
+        public void DeleteWaypoint(TrackPoint trackPoint, GMapOverlay lay)
         {
             if (trackPoint == null) return;
 
@@ -313,7 +309,7 @@ namespace TrackConverter.UI.Map
         /// </summary>
         /// <param name="point">точка</param>
         /// <param name="addToWaypoint">еси истина, то точка будет добавлена к путевым точкам</param>
-        protected void ShowWaypoint(TrackPoint point, bool addToWaypoint)
+        public void ShowWaypoint(TrackPoint point, bool addToWaypoint)
         {
             ShowWaypoint(point, baseOverlay, addToWaypoint);
         }
@@ -324,7 +320,7 @@ namespace TrackConverter.UI.Map
         /// <param name="point">точка</param>
         /// <param name="lay">слой в GMapControl для отображения маркера</param>
         /// <param name="addToWaypoint">если истина, то точка будет добавлена в список путевых точек</param>
-        protected void ShowWaypoint(TrackPoint point, GMapOverlay lay, bool addToWaypoint)
+        public void ShowWaypoint(TrackPoint point, GMapOverlay lay, bool addToWaypoint)
         {
             if (point == null)
                 return;
@@ -358,7 +354,7 @@ namespace TrackConverter.UI.Map
         /// <param name="lay">слой</param>
         /// <param name="icon">относительный адрес картинки (из Resources)</param>
         /// <param name="type">тип маркера</param>
-        protected void ShowWaypoint(TrackPoint point, GMapOverlay lay, Icon icon, MarkerTypes type)
+        public void ShowWaypoint(TrackPoint point, GMapOverlay lay, Icon icon, MarkerTypes type)
         {
             ShowWaypoint(point, lay, icon, type, MarkerTooltipMode.OnMouseOver);
         }
@@ -371,7 +367,7 @@ namespace TrackConverter.UI.Map
         /// <param name="icon">картинка</param>
         /// <param name="mType">тип  маркера</param>
         /// <param name="ttMode">тип всплывающей подсказки</param>
-        protected void ShowWaypoint(TrackPoint point, GMapOverlay lay, Icon icon, MarkerTypes mType, MarkerTooltipMode ttMode)
+        public void ShowWaypoint(TrackPoint point, GMapOverlay lay, Icon icon, MarkerTypes mType, MarkerTooltipMode ttMode)
         {
             ShowWaypoint(point, lay, icon, mType, PathingType.None, ttMode);
         }
@@ -385,7 +381,7 @@ namespace TrackConverter.UI.Map
         /// <param name="mType">тип  маркера</param>
         /// <param name="pType">тип точки при прокладке маршрута</param>
         /// <param name="ttMode">тип всплывающей подсказки</param>
-        protected void ShowWaypoint(TrackPoint point, GMapOverlay lay, Icon icon, MarkerTypes mType, PathingType pType, MarkerTooltipMode ttMode)
+        public void ShowWaypoint(TrackPoint point, GMapOverlay lay, Icon icon, MarkerTypes mType, PathingType pType, MarkerTooltipMode ttMode)
         {
             Point offsets = IconOffsets.GetOffset(point.Icon);
             MapMarker mar = new MapMarker(point.Coordinates.GMap, icon, offsets);
@@ -408,7 +404,7 @@ namespace TrackConverter.UI.Map
         /// <param name="points">точки для показа</param>
         /// <param name="addToWayPoints">если true , то точки будут добавлены в список путевых точек</param>
         /// <param name="isClearBefore">если истина, перед добавлением будет произведена очитска слоя от точек</param>
-        protected void ShowWaypoints(BaseTrack points, bool isClearBefore, bool addToWayPoints)
+        public void ShowWaypoints(BaseTrack points, bool isClearBefore, bool addToWayPoints)
         {
             if (points == null)
                 return;
@@ -428,7 +424,7 @@ namespace TrackConverter.UI.Map
         /// <param name="isClearBefore">если истина, то перед выводом слой будет очищен от мареров</param>
         /// <param name="wpts">список точек для вывода</param>
         /// <param name="lay">слой, на котором будут выведены точки</param>
-        protected void ShowWaypoints(BaseTrack wpts, GMapOverlay lay, bool isClearBefore)
+        public void ShowWaypoints(BaseTrack wpts, GMapOverlay lay, bool isClearBefore)
         {
             ShowWaypoints(wpts, lay, isClearBefore, true);
         }
@@ -441,7 +437,7 @@ namespace TrackConverter.UI.Map
         /// показать заданный маршрут. Если маршрута нет в списке машрутов карты то добавляет в общий список
         /// </summary>
         /// <param name="route">маршрут</param>
-        protected void ShowRoute(BaseTrack route)
+        public void ShowRoute(BaseTrack route)
         {
             ShowRoute(route, baseOverlay);
         }
@@ -451,7 +447,7 @@ namespace TrackConverter.UI.Map
         /// </summary>
         /// <param name="route">маршрут</param>
         /// <param name="overlay">слой</param>
-        protected void ShowRoute(BaseTrack route, GMapOverlay overlay)
+        public void ShowRoute(BaseTrack route, GMapOverlay overlay)
         {
             ShowRoute(route, overlay, true);
         }
@@ -462,7 +458,7 @@ namespace TrackConverter.UI.Map
         /// <param name="route">маршрут</param>
         /// <param name="lay">слой</param>
         /// <param name="centring">если истина, то после отрисовки карта будет подогнана под маршрут по центру и масштбу</param>
-        protected void ShowRoute(BaseTrack route, GMapOverlay lay, bool centring)
+        public void ShowRoute(BaseTrack route, GMapOverlay lay, bool centring)
         {
             if (route.GetType() == typeof(TrackFile))
                 ShowTrackFile(route as TrackFile, lay, centring);
@@ -476,7 +472,7 @@ namespace TrackConverter.UI.Map
         /// <param name="route">маршрут</param>
         /// <param name="lay">слой для вывода</param>
         /// <param name="centring">если истина, то карты будет по центру</param>
-        private void ShowTrackFile(TrackFile route, GMapOverlay lay, bool centring = true)
+        public void ShowTrackFile(TrackFile route, GMapOverlay lay, bool centring = true)
         {
             if (route == null)
                 return;
@@ -500,7 +496,7 @@ namespace TrackConverter.UI.Map
         /// <param name="route"></param>
         /// <param name="lay"></param>
         /// <param name="centring"></param>
-        private void ShowTripRoute(TripRouteFile route, GMapOverlay lay, bool centring)
+        public void ShowTripRoute(TripRouteFile route, GMapOverlay lay, bool centring)
         {
             //вывод маршрутов
             foreach (TrackFile tf in route.DaysRoutes)
@@ -525,7 +521,7 @@ namespace TrackConverter.UI.Map
         /// <param name="lay">слой для добавления</param>
         /// <param name="clearBefore">очистить слой перед добавлением</param>
         /// <param name="addToWaypoints">если истина, то точки будут добавлены в список точек</param>
-        protected void ShowWaypoints(BaseTrack waypoints, GMapOverlay lay, bool clearBefore, bool addToWaypoints)
+        public void ShowWaypoints(BaseTrack waypoints, GMapOverlay lay, bool clearBefore, bool addToWaypoints)
         {
             if (clearBefore)
                 lay.Markers.Clear();
@@ -539,13 +535,11 @@ namespace TrackConverter.UI.Map
             gmapControlMap.ResumeLayout();
         }
 
-
-
         /// <summary>
         /// удаление заданных точек с карты
         /// </summary>
         /// <param name="tf"></param>
-        protected void DeleteWaypoints(BaseTrack tf)
+        public void DeleteWaypoints(BaseTrack tf)
         {
             foreach (TrackPoint tt in tf)
                 waypoints.Remove(tt);

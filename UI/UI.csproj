@@ -160,7 +160,7 @@
     <Compile Include="Map\FormEditTrip.Designer.cs">
       <DependentUpon>FormEditTrip.cs</DependentUpon>
     </Compile>
-    <Compile Include="Map\FormMapBase.cs">
+    <Compile Include="Map\FormMap.Base.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Map\FormWhatsthere.cs">
