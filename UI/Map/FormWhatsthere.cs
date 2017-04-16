@@ -38,15 +38,38 @@ namespace TrackConverter.UI.Map
         /// <param name="e"></param>
         private void FormWhatsthere_Load(object sender, EventArgs e)
         {
+            if (point.Name == null)
+                try
+                {
+                    point.Name = new GeoCoder(Vars.Options.DataSources.GeoCoderProvider).GetAddress(point.Coordinates);
+                }
+                catch (Exception exx)
+                {
+                    MessageBox.Show(this, "Не удалось узнать адрес точки:\r\n" + exx.Message, "Поиск адреса", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    point.Name = "Недоступный адрес";
+                }
+
+            if (double.IsNaN(point.MetrAltitude))
+                try
+                {
+                    point.MetrAltitude = new GeoInfo(Vars.Options.DataSources.GeoInfoProvider).GetElevation(point.Coordinates);
+                }
+                catch (Exception exx)
+                {
+                    MessageBox.Show(this, "Не удалось получить высоту точки:\r\n" + exx.Message, "Получение высоты", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    point.FeetAltitude = double.NaN;
+                }
+
+
             this.Text = point.Name == "Недоступный адрес" ? point.Coordinates.ToString("{lat} {lon}", "ddºmm'ss.s\"H") : point.Name;
-            this.labelAddress.Text = point.Name;
+            this.textBoxAddress.Text = point.Name;
             this.labelRise.Text = point.Rise.ToString();
             this.labelRiseAzi.Text = point.RiseAzi.ToString("00.0000") + "º";
             this.labelFallAzi.Text = point.FallAzi.ToString("00.0000") + "º";
             this.labelFall.Text = point.Fall.ToString();
             this.labelDec.Text = point.MagneticDeclination.ToString("0.0000") + "º";
-            this.labelLat.Text = point.Coordinates.Latitude.TotalDegrees.ToString("00.000000") + "º";
-            this.labelLon.Text = point.Coordinates.Longitude.TotalDegrees.ToString("00.000000") + "º";
+            this.textBoxLat.Text = point.Coordinates.Latitude.TotalDegrees.ToString("00.000000") + "º";
+            this.textBoxLon.Text = point.Coordinates.Longitude.TotalDegrees.ToString("00.000000") + "º";
             this.labelAlt.Text = double.IsNaN(point.MetrAltitude) ? "недоступно" : (point.MetrAltitude.ToString() + " м");
             this.labelTimeOffset.Text = ((point.TimeOffset >= 0) ? "GMT+" : "GMT") + point.TimeOffset.ToString("00");
             this.labeldayLength.Text = point.DayLength.ToString();

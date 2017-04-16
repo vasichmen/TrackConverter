@@ -37,27 +37,27 @@
             this.label6 = new System.Windows.Forms.Label();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
-            this.labelLocalTime = new System.Windows.Forms.Label();
             this.labelAlt = new System.Windows.Forms.Label();
             this.labelTimeOffset = new System.Windows.Forms.Label();
-            this.labelDec = new System.Windows.Forms.Label();
-            this.labelAddress = new System.Windows.Forms.Label();
             this.labelFall = new System.Windows.Forms.Label();
-            this.labelLat = new System.Windows.Forms.Label();
             this.labelRise = new System.Windows.Forms.Label();
-            this.labelLon = new System.Windows.Forms.Label();
+            this.labeldayLength = new System.Windows.Forms.Label();
             this.labelRiseAzi = new System.Windows.Forms.Label();
             this.labelFallAzi = new System.Windows.Forms.Label();
+            this.labelLocalTime = new System.Windows.Forms.Label();
+            this.labelDec = new System.Windows.Forms.Label();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
-            this.label11 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
-            this.label12 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
+            this.label7 = new System.Windows.Forms.Label();
+            this.label12 = new System.Windows.Forms.Label();
             this.label13 = new System.Windows.Forms.Label();
+            this.label11 = new System.Windows.Forms.Label();
             this.buttonCenter = new System.Windows.Forms.Button();
             this.buttonClose = new System.Windows.Forms.Button();
-            this.label7 = new System.Windows.Forms.Label();
-            this.labeldayLength = new System.Windows.Forms.Label();
+            this.textBoxAddress = new System.Windows.Forms.TextBox();
+            this.textBoxLat = new System.Windows.Forms.TextBox();
+            this.textBoxLon = new System.Windows.Forms.TextBox();
             this.tableLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel3.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
@@ -132,7 +132,7 @@
             this.tableLayoutPanel1.RowCount = 2;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 302F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(338, 347);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(355, 347);
             this.tableLayoutPanel1.TabIndex = 6;
             // 
             // tableLayoutPanel3
@@ -141,16 +141,16 @@
             this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel3.Controls.Add(this.labelAlt, 0, 3);
             this.tableLayoutPanel3.Controls.Add(this.labelTimeOffset, 0, 9);
-            this.tableLayoutPanel3.Controls.Add(this.labelAddress, 0, 0);
             this.tableLayoutPanel3.Controls.Add(this.labelFall, 0, 5);
-            this.tableLayoutPanel3.Controls.Add(this.labelLat, 0, 1);
             this.tableLayoutPanel3.Controls.Add(this.labelRise, 0, 4);
-            this.tableLayoutPanel3.Controls.Add(this.labelLon, 0, 2);
             this.tableLayoutPanel3.Controls.Add(this.labeldayLength, 0, 6);
             this.tableLayoutPanel3.Controls.Add(this.labelRiseAzi, 0, 7);
             this.tableLayoutPanel3.Controls.Add(this.labelFallAzi, 0, 8);
             this.tableLayoutPanel3.Controls.Add(this.labelLocalTime, 0, 10);
             this.tableLayoutPanel3.Controls.Add(this.labelDec, 0, 11);
+            this.tableLayoutPanel3.Controls.Add(this.textBoxAddress, 0, 0);
+            this.tableLayoutPanel3.Controls.Add(this.textBoxLat, 0, 1);
+            this.tableLayoutPanel3.Controls.Add(this.textBoxLon, 0, 2);
             this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel3.Location = new System.Drawing.Point(147, 3);
             this.tableLayoutPanel3.Name = "tableLayoutPanel3";
@@ -167,18 +167,8 @@
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel3.Size = new System.Drawing.Size(188, 296);
+            this.tableLayoutPanel3.Size = new System.Drawing.Size(205, 296);
             this.tableLayoutPanel3.TabIndex = 1;
-            // 
-            // labelLocalTime
-            // 
-            this.labelLocalTime.AutoEllipsis = true;
-            this.labelLocalTime.AutoSize = true;
-            this.labelLocalTime.Location = new System.Drawing.Point(3, 250);
-            this.labelLocalTime.Name = "labelLocalTime";
-            this.labelLocalTime.Size = new System.Drawing.Size(62, 13);
-            this.labelLocalTime.TabIndex = 8;
-            this.labelLocalTime.Text = "Склонение";
             // 
             // labelAlt
             // 
@@ -200,26 +190,6 @@
             this.labelTimeOffset.TabIndex = 7;
             this.labelTimeOffset.Text = "Склонение";
             // 
-            // labelDec
-            // 
-            this.labelDec.AutoEllipsis = true;
-            this.labelDec.AutoSize = true;
-            this.labelDec.Location = new System.Drawing.Point(3, 275);
-            this.labelDec.Name = "labelDec";
-            this.labelDec.Size = new System.Drawing.Size(62, 13);
-            this.labelDec.TabIndex = 3;
-            this.labelDec.Text = "Склонение";
-            // 
-            // labelAddress
-            // 
-            this.labelAddress.AutoEllipsis = true;
-            this.labelAddress.AutoSize = true;
-            this.labelAddress.Location = new System.Drawing.Point(3, 0);
-            this.labelAddress.Name = "labelAddress";
-            this.labelAddress.Size = new System.Drawing.Size(38, 13);
-            this.labelAddress.TabIndex = 0;
-            this.labelAddress.Text = "Адрес";
-            // 
             // labelFall
             // 
             this.labelFall.AutoEllipsis = true;
@@ -229,16 +199,6 @@
             this.labelFall.Size = new System.Drawing.Size(37, 13);
             this.labelFall.TabIndex = 5;
             this.labelFall.Text = "Закат";
-            // 
-            // labelLat
-            // 
-            this.labelLat.AutoEllipsis = true;
-            this.labelLat.AutoSize = true;
-            this.labelLat.Location = new System.Drawing.Point(3, 25);
-            this.labelLat.Name = "labelLat";
-            this.labelLat.Size = new System.Drawing.Size(45, 13);
-            this.labelLat.TabIndex = 1;
-            this.labelLat.Text = "Широта";
             // 
             // labelRise
             // 
@@ -250,15 +210,14 @@
             this.labelRise.TabIndex = 4;
             this.labelRise.Text = "Восход";
             // 
-            // labelLon
+            // labeldayLength
             // 
-            this.labelLon.AutoEllipsis = true;
-            this.labelLon.AutoSize = true;
-            this.labelLon.Location = new System.Drawing.Point(3, 50);
-            this.labelLon.Name = "labelLon";
-            this.labelLon.Size = new System.Drawing.Size(50, 13);
-            this.labelLon.TabIndex = 2;
-            this.labelLon.Text = "Долгота";
+            this.labeldayLength.AutoSize = true;
+            this.labeldayLength.Location = new System.Drawing.Point(3, 150);
+            this.labeldayLength.Name = "labeldayLength";
+            this.labeldayLength.Size = new System.Drawing.Size(119, 13);
+            this.labeldayLength.TabIndex = 11;
+            this.labeldayLength.Text = "Магнитное склонение";
             // 
             // labelRiseAzi
             // 
@@ -279,6 +238,26 @@
             this.labelFallAzi.Size = new System.Drawing.Size(62, 13);
             this.labelFallAzi.TabIndex = 9;
             this.labelFallAzi.Text = "Склонение";
+            // 
+            // labelLocalTime
+            // 
+            this.labelLocalTime.AutoEllipsis = true;
+            this.labelLocalTime.AutoSize = true;
+            this.labelLocalTime.Location = new System.Drawing.Point(3, 250);
+            this.labelLocalTime.Name = "labelLocalTime";
+            this.labelLocalTime.Size = new System.Drawing.Size(62, 13);
+            this.labelLocalTime.TabIndex = 8;
+            this.labelLocalTime.Text = "Склонение";
+            // 
+            // labelDec
+            // 
+            this.labelDec.AutoEllipsis = true;
+            this.labelDec.AutoSize = true;
+            this.labelDec.Location = new System.Drawing.Point(3, 275);
+            this.labelDec.Name = "labelDec";
+            this.labelDec.Size = new System.Drawing.Size(62, 13);
+            this.labelDec.TabIndex = 3;
+            this.labelDec.Text = "Склонение";
             // 
             // tableLayoutPanel2
             // 
@@ -315,15 +294,6 @@
             this.tableLayoutPanel2.Size = new System.Drawing.Size(138, 296);
             this.tableLayoutPanel2.TabIndex = 0;
             // 
-            // label11
-            // 
-            this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(3, 250);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(98, 13);
-            this.label11.TabIndex = 9;
-            this.label11.Text = "Локальное время";
-            // 
             // label8
             // 
             this.label8.AutoSize = true;
@@ -332,6 +302,24 @@
             this.label8.Size = new System.Drawing.Size(45, 13);
             this.label8.TabIndex = 6;
             this.label8.Text = "Высота";
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(3, 225);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(78, 13);
+            this.label9.TabIndex = 8;
+            this.label9.Text = "Часовой пояс";
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(3, 150);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(132, 13);
+            this.label7.TabIndex = 12;
+            this.label7.Text = "Продолжительность дня";
             // 
             // label12
             // 
@@ -343,15 +331,6 @@
             this.label12.TabIndex = 10;
             this.label12.Text = "Азимут восхода";
             // 
-            // label9
-            // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(3, 225);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(78, 13);
-            this.label9.TabIndex = 8;
-            this.label9.Text = "Часовой пояс";
-            // 
             // label13
             // 
             this.label13.AutoEllipsis = true;
@@ -361,6 +340,15 @@
             this.label13.Size = new System.Drawing.Size(82, 13);
             this.label13.TabIndex = 11;
             this.label13.Text = "Азимут заката";
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(3, 250);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(98, 13);
+            this.label11.TabIndex = 9;
+            this.label11.Text = "Локальное время";
             // 
             // buttonCenter
             // 
@@ -375,8 +363,9 @@
             // 
             // buttonClose
             // 
-            this.buttonClose.Location = new System.Drawing.Point(194, 312);
-            this.buttonClose.Margin = new System.Windows.Forms.Padding(50, 10, 10, 10);
+            this.buttonClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonClose.Location = new System.Drawing.Point(262, 312);
+            this.buttonClose.Margin = new System.Windows.Forms.Padding(10, 10, 18, 10);
             this.buttonClose.Name = "buttonClose";
             this.buttonClose.Size = new System.Drawing.Size(75, 20);
             this.buttonClose.TabIndex = 3;
@@ -384,31 +373,40 @@
             this.buttonClose.UseVisualStyleBackColor = true;
             this.buttonClose.Click += new System.EventHandler(this.buttonClose_Click);
             // 
-            // label7
+            // textBoxAddress
             // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(3, 150);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(132, 13);
-            this.label7.TabIndex = 12;
-            this.label7.Text = "Продолжительность дня";
+            this.textBoxAddress.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.textBoxAddress.Location = new System.Drawing.Point(3, 3);
+            this.textBoxAddress.Name = "textBoxAddress";
+            this.textBoxAddress.ReadOnly = true;
+            this.textBoxAddress.Size = new System.Drawing.Size(199, 20);
+            this.textBoxAddress.TabIndex = 12;
             // 
-            // labeldayLength
+            // textBoxLat
             // 
-            this.labeldayLength.AutoSize = true;
-            this.labeldayLength.Location = new System.Drawing.Point(3, 150);
-            this.labeldayLength.Name = "labeldayLength";
-            this.labeldayLength.Size = new System.Drawing.Size(119, 13);
-            this.labeldayLength.TabIndex = 11;
-            this.labeldayLength.Text = "Магнитное склонение";
+            this.textBoxLat.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.textBoxLat.Location = new System.Drawing.Point(3, 28);
+            this.textBoxLat.Name = "textBoxLat";
+            this.textBoxLat.ReadOnly = true;
+            this.textBoxLat.Size = new System.Drawing.Size(199, 20);
+            this.textBoxLat.TabIndex = 13;
+            // 
+            // textBoxLon
+            // 
+            this.textBoxLon.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.textBoxLon.Location = new System.Drawing.Point(3, 53);
+            this.textBoxLon.Name = "textBoxLon";
+            this.textBoxLon.ReadOnly = true;
+            this.textBoxLon.Size = new System.Drawing.Size(199, 20);
+            this.textBoxLon.TabIndex = 14;
             // 
             // FormWhatsthere
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(338, 347);
+            this.ClientSize = new System.Drawing.Size(355, 347);
             this.Controls.Add(this.tableLayoutPanel1);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MinimumSize = new System.Drawing.Size(354, 381);
             this.Name = "FormWhatsthere";
@@ -434,11 +432,8 @@
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
-        private System.Windows.Forms.Label labelAddress;
         private System.Windows.Forms.Label labelFall;
-        private System.Windows.Forms.Label labelLat;
         private System.Windows.Forms.Label labelRise;
-        private System.Windows.Forms.Label labelLon;
         private System.Windows.Forms.Label labelDec;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
         private System.Windows.Forms.Label labelAlt;
@@ -455,5 +450,8 @@
         private System.Windows.Forms.Button buttonClose;
         private System.Windows.Forms.Label labeldayLength;
         private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.TextBox textBoxAddress;
+        private System.Windows.Forms.TextBox textBoxLat;
+        private System.Windows.Forms.TextBox textBoxLon;
     }
 }

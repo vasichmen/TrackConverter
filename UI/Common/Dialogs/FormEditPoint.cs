@@ -196,14 +196,14 @@ namespace TrackConverter.UI.Common.Dialogs
         private void buttonAdditionInfo_Click(object sender, EventArgs e)
         {
             this.editingPoint.CalculateParametres();
+            if (Program.winMap.ActiveWhatThereForms == null)
+                Program.winMap.ActiveWhatThereForms = new Dictionary<TrackPoint, FormWhatsthere>();
             if (Program.winMap.ActiveWhatThereForms.ContainsKey(this.editingPoint))
                 Program.winMap.ActiveWhatThereForms[this.editingPoint].Activate();
             else
             {
                 FormWhatsthere fw = new FormWhatsthere(this.editingPoint);
                 fw.Show(Program.winMain);
-                if (Program.winMap.ActiveWhatThereForms == null)
-                    Program.winMap.ActiveWhatThereForms = new Dictionary<TrackPoint, FormWhatsthere>();
                 Program.winMap.ActiveWhatThereForms.Add(this.editingPoint, fw);
             }
         }
