@@ -37,7 +37,8 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         private void AttachGuid(string guid, string name)
         {
             string site = Vars.Options.Common.SiteAddress;
-            string url = string.Format("{0}/receiver.php?mode=attach&program_guid={1}&user_name={2}", site, guid, name);
+            string ver = Vars.Options.Common.VersionText;
+            string url = string.Format("{0}/receiver.php?mode=attach&program_guid={1}&user_name={2}&version={3}", site, guid, name,ver);
             string ans = this.SendStringGetRequest(url);
             if (ans != "OK")
                 throw new WebException(ans);
