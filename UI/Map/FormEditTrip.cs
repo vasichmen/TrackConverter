@@ -484,60 +484,69 @@ namespace TrackConverter.UI.Map
                     fb.SelectedPath = Vars.Options.Common.LastFileSaveDirectory;
                 if (fb.ShowDialog() == DialogResult.OK)
                 {
-                    ParallelLoopResult pr = Parallel.ForEach(trip.DaysRoutes, new Action<BaseTrack>((BaseTrack tf) =>
+                    string basename = fb.SelectedPath + "\\";
+                    if (rt.Result == "rte")
                     {
-                        string nm = "";
-                        if (string.IsNullOrEmpty(tf.Name))
-                            if (string.IsNullOrEmpty(tf.FileName))
-                                nm = Guid.NewGuid().ToString();
-                            else
-                                nm = tf.FileName;
-                        else
-                            nm = tf.Name;
+                        basename += trip.Name;
+                        Serializer.Serialize(basename + ".rte", trip.DaysRoutes, FileFormats.RteFile);
+                    }
+                    else
+                    {
 
-                        string basename = fb.SelectedPath + "\\" + nm;
-                        switch (rt.Result)
+                        Parallel.ForEach(trip.DaysRoutes, new Action<BaseTrack>((BaseTrack tf) =>
                         {
-                            case "wpt":
-                                Serializer.Serialize(basename + ".wpt", tf, FileFormats.WptFile);
-                                break;
-                            case "crd":
-                                Serializer.Serialize(basename + ".crd", tf, FileFormats.CrdFile);
-                                break;
-                            case "plt":
-                                Serializer.Serialize(basename + ".plt", tf, FileFormats.PltFile);
-                                break;
-                            case "rt2":
-                                Serializer.Serialize(basename + ".rt2", tf, FileFormats.Rt2File);
-                                break;
-                            case "gpx":
-                                Serializer.Serialize(basename + ".gpx", tf, FileFormats.GpxFile);
-                                break;
-                            case "kml":
-                                Serializer.Serialize(basename + ".kml", tf, FileFormats.KmlFile);
-                                break;
-                            case "kmz":
-                                Serializer.Serialize(basename + ".kmz", tf, FileFormats.KmzFile);
-                                break;
-                            case "osm":
-                                Serializer.Serialize(basename + ".osm", tf, FileFormats.OsmFile);
-                                break;
-                            case "nmea":
-                                Serializer.Serialize(basename + ".nmea", tf, FileFormats.NmeaFile);
-                                break;
-                            case "csv":
-                                Serializer.Serialize(basename + ".csv", tf, FileFormats.CsvFile);
-                                break;
-                            case "txt":
-                                Serializer.Serialize(basename + ".txt", tf, FileFormats.TxtFile);
-                                break;
-                            default:
-                                MessageBox.Show(this, "Данный формат не поддерживается: " + rt.Result, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                                return;
-                        }
+                            string nm = "";
+                            if (string.IsNullOrEmpty(tf.Name))
+                                if (string.IsNullOrEmpty(tf.FileName))
+                                    nm = Guid.NewGuid().ToString();
+                                else
+                                    nm = tf.FileName;
+                            else
+                                nm = tf.Name;
+
+                            switch (rt.Result)
+                            {
+                                case "wpt":
+                                    Serializer.Serialize(basename+nm + ".wpt", tf, FileFormats.WptFile);
+                                    break;
+                                case "crd":
+                                    Serializer.Serialize(basename + nm + ".crd", tf, FileFormats.CrdFile);
+                                    break;
+                                case "plt":
+                                    Serializer.Serialize(basename + nm + ".plt", tf, FileFormats.PltFile);
+                                    break;
+                                case "rt2":
+                                    Serializer.Serialize(basename + nm + ".rt2", tf, FileFormats.Rt2File);
+                                    break;
+                                case "gpx":
+                                    Serializer.Serialize(basename + nm + ".gpx", tf, FileFormats.GpxFile);
+                                    break;
+                                case "kml":
+                                    Serializer.Serialize(basename + nm + ".kml", tf, FileFormats.KmlFile);
+                                    break;
+                                case "kmz":
+                                    Serializer.Serialize(basename + nm + ".kmz", tf, FileFormats.KmzFile);
+                                    break;
+                                case "osm":
+                                    Serializer.Serialize(basename + nm + ".osm", tf, FileFormats.OsmFile);
+                                    break;
+                                case "nmea":
+                                    Serializer.Serialize(basename + nm + ".nmea", tf, FileFormats.NmeaFile);
+                                    break;
+                                case "csv":
+                                    Serializer.Serialize(basename + nm + ".csv", tf, FileFormats.CsvFile);
+                                    break;
+                                case "txt":
+                                    Serializer.Serialize(basename + nm + ".txt", tf, FileFormats.TxtFile);
+                                    break;
+                                default:
+                                    MessageBox.Show(this, "Данный формат не поддерживается: " + rt.Result, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                    return;
+                            }
+                        }));
                         Vars.Options.Common.LastSaveSeparateExtension = rt.Result;
-                    }));
-                    MessageBox.Show("Файлы сoхранены");
+                        MessageBox.Show("Файлы сoхранены");
+                    }
                 }
             }
         }
