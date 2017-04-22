@@ -194,7 +194,7 @@ namespace TrackConverter.UI.Converter
             BaseTrack tf = null;
 
             //если кнопка контекстного меню
-            if ((string)(((ToolStripMenuItem)sender).Name) == "saveFileContextToolStripMenuItem1")
+            if (((ToolStripMenuItem)sender).Name == "saveToolStripMenuItem1")
                 if (dataGridView1.SelectedRows.Count > 1) //если выделено больше одного маршрута, то сохранение в один файл
                 {
                     saveAllInOneFileToolStripMenuItem_Click(sender, e);
@@ -245,7 +245,7 @@ namespace TrackConverter.UI.Converter
 
             if (sf.ShowDialog() == DialogResult.OK)
             {
-                tf.FileName = sf.FileName;
+                tf.FilePath = sf.FileName;
                 switch (Path.GetExtension(sf.FileName).ToLower())
                 {
                     case ".rt2":
@@ -1089,7 +1089,7 @@ namespace TrackConverter.UI.Converter
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void saveToolStripMenuItem1_Click(object sender, EventArgs e)
+        private void overwriteFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
             int row = dataGridView1.SelectedRows[0].Index;
             BaseTrack tf = Tracks[row];
@@ -1097,7 +1097,7 @@ namespace TrackConverter.UI.Converter
 
             if (tf.FilePath != null && tf.FilePath.Length > 1)
             {
-                if (MessageBox.Show(this, "Вы действительно хотите перезаписать файл " + tf.FilePath, "Внимание!", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == System.Windows.Forms.DialogResult.Yes)
+                if (MessageBox.Show(this, "Вы действительно хотите перезаписать файл\r\n " + tf.FilePath, "Внимание!", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == System.Windows.Forms.DialogResult.Yes)
                 {
                     if (Path.GetExtension(tf.FilePath) == ".kml" || Path.GetExtension(tf.FilePath) == ".kmz")
                     {
@@ -1110,7 +1110,7 @@ namespace TrackConverter.UI.Converter
                             "Внимание!",
                         MessageBoxButtons.YesNo,
                         MessageBoxIcon.Warning,
-                        MessageBoxDefaultButton.Button1) == System.Windows.Forms.DialogResult.No)
+                        MessageBoxDefaultButton.Button1) == DialogResult.No)
                             return;
                     }
                     Serializer.Serialize(tf.FilePath, tf, tf.Format);
@@ -1548,6 +1548,9 @@ namespace TrackConverter.UI.Converter
             TrackFile t2 = Yandex.DecodePolyline(one);
         }
 
+        private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
 
+        }
     }
 }

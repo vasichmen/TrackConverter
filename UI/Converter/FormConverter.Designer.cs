@@ -116,7 +116,7 @@
             this.OpenYandexToolStripMenuItem});
             this.загрузитьToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("загрузитьToolStripMenuItem.Image")));
             this.загрузитьToolStripMenuItem.Name = "загрузитьToolStripMenuItem";
-            this.загрузитьToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.загрузитьToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
             this.загрузитьToolStripMenuItem.Text = "Загрузить";
             // 
             // toolStripMenuItem1
@@ -147,7 +147,7 @@
             this.saveAllInOneFileToolStripMenuItem});
             this.SaveToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("SaveToolStripMenuItem.Image")));
             this.SaveToolStripMenuItem.Name = "SaveToolStripMenuItem";
-            this.SaveToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.SaveToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
             this.SaveToolStripMenuItem.Text = "Сохранить";
             // 
             // SaveFileToolStripMenuItem
@@ -233,7 +233,7 @@
             this.addComparisonToolStripMenuItem,
             this.removeToolStripMenuItem});
             this.contextMenuStripDGW.Name = "contextMenuStripDGW";
-            this.contextMenuStripDGW.Size = new System.Drawing.Size(236, 224);
+            this.contextMenuStripDGW.Size = new System.Drawing.Size(236, 202);
             this.contextMenuStripDGW.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStripDGW_Opening);
             // 
             // informationToolStripMenuItem
@@ -257,6 +257,7 @@
             this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
             this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(235, 22);
             this.saveAsToolStripMenuItem.Text = "Сохранить как";
+            this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.saveAsToolStripMenuItem_Click);
             // 
             // saveFileContextToolStripMenuItem1
             // 
@@ -293,7 +294,7 @@
             this.saveToolStripMenuItem1.Size = new System.Drawing.Size(235, 22);
             this.saveToolStripMenuItem1.Tag = "single";
             this.saveToolStripMenuItem1.Text = "Сохранить";
-            this.saveToolStripMenuItem1.Click += new System.EventHandler(this.saveToolStripMenuItem1_Click);
+            this.saveToolStripMenuItem1.Click += new System.EventHandler(this.overwriteFileToolStripMenuItem_Click);
             // 
             // изменитьToolStripMenuItem
             // 
