@@ -30,18 +30,22 @@ namespace TrackConverter.Lib.Tracking.Helpers
             wordDoc.SetSelectionToCell(1, 1);
             wordDoc.Selection.Text = "№";
             wordDoc.Selection.FontSize = 10;
+            wordDoc.Selection.Bold = true;
 
             wordDoc.SetSelectionToCell(1, 3);
             wordDoc.Selection.Text = "Название";
             wordDoc.Selection.FontSize = 10;
+            wordDoc.Selection.Bold = true;
 
             wordDoc.SetSelectionToCell(1, 2);
             wordDoc.Selection.Text = "Ш./Д."+ WordDocument.NewLineChar + "От старта";
             wordDoc.Selection.FontSize = 10;
+            wordDoc.Selection.Bold = true;
 
             wordDoc.SetSelectionToCell(1, 4);
             wordDoc.Selection.Text = "Описание";
             wordDoc.Selection.FontSize = 10;
+            wordDoc.Selection.Bold = true;
 
             for (int i = 0; i < track.Count; i++)
             {

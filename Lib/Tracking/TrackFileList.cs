@@ -87,8 +87,8 @@ namespace TrackConverter.Lib.Tracking
                 {
                     res.LoadDataRow(new object[] {
                     tf.Name,
-                    tf.Distance,
-                    tf.KmphSpeed,
+                    tf.Distance.ToString("0.00"),
+                    tf.KmphSpeed.ToString("0.00"),
                     tf.Time,
                     tf.Count,
                     ""

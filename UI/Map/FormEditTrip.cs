@@ -111,7 +111,11 @@ namespace TrackConverter.UI.Map
         /// <param name="e"></param>
         private void FormEditTrip_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (cancel)
+
+            if (cancel || 
+                e.CloseReason == CloseReason.UserClosing || 
+                e.CloseReason == CloseReason.FormOwnerClosing || 
+                e.CloseReason == CloseReason.WindowsShutDown)
             {
                 DialogResult msg = MessageBox.Show(this, "Вы действительно хотите отменить изменения?", "Внимание!", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                 if (msg == DialogResult.Yes)
