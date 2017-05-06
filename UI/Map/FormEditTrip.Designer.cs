@@ -54,9 +54,6 @@
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
-            this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
-            this.flowLayoutPanel5 = new System.Windows.Forms.FlowLayoutPanel();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.buttonLoadElevations = new System.Windows.Forms.Button();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
@@ -77,7 +74,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewWaypoints)).BeginInit();
             this.contextMenuStripWaypoints.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
-            this.tableLayoutPanel3.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
             this.flowLayoutPanel3.SuspendLayout();
@@ -90,7 +86,7 @@
             // buttonCancel
             // 
             this.buttonCancel.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.buttonCancel.Location = new System.Drawing.Point(501, 305);
+            this.buttonCancel.Location = new System.Drawing.Point(511, 305);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 32);
             this.buttonCancel.TabIndex = 0;
@@ -101,10 +97,12 @@
             // 
             // buttonSave
             // 
-            this.buttonSave.Location = new System.Drawing.Point(3, 0);
-            this.buttonSave.Margin = new System.Windows.Forms.Padding(3, 0, 3, 3);
+            this.buttonSave.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonSave.Location = new System.Drawing.Point(2, 0);
+            this.buttonSave.Margin = new System.Windows.Forms.Padding(2, 0, 2, 2);
             this.buttonSave.Name = "buttonSave";
-            this.buttonSave.Size = new System.Drawing.Size(75, 32);
+            this.buttonSave.Size = new System.Drawing.Size(82, 32);
             this.buttonSave.TabIndex = 1;
             this.buttonSave.Text = "Сохранить";
             this.toolTip1.SetToolTip(this.buttonSave, "Сохранить в списке маршрутов");
@@ -121,7 +119,7 @@
             this.dataGridViewDays.Location = new System.Drawing.Point(3, 23);
             this.dataGridViewDays.Name = "dataGridViewDays";
             this.dataGridViewDays.ReadOnly = true;
-            this.dataGridViewDays.Size = new System.Drawing.Size(242, 262);
+            this.dataGridViewDays.Size = new System.Drawing.Size(245, 262);
             this.dataGridViewDays.TabIndex = 2;
             this.dataGridViewDays.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewDays_CellClick);
             this.dataGridViewDays.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewDays_CellDoubleClick);
@@ -208,10 +206,10 @@
             this.dataGridViewWaypoints.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridViewWaypoints.ContextMenuStrip = this.contextMenuStripWaypoints;
             this.dataGridViewWaypoints.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dataGridViewWaypoints.Location = new System.Drawing.Point(251, 23);
+            this.dataGridViewWaypoints.Location = new System.Drawing.Point(254, 23);
             this.dataGridViewWaypoints.Name = "dataGridViewWaypoints";
             this.dataGridViewWaypoints.ReadOnly = true;
-            this.dataGridViewWaypoints.Size = new System.Drawing.Size(242, 262);
+            this.dataGridViewWaypoints.Size = new System.Drawing.Size(245, 262);
             this.dataGridViewWaypoints.TabIndex = 54;
             this.dataGridViewWaypoints.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewWaypoints_CellClick);
             this.dataGridViewWaypoints.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewWaypoints_CellDoubleClick);
@@ -277,7 +275,7 @@
             this.label1.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label1.Location = new System.Drawing.Point(56, 1);
+            this.label1.Location = new System.Drawing.Point(58, 1);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(135, 17);
             this.label1.TabIndex = 58;
@@ -288,7 +286,7 @@
             this.label2.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label2.Location = new System.Drawing.Point(318, 1);
+            this.label2.Location = new System.Drawing.Point(323, 1);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(107, 17);
             this.label2.TabIndex = 59;
@@ -299,8 +297,7 @@
             this.tableLayoutPanel1.ColumnCount = 3;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 86F));
-            this.tableLayoutPanel1.Controls.Add(this.tableLayoutPanel3, 2, 0);
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 93F));
             this.tableLayoutPanel1.Controls.Add(this.label1, 0, 0);
             this.tableLayoutPanel1.Controls.Add(this.label2, 1, 0);
             this.tableLayoutPanel1.Controls.Add(this.dataGridViewWaypoints, 1, 1);
@@ -316,53 +313,24 @@
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 66F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(582, 354);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(595, 354);
             this.tableLayoutPanel1.TabIndex = 60;
-            // 
-            // tableLayoutPanel3
-            // 
-            this.tableLayoutPanel3.ColumnCount = 2;
-            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel3.Controls.Add(this.flowLayoutPanel2, 1, 0);
-            this.tableLayoutPanel3.Controls.Add(this.flowLayoutPanel5, 0, 0);
-            this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel3.Location = new System.Drawing.Point(499, 3);
-            this.tableLayoutPanel3.Name = "tableLayoutPanel3";
-            this.tableLayoutPanel3.RowCount = 1;
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel3.Size = new System.Drawing.Size(80, 14);
-            this.tableLayoutPanel3.TabIndex = 64;
-            // 
-            // flowLayoutPanel2
-            // 
-            this.flowLayoutPanel2.Location = new System.Drawing.Point(43, 3);
-            this.flowLayoutPanel2.Name = "flowLayoutPanel2";
-            this.flowLayoutPanel2.Size = new System.Drawing.Size(34, 8);
-            this.flowLayoutPanel2.TabIndex = 0;
-            // 
-            // flowLayoutPanel5
-            // 
-            this.flowLayoutPanel5.Location = new System.Drawing.Point(3, 3);
-            this.flowLayoutPanel5.Name = "flowLayoutPanel5";
-            this.flowLayoutPanel5.Size = new System.Drawing.Size(34, 8);
-            this.flowLayoutPanel5.TabIndex = 1;
             // 
             // flowLayoutPanel1
             // 
             this.flowLayoutPanel1.Controls.Add(this.buttonSave);
             this.flowLayoutPanel1.Controls.Add(this.buttonLoadElevations);
             this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flowLayoutPanel1.Location = new System.Drawing.Point(499, 23);
+            this.flowLayoutPanel1.Location = new System.Drawing.Point(505, 23);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(80, 262);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(87, 262);
             this.flowLayoutPanel1.TabIndex = 60;
             // 
             // buttonLoadElevations
             // 
-            this.buttonLoadElevations.Location = new System.Drawing.Point(3, 38);
+            this.buttonLoadElevations.Location = new System.Drawing.Point(3, 37);
             this.buttonLoadElevations.Name = "buttonLoadElevations";
-            this.buttonLoadElevations.Size = new System.Drawing.Size(75, 38);
+            this.buttonLoadElevations.Size = new System.Drawing.Size(81, 38);
             this.buttonLoadElevations.TabIndex = 2;
             this.buttonLoadElevations.Text = "Загрузить высоты";
             this.buttonLoadElevations.UseVisualStyleBackColor = true;
@@ -376,20 +344,20 @@
             this.tableLayoutPanel2.Controls.Add(this.flowLayoutPanel3, 1, 0);
             this.tableLayoutPanel2.Controls.Add(this.flowLayoutPanel4, 0, 0);
             this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel2.Location = new System.Drawing.Point(251, 291);
+            this.tableLayoutPanel2.Location = new System.Drawing.Point(254, 291);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
             this.tableLayoutPanel2.RowCount = 1;
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(242, 60);
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(245, 60);
             this.tableLayoutPanel2.TabIndex = 63;
             // 
             // flowLayoutPanel3
             // 
             this.flowLayoutPanel3.Controls.Add(this.buttonWptFromFile);
             this.flowLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flowLayoutPanel3.Location = new System.Drawing.Point(124, 3);
+            this.flowLayoutPanel3.Location = new System.Drawing.Point(125, 3);
             this.flowLayoutPanel3.Name = "flowLayoutPanel3";
-            this.flowLayoutPanel3.Size = new System.Drawing.Size(115, 54);
+            this.flowLayoutPanel3.Size = new System.Drawing.Size(117, 54);
             this.flowLayoutPanel3.TabIndex = 0;
             // 
             // buttonWptFromFile
@@ -412,7 +380,7 @@
             this.flowLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel4.Location = new System.Drawing.Point(3, 3);
             this.flowLayoutPanel4.Name = "flowLayoutPanel4";
-            this.flowLayoutPanel4.Size = new System.Drawing.Size(115, 54);
+            this.flowLayoutPanel4.Size = new System.Drawing.Size(116, 54);
             this.flowLayoutPanel4.TabIndex = 1;
             // 
             // buttonAddWaypoint
@@ -455,16 +423,16 @@
             this.tableLayoutPanel4.Name = "tableLayoutPanel4";
             this.tableLayoutPanel4.RowCount = 1;
             this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel4.Size = new System.Drawing.Size(242, 60);
+            this.tableLayoutPanel4.Size = new System.Drawing.Size(245, 60);
             this.tableLayoutPanel4.TabIndex = 65;
             // 
             // flowLayoutPanel7
             // 
             this.flowLayoutPanel7.Controls.Add(this.buttonAddDayFromFile);
             this.flowLayoutPanel7.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flowLayoutPanel7.Location = new System.Drawing.Point(124, 3);
+            this.flowLayoutPanel7.Location = new System.Drawing.Point(125, 3);
             this.flowLayoutPanel7.Name = "flowLayoutPanel7";
-            this.flowLayoutPanel7.Size = new System.Drawing.Size(115, 54);
+            this.flowLayoutPanel7.Size = new System.Drawing.Size(117, 54);
             this.flowLayoutPanel7.TabIndex = 1;
             // 
             // buttonAddDayFromFile
@@ -487,7 +455,7 @@
             this.flowLayoutPanel6.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel6.Location = new System.Drawing.Point(3, 3);
             this.flowLayoutPanel6.Name = "flowLayoutPanel6";
-            this.flowLayoutPanel6.Size = new System.Drawing.Size(115, 54);
+            this.flowLayoutPanel6.Size = new System.Drawing.Size(116, 54);
             this.flowLayoutPanel6.TabIndex = 0;
             // 
             // buttonAddDay
@@ -523,7 +491,7 @@
             this.AcceptButton = this.buttonSave;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(582, 354);
+            this.ClientSize = new System.Drawing.Size(595, 354);
             this.Controls.Add(this.tableLayoutPanel1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MinimumSize = new System.Drawing.Size(598, 392);
@@ -536,7 +504,6 @@
             this.contextMenuStripWaypoints.ResumeLayout(false);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
-            this.tableLayoutPanel3.ResumeLayout(false);
             this.flowLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel2.ResumeLayout(false);
             this.flowLayoutPanel3.ResumeLayout(false);
@@ -574,9 +541,6 @@
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.Button buttonLoadElevations;
         private System.Windows.Forms.ToolStripMenuItem invertToolStripMenuItem;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
-        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel2;
-        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel5;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel3;
         private System.Windows.Forms.Button buttonWptFromFile;

@@ -77,6 +77,7 @@ namespace TrackConverter.UI.Map
             dataGridViewDays.Refresh();
 
             //путевые точки
+            trip.Waypoints = trip.SortWaypoints(trip.Waypoints);
             DataTable sourceW = new DataTable();
             sourceW.Columns.Add("Название");
             sourceW.Columns["Название"].DataType = typeof(string);

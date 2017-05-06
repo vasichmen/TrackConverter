@@ -324,6 +324,62 @@ namespace TrackConverter.Lib.Tracking
         }
 
 
+        /// <summary>
+        /// сортирует заданный массив путевых точек по порядку в маршруте 
+        /// </summary>
+        /// <param name="waypoints"></param>
+        public TrackFile SortWaypoints(TrackFile waypoints)
+        {
+            TrackFile track = null;
+            if (this.GetType() == typeof(TripRouteFile))
+                track = ((TripRouteFile)this).TotalTrack;
+            else
+                track = (TrackFile)this;
+
+            if (track == null || waypoints == null)
+                throw new ArgumentNullException("waypoints или track == null при сортировке точек вдоль трека");
+            if (track.Count == 0 || waypoints.Count == 0)
+                return waypoints;
+
+            TrackFile res = new TrackFile();
+
+            Dictionary<TrackPoint, TrackFile> dict = new Dictionary<TrackPoint, TrackFile>();
+            foreach (TrackPoint wpt in waypoints)
+            {
+                //поиск ближайшей точки
+                TrackPoint nearest = null;
+                double lenMin = double.MaxValue;
+                foreach (TrackPoint pt in track)
+                {
+                    double len = Vars.CurrentGeosystem.CalculateDistance(wpt, pt);
+                    if (len < lenMin)
+                    {
+                        lenMin = len;
+                        nearest = pt;
+                    }
+                }
+
+                //добавление в результат
+                if (nearest == null)
+                    throw new Exception("Ошибка при поиске ближайшей точки");
+
+                int ind = track.IndexOf(nearest);
+                if (!dict.ContainsKey(nearest))
+                    dict.Add(nearest, new TrackFile() { wpt });
+                else
+                    dict[nearest].Add(wpt);
+            }
+
+            foreach (TrackPoint tp in track)
+                if (dict.ContainsKey(tp))
+                    res.Add(dict[tp]);
+
+            if (waypoints.Count != res.Count)
+                throw new Exception("Ошибка, пропущена точка при поиске ближайшей");
+
+            return res;
+
+        }
 
         #endregion
 
