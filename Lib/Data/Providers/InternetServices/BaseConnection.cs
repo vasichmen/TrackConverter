@@ -131,8 +131,9 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                 request.Headers[HttpRequestHeader.AcceptLanguage] = "ru - RU,ru; q = 0.8,en - US; q = 0.6,en; q = 0.4";
 
                 //Получаем ответ от интернет-ресурса.
-                WebResponse response =
-                    request.GetResponse();
+                    WebResponse response =
+                        request.GetResponse();
+              
 
                 //string lng = response.Headers[HttpRequestHeader.var];
 

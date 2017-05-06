@@ -341,6 +341,7 @@ namespace TrackConverter.Lib.Tracking
             if (track.Count == 0 || waypoints.Count == 0)
                 return waypoints;
 
+            track.CalculateAll();
             TrackFile res = new TrackFile();
 
             Dictionary<TrackPoint, TrackFile> dict = new Dictionary<TrackPoint, TrackFile>();
@@ -363,6 +364,7 @@ namespace TrackConverter.Lib.Tracking
                 if (nearest == null)
                     throw new Exception("Ошибка при поиске ближайшей точки");
 
+                wpt.StartDistance = nearest.StartDistance;
                 int ind = track.IndexOf(nearest);
                 if (!dict.ContainsKey(nearest))
                     dict.Add(nearest, new TrackFile() { wpt });

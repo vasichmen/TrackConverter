@@ -289,4 +289,8 @@
     <value>7a9588127a9588127aca2bb0b07acffa5f77a957a958812225c2a32c3c076b4a82f95c8</value>
     <comment>ключ доступа к приложению ВК. Для сокращения ссылок</comment>
   </data>
+  <data name="word_template" xml:space="preserve">
+    <value>\Templates\template.dot</value>
+    <comment>шаблон ворда для сохранения</comment>
+  </data>
 </root>

@@ -375,6 +375,15 @@ namespace TrackConverter.Res.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на \Templates\template.dot.
+        /// </summary>
+        public static string word_template {
+            get {
+                return ResourceManager.GetString("word_template", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на \ICSharpCode.SharpZipLib.dll.
         /// </summary>
         public static string ziplib_dll_file {

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Windows.Forms;
 using Word = Microsoft.Office.Interop.Word;
 
 namespace TrackConverter.Lib.Tracking.Helpers
@@ -16,7 +17,7 @@ namespace TrackConverter.Lib.Tracking.Helpers
         {
 
             WordDocument wordDoc;
-            wordDoc = new WordDocument("D:\\template.dot");
+            wordDoc = new WordDocument(Application.StartupPath + Res.Properties.Resources.word_template);
 
             wordDoc.InsertTable(track.Count + 1, 4);
 
@@ -35,7 +36,7 @@ namespace TrackConverter.Lib.Tracking.Helpers
             wordDoc.Selection.FontSize = 10;
 
             wordDoc.SetSelectionToCell(1, 2);
-            wordDoc.Selection.Text = "Ш./Д.";
+            wordDoc.Selection.Text = "Ш./Д."+ WordDocument.NewLineChar + "От старта";
             wordDoc.Selection.FontSize = 10;
 
             wordDoc.SetSelectionToCell(1, 4);
@@ -44,22 +45,30 @@ namespace TrackConverter.Lib.Tracking.Helpers
 
             for (int i = 0; i < track.Count; i++)
             {
-                wordDoc.SetSelectionToCell(i+2, 1);
+                wordDoc.SetSelectionToCell(i + 2, 1);
                 wordDoc.Selection.Text = i.ToString();
                 wordDoc.Selection.FontSize = 10;
+
                 wordDoc.SetSelectionToCell(i + 2, 3);
                 wordDoc.Selection.Text = track[i].Name;
                 wordDoc.Selection.FontSize = 10;
+
                 wordDoc.SetSelectionToCell(i + 2, 2);
-                wordDoc.Selection.Text = track[i].Coordinates.Latitude.TotalDegrees.ToString("00.000")+"\r\n"+ track[i].Coordinates.Longitude.TotalDegrees.ToString("00.000");
+                wordDoc.Selection.Text =
+                    track[i].Coordinates.Latitude.ToString("00.000")+ 'º' + WordDocument.NewLineChar +
+                    track[i].Coordinates.Longitude.ToString("00.000")+ 'º' + WordDocument.NewLineChar +
+                    track[i].StartDistance.ToString("0.0")+" км";
                 wordDoc.Selection.FontSize = 10;
+
                 wordDoc.SetSelectionToCell(i + 2, 4);
                 wordDoc.Selection.Text = track[i].Description;
                 wordDoc.Selection.FontSize = 10;
             }
 
             wordDoc.Selection.FontSize = 10;
+
             wordDoc.Save(fileName);
+
             wordDoc.Visible = true;
         }
 
@@ -173,7 +182,7 @@ namespace TrackConverter.Lib.Tracking.Helpers
                 try
                 {
                     _document = _application.Documents.Add(ref _templatePathObj, ref _missingObj, ref _missingObj, ref _missingObj);
-               
+
                 }
                 catch (Exception error)
                 {

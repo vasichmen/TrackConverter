@@ -508,7 +508,7 @@ namespace TrackConverter.UI.Map
                             switch (rt.Result)
                             {
                                 case "wpt":
-                                    Serializer.Serialize(basename+nm + ".wpt", tf, FileFormats.WptFile);
+                                    Serializer.Serialize(basename + nm + ".wpt", tf, FileFormats.WptFile);
                                     break;
                                 case "crd":
                                     Serializer.Serialize(basename + nm + ".crd", tf, FileFormats.CrdFile);
@@ -620,7 +620,12 @@ namespace TrackConverter.UI.Map
                         Serializer.Serialize(sf.FileName, trip.Waypoints, FileFormats.TxtFile);
                         break;
                     case ".doc":
-                        Serializer.Serialize(sf.FileName, trip.Waypoints, FileFormats.DocFile);
+                        try
+                        {
+                            Serializer.Serialize(sf.FileName, trip.Waypoints, FileFormats.DocFile);
+                        }
+                        catch (Exception exxx)
+                        { MessageBox.Show(this, exxx.Message, "Сохранение файла", MessageBoxButtons.OK, MessageBoxIcon.Error); }
                         break;
                     case ".adrs":
                         Program.winMain.BeginOperation();
