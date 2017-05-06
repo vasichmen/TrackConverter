@@ -52,6 +52,11 @@
     <Reference Include="ICSharpCode.SharpZipLib">
       <HintPath>..\packages\SharpZipLib.0.86.0\lib\20\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Office.Interop.Word, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>..\..\..\..\..\..\WordTest\WordTest\bin\Debug\Microsoft.Office.Interop.Word.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net40\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
@@ -152,6 +157,7 @@
     <Compile Include="Mathematic\Routing\PolarSearch.cs" />
     <Compile Include="Tracking\BaseTrack.cs" />
     <Compile Include="Tracking\Helpers\KmlHelper.cs" />
+    <Compile Include="Tracking\Helpers\OfficeHelper.cs" />
     <Compile Include="Tracking\Helpers\RteHelper.cs" />
     <Compile Include="Tracking\Helpers\TrrHelper.cs" />
     <Compile Include="Tracking\Helpers\XmlHelper.cs" />

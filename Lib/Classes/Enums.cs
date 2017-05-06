@@ -480,6 +480,11 @@ namespace TrackConverter
         KmzFile,
 
         /// <summary>
+        /// файл microsoft word
+        /// </summary>
+        DocFile,
+
+        /// <summary>
         /// файл csv
         /// </summary>
         CsvFile,

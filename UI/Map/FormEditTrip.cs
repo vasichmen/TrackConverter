@@ -561,6 +561,7 @@ namespace TrackConverter.UI.Map
         {
             SaveFileDialog sf = new SaveFileDialog();
             sf.Filter = "Файл маршрута Androzic (*.rt2)|*.rt2";
+            sf.Filter += "|Документ Word (*.doc)|*.doc";
             sf.Filter += "|Треки Androzic (*.plt)|*.plt";
             sf.Filter += "|Путевые точки Ozi(*.wpt)|*.wpt";
             sf.Filter += "|Файл координат(*.crd)|*.crd";
@@ -617,6 +618,9 @@ namespace TrackConverter.UI.Map
                         break;
                     case ".txt":
                         Serializer.Serialize(sf.FileName, trip.Waypoints, FileFormats.TxtFile);
+                        break;
+                    case ".doc":
+                        Serializer.Serialize(sf.FileName, trip.Waypoints, FileFormats.DocFile);
                         break;
                     case ".adrs":
                         Program.winMain.BeginOperation();

@@ -8,6 +8,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
+using Word = Microsoft.Office.Interop.Word;
 using System.Xml;
 using ICSharpCode.SharpZipLib.Zip;
 using Newtonsoft.Json;
@@ -54,6 +55,9 @@ namespace TrackConverter.Lib.Tracking
                 case FileFormats.GpxFile:
                     ExportGPX(FileName, track);
                     return null;
+                case FileFormats.DocFile:
+                    ExportDOC(FileName, track);
+                    return null;
                 case FileFormats.KmlFile:
                     ExportKML(FileName, track);
                     return null;
@@ -89,6 +93,7 @@ namespace TrackConverter.Lib.Tracking
             }
            
         }
+
 
         /// <summary>
         /// сериализация списка треков в файл
@@ -1038,6 +1043,16 @@ namespace TrackConverter.Lib.Tracking
                 i++;
             }
             outputS.Close();
+        }
+
+        /// <summary>
+        /// экспорт в  microsoft word 
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <param name="track"></param>
+        private static void ExportDOC(string fileName, BaseTrack track)
+        {
+            OfficeHelper.WriteTrack(track, fileName);
         }
 
         /// <summary>
