@@ -131,11 +131,18 @@ namespace TrackConverter.Lib.Tracking
         /// <returns></returns>
         public TrackFile JoinTracks()
         {
+            if (this.Count == 0)
+                return new TrackFile();
             TrackFile res = new TrackFile();
+            string name = "";
             foreach (BaseTrack tf in this)
+            {
                 foreach (TrackPoint tp in tf)
                     res.Add(tp);
-
+                name += tf.Name;
+            }
+            res.Name = name;
+            res.Color = this[0].Color;
             return res;
         }
 

@@ -28,7 +28,7 @@ namespace TrackConverter.UI.Map
         private TripRouteFile trip;
         private BaseTrack selectedTrack;
         private TrackPoint selectedPoint;
-        private bool cancel = false;
+        private bool saved = false;
 
         private FormEditTrip()
         {
@@ -76,6 +76,11 @@ namespace TrackConverter.UI.Map
             dataGridViewDays.DataSource = sourceD;
             dataGridViewDays.Refresh();
 
+            foreach (DataGridViewColumn column in dataGridViewDays.Columns)
+                column.SortMode = DataGridViewColumnSortMode.NotSortable;
+            foreach (DataGridViewColumn column in dataGridViewWaypoints.Columns)
+                column.SortMode = DataGridViewColumnSortMode.NotSortable;
+
             //путевые точки
             trip.Waypoints = trip.SortWaypoints(trip.Waypoints);
             DataTable sourceW = new DataTable();
@@ -112,10 +117,10 @@ namespace TrackConverter.UI.Map
         private void FormEditTrip_FormClosing(object sender, FormClosingEventArgs e)
         {
 
-            if (cancel || 
-                e.CloseReason == CloseReason.UserClosing || 
-                e.CloseReason == CloseReason.FormOwnerClosing || 
-                e.CloseReason == CloseReason.WindowsShutDown)
+            if (!saved && (
+                e.CloseReason == CloseReason.UserClosing ||
+                e.CloseReason == CloseReason.FormOwnerClosing ||
+                e.CloseReason == CloseReason.WindowsShutDown))
             {
                 DialogResult msg = MessageBox.Show(this, "Вы действительно хотите отменить изменения?", "Внимание!", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                 if (msg == DialogResult.Yes)
@@ -139,7 +144,6 @@ namespace TrackConverter.UI.Map
         /// <param name="e"></param>
         private void contextMenuStripDays_Opening(object sender, CancelEventArgs e)
         {
-            invertToolStripMenuItem.Visible = !dataGridViewDays.Rows[0].Selected;
             if (dataGridViewDays.SelectedRows.Count == 1)
             {
                 int ind = dataGridViewDays.SelectedRows[0].Index;
@@ -147,6 +151,9 @@ namespace TrackConverter.UI.Map
                 downDayToolStripMenuItem.Visible = ind != dataGridViewDays.Rows.Count - 1;
                 informationDayToolStripMenuItem.Visible = true;
                 editDayToolStripMenuItem.Visible = true;
+                separateTrackToolStripMenuItem.Visible = true;
+                addIntermedPointsToolStripMenuItem.Visible = true;
+                joinToolStripMenuItem.Visible = false;
             }
             else
             {
@@ -154,8 +161,14 @@ namespace TrackConverter.UI.Map
                 downDayToolStripMenuItem.Visible = false;
                 informationDayToolStripMenuItem.Visible = false;
                 editDayToolStripMenuItem.Visible = false;
+                separateTrackToolStripMenuItem.Visible = false;
+                addIntermedPointsToolStripMenuItem.Visible = true;
+                joinToolStripMenuItem.Visible = true;
             }
-
+            invertToolStripMenuItem.Visible = !dataGridViewDays.Rows[0].Selected;
+            separateTrackToolStripMenuItem.Visible = !dataGridViewDays.Rows[0].Selected;
+            addIntermedPointsToolStripMenuItem.Visible = !dataGridViewDays.Rows[0].Selected;
+            joinToolStripMenuItem.Visible = !dataGridViewDays.Rows[0].Selected;
         }
 
         /// <summary>
@@ -237,6 +250,108 @@ namespace TrackConverter.UI.Map
                     trip.setDayRoute(ind, buf);
                 }
             FillDGV(trip);
+        }
+
+        /// <summary>
+        /// разделить маршрут на две части
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void separateTrackToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+            int ind = dataGridViewDays.SelectedRows[0].Index - 1; //первый маршрут в списке - всё путешествие
+            TrackFile tf = (TrackFile)trip.DaysRoutes[ind];
+            readLength:
+            FormReadText frt = new FormReadText(DialogType.ReadNumber, "Введите длину первого отрезка в км. Максимальная длина " + tf.Distance.ToString("0.0") + " км.", "", false, false, false, false);
+            if (frt.ShowDialog(this) == DialogResult.OK)
+            {
+                double length = double.Parse(frt.Result
+                    .Trim()
+                    .Replace('.', Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0])
+                    .Replace(',', Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0]));
+
+                if (length >= tf.Distance)
+                {
+                    MessageBox.Show(this, "Длина первого отрезка не может быть больше длины маршрута", "Разбиение маршурта", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    goto readLength;
+                }
+
+                TrackFile first = tf.Subtrack(0, length * 1000); //передаём длину в метрах
+                TrackFile second = tf.Subtrack(length * 1000, double.MaxValue);
+
+                //первая часть маршрута
+                first.CalculateAll();
+                first.Color = tf.Color;
+                first.Name = tf.Name + " 1";
+                first.Description = tf.Description;
+
+                //вторая часть
+                second.CalculateAll();
+                second.Color = Vars.Options.Converter.GetColor();
+                second.Name = tf.Name + " 2";
+                second.Description = tf.Description;
+
+                //добавление в список по дням
+                trip.DaysRoutes.Insert(ind, second);
+                trip.DaysRoutes.Insert(ind, first);
+                trip.DaysRoutes.Remove(tf);
+
+                FillDGV(trip);
+            }
+        }
+
+        /// <summary>
+        /// объединить маршруты
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void joinToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            TrackFileList tfl = new TrackFileList();
+            int startIndex = dataGridViewDays.SelectedRows[0].Index - 1;
+            foreach (DataGridViewRow dr in dataGridViewDays.SelectedRows)
+            {
+                BaseTrack bt = trip.DaysRoutes[dr.Index - 1];
+                tfl.Add(bt);
+                trip.DaysRoutes.Remove(bt);
+            }
+
+            TrackFile res= tfl.JoinTracks();
+            trip.DaysRoutes.Insert(startIndex, res);
+            FillDGV(trip);
+        }
+
+        /// <summary>
+        /// добавление промежуточных точек в маршрут
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void addIntermedPointsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FormReadText frt = new FormReadText(DialogType.ReadNumber, "Введите максимальное расстояние в метрах между точками", "", false, false, false, false);
+
+
+            if (frt.ShowDialog(this) == DialogResult.OK)
+            {
+                double length = double.Parse(frt.Result
+                    .Trim()
+                    .Replace('.', Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0])
+                    .Replace(',', Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0]));
+
+                foreach (DataGridViewRow dr in dataGridViewDays.SelectedRows)
+                {
+                    int ind = dr.Index - 1; //первый маршрут в списке - всё путешествие
+                    TrackFile tf = (TrackFile)trip.DaysRoutes[ind];
+
+                    TrackFile ntf = (TrackFile)tf.AddIntermediatePoints(length);
+                    trip.DaysRoutes.Insert(ind, ntf);
+                    trip.DaysRoutes.Remove(tf);
+
+                }
+                FillDGV(trip);
+            }
+
         }
 
         /// <summary>
@@ -689,7 +804,7 @@ namespace TrackConverter.UI.Map
         /// <param name="e"></param>
         private void buttonSave_Click(object sender, EventArgs e)
         {
-            cancel = false;
+            saved = true;
             afterAction.Invoke(this.trip.Clone() as TripRouteFile);
             Close();
         }
@@ -701,10 +816,39 @@ namespace TrackConverter.UI.Map
         /// <param name="e"></param>
         private void buttonCancel_Click(object sender, EventArgs e)
         {
-            cancel = true;
+            saved = false;
             Close();
         }
 
+        /// <summary>
+        /// загрузить высоты
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void buttonLoadElevations_Click(object sender, EventArgs e)
+        {
+            Program.winMain.BeginOperation();
+            Task ts = new Task(new Action(() =>
+            {
+                try
+                {
+                    trip = (TripRouteFile)new GeoInfo(Vars.Options.DataSources.GeoInfoProvider).GetElevation(trip, Program.winMain.setCurrentOperation);
+                }
+                catch (Exception ex)
+                {
+                    this.Invoke(new Action(() =>
+                        MessageBox.Show(this, "Не удалось получить информацию из-за проблем с соединением.\r\n" + ex.Message + "\r\nПроверьте соединение с Интернет", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    ));
+                }
+                this.Invoke(new Action(() =>
+                {
+                    dataGridViewDays.ClearSelection();
+                    dataGridViewDays.Rows[0].Selected = true;
+                    Program.winMain.EndOperation();
+                }));
+            }));
+            ts.Start();
+        }
 
         #endregion
 
@@ -852,39 +996,13 @@ namespace TrackConverter.UI.Map
         }
 
 
-        #endregion
+
+
 
         #endregion
 
-        /// <summary>
-        /// загрузить высоты
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void buttonLoadElevations_Click(object sender, EventArgs e)
-        {
-            Program.winMain.BeginOperation();
-            Task ts = new Task(new Action(() =>
-            {
-                try
-                {
-                    trip = (TripRouteFile)new GeoInfo(Vars.Options.DataSources.GeoInfoProvider).GetElevation(trip, Program.winMain.setCurrentOperation);
-                }
-                catch (Exception ex)
-                {
-                    this.Invoke(new Action(() =>
-                        MessageBox.Show(this, "Не удалось получить информацию из-за проблем с соединением.\r\n" + ex.Message + "\r\nПроверьте соединение с Интернет", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error)
-                    ));
-                }
-                this.Invoke(new Action(() =>
-                {
-                    dataGridViewDays.ClearSelection();
-                    dataGridViewDays.Rows[0].Selected = true;
-                    Program.winMain.EndOperation();
-                }));
-            }));
-            ts.Start();
-        }
+        #endregion
+
 
     }
 }

@@ -63,9 +63,8 @@ namespace TrackConverter.UI.Tools
 
             this.Points = waypoints;
             this.endEditWaypointsAction = callEndEditWaypointsOnMap;
-            dataGridView1.DataSource = null;
-            dataGridView1.DataSource = Points.Source;
-            dataGridView1.Refresh();
+            FillDGV(Points.Source);
+
         }
 
         #endregion
@@ -103,9 +102,7 @@ namespace TrackConverter.UI.Tools
                 {
                     Points = Serializer.DeserializeTrackFile(of.FileName);
 
-                    dataGridView1.DataSource = null;
-                    dataGridView1.DataSource = Points.Source;
-                    dataGridView1.Refresh();
+                    FillDGV(Points.Source);
                     Vars.Options.Common.LastFileLoadDirectory = Path.GetDirectoryName(of.FileName);
                 }
             }
@@ -176,9 +173,7 @@ namespace TrackConverter.UI.Tools
                 {
                     BaseTrack tf = Serializer.DeserializeTrackFile(of.Result);
                     Points = tf;
-                    dataGridView1.DataSource = null;
-                    dataGridView1.DataSource = Points.Source;
-                    dataGridView1.Refresh();
+                    FillDGV(Points.Source);
                 }
             }
             catch (Exception ex) { MessageBox.Show(this, ex.Message, "Ошибка!", MessageBoxButtons.OK, MessageBoxIcon.Error); }
@@ -235,10 +230,7 @@ namespace TrackConverter.UI.Tools
             {
                 DataTable dt = (DataTable)dataGridView1.DataSource;
                 Points.Source = dt;
-
-                dataGridView1.DataSource = null;
-                dataGridView1.DataSource = Points.Source;
-                dataGridView1.Refresh();
+                FillDGV(Points.Source);
             }
             catch (Exception ex) { MessageBox.Show(ex.Message); }
         }
@@ -272,11 +264,7 @@ namespace TrackConverter.UI.Tools
 
             int row = dataGridView1.SelectedCells[0].RowIndex;
             Points.Remove(row);
-
-
-            dataGridView1.DataSource = null;
-            dataGridView1.DataSource = Points.Source;
-            dataGridView1.Refresh();
+            FillDGV(Points.Source);
 
             Vars.currentSelectedTrack = Points;
             Program.RefreshWindows(this);
@@ -331,9 +319,7 @@ namespace TrackConverter.UI.Tools
             {
                 Points.Insert(row, fep.Result);
                 Points.CalculateAll();
-                dataGridView1.DataSource = null;
-                dataGridView1.DataSource = Points.Source;
-                dataGridView1.Refresh();
+                FillDGV(Points.Source);
                 this.isEdited = true;
 
             }
@@ -353,9 +339,7 @@ namespace TrackConverter.UI.Tools
             {
                 Points[row] = fep.Result;
                 Points.CalculateAll();
-                dataGridView1.DataSource = null;
-                dataGridView1.DataSource = Points.Source;
-                dataGridView1.Refresh();
+                FillDGV(Points.Source);
                 this.isEdited = true;
 
                 Vars.currentSelectedTrack = this.Points;
@@ -432,9 +416,7 @@ namespace TrackConverter.UI.Tools
             }
             if (loaded)
             {
-                dataGridView1.DataSource = null;
-                dataGridView1.DataSource = Points.Source;
-                dataGridView1.Refresh();
+                FillDGV(Points.Source);
             }
         }
 
@@ -508,9 +490,7 @@ namespace TrackConverter.UI.Tools
             {
                 Points[row] = fep.Result;
                 Points.CalculateAll();
-                dataGridView1.DataSource = null;
-                dataGridView1.DataSource = Points.Source;
-                dataGridView1.Refresh();
+                FillDGV(Points.Source);
             }
         }
 
@@ -583,9 +563,7 @@ namespace TrackConverter.UI.Tools
         internal void SetTrack(TrackFile tf)
         {
             this.Points = tf;
-            dataGridView1.DataSource = null;
-            dataGridView1.DataSource = Points.Source;
-            dataGridView1.Refresh();
+            FillDGV(Points.Source);
         }
 
         /// <summary>
@@ -594,9 +572,7 @@ namespace TrackConverter.UI.Tools
         internal void Clear()
         {
             this.Points.Clear();
-            dataGridView1.DataSource = null;
-            dataGridView1.DataSource = Points.Source;
-            dataGridView1.Refresh();
+            FillDGV(Points.Source);
         }
 
         /// <summary>
@@ -616,11 +592,26 @@ namespace TrackConverter.UI.Tools
             else
                 this.Points.Clear();
 
-            dataGridView1.DataSource = null;
-            dataGridView1.DataSource = Points.Source;
-            dataGridView1.Refresh();
+            FillDGV(Points.Source);
         }
 
+
+        #endregion
+
+        #region вспомогательные 
+
+        /// <summary>
+        /// заполнение таблицы
+        /// </summary>
+        /// <param name="source"></param>
+        void FillDGV(object source)
+        {
+            dataGridView1.DataSource = null;
+            dataGridView1.DataSource = source;
+            dataGridView1.Refresh();
+            foreach (DataGridViewColumn column in dataGridView1.Columns)
+                column.SortMode = DataGridViewColumnSortMode.NotSortable;
+        }
 
         #endregion
     }

@@ -441,7 +441,7 @@ namespace TrackConverter.Lib.Tracking
         /// получить отрезок маршрута с заданной позиции в метрах start длиной length метрах
         /// </summary>
         /// <param name="start">начало в метрах</param>
-        /// <param name="length">длина отрезка в метрах</param>
+        /// <param name="length">длина отрезка в метрах. Для выбора всего оставшегося маршрута передать length=double.MaxValue</param>
         /// <returns></returns>
         public TrackFile Subtrack(double start, double length)
         {

@@ -194,7 +194,7 @@ namespace TrackConverter.UI.Converter
             BaseTrack tf = null;
 
             //если кнопка контекстного меню
-            if (((ToolStripMenuItem)sender).Name == "saveToolStripMenuItem1")
+            if (((ToolStripMenuItem)sender).Name == "saveFileContextToolStripMenuItem1" || ((ToolStripMenuItem)sender).Name == "saveToolStripMenuItem1")
                 if (dataGridView1.SelectedRows.Count > 1) //если выделено больше одного маршрута, то сохранение в один файл
                 {
                     saveAllInOneFileToolStripMenuItem_Click(sender, e);

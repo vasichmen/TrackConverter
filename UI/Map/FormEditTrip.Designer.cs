@@ -47,8 +47,6 @@
             this.dataGridViewWaypoints = new System.Windows.Forms.DataGridView();
             this.contextMenuStripWaypoints = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.informationPointToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.upPointToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.downPointToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.insertPointНовуюToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.removePointToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.label1 = new System.Windows.Forms.Label();
@@ -69,6 +67,9 @@
             this.buttonAddDay = new System.Windows.Forms.Button();
             this.buttonExportDays = new System.Windows.Forms.Button();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.separateTrackToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.addIntermedPointsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.joinToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewDays)).BeginInit();
             this.contextMenuStripDays.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewWaypoints)).BeginInit();
@@ -134,11 +135,14 @@
             this.upDayToolStripMenuItem,
             this.downDayToolStripMenuItem,
             this.editDayToolStripMenuItem,
+            this.addIntermedPointsToolStripMenuItem,
+            this.separateTrackToolStripMenuItem,
+            this.joinToolStripMenuItem,
             this.invertToolStripMenuItem,
             this.insertDayToolStripMenuItem,
             this.removeDayToolStripMenuItem});
             this.contextMenuStripDays.Name = "contextMenuStripDays";
-            this.contextMenuStripDays.Size = new System.Drawing.Size(162, 158);
+            this.contextMenuStripDays.Size = new System.Drawing.Size(257, 246);
             this.contextMenuStripDays.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStripDays_Opening);
             // 
             // informationDayToolStripMenuItem
@@ -146,57 +150,63 @@
             this.informationDayToolStripMenuItem.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             this.informationDayToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("informationDayToolStripMenuItem.Image")));
             this.informationDayToolStripMenuItem.Name = "informationDayToolStripMenuItem";
-            this.informationDayToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
+            this.informationDayToolStripMenuItem.Size = new System.Drawing.Size(256, 22);
             this.informationDayToolStripMenuItem.Text = "Информация";
+            this.informationDayToolStripMenuItem.ToolTipText = "Информация о маршруте";
             this.informationDayToolStripMenuItem.Click += new System.EventHandler(this.informationDayToolStripMenuItem_Click);
             // 
             // upDayToolStripMenuItem
             // 
             this.upDayToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("upDayToolStripMenuItem.Image")));
             this.upDayToolStripMenuItem.Name = "upDayToolStripMenuItem";
-            this.upDayToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
+            this.upDayToolStripMenuItem.Size = new System.Drawing.Size(256, 22);
             this.upDayToolStripMenuItem.Text = "Вверх";
+            this.upDayToolStripMenuItem.ToolTipText = "Сдвинуть маршрут выше";
             this.upDayToolStripMenuItem.Click += new System.EventHandler(this.upDayToolStripMenuItem_Click);
             // 
             // downDayToolStripMenuItem
             // 
             this.downDayToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("downDayToolStripMenuItem.Image")));
             this.downDayToolStripMenuItem.Name = "downDayToolStripMenuItem";
-            this.downDayToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
+            this.downDayToolStripMenuItem.Size = new System.Drawing.Size(256, 22);
             this.downDayToolStripMenuItem.Text = "Вниз";
+            this.downDayToolStripMenuItem.ToolTipText = "Переместить выделенный маршрут ниже";
             this.downDayToolStripMenuItem.Click += new System.EventHandler(this.downDayToolStripMenuItem_Click);
             // 
             // editDayToolStripMenuItem
             // 
             this.editDayToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("editDayToolStripMenuItem.Image")));
             this.editDayToolStripMenuItem.Name = "editDayToolStripMenuItem";
-            this.editDayToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
+            this.editDayToolStripMenuItem.Size = new System.Drawing.Size(256, 22);
             this.editDayToolStripMenuItem.Text = "Редактировать";
+            this.editDayToolStripMenuItem.ToolTipText = "редактировать ывделенный маршрут на карте";
             this.editDayToolStripMenuItem.Click += new System.EventHandler(this.editDayToolStripMenuItem_Click);
             // 
             // invertToolStripMenuItem
             // 
             this.invertToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("invertToolStripMenuItem.Image")));
             this.invertToolStripMenuItem.Name = "invertToolStripMenuItem";
-            this.invertToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
+            this.invertToolStripMenuItem.Size = new System.Drawing.Size(256, 22);
             this.invertToolStripMenuItem.Text = "Инвертировать";
-            this.invertToolStripMenuItem.ToolTipText = "Инвертировать маршрут";
+            this.invertToolStripMenuItem.ToolTipText = "Переставить точки в маршурте в обратном порядке";
             this.invertToolStripMenuItem.Click += new System.EventHandler(this.invertToolStripMenuItem_Click);
             // 
             // insertDayToolStripMenuItem
             // 
             this.insertDayToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("insertDayToolStripMenuItem.Image")));
             this.insertDayToolStripMenuItem.Name = "insertDayToolStripMenuItem";
-            this.insertDayToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
+            this.insertDayToolStripMenuItem.Size = new System.Drawing.Size(256, 22);
             this.insertDayToolStripMenuItem.Text = "Вставить новый";
+            this.insertDayToolStripMenuItem.ToolTipText = "Добавление нового маршрута после выделенного";
             this.insertDayToolStripMenuItem.Click += new System.EventHandler(this.insertDayToolStripMenuItem_Click);
             // 
             // removeDayToolStripMenuItem
             // 
             this.removeDayToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("removeDayToolStripMenuItem.Image")));
             this.removeDayToolStripMenuItem.Name = "removeDayToolStripMenuItem";
-            this.removeDayToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
+            this.removeDayToolStripMenuItem.Size = new System.Drawing.Size(256, 22);
             this.removeDayToolStripMenuItem.Text = "Удалить";
+            this.removeDayToolStripMenuItem.ToolTipText = "Удаление выделенного маршрута";
             this.removeDayToolStripMenuItem.Click += new System.EventHandler(this.removeDayToolStripMenuItem_Click);
             // 
             // dataGridViewWaypoints
@@ -221,12 +231,10 @@
             // 
             this.contextMenuStripWaypoints.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.informationPointToolStripMenuItem,
-            this.upPointToolStripMenuItem,
-            this.downPointToolStripMenuItem,
             this.insertPointНовуюToolStripMenuItem,
             this.removePointToolStripMenuItem1});
             this.contextMenuStripWaypoints.Name = "contextMenuStripWaypoints";
-            this.contextMenuStripWaypoints.Size = new System.Drawing.Size(162, 114);
+            this.contextMenuStripWaypoints.Size = new System.Drawing.Size(162, 70);
             this.contextMenuStripWaypoints.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStripWaypoints_Opening);
             // 
             // informationPointToolStripMenuItem
@@ -236,23 +244,8 @@
             this.informationPointToolStripMenuItem.Name = "informationPointToolStripMenuItem";
             this.informationPointToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
             this.informationPointToolStripMenuItem.Text = "Информация";
+            this.informationPointToolStripMenuItem.ToolTipText = "Информация о точке";
             this.informationPointToolStripMenuItem.Click += new System.EventHandler(this.informationPointToolStripMenuItem_Click);
-            // 
-            // upPointToolStripMenuItem
-            // 
-            this.upPointToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("upPointToolStripMenuItem.Image")));
-            this.upPointToolStripMenuItem.Name = "upPointToolStripMenuItem";
-            this.upPointToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
-            this.upPointToolStripMenuItem.Text = "Вверх";
-            this.upPointToolStripMenuItem.Click += new System.EventHandler(this.upPointToolStripMenuItem1_Click);
-            // 
-            // downPointToolStripMenuItem
-            // 
-            this.downPointToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("downPointToolStripMenuItem.Image")));
-            this.downPointToolStripMenuItem.Name = "downPointToolStripMenuItem";
-            this.downPointToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
-            this.downPointToolStripMenuItem.Text = "Вниз";
-            this.downPointToolStripMenuItem.Click += new System.EventHandler(this.downPointToolStripMenuItem1_Click);
             // 
             // insertPointНовуюToolStripMenuItem
             // 
@@ -260,6 +253,7 @@
             this.insertPointНовуюToolStripMenuItem.Name = "insertPointНовуюToolStripMenuItem";
             this.insertPointНовуюToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
             this.insertPointНовуюToolStripMenuItem.Text = "Вставить новую";
+            this.insertPointНовуюToolStripMenuItem.ToolTipText = "Добавление новой точки после выделенной";
             this.insertPointНовуюToolStripMenuItem.Click += new System.EventHandler(this.insertPointToolStripMenuItem_Click);
             // 
             // removePointToolStripMenuItem1
@@ -268,6 +262,7 @@
             this.removePointToolStripMenuItem1.Name = "removePointToolStripMenuItem1";
             this.removePointToolStripMenuItem1.Size = new System.Drawing.Size(161, 22);
             this.removePointToolStripMenuItem1.Text = "Удалить";
+            this.removePointToolStripMenuItem1.ToolTipText = "Удаление выделенной точки";
             this.removePointToolStripMenuItem1.Click += new System.EventHandler(this.removePointToolStripMenuItem1_Click);
             // 
             // label1
@@ -486,6 +481,35 @@
             this.buttonExportDays.UseVisualStyleBackColor = true;
             this.buttonExportDays.Click += new System.EventHandler(this.buttonExportDays_Click);
             // 
+            // separateTrackToolStripMenuItem
+            // 
+            this.separateTrackToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("separateTrackToolStripMenuItem.Image")));
+            this.separateTrackToolStripMenuItem.Name = "separateTrackToolStripMenuItem";
+            this.separateTrackToolStripMenuItem.Size = new System.Drawing.Size(256, 22);
+            this.separateTrackToolStripMenuItem.Text = "Разделить";
+            this.separateTrackToolStripMenuItem.ToolTipText = "Разделить маршрут на два. Длина первого задаётся вручную, оставшаяся часть объеди" +
+    "няется во второй маршрут";
+            this.separateTrackToolStripMenuItem.Click += new System.EventHandler(this.separateTrackToolStripMenuItem_Click);
+            // 
+            // addIntermedPointsToolStripMenuItem
+            // 
+            this.addIntermedPointsToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("addIntermedPointsToolStripMenuItem.Image")));
+            this.addIntermedPointsToolStripMenuItem.Name = "addIntermedPointsToolStripMenuItem";
+            this.addIntermedPointsToolStripMenuItem.Size = new System.Drawing.Size(256, 22);
+            this.addIntermedPointsToolStripMenuItem.Text = "Добавить промежуточные точки";
+            this.addIntermedPointsToolStripMenuItem.ToolTipText = "Добавление дополнительных точек в маршрут между существующими на заданном расстоя" +
+    "нии";
+            this.addIntermedPointsToolStripMenuItem.Click += new System.EventHandler(this.addIntermedPointsToolStripMenuItem_Click);
+            // 
+            // joinToolStripMenuItem
+            // 
+            this.joinToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("joinToolStripMenuItem.Image")));
+            this.joinToolStripMenuItem.Name = "joinToolStripMenuItem";
+            this.joinToolStripMenuItem.Size = new System.Drawing.Size(256, 22);
+            this.joinToolStripMenuItem.Text = "Объединить";
+            this.joinToolStripMenuItem.ToolTipText = "Объединение нескольких маршрутов в один";
+            this.joinToolStripMenuItem.Click += new System.EventHandler(this.joinToolStripMenuItem_Click);
+            // 
             // FormEditTrip
             // 
             this.AcceptButton = this.buttonSave;
@@ -536,8 +560,6 @@
         private System.Windows.Forms.ToolStripMenuItem removePointToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem downDayToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem upDayToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem upPointToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem downPointToolStripMenuItem;
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.Button buttonLoadElevations;
         private System.Windows.Forms.ToolStripMenuItem invertToolStripMenuItem;
@@ -553,5 +575,8 @@
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel6;
         private System.Windows.Forms.Button buttonAddDay;
         private System.Windows.Forms.Button buttonExportDays;
+        private System.Windows.Forms.ToolStripMenuItem separateTrackToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem addIntermedPointsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem joinToolStripMenuItem;
     }
 }
