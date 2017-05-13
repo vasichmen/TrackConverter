@@ -627,8 +627,9 @@ namespace TrackConverter.UI.Converter
         /// <param name="e"></param>
         private void ClearToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            dataGridView1.DataSource = null;
             Tracks.Clear();
+            dataGridView1.DataSource = Tracks.Source;
+            dataGridView1.Refresh();
             SaveToolStripMenuItem.Enabled = false;
             Program.winMap.Clear();
             Program.winPoints.Clear();

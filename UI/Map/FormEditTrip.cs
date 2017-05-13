@@ -411,18 +411,9 @@ namespace TrackConverter.UI.Map
         private void contextMenuStripWaypoints_Opening(object sender, CancelEventArgs e)
         {
             if (dataGridViewWaypoints.SelectedRows.Count == 1)
-            {
-                int ind = dataGridViewWaypoints.SelectedRows[0].Index;
-                upPointToolStripMenuItem.Visible = ind != 0;
-                downPointToolStripMenuItem.Visible = ind != dataGridViewWaypoints.Rows.Count - 1;
                 informationPointToolStripMenuItem.Visible = true;
-            }
             else
-            {
-                upPointToolStripMenuItem.Visible = false;
-                downPointToolStripMenuItem.Visible = false;
                 informationPointToolStripMenuItem.Visible = false;
-            }
 
         }
 

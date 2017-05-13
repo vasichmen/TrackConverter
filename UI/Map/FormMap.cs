@@ -638,13 +638,8 @@ namespace TrackConverter.UI.Map
         /// <param name="e"></param>
         private void clearRoutesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (creatingRouteOverlay != null)
-                creatingRouteOverlay.Clear();
-            if (rulerRouteOverlay != null)
-                rulerRouteOverlay.Clear();
-            fromToOverlay.Routes.Clear();
-            baseOverlay.Routes.Clear();
-            selectedRouteOverlay.Routes.Clear();
+            foreach (GMapOverlay ov in gmapControlMap.Overlays)
+                ov.Routes.Clear();
         }
 
         /// <summary>
@@ -656,9 +651,8 @@ namespace TrackConverter.UI.Map
         {
             if (waypoints != null)
                 waypoints.Clear();
-            fromToOverlay.Markers.Clear();
-            baseOverlay.Markers.Clear();
-            selectedRouteOverlay.Markers.Clear();
+            foreach (GMapOverlay ov in gmapControlMap.Overlays)
+                ov.Markers.Clear();
             fromPoint = null;
             toPoint = null;
             IntermediatePoints = null;
@@ -2296,7 +2290,7 @@ namespace TrackConverter.UI.Map
                     return true;
                 }
 
-            if (waypoints != null && waypoints.Count > 0 && Program.winConverter.Tracks != null && Program.winConverter.Tracks.Count > 0)
+            if (waypoints != null  && Program.winConverter.Tracks != null)
             {
                 TrackFileList tracks = new TrackFileList();
                 foreach (BaseTrack tf in Program.winConverter.Tracks)
