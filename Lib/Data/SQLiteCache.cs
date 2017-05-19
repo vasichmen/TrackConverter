@@ -52,6 +52,36 @@ namespace TrackConverter.Lib.Data
 
             geocoder_connection = new SQLiteConnection();
             geocoder_connection.ConnectionString = geocoder_connectionString;
+
+            //проверка версии БД
+            geocoder_connection.Open();
+            SQLiteCommand cm = new SQLiteCommand("SELECT * FROM " + table_name + " WHERE latitude != NULL LIMIT 1", geocoder_connection);
+            SQLiteDataReader dr = cm.ExecuteReader();
+            int version=0;
+            if (dr.FieldCount == 5)
+                version = 1;
+            else
+            if (dr.FieldCount == 8)
+                version = 2;
+            geocoder_connection.Close();
+
+            switch (version)
+            {
+                case 1:
+                    geocoder_connection.Open();
+                    SQLiteCommand cmac = new SQLiteCommand("ALTER TABLE "+table_name+" ADD COLUMN tzid TEXT", geocoder_connection);
+                    cmac.ExecuteNonQuery();
+                    cmac.CommandText = "ALTER TABLE " + table_name + " ADD COLUMN tzname TEXT";
+                    cmac.ExecuteNonQuery();
+                    cmac.CommandText = "ALTER TABLE " + table_name + " ADD COLUMN tzoffset DOUBLE";
+                    cmac.ExecuteNonQuery();
+                    geocoder_connection.Close();
+                    break;
+                case 2:
+                    break;
+                default: throw new SQLiteException("Неизвестная исходная версия БД: " + version);
+            }
+
         }
 
         /// <summary>
@@ -136,6 +166,44 @@ namespace TrackConverter.Lib.Data
                 tzi
                 );
         }
+
+        /// <summary>
+        /// удаление данных геокодера
+        /// </summary>
+        public void ClearGeocoder()
+        {
+            string seln = "UPDATE '" + table_name + "' SET address = NULL";
+            int i = ExecuteQuery(seln);
+            remNulls();
+        }
+
+        /// <summary>
+        /// удаление высот точек
+        /// </summary>
+        public void ClearAltitudes()
+        {
+            string seln = "UPDATE '" + table_name + "' SET altitude = NULL";
+            int i = ExecuteQuery(seln);
+            remNulls();
+        }
+
+        /// <summary>
+        /// попробовать загрузить все высоты из кэша, если все высоты есть, то возвращает истину, а в track запишутся высоты
+        /// </summary>
+        /// <param name="track">маршрут, куда надо загрузить высоты</param>
+        /// <returns></returns>
+        internal bool TryGetElevations(ref BaseTrack track)
+        {
+            foreach (TrackPoint point in track)
+            {
+                double alt = this.GetElevation(point.Coordinates);
+                if (double.IsNaN(alt)) //если такой точки в кэше нет, то выход false
+                    return false;
+                point.MetrAltitude = alt; //если точка есть, от береём следующую
+            }
+            return true;
+        }
+
 
         #region работа с базой данных
 
@@ -269,6 +337,17 @@ namespace TrackConverter.Lib.Data
             }
         }
 
+        /// <summary>
+        /// удаление записей, у которых адрес и высота NULL
+        /// </summary>
+        private void remNulls()
+        {
+            string com = "DELETE FROM '" + table_name + "' WHERE address IS NULL AND altitude IS NULL";
+            int i = ExecuteQuery(com);
+            string sel = "SELECT * FROM " + table_name;
+            List<Row> all = ExecuteReader(sel);
+        }
+
         #endregion
 
         #region  реализации интерфейсов TrackConverter
@@ -373,54 +452,6 @@ namespace TrackConverter.Lib.Data
             }
 
 
-        }
-
-        /// <summary>
-        /// удаление данных геокодера
-        /// </summary>
-        public void ClearGeocoder()
-        {
-            string seln = "UPDATE '" + table_name + "' SET address = NULL";
-            int i = ExecuteQuery(seln);
-            remNulls();
-        }
-
-        /// <summary>
-        /// удаление высот точек
-        /// </summary>
-        public void ClearAltitudes()
-        {
-            string seln = "UPDATE '" + table_name + "' SET altitude = NULL";
-            int i = ExecuteQuery(seln);
-            remNulls();
-        }
-
-        /// <summary>
-        /// удаление записей, у которых адрес и высота NULL
-        /// </summary>
-        private void remNulls()
-        {
-            string com = "DELETE FROM '" + table_name + "' WHERE address IS NULL AND altitude IS NULL";
-            int i = ExecuteQuery(com);
-            string sel = "SELECT * FROM " + table_name;
-            List<Row> all = ExecuteReader(sel);
-        }
-
-        /// <summary>
-        /// попробовать загрузить все высоты из кэша, если все высоты есть, то возвращает истину, а в track запишутся высоты
-        /// </summary>
-        /// <param name="track">маршрут, куда надо загрузить высоты</param>
-        /// <returns></returns>
-        internal bool TryGetElevations(ref BaseTrack track)
-        {
-            foreach (TrackPoint point in track)
-            {
-                double alt = this.GetElevation(point.Coordinates);
-                if (double.IsNaN(alt)) //если такой точки в кэше нет, то выход false
-                    return false;
-                point.MetrAltitude = alt; //если точка есть, от береём следующую
-            }
-            return true;
         }
 
 
