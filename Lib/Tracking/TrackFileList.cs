@@ -126,7 +126,7 @@ namespace TrackConverter.Lib.Tracking
         }
 
         /// <summary>
-        /// объединение треков в один
+        /// объединение треков в один. Имя нового трека - сумма всех имёт треков. Цвет - цвет первого трека в списке
         /// </summary>
         /// <returns></returns>
         public TrackFile JoinTracks()

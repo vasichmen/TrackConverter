@@ -23,13 +23,39 @@ namespace TrackConverter.UI.Map
     /// </summary>
     public partial class FormEditTrip : Form
     {
+        /// <summary>
+        /// действие после редактирования
+        /// </summary>
         private Action<TripRouteFile> afterAction;
+
+        /// <summary>
+        /// действие при отмене редактирования
+        /// </summary>
         private Action cancelAction;
+
+        /// <summary>
+        /// путешествие для редактирвания
+        /// </summary>
         private TripRouteFile trip;
+
+        /// <summary>
+        /// выбраный маршрут по дням
+        /// </summary>
         private BaseTrack selectedTrack;
+
+        /// <summary>
+        /// выбранная точка в списке
+        /// </summary>
         private TrackPoint selectedPoint;
+
+        /// <summary>
+        /// если истина, то нажата кнопка сохранить
+        /// </summary>
         private bool saved = false;
 
+        /// <summary>
+        /// создаёт окно редактирования путешествия
+        /// </summary>
         private FormEditTrip()
         {
             InitializeComponent();
@@ -56,7 +82,8 @@ namespace TrackConverter.UI.Map
         /// заполнение таблицы заданным путешествием и обновление карты 
         /// </summary>
         /// <param name="tripRoute">путешествие</param>
-        private void FillDGV(TripRouteFile tripRoute)
+        /// <param name="centring">если истина, то карта будет отцентрована по маршруту</param>
+        private void FillDGV(TripRouteFile tripRoute, bool centring = false)
         {
             //маршруты
             DataTable sourceD = new DataTable();
@@ -94,18 +121,19 @@ namespace TrackConverter.UI.Map
             dataGridViewWaypoints.Refresh();
 
             //обновление карты
-            RefreshOverlay(tripRoute);
+            RefreshOverlay(tripRoute,centring);
         }
 
         /// <summary>
         /// заполнение слоя карты создаваемого путешествия
         /// </summary>
         /// <param name="tripRoute"></param>
-        private void RefreshOverlay(TripRouteFile tripRoute)
+        /// <param name="centring">если истина, то карта будет отцентрована по маршруту</param>
+        private void RefreshOverlay(TripRouteFile tripRoute, bool centring = false)
         {
             Program.winMap.creatingTripOverlay.Clear();
             foreach (TrackFile tfl in tripRoute.DaysRoutes)
-                Program.winMap.ShowRoute(tfl, Program.winMap.creatingTripOverlay, true);
+                Program.winMap.ShowRoute(tfl, Program.winMap.creatingTripOverlay, centring);
             Program.winMap.ShowWaypoints(tripRoute.Waypoints, Program.winMap.creatingTripOverlay, false, false);
         }
 
@@ -154,6 +182,7 @@ namespace TrackConverter.UI.Map
                 separateTrackToolStripMenuItem.Visible = true;
                 addIntermedPointsToolStripMenuItem.Visible = true;
                 joinToolStripMenuItem.Visible = false;
+                saveAsToolStripMenuItem.Visible = true;
             }
             else
             {
@@ -164,11 +193,13 @@ namespace TrackConverter.UI.Map
                 separateTrackToolStripMenuItem.Visible = false;
                 addIntermedPointsToolStripMenuItem.Visible = true;
                 joinToolStripMenuItem.Visible = true;
+                saveAsToolStripMenuItem.Visible = false;
             }
             invertToolStripMenuItem.Visible = !dataGridViewDays.Rows[0].Selected;
             separateTrackToolStripMenuItem.Visible = !dataGridViewDays.Rows[0].Selected;
             addIntermedPointsToolStripMenuItem.Visible = !dataGridViewDays.Rows[0].Selected;
             joinToolStripMenuItem.Visible = !dataGridViewDays.Rows[0].Selected;
+            saveAsToolStripMenuItem.Visible = !dataGridViewDays.Rows[0].Selected;
         }
 
         /// <summary>
@@ -222,13 +253,86 @@ namespace TrackConverter.UI.Map
             Program.winMap.BeginEditRoute(selectedTrack as TrackFile, after, canc);
         }
 
+
         /// <summary>
-        /// вставить новый
+        /// сохранить как 
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void insertDayToolStripMenuItem_Click(object sender, EventArgs e)
+        private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            SaveFileDialog sf = new SaveFileDialog();
+            sf.Filter = "Файл маршрута Androzic (*.rt2)|*.rt2";
+            sf.Filter += "|Треки Androzic (*.plt)|*.plt";
+            sf.Filter += "|Путевые точки Ozi(*.wpt)|*.wpt";
+            sf.Filter += "|Файл координат(*.crd)|*.crd";
+            sf.Filter += "|Файл координат(*.kml)|*.kml";
+            sf.Filter += "|Файл GPS координат(*.gpx)|*.gpx";
+            sf.Filter += "|Файл координат(*.kmz)|*.kmz";
+            sf.Filter += "|Файл OpenStreetMaps(*.osm)|*.osm";
+            sf.Filter += "|Файл NMEA(*.nmea)|*.nmea";
+            sf.Filter += "|Файл Excel(*.csv)|*.csv";
+            sf.Filter += "|Текстовый файл(*.txt)|*.txt";
+            sf.Filter += "|Список адресов(*.adrs)|*.adrs";
+
+            sf.AddExtension = true;
+
+            if (Vars.Options.Common.IsSaveDir)
+                sf.InitialDirectory = Vars.Options.Common.LastFileSaveDirectory;
+            if (Vars.Options.Common.IsExtension)
+                sf.FilterIndex = Vars.Options.Common.LastSaveExtensionNumberSaveOneTrack;
+            sf.FileName = Path.GetFileNameWithoutExtension(this.selectedTrack.FileName);
+
+            if (sf.ShowDialog() == DialogResult.OK)
+            {
+                switch (Path.GetExtension(sf.FileName).ToLower())
+                {
+                    case ".rt2":
+                        Serializer.Serialize(sf.FileName, this.selectedTrack, FileFormats.Rt2File);
+                        break;
+                    case ".plt":
+                        Serializer.Serialize(sf.FileName, this.selectedTrack, FileFormats.PltFile);
+                        break;
+                    case ".wpt":
+                        Serializer.Serialize(sf.FileName, this.selectedTrack, FileFormats.WptFile);
+                        break;
+                    case ".crd":
+                        Serializer.Serialize(sf.FileName, this.selectedTrack, FileFormats.CrdFile);
+                        break;
+                    case ".kml":
+                        Serializer.Serialize(sf.FileName, this.selectedTrack, FileFormats.KmlFile);
+                        break;
+                    case ".gpx":
+                        Serializer.Serialize(sf.FileName, this.selectedTrack, FileFormats.GpxFile);
+                        break;
+                    case ".kmz":
+                        Serializer.Serialize(sf.FileName, this.selectedTrack, FileFormats.KmzFile);
+                        break;
+                    case ".osm":
+                        Serializer.Serialize(sf.FileName, this.selectedTrack, FileFormats.OsmFile);
+                        break;
+                    case ".nmea":
+                        Serializer.Serialize(sf.FileName, this.selectedTrack, FileFormats.NmeaFile);
+                        break;
+                    case ".csv":
+                        Serializer.Serialize(sf.FileName, this.selectedTrack, FileFormats.CsvFile);
+                        break;
+                    case ".txt":
+                        Serializer.Serialize(sf.FileName, this.selectedTrack, FileFormats.TxtFile);
+                        break;
+                    case ".adrs":
+                        Program.winMain.BeginOperation();
+                        Action act = new Action(() =>
+                        {
+                            Serializer.Serialize(sf.FileName, this.selectedTrack, FileFormats.AddressList, Program.winMain.setCurrentOperation);
+                            Program.winMain.EndOperation();
+                        });
+                        new Task(act).Start();
+                        break;
+                }
+                Vars.Options.Common.LastFileSaveDirectory = Path.GetDirectoryName(sf.FileName);
+                Vars.Options.Common.LastSaveExtensionNumberSaveOneTrack = sf.FilterIndex;
+            }
 
         }
 
@@ -440,16 +544,6 @@ namespace TrackConverter.UI.Map
         }
 
         /// <summary>
-        /// вставить новую
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void insertPointToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        /// <summary>
         /// удалить
         /// </summary>
         /// <param name="sender"></param>
@@ -459,26 +553,6 @@ namespace TrackConverter.UI.Map
             foreach (DataGridViewRow r in dataGridViewWaypoints.SelectedRows)
                 trip.Waypoints.Remove(r.Index);
             FillDGV(trip);
-        }
-
-        /// <summary>
-        /// вверх
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void upPointToolStripMenuItem1_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        /// <summary>
-        /// вниз
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void downPointToolStripMenuItem1_Click(object sender, EventArgs e)
-        {
-
         }
 
 
@@ -993,7 +1067,6 @@ namespace TrackConverter.UI.Map
         #endregion
 
         #endregion
-
 
     }
 }

@@ -419,14 +419,14 @@ namespace TrackConverter.UI.Map
         }
 
         /// <summary>
-        /// выод на карту списка точек. Новые точки будут добавлены в список
+        /// выод на карту списка точек. Новые точки не будут добавлены в список
         /// </summary>
         /// <param name="isClearBefore">если истина, то перед выводом слой будет очищен от мареров</param>
         /// <param name="wpts">список точек для вывода</param>
         /// <param name="lay">слой, на котором будут выведены точки</param>
         public void ShowWaypoints(BaseTrack wpts, GMapOverlay lay, bool isClearBefore)
         {
-            ShowWaypoints(wpts, lay, isClearBefore, true);
+            ShowWaypoints(wpts, lay, isClearBefore, false);
         }
 
         #endregion

@@ -1484,17 +1484,22 @@ namespace TrackConverter.UI.Converter
         /// <param name="FileName"> имя файла</param>
         public void OpenFile(string FileName)
         {
+            BaseTrack toShow = null;
             if (Path.GetExtension(FileName).ToLower() == ".trr")
             {
                 TripRouteFile tr = Serializer.DeserializeTripRouteFile(FileName);
                 AddRouteToList(tr);
                 Program.winMap.Clear();
-                Program.winMap.ShowWaypoints(tr.Waypoints, true, true);
+                toShow = tr;
             }
             else
             {
                 TrackFileList tfl = Serializer.DeserializeTrackFileList(FileName);
-                AddRouteToList(tfl);
+                if (tfl.Count > 0)
+                {
+                    toShow = tfl[0];
+                    AddRouteToList(tfl);
+                }
             }
             Vars.Options.Converter.AddRecentFile(FileName); //добавление последнего файла
             Vars.Options.Common.LastFileLoadDirectory = Path.GetDirectoryName(FileName); //послденяя открытая папка

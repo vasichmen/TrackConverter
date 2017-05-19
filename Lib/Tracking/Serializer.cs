@@ -236,7 +236,7 @@ namespace TrackConverter.Lib.Tracking
         }
 
         /// <summary>
-        /// загрузка списка треков из фйла
+        /// загрузка списка треков из фйла нескольких треков. Если это один трек, то будет загружен как один и добавлен в список
         /// </summary>
         /// <param name="FileName">имя файла</param>
         /// <returns></returns>
