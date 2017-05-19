@@ -57,7 +57,7 @@ namespace TrackConverter.UI.Map
         #endregion
 
         #region карта, слои, маршруты
-        
+
 
         /// <summary>
         /// список загруженных путевых точек
@@ -152,6 +152,11 @@ namespace TrackConverter.UI.Map
         protected GMapOverlay fromToOverlay;
 
         /// <summary>
+        /// слой точек "что здесь"
+        /// </summary>
+        protected GMapOverlay whatThereOverlay;
+
+        /// <summary>
         /// начало маршрута
         /// </summary>
         protected TrackPoint fromPoint;
@@ -244,6 +249,10 @@ namespace TrackConverter.UI.Map
         /// </summary>
         protected readonly string fromToOverlayID = "fromToOverlay";
 
+        /// <summary>
+        /// слой маркеров "что здесь"
+        /// </summary>
+        protected readonly string whatThereOverlayID = "whatThereOverlay";
         #endregion
 
         #region работа интерфейса

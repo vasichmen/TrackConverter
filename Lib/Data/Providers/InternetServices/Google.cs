@@ -362,7 +362,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                 return ell;
             }
             else
-                throw new ApplicationException("Ошибка при обработке запроса: \r\n" + status.InnerText);
+                throw new ApplicationException("Ошибка при обработке запроса. \r\nGoogle error: " + status.InnerText);
         }
 
         /// <summary>

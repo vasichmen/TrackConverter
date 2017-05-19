@@ -226,6 +226,7 @@ namespace TrackConverter.UI.Map
             rulerRouteOverlay = new GMapOverlay(rulerRouteOverlayID);
             baseOverlay = new GMapOverlay(baseOverlayID);
             fromToOverlay = new GMapOverlay(fromToOverlayID);
+            whatThereOverlay = new GMapOverlay(whatThereOverlayID);
             creatingTripOverlay = new GMapOverlay(creatingTripOverlayID);
 
             //добавление слоев на карту
@@ -236,6 +237,7 @@ namespace TrackConverter.UI.Map
             gmapControlMap.Overlays.Add(baseOverlay);
             gmapControlMap.Overlays.Add(fromToOverlay);
             gmapControlMap.Overlays.Add(creatingTripOverlay);
+            gmapControlMap.Overlays.Add(whatThereOverlay);
 
             #endregion
         }
@@ -962,7 +964,7 @@ namespace TrackConverter.UI.Map
                 ActiveWhatThereForms.Add(point, wt);
 
                 //вывод значка на экран
-                ShowWaypoint(point, baseOverlay, Resources.what_there, MarkerTypes.WhatThere, MarkerTooltipMode.OnMouseOver);
+                ShowWaypoint(point, whatThereOverlay, Resources.what_there, MarkerTypes.WhatThere, MarkerTooltipMode.OnMouseOver);
             }
             catch (Exception we)
             {
