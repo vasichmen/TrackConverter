@@ -94,7 +94,6 @@ namespace TrackConverter.Lib.Tracking
            
         }
 
-
         /// <summary>
         /// сериализация списка треков в файл
         /// </summary>
@@ -1764,7 +1763,6 @@ namespace TrackConverter.Lib.Tracking
             kml.WriteTo(xw);
             xw.Close();
         }
-
 
         /// <summary>
         /// экспорт в файл kmz

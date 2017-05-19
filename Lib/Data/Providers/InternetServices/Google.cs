@@ -15,6 +15,7 @@ using System.Collections.Concurrent;
 using System.IO;
 using System.Windows.Forms;
 using TrackConverter.Res.Properties;
+using TrackConverter.Lib.Mathematic.Astronomy;
 
 namespace TrackConverter.Lib.Data.Providers.InternetServices
 {
@@ -347,10 +348,10 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         {
             //https://maps.googleapis.com/maps/api/elevation/json?locations=39.7391536,-104.9847034&api_key=
 
-            string url = string.Format("https://maps.googleapis.com/maps/api/elevation/xml?locations={0},{1}",
+            string url = string.Format("https://maps.googleapis.com/maps/api/elevation/xml?locations={0},{1}&api_key={2}",
                 coordinate.Latitude.TotalDegrees.ToString().Replace(Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0], '.'),
-                coordinate.Longitude.TotalDegrees.ToString().Replace(Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0], '.')
-                );
+                coordinate.Longitude.TotalDegrees.ToString().Replace(Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0], '.'),
+                Resources.google_elevation_api_key);
 
             XmlDocument xml = SendXmlGetRequest(url);
             XmlNode status = xml.GetElementsByTagName("status")[0];
@@ -564,6 +565,41 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
             xml.Load(fname);
             TrackFile res = decodeXMLPath(xml);
             return res;
+        }
+
+        /// <summary>
+        /// получить информацию о временной зоне
+        /// </summary>
+        /// <param name="coordinate">координаты точки</param>
+        /// <returns></returns>
+        public TimeZoneInfo GetTimeZone(Coordinate coordinate)
+        {
+            //https://maps.googleapis.com/maps/api/timezone/xml?location=39.6034810,-119.6822510&timestamp=1331161200&key=YOUR_API_KEY
+            int timestamp = (int)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
+            string url = string.Format("https://maps.googleapis.com/maps/api/timezone/xml?location={0},{1}&timestamp={2}&api_key={3}&languange=ru",
+                coordinate.Latitude.TotalDegrees.ToString().Replace(Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0], '.'),
+                coordinate.Longitude.TotalDegrees.ToString().Replace(Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0], '.'),
+                timestamp,
+                Resources.google_elevation_api_key);
+
+            XmlDocument xml = SendXmlGetRequest(url);
+            XmlNode status = xml.GetElementsByTagName("status")[0];
+            if (status.InnerText == "OK")
+            {
+                string raw_offset = xml.GetElementsByTagName("raw_offset")[0].InnerText;
+                double raw_offset2 = double.Parse(raw_offset.Replace('.', Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0]));
+                string dst_offset = xml.GetElementsByTagName("dst_offset")[0].InnerText;
+                double dst_offset2 = double.Parse(dst_offset.Replace('.', Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0]));
+                string time_zone_id2 = xml.GetElementsByTagName("time_zone_id")[0].InnerText;
+                string time_zone_name2 = xml.GetElementsByTagName("time_zone_name")[0].InnerText;
+
+                if (Vars.Options.DataSources.UseSystemTimeZones)
+                    return TimeZoneInfo.FindSystemTimeZoneById(time_zone_id2);
+                else
+                    return TimeZoneInfo.CreateCustomTimeZone(time_zone_id2, TimeSpan.FromSeconds(raw_offset2), time_zone_name2, time_zone_name2);
+            }
+            else
+                throw new ApplicationException("Ошибка при обработке запроса: \r\n" + status.InnerText);
         }
     }
 }

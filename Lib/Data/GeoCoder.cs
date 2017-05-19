@@ -152,5 +152,22 @@ namespace TrackConverter.Lib.Data
             }
             return res;
         }
+
+        /// <summary>
+        /// получить информацию о часовом поясе
+        /// </summary>
+        /// <param name="coordinates">координаты</param>
+        /// <returns></returns>
+        public TimeZoneInfo GetTimeZone(Coordinate coordinates)
+        {
+            TimeZoneInfo tz = Vars.dataCache.GetTimeZone(coordinates);
+            if (tz == null)
+            {
+                TimeZoneInfo tzi = coder.GetTimeZone(coordinates);
+                Vars.dataCache.Put(coordinates, tzi);
+                return tzi;
+            }
+            else return tz;
+        }
     }
 }

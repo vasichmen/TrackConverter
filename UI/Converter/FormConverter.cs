@@ -1526,6 +1526,8 @@ namespace TrackConverter.UI.Converter
 
             double rise = 0, set = 0;
 
+            TrackPoint tt = new TrackPoint(55, 37);
+            tt.TimeZone = new GeoCoder(GeoCoderProvider.Google).GetTimeZone(tt.Coordinates);
 
             int d = 75089;
             int f = Yandex.Perest(d);

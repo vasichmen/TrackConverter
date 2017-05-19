@@ -165,6 +165,24 @@ namespace TrackConverter.Res.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на AIzaSyD_HQaeF2zZDgK7V22BJ_cI-iczZQD-ODo.
+        /// </summary>
+        public static string google_elevation_api_key {
+            get {
+                return ResourceManager.GetString("google_elevation_api_key", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на AIzaSyCmDnZ90-2gbv2tpqhkQiXsKM70hvkz3_A.
+        /// </summary>
+        public static string google_timezone_api {
+            get {
+                return ResourceManager.GetString("google_timezone_api", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на &lt;?xml version=&apos;1.0&apos; encoding=&apos;UTF-8&apos; ?&gt;
         ///&lt;gpx  xmlns=&quot;http://www.topografix.com/GPX/1/1&quot;&gt;
         ///  &lt;trk&gt;

@@ -23,6 +23,9 @@ namespace TrackConverter.Lib.Data
             public double lon;
             public double alt;
             public string adr;
+            public string TZname;
+            public double TZoffset;
+            public string TZid;
         }
 
         SQLiteConnection geocoder_connection;
@@ -62,6 +65,7 @@ namespace TrackConverter.Lib.Data
                 Coordinate.Latitude.TotalDegrees,
                 Coordinate.Longitude.TotalDegrees,
                 Altitude,
+                null,
                 null
                 );
         }
@@ -77,7 +81,8 @@ namespace TrackConverter.Lib.Data
                 Coordinate.Latitude.TotalDegrees,
                 Coordinate.Longitude.TotalDegrees,
                 double.NaN,
-                Address
+                Address,
+                null
                 );
         }
 
@@ -90,28 +95,47 @@ namespace TrackConverter.Lib.Data
         internal void Put(BaseTrack track, List<double> els, Action<string> callback = null)
         {
             //ЭКСПОРТ ДАННЫХ
-            this.geocoder_connection.Open();
-            SQLiteTransaction trans = this.geocoder_connection.BeginTransaction();
-            double all = track.Count;
-            for (int i = 0; i < track.Count; i++)
+            lock (this.geocoder_connection)
             {
-                SQLiteCommand cm = geocoder_connection.CreateCommand();
+                this.geocoder_connection.Open();
+                SQLiteTransaction trans = this.geocoder_connection.BeginTransaction();
+                double all = track.Count;
+                for (int i = 0; i < track.Count; i++)
+                {
+                    SQLiteCommand cm = geocoder_connection.CreateCommand();
 
-                string command = CreateCommand(
-                track[i].Coordinates.Latitude.TotalDegrees,
-                track[i].Coordinates.Longitude.TotalDegrees,
-                els[i],
-                null);
+                    string command = CreateCommand(
+                    track[i].Coordinates.Latitude.TotalDegrees,
+                    track[i].Coordinates.Longitude.TotalDegrees,
+                    els[i],
+                    null,
+                    null);
 
-                cm.CommandText = command;
-                cm.ExecuteNonQuery();
-                if (i % 200 == 0 && callback != null)
-                    callback.Invoke("Запись данных в кэш: завершено " + ((i / all) * 100d).ToString("0.0"));
+                    cm.CommandText = command;
+                    cm.ExecuteNonQuery();
+                    if (i % 200 == 0 && callback != null)
+                        callback.Invoke("Запись данных в кэш: завершено " + ((i / all) * 100d).ToString("0.0"));
+                }
+                trans.Commit();
+                this.geocoder_connection.Close();
             }
-            trans.Commit();
-            this.geocoder_connection.Close();
         }
 
+        /// <summary>
+        /// записать значения временной зоны в кэш
+        /// </summary>
+        /// <param name="coordinates"></param>
+        /// <param name="tzi"></param>
+        public void Put(Coordinate coordinates, TimeZoneInfo tzi)
+        {
+            this.Add(
+                coordinates.Latitude.TotalDegrees,
+                coordinates.Longitude.TotalDegrees,
+                double.NaN,
+                null,
+                tzi
+                );
+        }
 
         #region работа с базой данных
 
@@ -131,15 +155,18 @@ namespace TrackConverter.Lib.Data
                 latitude double NOT NULL,
                 longitude double NOT NULL,
                 altitude double,
-                address text
+                address text,
+                tzid text,
+                tzname text,
+                tzoffset double
                 );",
                 con);
             commCreate.ExecuteNonQuery();
 
             SQLiteCommand commAddFirst = new SQLiteCommand(
                 @"INSERT INTO '" + table_name + @"' 
-                ('latitude','longitude','altitude','address') 
-                VALUES (55.755351,37.855511, NULL, 'Россия, Реутов, Войтовича, 3');",
+                ('latitude','longitude','altitude','address','tzid','tzname','tzoffset') 
+                VALUES (55.755351,37.855511, 200, 'Россия, Реутов, Войтовича, 3', 'Moscow', 'GMT+3', '3');",
                 con);
             int g = commAddFirst.ExecuteNonQuery();
             con.Close();
@@ -152,12 +179,21 @@ namespace TrackConverter.Lib.Data
         /// <param name="lon">долгота</param>
         /// <param name="alt">высота</param>
         /// <param name="addr">адрес</param>
-        private void Add(double lat, double lon, double alt, string addr)
+        private void Add(double lat, double lon, double alt, string addr, TimeZoneInfo tzone)
         {
-            ExecuteQuery(CreateCommand(lat, lon, alt, addr));
+            ExecuteQuery(CreateCommand(lat, lon, alt, addr, tzone));
         }
 
-        private string CreateCommand(double lat, double lon, double alt, string addr)
+        /// <summary>
+        /// генерирует команду на вставку в таблицу строки
+        /// </summary>
+        /// <param name="lat">широта</param>
+        /// <param name="lon">долгота</param>
+        /// <param name="alt">высота</param>
+        /// <param name="addr">адрес</param>
+        /// <param name="tzone">временная зона</param>
+        /// <returns></returns>
+        private string CreateCommand(double lat, double lon, double alt, string addr, TimeZoneInfo tzone)
         {
             string com = "";
             //if (double.IsNaN(lat) && double.IsNaN(lon))
@@ -167,11 +203,15 @@ namespace TrackConverter.Lib.Data
             //               double.IsNaN(alt) ? "NULL" : alt.ToString().Replace(',', '.'),
             //               string.IsNullOrEmpty(addr) ? "NULL" : "'" + addr + "'");
             //else
-            com = string.Format(@"INSERT OR REPLACE INTO '" + table_name + @"'('latitude','longitude','altitude','address') VALUES ({0},{1},{2},{3});",
+            com = string.Format(@"INSERT OR REPLACE INTO '" + table_name + @"'('latitude','longitude','altitude','address','tzid','tzname','tzoffset') VALUES ({0},{1},{2},{3},{4},{5},{6});",
                        Math.Round(lat, decimal_digits).ToString().Replace(',', '.'),
                        Math.Round(lon, decimal_digits).ToString().Replace(',', '.'),
                        double.IsNaN(alt) ? "NULL" : alt.ToString().Replace(',', '.'),
-                       string.IsNullOrEmpty(addr) ? "NULL" : "'" + addr + "'");
+                       string.IsNullOrEmpty(addr) ? "NULL" : "'" + addr + "'",
+                       tzone == null ? "NULL" : "'" + tzone.Id + "'",
+                       tzone == null ? "NULL" : "'" + tzone.DisplayName + "'",
+                        tzone == null ? "NULL" : tzone.BaseUtcOffset.Hours.ToString()
+                       );
             return com;
         }
 
@@ -182,12 +222,15 @@ namespace TrackConverter.Lib.Data
         /// <returns></returns>
         private int ExecuteQuery(string query)
         {
-            geocoder_connection.Open();
-            SQLiteCommand com = geocoder_connection.CreateCommand();
-            com.CommandText = query;
-            int i = com.ExecuteNonQuery();
-            geocoder_connection.Close();
-            return i;
+            lock (this.geocoder_connection)
+            {
+                geocoder_connection.Open();
+                SQLiteCommand com = geocoder_connection.CreateCommand();
+                com.CommandText = query;
+                int i = com.ExecuteNonQuery();
+                geocoder_connection.Close();
+                return i;
+            }
         }
 
         /// <summary>
@@ -197,27 +240,33 @@ namespace TrackConverter.Lib.Data
         /// <returns></returns>
         private List<Row> ExecuteReader(string com)
         {
-            geocoder_connection.Open();
-            SQLiteCommand cmd = geocoder_connection.CreateCommand();
-            cmd.CommandText = com;
-            SQLiteDataReader dr = cmd.ExecuteReader();
-
-            List<Row> res = new List<Row>();
-
-            while (dr.Read())
+            lock (this.geocoder_connection)
             {
-                res.Add(new Row()
-                {
-                    id = Convert.ToInt32(dr["id"]),
-                    lat = Convert.ToDouble(dr["latitude"]),
-                    lon = Convert.ToDouble(dr["longitude"]),
-                    alt = dr["altitude"].GetType() == typeof(DBNull) ? double.NaN : Convert.ToDouble(dr["altitude"]),
-                    adr = dr["address"].GetType() == typeof(DBNull) ? null : Convert.ToString(dr["address"])
-                });
-            }
+                geocoder_connection.Open();
+                SQLiteCommand cmd = geocoder_connection.CreateCommand();
+                cmd.CommandText = com;
+                SQLiteDataReader dr = cmd.ExecuteReader();
 
-            geocoder_connection.Close();
-            return res;
+                List<Row> res = new List<Row>();
+
+                while (dr.Read())
+                {
+                    res.Add(new Row()
+                    {
+                        id = Convert.ToInt32(dr["id"]),
+                        lat = Convert.ToDouble(dr["latitude"]),
+                        lon = Convert.ToDouble(dr["longitude"]),
+                        alt = dr["altitude"].GetType() == typeof(DBNull) ? double.NaN : Convert.ToDouble(dr["altitude"]),
+                        adr = dr["address"].GetType() == typeof(DBNull) ? null : Convert.ToString(dr["address"]),
+                        TZid = dr["tzid"].GetType() == typeof(DBNull) ? null : Convert.ToString(dr["tzid"]),
+                        TZname = dr["tzname"].GetType() == typeof(DBNull) ? null : Convert.ToString(dr["tzname"]),
+                        TZoffset = dr["tzoffset"].GetType() == typeof(DBNull) ? double.NaN : Convert.ToDouble(dr["tzoffset"]),
+                    });
+                }
+
+                geocoder_connection.Close();
+                return res;
+            }
         }
 
         #endregion
@@ -276,7 +325,7 @@ namespace TrackConverter.Lib.Data
         /// <returns></returns>
         public double GetElevation(Coordinate coordinate)
         {
-            string sel = string.Format(@"SELECT * FROM '" + table_name + @"' WHERE latitude = {0} AND longitude = {1}",
+            string sel = string.Format(@"SELECT * FROM '" + table_name + @"' WHERE latitude = {0} AND longitude = {1} AND altitude != NULL",
             Math.Round(coordinate.Latitude.TotalDegrees, decimal_digits).ToString().Replace(',', '.'),
             Math.Round(coordinate.Longitude.TotalDegrees, decimal_digits).ToString().Replace(',', '.')
             );
@@ -284,6 +333,27 @@ namespace TrackConverter.Lib.Data
             if (dr.Count == 0)
                 return double.NaN;
             return dr[0].alt;
+        }
+
+        /// <summary>
+        /// получить веремнную зону из кэша
+        /// </summary>
+        /// <param name="coordinates">координаты</param>
+        /// <returns></returns>
+        public TimeZoneInfo GetTimeZone(Coordinate coordinates)
+        {
+            string sel = string.Format(@"SELECT * FROM '" + table_name + @"' WHERE latitude = {0} AND longitude = {1} AND tzid != NULL AND tzname != NULL AND tzoffset != NULL",
+           Math.Round(coordinates.Latitude.TotalDegrees, decimal_digits).ToString().Replace(',', '.'),
+           Math.Round(coordinates.Longitude.TotalDegrees, decimal_digits).ToString().Replace(',', '.')
+           );
+            List<Row> dr = ExecuteReader(sel);
+            if (dr.Count == 0)
+                return null;
+            if (Vars.Options.DataSources.UseSystemTimeZones)
+                return TimeZoneInfo.FindSystemTimeZoneById(dr[0].TZid);
+            else
+                return TimeZoneInfo.CreateCustomTimeZone(dr[0].TZid, TimeSpan.FromHours(dr[0].TZoffset), dr[0].TZname, dr[0].TZname);
+
         }
 
         #endregion
@@ -320,8 +390,8 @@ namespace TrackConverter.Lib.Data
         /// </summary>
         public void ClearAltitudes()
         {
-            string seln = "UPDATE '" + table_name+ "' SET altitude = NULL";
-            int i = ExecuteQuery(seln);   
+            string seln = "UPDATE '" + table_name + "' SET altitude = NULL";
+            int i = ExecuteQuery(seln);
             remNulls();
         }
 
@@ -330,7 +400,7 @@ namespace TrackConverter.Lib.Data
         /// </summary>
         private void remNulls()
         {
-            string com = "DELETE FROM '"+table_name+"' WHERE address IS NULL AND altitude IS NULL";
+            string com = "DELETE FROM '" + table_name + "' WHERE address IS NULL AND altitude IS NULL";
             int i = ExecuteQuery(com);
             string sel = "SELECT * FROM " + table_name;
             List<Row> all = ExecuteReader(sel);
@@ -352,6 +422,7 @@ namespace TrackConverter.Lib.Data
             }
             return true;
         }
+
 
         #endregion
 

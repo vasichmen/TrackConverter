@@ -21,7 +21,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
     /// 
     /// Работа с маршрутихатором организована опытным путем
     /// </summary>
-    public class Yandex : BaseConnection, IRouterProvider, IGeoсoderProvider
+    public class Yandex : BaseConnection, IRouterProvider, IGeoсoderProvider 
     {
         /// <summary>
         /// временная папка для маршрутов
@@ -571,6 +571,16 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         }
 
         /// <summary>
+        /// получить информацию о временной зоне
+        /// </summary>
+        /// <param name="coordinate"></param>
+        /// <returns></returns>
+        public TimeZoneInfo GetTimeZone(Coordinate coordinate)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
         /// построить все маршруты между точками. Используются разные потоки для получения данных о обработки ответов
         /// </summary>
         /// <param name="points">точки</param>
@@ -712,5 +722,6 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
             sr.Close();
             return res;
         }
+
     }
 }

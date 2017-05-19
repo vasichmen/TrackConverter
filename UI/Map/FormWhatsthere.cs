@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using TrackConverter;
 using TrackConverter.Lib.Data;
@@ -38,28 +39,76 @@ namespace TrackConverter.UI.Map
         /// <param name="e"></param>
         private void FormWhatsthere_Load(object sender, EventArgs e)
         {
-            if (point.Name == null)
-                try
-                {
-                    point.Name = new GeoCoder(Vars.Options.DataSources.GeoCoderProvider).GetAddress(point.Coordinates);
-                }
-                catch (Exception exx)
-                {
-                    MessageBox.Show(this, "Не удалось узнать адрес точки:\r\n" + exx.Message, "Поиск адреса", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    point.Name = "Недоступный адрес";
-                }
+            Task addr = new Task(new Action(() =>
+            {
+                if (point.Name == null)
+                    try
+                    {
+                        string addrr = new GeoCoder(Vars.Options.DataSources.GeoCoderProvider).GetAddress(point.Coordinates);
+                        lock (point)
+                        {
+                            point.Name = addrr;
+                        }
+                    }
+                    catch (Exception exx)
+                    {
+                        lock (point)
+                        {
+                            point.Name = "Недоступный адрес";
+                        }
+                        this.Invoke(new Action(() => MessageBox.Show(null, "Не удалось узнать адрес точки. Причина:\r\n" + exx.Message + "\r\nПопробуйте другой геокодер", "Поиск адреса", MessageBoxButtons.OK, MessageBoxIcon.Warning)));
+                    }
+            }));
+            Task alt = new Task(new Action(() =>
+            {
+                if (double.IsNaN(point.MetrAltitude))
+                    try
+                    {
+                        double altt = new GeoInfo(Vars.Options.DataSources.GeoInfoProvider).GetElevation(point.Coordinates);
+                        lock (point)
+                        {
+                            point.MetrAltitude = altt;
+                        }
+                    }
+                    catch (Exception exx)
+                    {
+                        lock (point)
+                        {
+                            point.FeetAltitude = double.NaN;
+                        }
+                        this.Invoke(new Action(() => MessageBox.Show(null, "Не удалось получить высоту точки. Причина:\r\n" + exx.Message, "Получение высоты", MessageBoxButtons.OK, MessageBoxIcon.Warning)));
+                    }
+            }));
+            Task tz = new Task(new Action(() =>
+            {
+                if (point.TimeZone == null)
+                    try
+                    {
+                        TimeZoneInfo tzz = new GeoCoder(GeoCoderProvider.Google).GetTimeZone(point.Coordinates);
+                        lock (point)
+                        {
+                            point.TimeZone = tzz;
+                        }
+                    }
+                    catch (Exception exx)
+                    {
+                        lock (point)
+                        {
+                            point.TimeZone = TimeZoneInfo.Utc;
+                        }
+                        this.Invoke(new Action(() => MessageBox.Show(null, "Не удалось получить локальное время. Причина:\r\n" + exx.Message + "\r\nДля вычислений будет использоваться время UTC", "Получение локального времени", MessageBoxButtons.OK, MessageBoxIcon.Warning)));
+                    }
+            }));
 
-            if (double.IsNaN(point.MetrAltitude))
-                try
-                {
-                    point.MetrAltitude = new GeoInfo(Vars.Options.DataSources.GeoInfoProvider).GetElevation(point.Coordinates);
-                }
-                catch (Exception exx)
-                {
-                    MessageBox.Show(this, "Не удалось получить высоту точки:\r\n" + exx.Message, "Получение высоты", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    point.FeetAltitude = double.NaN;
-                }
+            addr.Start();
+            alt.Start();
+            tz.Start();
 
+            addr.Wait(5000);
+            alt.Wait(5000);
+            tz.Wait(5000);
+
+            point.CalculateParametres();
 
             this.Text = point.Name == "Недоступный адрес" ? point.Coordinates.ToString("{lat} {lon}", "ddºmm'ss.s\"H") : point.Name;
             this.textBoxAddress.Text = point.Name;
@@ -71,7 +120,7 @@ namespace TrackConverter.UI.Map
             this.textBoxLat.Text = point.Coordinates.Latitude.TotalDegrees.ToString("00.000000") + "º";
             this.textBoxLon.Text = point.Coordinates.Longitude.TotalDegrees.ToString("00.000000") + "º";
             this.labelAlt.Text = double.IsNaN(point.MetrAltitude) ? "недоступно" : (point.MetrAltitude.ToString() + " м");
-            this.labelTimeOffset.Text = ((point.TimeOffset >= 0) ? "GMT+" : "GMT") + point.TimeOffset.ToString("00");
+            this.labelTimeOffset.Text = (point.TimeZone != null) ? point.TimeZone.Id + (point.TimeZone.BaseUtcOffset.TotalHours > 0 ? " GMT+" : " GMT") + point.TimeZone.BaseUtcOffset.TotalHours.ToString() : "недоступно";
             this.labeldayLength.Text = point.DayLength.ToString();
 
             //обновление времени

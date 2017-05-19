@@ -12,5 +12,7 @@ namespace TrackConverter.Lib.Data.Interfaces
         string GetAddress(Coordinate coordinate);
     
         Coordinate GetCoordinate(string address);
+
+        TimeZoneInfo GetTimeZone(Coordinate coordinate);
     }
 }

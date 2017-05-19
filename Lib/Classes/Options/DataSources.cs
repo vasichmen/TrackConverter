@@ -21,6 +21,7 @@ namespace TrackConverter.Lib.Classes.Options
             GeoCoderProvider = GeoCoderProvider.Yandex;
             GeoInfoProvider = GeoInfoProvider.Google;
             UseGeocoderCache = true;
+            UseSystemTimeZones = false;
         }
 
         /// <summary>
@@ -42,5 +43,10 @@ namespace TrackConverter.Lib.Classes.Options
         /// Использовать кэш геокодера и высот в интернет-сервисах
         /// </summary>
         public bool UseGeocoderCache { get; set; }
+
+        /// <summary>
+        /// Использовать системные часовые пояса. (в противном случае используются данные геокодера)
+        /// </summary>
+        public bool UseSystemTimeZones { get;  set; }
     }
 }

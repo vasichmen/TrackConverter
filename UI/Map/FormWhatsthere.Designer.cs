@@ -46,6 +46,9 @@
             this.labelFallAzi = new System.Windows.Forms.Label();
             this.labelLocalTime = new System.Windows.Forms.Label();
             this.labelDec = new System.Windows.Forms.Label();
+            this.textBoxAddress = new System.Windows.Forms.TextBox();
+            this.textBoxLat = new System.Windows.Forms.TextBox();
+            this.textBoxLon = new System.Windows.Forms.TextBox();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.label8 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
@@ -55,9 +58,6 @@
             this.label11 = new System.Windows.Forms.Label();
             this.buttonCenter = new System.Windows.Forms.Button();
             this.buttonClose = new System.Windows.Forms.Button();
-            this.textBoxAddress = new System.Windows.Forms.TextBox();
-            this.textBoxLat = new System.Windows.Forms.TextBox();
-            this.textBoxLon = new System.Windows.Forms.TextBox();
             this.tableLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel3.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
@@ -259,6 +259,33 @@
             this.labelDec.TabIndex = 3;
             this.labelDec.Text = "Склонение";
             // 
+            // textBoxAddress
+            // 
+            this.textBoxAddress.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.textBoxAddress.Location = new System.Drawing.Point(3, 3);
+            this.textBoxAddress.Name = "textBoxAddress";
+            this.textBoxAddress.ReadOnly = true;
+            this.textBoxAddress.Size = new System.Drawing.Size(199, 20);
+            this.textBoxAddress.TabIndex = 12;
+            // 
+            // textBoxLat
+            // 
+            this.textBoxLat.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.textBoxLat.Location = new System.Drawing.Point(3, 28);
+            this.textBoxLat.Name = "textBoxLat";
+            this.textBoxLat.ReadOnly = true;
+            this.textBoxLat.Size = new System.Drawing.Size(199, 20);
+            this.textBoxLat.TabIndex = 13;
+            // 
+            // textBoxLon
+            // 
+            this.textBoxLon.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.textBoxLon.Location = new System.Drawing.Point(3, 53);
+            this.textBoxLon.Name = "textBoxLon";
+            this.textBoxLon.ReadOnly = true;
+            this.textBoxLon.Size = new System.Drawing.Size(199, 20);
+            this.textBoxLon.TabIndex = 14;
+            // 
             // tableLayoutPanel2
             // 
             this.tableLayoutPanel2.ColumnCount = 1;
@@ -372,33 +399,6 @@
             this.buttonClose.Text = "Закрыть";
             this.buttonClose.UseVisualStyleBackColor = true;
             this.buttonClose.Click += new System.EventHandler(this.buttonClose_Click);
-            // 
-            // textBoxAddress
-            // 
-            this.textBoxAddress.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBoxAddress.Location = new System.Drawing.Point(3, 3);
-            this.textBoxAddress.Name = "textBoxAddress";
-            this.textBoxAddress.ReadOnly = true;
-            this.textBoxAddress.Size = new System.Drawing.Size(199, 20);
-            this.textBoxAddress.TabIndex = 12;
-            // 
-            // textBoxLat
-            // 
-            this.textBoxLat.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBoxLat.Location = new System.Drawing.Point(3, 28);
-            this.textBoxLat.Name = "textBoxLat";
-            this.textBoxLat.ReadOnly = true;
-            this.textBoxLat.Size = new System.Drawing.Size(199, 20);
-            this.textBoxLat.TabIndex = 13;
-            // 
-            // textBoxLon
-            // 
-            this.textBoxLon.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBoxLon.Location = new System.Drawing.Point(3, 53);
-            this.textBoxLon.Name = "textBoxLon";
-            this.textBoxLon.ReadOnly = true;
-            this.textBoxLon.Size = new System.Drawing.Size(199, 20);
-            this.textBoxLon.TabIndex = 14;
             // 
             // FormWhatsthere
             // 

@@ -1,6 +1,9 @@
 ﻿Google elevation_api
 AIzaSyDmc2dTdwizL-CNdgHw5PliuhtKc6JOPss
 
+Google TimeZone API
+AIzaSyCmDnZ90-2gbv2tpqhkQiXsKM70hvkz3_A
+
 Yandex API_KEY
 PLDmd5925Sr792Z798MjAQWMRDjQTY0~R9xo0NTgIR9-85X-aUZkLRwgoAXa-B97XBzf2jd-dDZkSpCd2aLZxS55DjFt~AtG90jY1EtCLbk=
 

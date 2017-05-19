@@ -141,7 +141,7 @@
             this.invertToolStripMenuItem,
             this.removeDayToolStripMenuItem});
             this.contextMenuStripDays.Name = "contextMenuStripDays";
-            this.contextMenuStripDays.Size = new System.Drawing.Size(257, 246);
+            this.contextMenuStripDays.Size = new System.Drawing.Size(257, 224);
             this.contextMenuStripDays.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStripDays_Opening);
             // 
             // informationDayToolStripMenuItem
@@ -337,6 +337,7 @@
             this.buttonLoadElevations.Size = new System.Drawing.Size(81, 38);
             this.buttonLoadElevations.TabIndex = 2;
             this.buttonLoadElevations.Text = "Загрузить высоты";
+            this.toolTip1.SetToolTip(this.buttonLoadElevations, "Записать высоты точек в маршруты по дням и в путевые точки");
             this.buttonLoadElevations.UseVisualStyleBackColor = true;
             this.buttonLoadElevations.Click += new System.EventHandler(this.buttonLoadElevations_Click);
             // 

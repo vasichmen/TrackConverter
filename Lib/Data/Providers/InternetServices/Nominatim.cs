@@ -25,6 +25,11 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
             }
         }
 
+        /// <summary>
+        /// получить адрес по координатам
+        /// </summary>
+        /// <param name="coordinate"></param>
+        /// <returns></returns>
         public string GetAddress(Coordinate coordinate)
         {
             // http://nominatim.openstreetmap.org/reverse?format=xml&lat=52.5487429714954&lon=-1.81602098644987
@@ -59,6 +64,11 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
             return res;
         }
 
+        /// <summary>
+        /// получить координаты по адресу
+        /// </summary>
+        /// <param name="address">адрес</param>
+        /// <returns></returns>
         public Coordinate GetCoordinate(string address)
         {
             // http://nominatim.openstreetmap.org/search?q=135+pilkington+avenue,+birmingham&format=xml
@@ -76,6 +86,16 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
 
             Coordinate res = new Coordinate(lat, lon);
             return res;
+        }
+
+        /// <summary>
+        /// получить информацию о временной зоне
+        /// </summary>
+        /// <param name="coordinate"></param>
+        /// <returns></returns>
+        public TimeZoneInfo GetTimeZone(Coordinate coordinate)
+        {
+            throw new NotImplementedException();
         }
     }
 }

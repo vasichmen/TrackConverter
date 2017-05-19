@@ -953,19 +953,6 @@ namespace TrackConverter.UI.Map
             point.Icon = IconOffsets.what_there;
             try
             {
-                point.CalculateParametres();
-
-                if (BaseConnection.CheckInternet())
-                {
-                    point.Name = new GeoCoder(Vars.Options.DataSources.GeoCoderProvider).GetAddress(point.Coordinates);
-                    point.MetrAltitude = new GeoInfo(Vars.Options.DataSources.GeoInfoProvider).GetElevation(point.Coordinates);
-                }
-                else
-                {
-                    point.Name = "Недоступный адрес";
-                    MessageBox.Show(this, "Не удалось получить всю информацию о точке.\r\nПроверьте подключение к сети.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                }
-
                 FormWhatsthere wt = new FormWhatsthere(point);
                 wt.Show(Program.winMain);
 

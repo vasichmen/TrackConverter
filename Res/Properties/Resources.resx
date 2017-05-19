@@ -293,4 +293,12 @@
     <value>\Templates\template.dot</value>
     <comment>шаблон ворда для сохранения</comment>
   </data>
+  <data name="google_elevation_api_key" xml:space="preserve">
+    <value>AIzaSyD_HQaeF2zZDgK7V22BJ_cI-iczZQD-ODo</value>
+    <comment>ключ высот гугл</comment>
+  </data>
+  <data name="google_timezone_api" xml:space="preserve">
+    <value>AIzaSyCmDnZ90-2gbv2tpqhkQiXsKM70hvkz3_A</value>
+    <comment>ключ временных зон гугл</comment>
+  </data>
 </root>

@@ -127,17 +127,15 @@ namespace TrackConverter.Lib.Tracking
         {
             get
             {
-                if (TimeOffset > 0)
-                    return DateTime.UtcNow + TimeSpan.FromHours(Math.Abs(this.TimeOffset));
-                else
-                    return DateTime.UtcNow - TimeSpan.FromHours(Math.Abs(this.TimeOffset));
+                return  DateTime.UtcNow.Add(TimeZone.GetUtcOffset(DateTime.UtcNow));
             }
         }
 
         /// <summary>
         /// часовой пояс
         /// </summary>
-        public double TimeOffset { get; set; }
+        [JsonIgnore]
+        public TimeZoneInfo TimeZone { get; set; }
 
         /// <summary>
         /// Имя точки
@@ -313,16 +311,19 @@ namespace TrackConverter.Lib.Tracking
         }
 
         /// <summary>
-        /// вычисление параметров точки: склонение, восход, закат, часовой пояс, время
+        /// вычисление параметров точки: склонение, восход, закат, время
         /// </summary>
         public void CalculateParametres()
         {
             MagneticDeclination = Vars.CurrentGeosystem.CalculateMagneticDeclination(this);
-            TimeOffset = AstronomyCalculations.CalculateTimeOffset(this);
-            Rise = AstronomyCalculations.CalculateRise(this);
-            Fall = AstronomyCalculations.CalculateFall(this);
-            RiseAzi = AstronomyCalculations.CalculateRiseAzimuth(this);
-            FallAzi = AstronomyCalculations.CalculateFallAzimuth(this);
+            //TimeOffset = AstronomyCalculations.CalculateTimeOffset(this);
+            if (this.TimeZone != null)
+            {
+                Rise = AstronomyCalculations.CalculateRise(this);
+                Fall = AstronomyCalculations.CalculateFall(this);
+                RiseAzi = AstronomyCalculations.CalculateRiseAzimuth(this);
+                FallAzi = AstronomyCalculations.CalculateFallAzimuth(this);
+            }
         }
 
         /// <summary>
