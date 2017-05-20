@@ -246,6 +246,7 @@ namespace TrackConverter.UI.Converter
             if (sf.ShowDialog() == DialogResult.OK)
             {
                 tf.FilePath = sf.FileName;
+                tf.FileName = Path.GetFileName(sf.FileName);
                 switch (Path.GetExtension(sf.FileName).ToLower())
                 {
                     case ".rt2":
@@ -1522,7 +1523,8 @@ namespace TrackConverter.UI.Converter
 
         private void button1_Click(object sender, EventArgs e)
         {
-
+            Program.winPoints.dataGridView1.ClearSelection();
+            Program.winPoints.dataGridView1.Rows[2].Selected = true;
 
             double rise = 0, set = 0;
 

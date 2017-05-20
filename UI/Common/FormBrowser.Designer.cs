@@ -52,7 +52,8 @@
             this.buttonGoBack.Location = new System.Drawing.Point(0, 0);
             this.buttonGoBack.Margin = new System.Windows.Forms.Padding(0);
             this.buttonGoBack.Name = "buttonGoBack";
-            this.buttonGoBack.Size = new System.Drawing.Size(75, 23);
+            this.buttonGoBack.Size = new System.Drawing.Size(75
+                , 23);
             this.buttonGoBack.TabIndex = 1;
             this.buttonGoBack.Text = "Назад";
             this.buttonGoBack.UseVisualStyleBackColor = true;

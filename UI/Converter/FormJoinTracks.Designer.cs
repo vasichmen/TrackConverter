@@ -44,7 +44,8 @@
             // 
             this.buttonUp.Location = new System.Drawing.Point(243, 12);
             this.buttonUp.Name = "buttonUp";
-            this.buttonUp.Size = new System.Drawing.Size(75, 23);
+            this.buttonUp.Size = new System.Drawing.Size(75
+                , 23);
             this.buttonUp.TabIndex = 1;
             this.buttonUp.Text = "Вверх";
             this.buttonUp.UseVisualStyleBackColor = true;

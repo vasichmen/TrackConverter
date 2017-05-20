@@ -2138,11 +2138,12 @@ namespace TrackConverter.UI.Map
             }
 
             selectedPointsOverlay.Markers.Clear();
-            point.Icon = 75;
-            ShowWaypoint(point, selectedPointsOverlay, Resources.selected_point, MarkerTypes.SelectedPoint);
+            TrackPoint cop = point.Clone();
+            cop.Icon = 75;
+            ShowWaypoint(cop, selectedPointsOverlay, Resources.selected_point, MarkerTypes.SelectedPoint);
 
             //центр на точку
-            gmapControlMap.Position = point.Coordinates.GMap;
+            gmapControlMap.Position = cop.Coordinates.GMap;
         }
 
         /// <summary>

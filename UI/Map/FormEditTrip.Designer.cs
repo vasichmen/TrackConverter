@@ -88,7 +88,7 @@
             this.buttonCancel.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.buttonCancel.Location = new System.Drawing.Point(511, 305);
             this.buttonCancel.Name = "buttonCancel";
-            this.buttonCancel.Size = new System.Drawing.Size(75, 32);
+            this.buttonCancel.Size = new System.Drawing.Size(75 , 32);
             this.buttonCancel.TabIndex = 0;
             this.buttonCancel.Text = "Отмена";
             this.toolTip1.SetToolTip(this.buttonCancel, "Отменить изменения");
@@ -97,7 +97,7 @@
             // 
             // buttonSave
             // 
-            this.buttonSave.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.buttonSave.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonSave.Location = new System.Drawing.Point(2, 0);
             this.buttonSave.Margin = new System.Windows.Forms.Padding(2, 0, 2, 2);

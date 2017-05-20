@@ -465,12 +465,24 @@ namespace TrackConverter.UI.Map
         /// <param name="e"></param>
         private void removeDayToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (dataGridViewDays.SelectedRows[0].Index == 0)
+                return;
+            int first = dataGridViewDays.SelectedRows[0].Index;
+            int i = 0;
             foreach (DataGridViewRow r in dataGridViewDays.SelectedRows)
                 if (r.Index == 0)
                     continue;
                 else
-                    trip.RemoveDay(r.Index - 1);
+                {
+                    trip.RemoveDay(r.Index - 1-i);
+                    i++;
+                }
             FillDGV(trip);
+
+            dataGridViewDays.ClearSelection();
+            if (dataGridViewDays.Rows.Count != 0)
+                dataGridViewDays.Rows[first - 1].Selected = true;
+
             Vars.currentSelectedTrack = null;
             Program.RefreshWindows(this); //обновление окон для того, чтобы убрать выделенный трек с карты
         }
@@ -550,9 +562,18 @@ namespace TrackConverter.UI.Map
         /// <param name="e"></param>
         private void removePointToolStripMenuItem1_Click(object sender, EventArgs e)
         {
+            if (dataGridViewWaypoints.SelectedRows.Count == 0) return;
+            int first = dataGridViewWaypoints.SelectedRows[0].Index;
+            int i = 0;
             foreach (DataGridViewRow r in dataGridViewWaypoints.SelectedRows)
-                trip.Waypoints.Remove(r.Index);
+            {
+                trip.Waypoints.Remove(r.Index - i);
+                i++;
+            }
             FillDGV(trip);
+            dataGridViewWaypoints.ClearSelection();
+            if (dataGridViewWaypoints.Rows.Count!=0)
+            dataGridViewWaypoints.Rows[first - 1].Selected = true;
         }
 
 

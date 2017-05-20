@@ -60,7 +60,7 @@ namespace TrackConverter.Lib.Tracking
         {
             get
             {
-                if (string.IsNullOrWhiteSpace(this.FilePath) || string.IsNullOrWhiteSpace(this.FileName))
+                if (string.IsNullOrWhiteSpace(this.FilePath) )
                     return FileFormats.Undefined;
                 string ext = Path.GetExtension(this.FilePath);
                 switch (ext.ToLower())

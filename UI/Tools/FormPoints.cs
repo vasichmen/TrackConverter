@@ -260,24 +260,30 @@ namespace TrackConverter.UI.Tools
         /// <param name="e"></param>
         private void removeToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            dataGridView1.SuspendLayout();
+            if (dataGridView1.SelectedRows.Count == 0) return;
 
-            int row = dataGridView1.SelectedCells[0].RowIndex;
-            Points.Remove(row);
-            FillDGV(Points.Source);
+            int first = dataGridView1.SelectedRows[0].Index;
+            int i = 0;
+            foreach (DataGridViewRow r in dataGridView1.SelectedRows)
+            {
+                Points.Remove(r.Index - i);
+                i++;
+            }
 
             Vars.currentSelectedTrack = Points;
-            Program.RefreshWindows(this);
 
-            //этот кусок удаляет почему-то еще одну строку перед выделенной 
-            //if (dataGridView1.Rows.Count != 0)
-            //    if (row - 1 > 0)
-            //        dataGridView1.Rows[row - 1].Selected = true;
-            //    else
-            //        dataGridView1.Rows[0].Selected = true;
+            FillDGV(Points.Source);
 
-            dataGridView1.ResumeLayout();
             this.isEdited = true;
+            Vars.currentSelectedTrack = Points;
+            Program.RefreshWindows(this);
+            if (dataGridView1.Rows.Count != 0)
+            {
+                if (first == 0)
+                    first = 1;
+                dataGridView1.ClearSelection();
+                dataGridView1.Rows[first - 1].Selected = true; //удаляется та строка, которая выделяется в этом месте
+            }
         }
 
         /// <summary>
@@ -514,16 +520,17 @@ namespace TrackConverter.UI.Tools
         /// <param name="e"></param>
         private void dataGridView1_SelectionChanged(object sender, EventArgs e)
         {
-            if (dataGridView1.SelectedRows.Count != 1)
-                return;
-            int ind = dataGridView1.SelectedRows[0].Index;
+            if (dataGridView1.SelectedRows.Count == 1)
+            {
+                int ind = dataGridView1.SelectedRows[0].Index;
 
-            if (ind >= Points.Count)
-                return;
+                if (ind >= Points.Count)
+                    return;
 
-            TrackPoint tt = Points[ind];
-            Program.winMap.SelectPoint(tt);
-            Program.winElevVisual.SelectPoint(tt);
+                TrackPoint tt = Points[ind];
+                Program.winMap.SelectPoint(tt);
+                Program.winElevVisual.SelectPoint(tt);
+            }
         }
 
         #endregion
