@@ -30,7 +30,7 @@ namespace TrackConverter.UI.Map
     /// <summary>
     /// окно карты
     /// </summary>
-    public partial class FormMap:Form
+    public partial class FormMap : Form
     {
         #region Конструкторы
 
@@ -480,7 +480,7 @@ namespace TrackConverter.UI.Map
                 Program.RefreshWindows(this);
                 RefreshData();
             });
-            
+
             BeginEditTrip(trip, after, canc);
         }
 
@@ -1316,7 +1316,7 @@ namespace TrackConverter.UI.Map
             catch (Exception ex)
             {
                 Vars.Options.Map.RestoreRoutesWaypoints = false;
-                MessageBox.Show("Произошла ошибка при восстановлении точек или маршрутов.\r\n"+ex.Message+"\r\nВосстановление отключено.");
+                MessageBox.Show("Произошла ошибка при восстановлении точек или маршрутов.\r\n" + ex.Message + "\r\nВосстановление отключено.");
             }
 
             //обновление списка отображаемых маршрутов
@@ -2280,16 +2280,18 @@ namespace TrackConverter.UI.Map
                     return true;
                 }
 
-            if (waypoints != null  && Program.winConverter.Tracks != null)
-            {
-                TrackFileList tracks = new TrackFileList();
-                foreach (BaseTrack tf in Program.winConverter.Tracks)
-                    if (tf.IsVisible)
-                        tracks.Add(tf);
+            //сохранение маршрутов и точек
+            if (waypoints == null)
+                waypoints = new TrackFile();
+            if (Program.winConverter.Tracks == null)
+                Program.winConverter.Tracks = new TrackFileList();
+            TrackFileList tracks = new TrackFileList();
+            foreach (BaseTrack tf in Program.winConverter.Tracks)
+                if (tf.IsVisible)
+                    tracks.Add(tf);
 
-                TripRouteFile gf = new TripRouteFile(tracks, waypoints);
-                Serializer.Serialize(Application.StartupPath + Resources.saveLast_file, gf, FileFormats.TrrFile);
-            }
+            TripRouteFile gf = new TripRouteFile(tracks, waypoints);
+            Serializer.Serialize(Application.StartupPath + Resources.saveLast_file, gf, FileFormats.TrrFile);
             return false;
         }
 
