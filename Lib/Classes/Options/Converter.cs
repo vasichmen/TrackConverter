@@ -34,6 +34,8 @@ namespace TrackConverter.Lib.Classes.Options {
             this.ApproximateAmount = 60;
             this.MinimumRiseInterval = 2000;
             this.Geosystem = Geosystems.WGS84;
+            this.MinimalNormalizeAngle = 45;
+            this.NormalizerBehavior = NormalizerBehavior.RemovePoint;
         }
 
         /// <summary>
@@ -111,6 +113,16 @@ namespace TrackConverter.Lib.Classes.Options {
         /// минимальная длина горки в метрах при поиске точек экстремума
         /// </summary>
         public double MinimumRiseInterval { get; set; }
+
+        /// <summary>
+        /// минимальный угол, при котором точка считается "острой" в нормализаторе
+        /// </summary>
+        public double MinimalNormalizeAngle { get; set; }
+
+        /// <summary>
+        /// поведение нормализатора
+        /// </summary>
+        public NormalizerBehavior NormalizerBehavior { get; set; }
 
         /// <summary>
         /// добавление последнего открытого файла

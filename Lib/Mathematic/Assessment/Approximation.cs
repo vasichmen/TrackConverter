@@ -15,7 +15,7 @@ namespace TrackConverter.Lib.Mathematic.Assessment
     /// http://www.cyberforum.ru/windows-forms/thread745949.html
     /// 
     /// </summary>
-    public static class Approximator
+    static class Approximator
     {
         private class Polynomial
         {

@@ -16,6 +16,7 @@ using TrackConverter.Lib.Classes;
 using TrackConverter.Lib.Data.Providers.Local.ETOPO;
 using TrackConverter.Res.Properties;
 using TrackConverter.UI.Common;
+using System.Threading;
 
 namespace TrackConverter.UI.Tools
 {
@@ -69,6 +70,19 @@ namespace TrackConverter.UI.Tools
                     comboBoxEllipsoid.SelectedIndex = 1;
                     break;
             }
+
+            //нормализатор
+            switch (Vars.Options.Converter.NormalizerBehavior)
+            {
+                case NormalizerBehavior.RemovePoint:
+                    comboBoxNormalizeBehavior.SelectedIndex = 0;
+                    break;
+                case NormalizerBehavior.AddCritical:
+                    comboBoxNormalizeBehavior.SelectedIndex = 1;
+                    break;
+            }
+
+            textBoxMinimalNormalizeAngle.Text = Vars.Options.Converter.MinimalNormalizeAngle.ToString();
 
             #endregion
 
@@ -269,6 +283,20 @@ namespace TrackConverter.UI.Tools
                 Vars.Options.Converter.Geosystem = Geosystems.WGS84;
             if (comboBoxEllipsoid.SelectedIndex == 1)
                 Vars.Options.Converter.Geosystem = Geosystems.PZ90;
+
+            //нормализатор
+            if (comboBoxNormalizeBehavior.SelectedIndex == 0)
+                Vars.Options.Converter.NormalizerBehavior = NormalizerBehavior.RemovePoint;
+            if (comboBoxNormalizeBehavior.SelectedIndex == 1)
+                Vars.Options.Converter.NormalizerBehavior = NormalizerBehavior.AddCritical;
+            double ang = 45;
+            bool f = double.TryParse(textBoxMinimalNormalizeAngle.Text.Trim().Replace('.', Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0]), out ang);
+            if (!f || ang >= 180)
+            {
+                MessageBox.Show(this, "Ошибка ввода.\r\nМинимальный угол нормализации должен быть в пределах от 0 до 180 градусов", "Настройки", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+            Vars.Options.Converter.MinimalNormalizeAngle = ang;
 
             #endregion
 

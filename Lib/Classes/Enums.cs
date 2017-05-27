@@ -308,7 +308,21 @@ namespace TrackConverter
         PolarSearch
     }
 
+    /// <summary>
+    /// поведение нормализатора при нормализации
+    /// </summary>
+    public enum NormalizerBehavior
+    {
+        /// <summary>
+        /// удаляет точки, которые приводят к острым углам
+        /// </summary>
+        RemovePoint,
 
+        /// <summary>
+        /// ставит вместо "острых" точек такие точки, чтоб угол был минимально допустимый
+        /// </summary>
+        AddCritical
+    }
 
     #endregion
 

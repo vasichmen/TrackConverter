@@ -11,7 +11,7 @@ namespace TrackConverter.Lib.Mathematic.Assessment
     /// <summary>
     /// класс анализа горок в маршруте
     /// </summary>
-    public static class ElevationAnalysis
+    static class ElevationAnalysis
     {
         /// <summary>
         /// информация о точке экстремума

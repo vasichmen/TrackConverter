@@ -180,16 +180,16 @@ namespace TrackConverter.Lib.Mathematic.Geodesy.Models
         }
 
 
-        ///// <summary>
-        ///// рассчет угла криволинейного треугольника на сфере. 
-        ///// Возвращает угол ВАС в градусах.  
-        ///// </summary>
-        ///// <param name="A">точка А (первая точка)</param>
-        ///// <param name="B">точка В (полюс)</param>
-        ///// <param name="C">точка С (вторая точка)</param>
-        ///// <param name="Measure">единица измерения угла для результата</param>
-        ///// <returns></returns>
-        private static double CalculateAngle(Coordinate A, Coordinate B, Coordinate C, AngleMeasure Measure)
+        /// <summary>
+        /// рассчет угла криволинейного треугольника на сфере. 
+        /// Возвращает угол ВАС в градусах.  Угол отсчитывается по часовой стрелке!!
+        /// </summary>
+        /// <param name="A">точка А (первая точка)</param>
+        /// <param name="B">точка В (полюс)</param>
+        /// <param name="C">точка С (вторая точка)</param>
+        /// <param name="Measure">единица измерения угла для результата</param>
+        /// <returns></returns>
+        public static double CalculateAngle(Coordinate A, Coordinate B, Coordinate C, AngleMeasure Measure)
         {
             //В - полюс 
             //А - первая точка

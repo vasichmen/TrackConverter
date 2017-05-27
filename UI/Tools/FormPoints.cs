@@ -262,11 +262,13 @@ namespace TrackConverter.UI.Tools
         {
             if (dataGridView1.SelectedRows.Count == 0) return;
 
-            int first = dataGridView1.SelectedRows[0].Index;
+            int first = int.MaxValue;
             int i = 0;
             foreach (DataGridViewRow r in dataGridView1.SelectedRows)
             {
                 Points.Remove(r.Index - i);
+                if (r.Index < first)
+                    first = r.Index;
                 i++;
             }
 

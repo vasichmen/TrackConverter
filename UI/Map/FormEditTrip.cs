@@ -121,7 +121,7 @@ namespace TrackConverter.UI.Map
             dataGridViewWaypoints.Refresh();
 
             //обновление карты
-            RefreshOverlay(tripRoute,centring);
+            RefreshOverlay(tripRoute, centring);
         }
 
         /// <summary>
@@ -421,7 +421,7 @@ namespace TrackConverter.UI.Map
                 trip.DaysRoutes.Remove(bt);
             }
 
-            TrackFile res= tfl.JoinTracks();
+            TrackFile res = tfl.JoinTracks();
             trip.DaysRoutes.Insert(startIndex, res);
             FillDGV(trip);
         }
@@ -467,14 +467,16 @@ namespace TrackConverter.UI.Map
         {
             if (dataGridViewDays.SelectedRows[0].Index == 0)
                 return;
-            int first = dataGridViewDays.SelectedRows[0].Index;
+            int first = int.MaxValue;
             int i = 0;
             foreach (DataGridViewRow r in dataGridViewDays.SelectedRows)
                 if (r.Index == 0)
                     continue;
                 else
                 {
-                    trip.RemoveDay(r.Index - 1-i);
+                    if (r.Index < first)
+                        first = r.Index;
+                    trip.RemoveDay(r.Index - 1 - i);
                     i++;
                 }
             FillDGV(trip);
@@ -563,17 +565,19 @@ namespace TrackConverter.UI.Map
         private void removePointToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             if (dataGridViewWaypoints.SelectedRows.Count == 0) return;
-            int first = dataGridViewWaypoints.SelectedRows[0].Index;
+            int first = int.MaxValue;
             int i = 0;
             foreach (DataGridViewRow r in dataGridViewWaypoints.SelectedRows)
             {
+                if (r.Index < first)
+                    first = r.Index;
                 trip.Waypoints.Remove(r.Index - i);
                 i++;
             }
             FillDGV(trip);
             dataGridViewWaypoints.ClearSelection();
-            if (dataGridViewWaypoints.Rows.Count!=0)
-            dataGridViewWaypoints.Rows[first - 1].Selected = true;
+            if (dataGridViewWaypoints.Rows.Count != 0)
+                dataGridViewWaypoints.Rows[first - 1].Selected = true;
         }
 
 

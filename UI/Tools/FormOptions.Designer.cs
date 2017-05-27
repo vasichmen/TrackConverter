@@ -50,6 +50,11 @@
             this.buttonAssociateFiles = new System.Windows.Forms.Button();
             this.checkBoxLastExtension = new System.Windows.Forms.CheckBox();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.label17 = new System.Windows.Forms.Label();
+            this.comboBoxNormalizeBehavior = new System.Windows.Forms.ComboBox();
+            this.label16 = new System.Windows.Forms.Label();
+            this.label15 = new System.Windows.Forms.Label();
+            this.textBoxMinimalNormalizeAngle = new System.Windows.Forms.TextBox();
             this.label14 = new System.Windows.Forms.Label();
             this.comboBoxEllipsoid = new System.Windows.Forms.ComboBox();
             this.label12 = new System.Windows.Forms.Label();
@@ -125,7 +130,7 @@
             this.groupBox2.Controls.Add(this.label1);
             this.groupBox2.Controls.Add(this.textBoxMagnNPLon);
             this.groupBox2.Controls.Add(this.textBoxMagnNPLat);
-            this.groupBox2.Location = new System.Drawing.Point(11, 120);
+            this.groupBox2.Location = new System.Drawing.Point(11, 231);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(302, 82);
             this.groupBox2.TabIndex = 8;
@@ -342,6 +347,11 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.label17);
+            this.tabPage1.Controls.Add(this.comboBoxNormalizeBehavior);
+            this.tabPage1.Controls.Add(this.label16);
+            this.tabPage1.Controls.Add(this.label15);
+            this.tabPage1.Controls.Add(this.textBoxMinimalNormalizeAngle);
             this.tabPage1.Controls.Add(this.label14);
             this.tabPage1.Controls.Add(this.comboBoxEllipsoid);
             this.tabPage1.Controls.Add(this.label12);
@@ -359,6 +369,56 @@
             this.tabPage1.ToolTipText = "Настройки вычислений и преобразования маршрутов";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Location = new System.Drawing.Point(8, 111);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(145, 13);
+            this.label17.TabIndex = 20;
+            this.label17.Text = "Поведение нормализатора";
+            this.toolTip1.SetToolTip(this.label17, "Поведение при нормализации трека. Если выбран пункт \"удалять точки\", то острые то" +
+        "чки будут удалены. В противном случает острые точки будут заменены на точки с ми" +
+        "нимально допустимым углом");
+            // 
+            // comboBoxNormalizeBehavior
+            // 
+            this.comboBoxNormalizeBehavior.FormattingEnabled = true;
+            this.comboBoxNormalizeBehavior.Items.AddRange(new object[] {
+            "Удалять точки",
+            "Добавлять с минимальным углом"});
+            this.comboBoxNormalizeBehavior.Location = new System.Drawing.Point(204, 108);
+            this.comboBoxNormalizeBehavior.Name = "comboBoxNormalizeBehavior";
+            this.comboBoxNormalizeBehavior.Size = new System.Drawing.Size(121, 21);
+            this.comboBoxNormalizeBehavior.TabIndex = 19;
+            // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Location = new System.Drawing.Point(261, 138);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(53, 13);
+            this.label16.TabIndex = 18;
+            this.label16.Text = "градусов";
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Location = new System.Drawing.Point(8, 138);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(182, 13);
+            this.label15.TabIndex = 17;
+            this.label15.Text = "Минимальный угол нормализации";
+            this.toolTip1.SetToolTip(this.label15, "Минимальный угол между направлениями на две соседние точки, при котором средняя т" +
+        "очка считается острой");
+            // 
+            // textBoxMinimalNormalizeAngle
+            // 
+            this.textBoxMinimalNormalizeAngle.Location = new System.Drawing.Point(204, 135);
+            this.textBoxMinimalNormalizeAngle.Name = "textBoxMinimalNormalizeAngle";
+            this.textBoxMinimalNormalizeAngle.Size = new System.Drawing.Size(51, 20);
+            this.textBoxMinimalNormalizeAngle.TabIndex = 16;
+            // 
             // label14
             // 
             this.label14.AutoSize = true;
@@ -375,7 +435,7 @@
             this.comboBoxEllipsoid.Items.AddRange(new object[] {
             "WGS 84",
             "ПЗ-90.11"});
-            this.comboBoxEllipsoid.Location = new System.Drawing.Point(76, 6);
+            this.comboBoxEllipsoid.Location = new System.Drawing.Point(204, 6);
             this.comboBoxEllipsoid.Name = "comboBoxEllipsoid";
             this.comboBoxEllipsoid.Size = new System.Drawing.Size(121, 21);
             this.comboBoxEllipsoid.TabIndex = 14;
@@ -399,7 +459,7 @@
             // labelApproxPower
             // 
             this.labelApproxPower.AutoSize = true;
-            this.labelApproxPower.Location = new System.Drawing.Point(67, 82);
+            this.labelApproxPower.Location = new System.Drawing.Point(7, 84);
             this.labelApproxPower.Name = "labelApproxPower";
             this.labelApproxPower.Size = new System.Drawing.Size(132, 13);
             this.labelApproxPower.TabIndex = 11;
@@ -407,7 +467,7 @@
             // 
             // numericUpDownAmount
             // 
-            this.numericUpDownAmount.Location = new System.Drawing.Point(10, 80);
+            this.numericUpDownAmount.Location = new System.Drawing.Point(204, 82);
             this.numericUpDownAmount.Maximum = new decimal(new int[] {
             90,
             0,
@@ -1081,5 +1141,10 @@
         private System.Windows.Forms.CheckBox checkBoxCacheMap;
         private System.Windows.Forms.Button buttonAssociateFiles;
         private System.Windows.Forms.CheckBox checkBoxCacheAltitudes;
+        private System.Windows.Forms.Label label16;
+        private System.Windows.Forms.Label label15;
+        private System.Windows.Forms.TextBox textBoxMinimalNormalizeAngle;
+        private System.Windows.Forms.Label label17;
+        private System.Windows.Forms.ComboBox comboBoxNormalizeBehavior;
     }
 }

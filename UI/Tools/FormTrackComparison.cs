@@ -54,7 +54,7 @@ namespace TrackConverter.UI.Tools
             {
                 if (Tracks.TotalPoints > 10000 && !Vars.Options.Converter.IsApproximateAltitudes)
                     MessageBox.Show(this, "Обработка больших маршрутов без использования аппроксимации может занять длительное время", "Внимание", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                DataTable dt = ElevationAnalysis.AnalyzeTracks(Tracks);
+                DataTable dt = TrackHandler.AnalyzeTracks(Tracks);
 
                 dataGridView1.DataSource = null;
                 dataGridView1.DataSource = dt;

@@ -281,7 +281,7 @@ namespace TrackConverter.UI.Converter
                         break;
                     case ".rte":
                         if (tf.GetType() == typeof(TripRouteFile))
-                            Serializer.Serialize(sf.FileName,(tf as TripRouteFile).DaysRoutes,FileFormats.RteFile);
+                            Serializer.Serialize(sf.FileName, (tf as TripRouteFile).DaysRoutes, FileFormats.RteFile);
                         else
                             Serializer.Serialize(sf.FileName, new TrackFileList() { tf }, FileFormats.RteFile);
                         break;
@@ -805,6 +805,29 @@ namespace TrackConverter.UI.Converter
                 BeginEditTrip(bt as TripRouteFile);
         }
 
+
+        /// <summary>
+        /// нормализация трека
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void normalizeTrackToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            int min = int.MaxValue;
+            foreach (DataGridViewRow r in dataGridView1.SelectedRows)
+            {
+                if (Tracks[r.Index].GetType() == typeof(TrackFile))
+                {
+                    if (min > r.Index)
+                        min = r.Index;
+                    Tracks[r.Index] = TrackHandler.Normalize(Tracks[r.Index] as TrackFile, Vars.Options.Converter.MinimalNormalizeAngle,Vars.Options.Converter.NormalizerBehavior);
+                }
+            }
+            Program.RefreshWindows(this);
+            dataGridView1.ClearSelection();
+            dataGridView1.Rows[min].Selected = true;
+        }
+
         /// <summary>
         /// показать маршрут на карте
         /// </summary>
@@ -1050,7 +1073,7 @@ namespace TrackConverter.UI.Converter
                 {
                     int row = dgvr.Index;
                     BaseTrack tf = Tracks[row];
-                    tf = Approximator.Approximate(tf, amount);
+                    tf = TrackHandler.Approximate(tf, amount);
                 }
                 MessageBox.Show(this, "Обработка завершена", "Выполнено!", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
@@ -1558,9 +1581,5 @@ namespace TrackConverter.UI.Converter
             TrackFile t2 = Yandex.DecodePolyline(one);
         }
 
-        private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-
-        }
     }
 }

@@ -120,6 +120,8 @@
     <Compile Include="Data\Providers\Local\ETOPO\FloatDatabase.cs" />
     <Compile Include="Data\Providers\Local\ETOPO\SQLiteDatabase.cs" />
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="Mathematic\Assessment\Normalizer.cs" />
+    <Compile Include="Mathematic\Assessment\TrackHandler.cs" />
     <Compile Include="Mathematic\Astronomy\AstronomyCalculations.cs" />
     <Compile Include="Mathematic\Astronomy\SunRiseSet.cs" />
     <Compile Include="Mathematic\Astronomy\Time.cs" />
