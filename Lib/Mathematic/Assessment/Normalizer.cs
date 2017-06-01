@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using TrackConverter.Lib.Classes;
+using TrackConverter.Lib.Mathematic.Base;
 using TrackConverter.Lib.Mathematic.Geodesy.Models;
 using TrackConverter.Lib.Tracking;
 
@@ -41,7 +42,7 @@ namespace TrackConverter.Lib.Mathematic.Assessment
             for (int i = 1; i < track.Count - 1; i++)
             {
                 //поиск угла BAC
-                double angle = BaseModel.CalculateAngle(
+                double angle = SphereCalculations.CalculateAngle(
                     track[i].Coordinates, //A
                     track[i - 1].Coordinates, //B
                     track[i + 1].Coordinates, //C
@@ -71,7 +72,7 @@ namespace TrackConverter.Lib.Mathematic.Assessment
             for (int i = 1; i < track.Count - 1; i++)
             {
                 //поиск угла BAC
-                double angle = BaseModel.CalculateAngle(
+                double angle = SphereCalculations.CalculateAngle(
                     track[i].Coordinates, //A
                     track[i - 1].Coordinates, //B
                     track[i + 1].Coordinates, //C

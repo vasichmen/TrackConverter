@@ -125,6 +125,7 @@
     <Compile Include="Mathematic\Astronomy\AstronomyCalculations.cs" />
     <Compile Include="Mathematic\Astronomy\SunRiseSet.cs" />
     <Compile Include="Mathematic\Astronomy\Time.cs" />
+    <Compile Include="Mathematic\Base\SphereCalculations.cs" />
     <Compile Include="Mathematic\Geodesy\MapCalibrations\MapCalibrationOzi.cs" />
     <Compile Include="Mathematic\Geodesy\MapCalibrations\MapCalibrationWorld.cs" />
     <Compile Include="Mathematic\Geodesy\Projections\IProjection.cs" />
