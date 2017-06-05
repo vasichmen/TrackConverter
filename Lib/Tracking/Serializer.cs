@@ -225,6 +225,9 @@ namespace TrackConverter.Lib.Tracking
                     case ".trr":
                         res = LoadTRR(FileNameOrLink);
                         break;
+                    case ".rte":
+                        res = LoadRTE(FileNameOrLink)[0];
+                        break;
                     default:
                         throw new Exception("Данный файл не поддерживается: " + FileNameOrLink);
                 }
