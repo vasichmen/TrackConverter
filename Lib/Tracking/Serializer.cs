@@ -59,10 +59,16 @@ namespace TrackConverter.Lib.Tracking
                     ExportDOC(FileName, track);
                     return null;
                 case FileFormats.KmlFile:
-                    ExportKML(FileName, track);
+                    if (track.GetType() == typeof(TrackFile))
+                        ExportKML(FileName, new TrackFileList(track));
+                    if (track.GetType() == typeof(TripRouteFile))
+                        ExportKML(FileName, (track as TripRouteFile).DaysRoutes);
                     return null;
                 case FileFormats.KmzFile:
-                    ExportKMZ(FileName, track);
+                    if (track.GetType() == typeof(TrackFile))
+                        ExportKMZ(FileName, new TrackFileList(track));
+                    if (track.GetType() == typeof(TripRouteFile))
+                        ExportKMZ(FileName, (track as TripRouteFile).DaysRoutes);
                     return null;
                 case FileFormats.OsmFile:
                     ExportOSM(FileName, track);
@@ -83,15 +89,18 @@ namespace TrackConverter.Lib.Tracking
                     ExportTrr(FileName, track);
                     return null;
                 case FileFormats.RteFile:
-                    ExportRTE(FileName, new TrackFileList( track));
+                    if (track.GetType() == typeof(TrackFile))
+                        ExportRTE(FileName, new TrackFileList(track));
+                    if (track.GetType() == typeof(TripRouteFile))
+                        ExportRTE(FileName, (track as TripRouteFile).DaysRoutes);
                     return null;
                 case FileFormats.YandexLink:
                     return ExportYandex(int.Parse(FileName), track);
                 case FileFormats.WikimapiaLink:
                     return ExportWikimapia(int.Parse(FileName), track);
-                default:  throw new NotSupportedException("Неподдерживаемый формат " + format.ToString());
+                default: throw new NotSupportedException("Неподдерживаемый формат " + format.ToString());
             }
-           
+
         }
 
         /// <summary>
@@ -941,7 +950,7 @@ namespace TrackConverter.Lib.Tracking
                 string f1 = "RWPT" + i.ToString();
                 string lat = pt.Coordinates.Latitude.TotalDegrees.ToString().Replace(Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0], '.');
                 string lon = pt.Coordinates.Longitude.TotalDegrees.ToString().Replace(Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0], '.');
-                string f4 = pt.FeetAltitude.ToString().Replace(",",".");
+                string f4 = pt.FeetAltitude.ToString().Replace(",", ".");
                 outputS.WriteLine("{0},{1},{2},{3},{4}", f0, f1, lat, lon, f4);
                 i++;
             }
@@ -1405,7 +1414,7 @@ namespace TrackConverter.Lib.Tracking
         /// <returns>ссылка на машрурт на картах Wikimapia</returns>
         public static string ExportWikimapia(int count, BaseTrack Track)
         {
-            if (count <= 0 )
+            if (count <= 0)
                 throw new ArgumentOutOfRangeException("Количество точек меньше или равно нулю");
             if (count > Track.Count)
                 count = Track.Count;

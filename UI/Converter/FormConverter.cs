@@ -240,7 +240,8 @@ namespace TrackConverter.UI.Converter
                 sf.InitialDirectory = Vars.Options.Common.LastFileSaveDirectory;
             if (Vars.Options.Common.IsExtension)
                 sf.FilterIndex = Vars.Options.Common.LastSaveExtensionNumberSaveOneTrack;
-            sf.FileName = tf.Name;
+
+            //sf.FileName = tf.Name; //при сохранении как файл не записывать сохранённый путь
 
 
             if (sf.ShowDialog() == DialogResult.OK)
