@@ -45,7 +45,7 @@ namespace TrackConverter.UI.Common.Dialogs
         {
             if (checkBoxRemember.Checked)
                 Vars.Options.Common.UpdateMode = UpdateDialogAnswer.AlwaysAccept;
-            Process.Start(Vars.Options.Common.SiteAddress + "/programs.php?item=TrackConverter");
+            Process.Start(Vars.Options.Common.SiteAddress + "/files/downloads/TrackConverter_"+vi.VersionText.Substring(0,5)+".zip"); 
             this.Close();
         }
 
