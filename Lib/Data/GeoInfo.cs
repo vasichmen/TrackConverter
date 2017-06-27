@@ -118,7 +118,6 @@ namespace TrackConverter.Lib.Data
                 //если приходится работать с каждой точкой отдельно
                 TrackFile res = new TrackFile();
                 res.Name = track.Name;
-                res.FileName = track.FileName;
                 res.FilePath = track.FilePath;
                 res.Description = track.Description;
                 res.Color = track.Color;

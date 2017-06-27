@@ -46,7 +46,7 @@ namespace TrackConverter.Lib.Tracking
         /// <summary>
         /// имя фыайла
         /// </summary>
-        public string FileName { get; set; }
+        public string FileName { get { return string.IsNullOrEmpty(FilePath) ? null : Path.GetFileNameWithoutExtension(FilePath); } }
 
         /// <summary>
         /// адрес файла
@@ -60,7 +60,7 @@ namespace TrackConverter.Lib.Tracking
         {
             get
             {
-                if (string.IsNullOrWhiteSpace(this.FilePath) )
+                if (string.IsNullOrWhiteSpace(this.FilePath))
                     return FileFormats.Undefined;
                 string ext = Path.GetExtension(this.FilePath);
                 switch (ext.ToLower())

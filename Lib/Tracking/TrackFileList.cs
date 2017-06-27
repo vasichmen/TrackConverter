@@ -182,5 +182,20 @@ namespace TrackConverter.Lib.Tracking
                 res.Add(bt.Clone());
             return res;
         }
+
+        /// <summary>
+        /// преобразование списка маршрутов в путешествие
+        /// </summary>
+        /// <returns></returns>
+        public TripRouteFile ToTripRoute()
+        {
+            if (this.Count == 0)
+                return new TripRouteFile();
+            TripRouteFile res = new TripRouteFile(this, null);
+            res.Color = Vars.Options.Converter.GetColor();
+            res.FilePath = null;
+            res.Name = this[0].Name;
+            return res;
+        }
     }
 }

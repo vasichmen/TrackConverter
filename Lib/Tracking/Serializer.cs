@@ -411,7 +411,6 @@ namespace TrackConverter.Lib.Tracking
             inputS.Close();
             res.CalculateAll();
             res.Name = Path.GetFileName(FilePath);
-            res.FileName = Path.GetFileNameWithoutExtension(FilePath);
             res.FilePath = FilePath;
             return res;
         }
@@ -476,7 +475,6 @@ namespace TrackConverter.Lib.Tracking
             inputS.Close();
             res.CalculateAll();
             res.Name = Path.GetFileName(FilePath);
-            res.FileName = Path.GetFileNameWithoutExtension(FilePath);
             res.FilePath = FilePath;
             return res;
         }
@@ -515,7 +513,6 @@ namespace TrackConverter.Lib.Tracking
             }
             inputS.Close();
             res.CalculateAll();
-            res.FileName = Path.GetFileNameWithoutExtension(FilePath);
             res.FilePath = FilePath;
             return res;
         }
@@ -553,7 +550,6 @@ namespace TrackConverter.Lib.Tracking
                         }
                 }
             }
-            res.FileName = Path.GetFileNameWithoutExtension(FilePath);
             res.FilePath = FilePath;
             res.CalculateAll();
             return res;
@@ -609,7 +605,6 @@ namespace TrackConverter.Lib.Tracking
                         }
 
             res.Name = routeName;
-            res.FileName = Path.GetFileNameWithoutExtension(FilePath);
             res.FilePath = FilePath;
             res.CalculateAll();
             return res;
@@ -636,7 +631,6 @@ namespace TrackConverter.Lib.Tracking
             res.Description = arrd[1]; //записываем описание
             if (arrd[3] != "0")
                 res.Color = Color.FromArgb(int.Parse(arrd[3])); //цвет
-            res.FileName = Path.GetFileNameWithoutExtension(FilePath);
             res.FilePath = FilePath;
             res.Name = res.FileName;
             while (!sr.EndOfStream)
@@ -695,7 +689,6 @@ namespace TrackConverter.Lib.Tracking
             st = sr.ReadLine(); //параметры трека
             string[] arrd = Regex.Split(st, "w*,w*");
             res.Description = arrd[3]; //записываем описание трека
-            res.FileName = Path.GetFileNameWithoutExtension(FilePath); //имя файла
             res.FilePath = FilePath; //путь к файлу
             if (arrd[2] != "0")
                 res.Color = Color.FromArgb(int.Parse(arrd[2]));
@@ -766,7 +759,6 @@ namespace TrackConverter.Lib.Tracking
             inputS.Close();
             res.CalculateAll();
             res.Name = Path.GetFileName(FilePath);
-            res.FileName = Path.GetFileNameWithoutExtension(FilePath);
             res.FilePath = FilePath;
             return res;
         }
@@ -815,7 +807,6 @@ namespace TrackConverter.Lib.Tracking
             inputS.Close();
             res.CalculateAll();
             res.Name = Path.GetFileName(FilePath);
-            res.FileName = Path.GetFileNameWithoutExtension(FilePath);
             res.FilePath = FilePath;
             return res;
         }
@@ -870,8 +861,7 @@ namespace TrackConverter.Lib.Tracking
                 res.Add(npt);
             }
             res.Name = "Yandex";
-            res.FileName = "yandexRoute" + DateTime.Now.ToString();
-            res.FilePath = "";
+            res.FilePath = "Yandex\\yandexRoute" + DateTime.Now.ToString();
             res.CalculateAll();
             return res;
         }
@@ -919,8 +909,7 @@ namespace TrackConverter.Lib.Tracking
                 res.Add(npt);
             }
             res.Name = "Wikimapia";
-            res.FileName = "wikimapiaRoute" + DateTime.Now.ToString();
-            res.FilePath = "";
+            res.FilePath = "Wikimapia\\wikimapiaRoute" + DateTime.Now.ToString();;
             res.CalculateAll();
             return res;
         }
@@ -1647,7 +1636,6 @@ namespace TrackConverter.Lib.Tracking
                     res.DaysRoutes = TrrHelper.GetRoutes(routes);
                     res.Waypoints = TrrHelper.GetWaypoints(wpts);
                     res.FilePath = fileName;
-                    res.FileName = Path.GetFileName(fileName);
                     sr.Close();
                     return res;
                 default: throw new ApplicationException("Версия файла " + version + " не поддерживается в этой версии программы. Обновите Track Converter!");

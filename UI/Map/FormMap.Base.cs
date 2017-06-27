@@ -532,6 +532,8 @@ namespace TrackConverter.UI.Map
         /// <param name="addToWaypoints">если истина, то точки будут добавлены в список точек</param>
         public void ShowWaypoints(BaseTrack waypoints, GMapOverlay lay, bool clearBefore, bool addToWaypoints)
         {
+            if (waypoints == null)
+                return;
             if (clearBefore)
                 lay.Markers.Clear();
             gmapControlMap.SuspendLayout();

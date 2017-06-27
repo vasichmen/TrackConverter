@@ -57,6 +57,7 @@
             this.loadElevationsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.removeElevationsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.approximateAltitudesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.normalizeTrackToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.показатьToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showWaypointsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showOnMapToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -67,7 +68,8 @@
             this.addComparisonToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.removeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.button1 = new System.Windows.Forms.Button();
-            this.normalizeTrackToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toTripRouteFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.joinToTripRouteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.contextMenuStripDGW.SuspendLayout();
@@ -304,7 +306,9 @@
             this.loadElevationsToolStripMenuItem,
             this.removeElevationsToolStripMenuItem,
             this.approximateAltitudesToolStripMenuItem,
-            this.normalizeTrackToolStripMenuItem});
+            this.normalizeTrackToolStripMenuItem,
+            this.toTripRouteFileToolStripMenuItem,
+            this.joinToTripRouteToolStripMenuItem});
             this.изменитьToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("изменитьToolStripMenuItem.Image")));
             this.изменитьToolStripMenuItem.Name = "изменитьToolStripMenuItem";
             this.изменитьToolStripMenuItem.Size = new System.Drawing.Size(235, 22);
@@ -314,16 +318,17 @@
             // 
             this.editRouteMapToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("editRouteMapToolStripMenuItem.Image")));
             this.editRouteMapToolStripMenuItem.Name = "editRouteMapToolStripMenuItem";
-            this.editRouteMapToolStripMenuItem.Size = new System.Drawing.Size(227, 22);
+            this.editRouteMapToolStripMenuItem.Size = new System.Drawing.Size(241, 22);
             this.editRouteMapToolStripMenuItem.Tag = "single";
             this.editRouteMapToolStripMenuItem.Text = "Редактировать на карте";
+            this.editRouteMapToolStripMenuItem.ToolTipText = "Изменение маршрута на карте";
             this.editRouteMapToolStripMenuItem.Click += new System.EventHandler(this.editRouteMapToolStripMenuItem_Click);
             // 
             // editWaypointsToolStripMenuItem
             // 
             this.editWaypointsToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("editWaypointsToolStripMenuItem.Image")));
             this.editWaypointsToolStripMenuItem.Name = "editWaypointsToolStripMenuItem";
-            this.editWaypointsToolStripMenuItem.Size = new System.Drawing.Size(227, 22);
+            this.editWaypointsToolStripMenuItem.Size = new System.Drawing.Size(241, 22);
             this.editWaypointsToolStripMenuItem.Tag = "single";
             this.editWaypointsToolStripMenuItem.Text = "Править путевые точки";
             this.editWaypointsToolStripMenuItem.ToolTipText = "Открыть как последовательность точек";
@@ -333,29 +338,42 @@
             // 
             this.loadElevationsToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("loadElevationsToolStripMenuItem.Image")));
             this.loadElevationsToolStripMenuItem.Name = "loadElevationsToolStripMenuItem";
-            this.loadElevationsToolStripMenuItem.Size = new System.Drawing.Size(227, 22);
+            this.loadElevationsToolStripMenuItem.Size = new System.Drawing.Size(241, 22);
             this.loadElevationsToolStripMenuItem.Tag = "multy";
             this.loadElevationsToolStripMenuItem.Text = "Загрузить высоты точек";
-            this.loadElevationsToolStripMenuItem.ToolTipText = "Записать в маршрут данные высоты";
+            this.loadElevationsToolStripMenuItem.ToolTipText = "Записать в маршрут высоты все его точек. Если это путешествие, то будут записаны " +
+    "высоты путевых точек";
             this.loadElevationsToolStripMenuItem.Click += new System.EventHandler(this.loadElevationsToolStripMenuItem_Click);
             // 
             // removeElevationsToolStripMenuItem
             // 
             this.removeElevationsToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("removeElevationsToolStripMenuItem.Image")));
             this.removeElevationsToolStripMenuItem.Name = "removeElevationsToolStripMenuItem";
-            this.removeElevationsToolStripMenuItem.Size = new System.Drawing.Size(227, 22);
+            this.removeElevationsToolStripMenuItem.Size = new System.Drawing.Size(241, 22);
             this.removeElevationsToolStripMenuItem.Tag = "multy";
             this.removeElevationsToolStripMenuItem.Text = "Удалить высоты точек";
+            this.removeElevationsToolStripMenuItem.ToolTipText = "Удалить все высоты точек из маршурта";
             this.removeElevationsToolStripMenuItem.Click += new System.EventHandler(this.removeElevationsToolStripMenuItem_Click);
             // 
             // approximateAltitudesToolStripMenuItem
             // 
             this.approximateAltitudesToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("approximateAltitudesToolStripMenuItem.Image")));
             this.approximateAltitudesToolStripMenuItem.Name = "approximateAltitudesToolStripMenuItem";
-            this.approximateAltitudesToolStripMenuItem.Size = new System.Drawing.Size(227, 22);
+            this.approximateAltitudesToolStripMenuItem.Size = new System.Drawing.Size(241, 22);
             this.approximateAltitudesToolStripMenuItem.Tag = "multy";
             this.approximateAltitudesToolStripMenuItem.Text = "Аппроксимировать высоты";
+            this.approximateAltitudesToolStripMenuItem.ToolTipText = "Аппроксимация высот полиномом заданной степени. Степень задаётся в настройках";
             this.approximateAltitudesToolStripMenuItem.Click += new System.EventHandler(this.approximateAltitudesToolStripMenuItem_Click);
+            // 
+            // normalizeTrackToolStripMenuItem
+            // 
+            this.normalizeTrackToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("normalizeTrackToolStripMenuItem.Image")));
+            this.normalizeTrackToolStripMenuItem.Name = "normalizeTrackToolStripMenuItem";
+            this.normalizeTrackToolStripMenuItem.Size = new System.Drawing.Size(241, 22);
+            this.normalizeTrackToolStripMenuItem.Tag = "multy";
+            this.normalizeTrackToolStripMenuItem.Text = "Нормализовать трек";
+            this.normalizeTrackToolStripMenuItem.ToolTipText = "Удаление из трека погрешностей, создаваемых GPS";
+            this.normalizeTrackToolStripMenuItem.Click += new System.EventHandler(this.normalizeTrackToolStripMenuItem_Click);
             // 
             // показатьToolStripMenuItem
             // 
@@ -457,12 +475,24 @@
             this.button1.Visible = false;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
-            // normalizeTrackToolStripMenuItem
+            // toTripRouteFileToolStripMenuItem
             // 
-            this.normalizeTrackToolStripMenuItem.Name = "normalizeTrackToolStripMenuItem";
-            this.normalizeTrackToolStripMenuItem.Size = new System.Drawing.Size(227, 22);
-            this.normalizeTrackToolStripMenuItem.Text = "Нормализовать трек";
-            this.normalizeTrackToolStripMenuItem.Click += new System.EventHandler(this.normalizeTrackToolStripMenuItem_Click);
+            this.toTripRouteFileToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("toTripRouteFileToolStripMenuItem.Image")));
+            this.toTripRouteFileToolStripMenuItem.Name = "toTripRouteFileToolStripMenuItem";
+            this.toTripRouteFileToolStripMenuItem.Size = new System.Drawing.Size(241, 22);
+            this.toTripRouteFileToolStripMenuItem.Tag = "multy";
+            this.toTripRouteFileToolStripMenuItem.Text = "Преобразовать в путешествия";
+            this.toTripRouteFileToolStripMenuItem.ToolTipText = "Преобразование каждого выделенного маршрута в отдельное путешествие";
+            this.toTripRouteFileToolStripMenuItem.Click += new System.EventHandler(this.toTripRouteFileToolStripMenuItem_Click);
+            // 
+            // joinToTripRouteToolStripMenuItem
+            // 
+            this.joinToTripRouteToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("joinToTripRouteToolStripMenuItem.Image")));
+            this.joinToTripRouteToolStripMenuItem.Name = "joinToTripRouteToolStripMenuItem";
+            this.joinToTripRouteToolStripMenuItem.Size = new System.Drawing.Size(241, 22);
+            this.joinToTripRouteToolStripMenuItem.Tag = "multy";
+            this.joinToTripRouteToolStripMenuItem.Text = "Объединить в путешествие";
+            this.joinToTripRouteToolStripMenuItem.Click += new System.EventHandler(this.joinToTripRouteToolStripMenuItem_Click);
             // 
             // FormConverter
             // 
@@ -529,5 +559,7 @@
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.ToolStripMenuItem removeElevationsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem normalizeTrackToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem toTripRouteFileToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem joinToTripRouteToolStripMenuItem;
     }
 }

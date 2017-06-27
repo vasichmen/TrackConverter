@@ -272,19 +272,22 @@ namespace TrackConverter.UI.Tools
                 i++;
             }
 
-            Vars.currentSelectedTrack = Points;
-
             FillDGV(Points.Source);
 
+            if (this == Program.winPoints)
+            {
+                Vars.currentSelectedTrack = Points;
+                Program.RefreshWindows(this);
+            }
+
             this.isEdited = true;
-            Vars.currentSelectedTrack = Points;
-            Program.RefreshWindows(this);
+            
             if (dataGridView1.Rows.Count != 0)
             {
                 if (first == 0)
                     first = 1;
                 dataGridView1.ClearSelection();
-                dataGridView1.Rows[first - 1].Selected = true; //удаляется та строка, которая выделяется в этом месте
+                dataGridView1.Rows[first - 1].Selected = true; 
             }
         }
 

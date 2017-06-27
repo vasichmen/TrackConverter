@@ -411,7 +411,6 @@ namespace TrackConverter.Lib.Tracking
                 foreach (TrackPoint t in this)
                     res.Add(t.Clone());
             res.Description = this.Description;
-            res.FileName = this.FileName;
             res.FilePath = this.FilePath;
             res.Name = this.Name;
             res.Color = this.Color;
@@ -540,7 +539,6 @@ namespace TrackConverter.Lib.Tracking
         {
             TrackFile res = new TrackFile();
             res.Name = this.Name;
-            res.FileName = this.FileName;
             res.FilePath = this.FilePath;
             res.Description = this.Description;
             res.Color = this.Color;
@@ -569,14 +567,13 @@ namespace TrackConverter.Lib.Tracking
         /// преобразует TrackFile в TripRouteFile
         /// </summary>
         /// <returns></returns>
-        internal TripRouteFile ToTripRoute()
+        public TripRouteFile ToTripRoute()
         {
             TripRouteFile res = new TripRouteFile();
             res.AddDay(this.Clone() as TrackFile);
             res.Name = this.Name;
             res.Description = this.Description;
             res.Color = this.Color;
-            res.FileName = this.FileName;
             //FilePath не копируется
             return res;
         }

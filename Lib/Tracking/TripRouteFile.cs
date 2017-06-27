@@ -37,8 +37,15 @@ namespace TrackConverter.Lib.Tracking
         public TripRouteFile(TrackFileList tracks, TrackFile waypoints)
         {
             Track = new List<TrackPoint>();
-            this.DaysRoutes = tracks;
-            this.Waypoints = waypoints;
+            if (tracks == null)
+                this.DaysRoutes = new TrackFileList();
+            else
+                this.DaysRoutes = tracks;
+
+            if (waypoints == null)
+                this.Waypoints = new TrackFile();
+            else
+                this.Waypoints = waypoints;
         }
 
         /// <summary>
@@ -92,6 +99,8 @@ namespace TrackConverter.Lib.Tracking
         /// <returns></returns>
         public DataTable GetDaysRoutesTable(DataTable baseTable)
         {
+            if (daysRoutes == null)
+                daysRoutes = new TrackFileList();
             foreach (TrackFile tf in this.DaysRoutes)
             {
                 baseTable.LoadDataRow(
@@ -112,6 +121,8 @@ namespace TrackConverter.Lib.Tracking
         /// <returns></returns>
         public DataTable GetWaypointsTable(DataTable baseTable)
         {
+            if (this.Waypoints == null)
+                this.Waypoints = new TrackFile();
             foreach (TrackPoint tf in this.Waypoints)
             {
                 baseTable.LoadDataRow(
@@ -131,6 +142,8 @@ namespace TrackConverter.Lib.Tracking
         /// <param name="day"></param>
         public void AddDay(TrackFile day)
         {
+            if (daysRoutes == null)
+                daysRoutes = new TrackFileList();
             daysRoutes.Add(day);
             totalTrack = daysRoutes.JoinTracks();
             totalTrack.CalculateAll();
@@ -151,6 +164,8 @@ namespace TrackConverter.Lib.Tracking
         /// <param name="v">номер дня в списке</param>
         public void RemoveDay(int v)
         {
+            if (daysRoutes == null)
+                return;
             daysRoutes.RemoveAt(v);
             totalTrack = daysRoutes.JoinTracks();
             totalTrack.CalculateAll();
@@ -163,6 +178,8 @@ namespace TrackConverter.Lib.Tracking
         /// <param name="newPos"></param>
         public void MoveDay(int oldPos, int newPos)
         {
+            if (daysRoutes == null)
+                return;
             if (oldPos == newPos) return; //если двигать не надо, то выход
             if (oldPos > newPos) //если движение вверх
             {
@@ -401,7 +418,6 @@ namespace TrackConverter.Lib.Tracking
             res.Name = this.Name;
             res.Color = this.Color;
             res.Description = this.Description;
-            res.FileName = this.FileName;
             res.FilePath = this.FilePath;
             return res;
         }

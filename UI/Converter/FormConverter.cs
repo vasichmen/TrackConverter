@@ -246,8 +246,8 @@ namespace TrackConverter.UI.Converter
 
             if (sf.ShowDialog() == DialogResult.OK)
             {
-                tf.FilePath = sf.FileName;
-                tf.FileName = Path.GetFileName(sf.FileName);
+                if (string.IsNullOrEmpty(tf.FilePath))
+                    tf.FilePath = sf.FileName;
                 switch (Path.GetExtension(sf.FileName).ToLower())
                 {
                     case ".rt2":
@@ -663,7 +663,22 @@ namespace TrackConverter.UI.Converter
         /// <param name="e"></param>
         private void contextMenuStripDGW_Opening(object sender, CancelEventArgs e)
         {
-            //если выделенный маршрут - путешествие, то переименовываем кнопку редактирования
+            //если все выделенные маршрты - TrackFile, то добавление пункта "преобразовать в путешествие и объединить в путешествие"
+            bool allTF = true;
+            foreach (DataGridViewRow dr in dataGridView1.SelectedRows)
+                allTF &= Tracks[dr.Index].GetType() == typeof(TrackFile);
+            if (allTF)
+            {
+                toTripRouteFileToolStripMenuItem.Visible = true;
+                joinToTripRouteToolStripMenuItem.Visible = true;
+            }
+            else
+            {
+                toTripRouteFileToolStripMenuItem.Visible = false;
+                joinToTripRouteToolStripMenuItem.Visible = false;
+            }
+
+            //если один выделенный маршрут - путешествие, то переименовываем кнопку редактирования
             if (dataGridView1.SelectedRows.Count == 1)
             {
                 int ind = dataGridView1.SelectedRows[0].Index;
@@ -788,7 +803,7 @@ namespace TrackConverter.UI.Converter
         }
 
         /// <summary>
-        /// редактирование мкршрута на карте
+        /// редактирование маршрута или путешествия на карте
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -806,7 +821,6 @@ namespace TrackConverter.UI.Converter
                 BeginEditTrip(bt as TripRouteFile);
         }
 
-
         /// <summary>
         /// нормализация трека
         /// </summary>
@@ -821,12 +835,55 @@ namespace TrackConverter.UI.Converter
                 {
                     if (min > r.Index)
                         min = r.Index;
-                    Tracks[r.Index] = TrackHandler.Normalize(Tracks[r.Index] as TrackFile, Vars.Options.Converter.MinimalNormalizeAngle,Vars.Options.Converter.NormalizerBehavior);
+                    Tracks[r.Index] = TrackHandler.Normalize(Tracks[r.Index] as TrackFile, Vars.Options.Converter.MinimalNormalizeAngle, Vars.Options.Converter.NormalizerBehavior);
                 }
             }
             Program.RefreshWindows(this);
             dataGridView1.ClearSelection();
             dataGridView1.Rows[min].Selected = true;
+        }
+
+        /// <summary>
+        /// преобразование обычного маршрута в отдельные путешествие
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void toTripRouteFileToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            foreach (DataGridViewRow dr in dataGridView1.SelectedRows)
+            {
+                int ind = dr.Index;
+                TrackFile tf = (TrackFile)Tracks[ind];
+                TripRouteFile tr = tf.ToTripRoute();
+                Tracks.Remove(tf);
+                Tracks.Insert(ind, tr);
+            }
+            Vars.currentSelectedTrack = null;
+            Program.RefreshWindows(this);
+            RefreshData();
+        }
+
+        /// <summary>
+        /// объединение маршуртов в одно путешествие
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void joinToTripRouteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            int first = dataGridView1.SelectedRows[0].Index;
+            TrackFileList tfl = new TrackFileList();
+            foreach (DataGridViewRow dr in dataGridView1.SelectedRows)
+            {
+                int ind = dr.Index;
+                TrackFile tf = (TrackFile)Tracks[ind - tfl.Count];
+                tfl.Add(tf);
+                Tracks.Remove(tf);
+            }
+            TripRouteFile trr = tfl.ToTripRoute();
+            Tracks.Insert(first, trr);
+            Vars.currentSelectedTrack = trr;
+            Program.RefreshWindows(this);
+            RefreshData();
         }
 
         /// <summary>
@@ -1121,9 +1178,9 @@ namespace TrackConverter.UI.Converter
             BaseTrack tf = Tracks[row];
 
 
-            if (tf.FilePath != null && tf.FilePath.Length > 1)
+            if (!string.IsNullOrEmpty(tf.FilePath))
             {
-                if (MessageBox.Show(this, "Вы действительно хотите перезаписать файл\r\n " + tf.FilePath, "Внимание!", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == System.Windows.Forms.DialogResult.Yes)
+                if (MessageBox.Show(this, "Вы действительно хотите перезаписать файл\r\n " + tf.FilePath, "Внимание!", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
                 {
                     if (Path.GetExtension(tf.FilePath) == ".kml" || Path.GetExtension(tf.FilePath) == ".kmz")
                     {
@@ -1131,16 +1188,10 @@ namespace TrackConverter.UI.Converter
                             "\r\nЕсли продолжить сохранение, информация о путевых точках в этом файле может быть утеряна." +
                             "\r\nДля сохранения маршрутов и точек в один файл используйте соответствующий пункт меню карты." +
                             "\r\nПродолжить?";
-                        if (MessageBox.Show(this,
-                            msg,
-                            "Внимание!",
-                        MessageBoxButtons.YesNo,
-                        MessageBoxIcon.Warning,
-                        MessageBoxDefaultButton.Button1) == DialogResult.No)
+                        if (MessageBox.Show(this, msg, "Внимание!", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) == DialogResult.No)
                             return;
                     }
                     Serializer.Serialize(tf.FilePath, tf, tf.Format);
-                    MessageBox.Show("Файл сохранен!");
                 }
             }
             else
@@ -1157,7 +1208,6 @@ namespace TrackConverter.UI.Converter
         /// <param name="e"></param>
         private void dataGridView1_DragEnter(object sender, DragEventArgs e)
         {
-            //dataGridView1.BackgroundColor = Color.DarkGreen;
             if (e.Data.GetDataPresent(DataFormats.FileDrop) || e.Data.GetDataPresent(DataFormats.UnicodeText))
                 e.Effect = DragDropEffects.All;
             else
@@ -1281,7 +1331,12 @@ namespace TrackConverter.UI.Converter
         /// <param name="e"></param>
         private void dataGridView1_CellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
         {
-            informationToolStripMenuItem_Click(sender, new EventArgs());
+            dataGridView1.ClearSelection();
+            dataGridView1.Rows[e.RowIndex].Selected = true;
+            if (Tracks[e.RowIndex].GetType() == typeof(TripRouteFile))
+                editRouteMapToolStripMenuItem_Click(sender, new EventArgs());
+            else
+                informationToolStripMenuItem_Click(sender, new EventArgs());
         }
 
         /// <summary>
