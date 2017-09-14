@@ -422,7 +422,7 @@ namespace TrackConverter.UI.Map
             }
 
             TrackFile res = tfl.JoinTracks();
-            trip.DaysRoutes.Insert(startIndex, res);
+            trip.DaysRoutes.Insert(startIndex-1, res);
             FillDGV(trip);
         }
 
@@ -789,7 +789,7 @@ namespace TrackConverter.UI.Map
                 sf.InitialDirectory = Vars.Options.Common.LastFileSaveDirectory;
             if (Vars.Options.Common.IsExtension)
                 sf.FilterIndex = Vars.Options.Common.LastSaveExtensionNumberSaveOneTrack;
-            sf.FileName = Path.GetFileNameWithoutExtension(trip.Waypoints.FileName);
+            sf.FileName = "Путевые точки " + trip.Name;
 
             if (sf.ShowDialog() == DialogResult.OK)
             {
