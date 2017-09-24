@@ -595,7 +595,7 @@ namespace TrackConverter.Lib.Tracking
                             }
 
                             double altD = alt == "" ? -777 : Convert.ToDouble(alt.Replace('.', Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0]));
-                            DateTime dt = Convert.ToDateTime(tim) - Vars.Options.Converter.UTCDifferrent;
+                            DateTime dt = tim == "" || tim == "01.01.0001 0:00:00" ? DateTime.MinValue : Convert.ToDateTime(tim) - Vars.Options.Converter.UTCDifferrent;
                             TrackPoint nv = new TrackPoint(lat, lon)
                             {
                                 MetrAltitude = altD, //высота в метрах
@@ -909,7 +909,7 @@ namespace TrackConverter.Lib.Tracking
                 res.Add(npt);
             }
             res.Name = "Wikimapia";
-            res.FilePath = "Wikimapia\\wikimapiaRoute" + DateTime.Now.ToString();;
+            res.FilePath = "Wikimapia\\wikimapiaRoute" + DateTime.Now.ToString(); ;
             res.CalculateAll();
             return res;
         }

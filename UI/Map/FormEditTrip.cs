@@ -366,7 +366,7 @@ namespace TrackConverter.UI.Map
 
             int ind = dataGridViewDays.SelectedRows[0].Index - 1; //первый маршрут в списке - всё путешествие
             TrackFile tf = (TrackFile)trip.DaysRoutes[ind];
-            readLength:
+        readLength:
             FormReadText frt = new FormReadText(DialogType.ReadNumber, "Введите длину первого отрезка в км. Максимальная длина " + tf.Distance.ToString("0.0") + " км.", "", false, false, false, false);
             if (frt.ShowDialog(this) == DialogResult.OK)
             {
@@ -413,13 +413,19 @@ namespace TrackConverter.UI.Map
         private void joinToolStripMenuItem_Click(object sender, EventArgs e)
         {
             TrackFileList tfl = new TrackFileList();
-            int startIndex = dataGridViewDays.SelectedRows[0].Index - 1;
+            int startIndex = int.MaxValue;
+            foreach (DataGridViewRow dr in dataGridViewDays.SelectedRows)
+                if (dr.Index < startIndex)
+                    startIndex = dr.Index;
+
+            startIndex--; //убираем первый пункт (само путешествие)
             foreach (DataGridViewRow dr in dataGridViewDays.SelectedRows)
             {
-                BaseTrack bt = trip.DaysRoutes[dr.Index - 1];
+                BaseTrack bt = trip.DaysRoutes[dataGridViewDays.SelectedRows.Count - dr.Index];
                 tfl.Add(bt);
-                trip.DaysRoutes.Remove(bt);
             }
+            foreach (TrackFile tf in tfl)
+                trip.DaysRoutes.Remove(tf);
 
             TrackFile res = tfl.JoinTracks();
             trip.DaysRoutes.Insert(startIndex, res);
@@ -789,7 +795,7 @@ namespace TrackConverter.UI.Map
                 sf.InitialDirectory = Vars.Options.Common.LastFileSaveDirectory;
             if (Vars.Options.Common.IsExtension)
                 sf.FilterIndex = Vars.Options.Common.LastSaveExtensionNumberSaveOneTrack;
-            sf.FileName = Path.GetFileNameWithoutExtension(trip.Waypoints.FileName);
+            sf.FileName = "Путевые точки " + trip.Name;
 
             if (sf.ShowDialog() == DialogResult.OK)
             {

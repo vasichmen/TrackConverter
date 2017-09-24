@@ -235,7 +235,7 @@ namespace TrackConverter.UI.Converter
             sf.Filter += "|Список адресов(*.adrs)|*.adrs";
 
             sf.AddExtension = true;
-
+            sf.FileName = tf.Name;
             if (Vars.Options.Common.IsSaveDir)
                 sf.InitialDirectory = Vars.Options.Common.LastFileSaveDirectory;
             if (Vars.Options.Common.IsExtension)
@@ -403,6 +403,8 @@ namespace TrackConverter.UI.Converter
             }
         }
 
+
+
         /// <summary>
         /// сохранение как ссылка на викимапию
         /// </summary>
@@ -492,6 +494,7 @@ namespace TrackConverter.UI.Converter
                 sf.FilterIndex = Vars.Options.Common.LastSaveExtensionNumberSaveAllInOne;
             sf.AddExtension = true;
             sf.InitialDirectory = Application.StartupPath;
+            sf.FileName = tfs.Count > 0 ? tfs[0].Name : "";
 
             if (sf.ShowDialog() == DialogResult.OK)
             {
@@ -1596,6 +1599,15 @@ namespace TrackConverter.UI.Converter
         {
             BaseTrack tf = Serializer.DeserializeTrackFile(link);
             AddRouteToList(tf);
+        }
+
+        /// <summary>
+        /// присваивает текущему выделенному треку значение из Vars.currentSelectedTrack
+        /// </summary>
+        internal void UpdateSelectedTrack()
+        {
+            int index = dataGridView1.SelectedRows[0].Index;
+            Tracks[index] = Vars.currentSelectedTrack;
         }
 
         #endregion

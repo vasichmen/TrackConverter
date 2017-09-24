@@ -57,7 +57,7 @@ namespace TrackConverter.Lib.Data
             geocoder_connection.Open();
             SQLiteCommand cm = new SQLiteCommand("SELECT * FROM " + table_name + " WHERE latitude != NULL LIMIT 1", geocoder_connection);
             SQLiteDataReader dr = cm.ExecuteReader();
-            int version=0;
+            int version = 0;
             if (dr.FieldCount == 5)
                 version = 1;
             else
@@ -69,7 +69,7 @@ namespace TrackConverter.Lib.Data
             {
                 case 1:
                     geocoder_connection.Open();
-                    SQLiteCommand cmac = new SQLiteCommand("ALTER TABLE "+table_name+" ADD COLUMN tzid TEXT", geocoder_connection);
+                    SQLiteCommand cmac = new SQLiteCommand("ALTER TABLE " + table_name + " ADD COLUMN tzid TEXT", geocoder_connection);
                     cmac.ExecuteNonQuery();
                     cmac.CommandText = "ALTER TABLE " + table_name + " ADD COLUMN tzname TEXT";
                     cmac.ExecuteNonQuery();
@@ -199,7 +199,8 @@ namespace TrackConverter.Lib.Data
                 double alt = this.GetElevation(point.Coordinates);
                 if (double.IsNaN(alt)) //если такой точки в кэше нет, то выход false
                     return false;
-                point.MetrAltitude = alt; //если точка есть, от береём следующую
+                if (double.IsNaN(point.MetrAltitude))
+                    point.MetrAltitude = alt; //если точка есть, от береём следующую
             }
             return true;
         }

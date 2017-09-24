@@ -70,7 +70,7 @@ namespace TrackConverter.UI.Common.Dialogs
             comboBoxPointType.SelectedIndex = 0;
             if (point != null)
             {
-                textBoxName.Text = string.IsNullOrWhiteSpace(point.Name) ? "Имя точки" : point.Name;
+                textBoxName.Text = string.IsNullOrWhiteSpace(point.Name) ? "Точка" : point.Name;
                 textBoxLat.Text = point.Coordinates.Latitude.TotalDegrees.ToString();
                 textBoxLon.Text = point.Coordinates.Longitude.TotalDegrees.ToString();
                 textBoxAlt.Text = point.MetrAltitude.ToString();
@@ -84,34 +84,66 @@ namespace TrackConverter.UI.Common.Dialogs
                 switch (point.PointType)
                 {
                     case RouteWaypointType.None:
-                        comboBoxPointType.SelectedIndex = 6;
+                        comboBoxPointType.SelectedIndex = 6; //точка
+                        switch (point.Icon)
+                        {
+                            case 4: //старт
+                                point.PointType = RouteWaypointType.Start;
+                                break;
+                            case 14: //достопримечательность
+                                point.PointType = RouteWaypointType.Interest;
+                                break;
+                            case 3: //точка сбора
+                                point.PointType = RouteWaypointType.CollectPoint;
+                                break;
+                            case 16: //привал
+                                point.PointType = RouteWaypointType.Camp;
+                                break;
+                            case 9: //место для ночевки
+                                point.PointType = RouteWaypointType.Overnight;
+                                break;
+                            case 5: //финиш
+                                point.PointType = RouteWaypointType.Finish;
+                                break;
+                            case 0: //просто точка
+                                point.PointType = RouteWaypointType.None;
+                                break;
+                            case 22: //магазин
+                                point.PointType = RouteWaypointType.Shop;
+                                break;
+                            case 20: //источник воды
+                                point.PointType = RouteWaypointType.WaterSource;
+                                break;
+                        }
                         break;
                     case RouteWaypointType.Start:
-                        comboBoxPointType.SelectedIndex = 0;
+                        comboBoxPointType.SelectedIndex = 0; //старт
                         break;
                     case RouteWaypointType.Interest:
-                        comboBoxPointType.SelectedIndex = 1;
+                        comboBoxPointType.SelectedIndex = 1; //Достопримечательность
                         break;
                     case RouteWaypointType.CollectPoint:
-                        comboBoxPointType.SelectedIndex = 2;
+                        comboBoxPointType.SelectedIndex = 2; //Точка сбора
                         break;
                     case RouteWaypointType.Camp:
-                        comboBoxPointType.SelectedIndex = 3;
+                        comboBoxPointType.SelectedIndex = 3; //Привал
                         break;
                     case RouteWaypointType.Overnight:
-                        comboBoxPointType.SelectedIndex = 4;
+                        comboBoxPointType.SelectedIndex = 4; //ночёвка
                         break;
                     case RouteWaypointType.Finish:
-                        comboBoxPointType.SelectedIndex = 5;
+                        comboBoxPointType.SelectedIndex = 5; //Финиш
                         break;
                     case RouteWaypointType.WaterSource:
-                        comboBoxPointType.SelectedIndex = 6;
+                        comboBoxPointType.SelectedIndex = 6; //источник воды
                         break;
                     case RouteWaypointType.Shop:
-                        comboBoxPointType.SelectedIndex = 7;
+                        comboBoxPointType.SelectedIndex = 7; //магазин
                         break;
                     default: throw new ApplicationException("неизвестный индекс точки " + comboBoxPointType.SelectedIndex);
                 }
+
+               
             }
         }
 
@@ -322,30 +354,48 @@ namespace TrackConverter.UI.Common.Dialogs
             {
                 case 0:
                     comboBoxSelectImage.SelectedIndex = 4; //старт
+                    if (textBoxName.Text == "Точка")
+                        textBoxName.Text = "Старт";
                     break;
                 case 1:
                     comboBoxSelectImage.SelectedIndex = 14; //достопримечательность
+                    if (textBoxName.Text == "Точка")
+                        textBoxName.Text = "Достопримечательность";
                     break;
                 case 2:
                     comboBoxSelectImage.SelectedIndex = 3; //точка сбора
+                    if (textBoxName.Text == "Точка")
+                        textBoxName.Text = "Точка сбора";
                     break;
                 case 3:
                     comboBoxSelectImage.SelectedIndex = 16; //привал
+                    if (textBoxName.Text == "Точка")
+                        textBoxName.Text = "Привал";
                     break;
                 case 4:
                     comboBoxSelectImage.SelectedIndex = 9; //место для ночевки
+                    if (textBoxName.Text == "Точка")
+                        textBoxName.Text = "Место для ночевки";
                     break;
                 case 5:
                     comboBoxSelectImage.SelectedIndex = 5; //финиш
+                    if (textBoxName.Text == "Точка")
+                        textBoxName.Text = "Финиш";
                     break;
                 case 6:
                     comboBoxSelectImage.SelectedIndex = 0; //просто точка
+                    if (textBoxName.Text == "Точка")
+                        textBoxName.Text = "Точка";
                     break;
                 case 7:
                     comboBoxSelectImage.SelectedIndex = 22; //магазин
+                    if (textBoxName.Text == "Точка")
+                        textBoxName.Text = "Магазин";
                     break;
                 case 8:
                     comboBoxSelectImage.SelectedIndex = 20; //источник воды
+                    if (textBoxName.Text == "Точка")
+                        textBoxName.Text = "Источник воды";
                     break;
             }
         }

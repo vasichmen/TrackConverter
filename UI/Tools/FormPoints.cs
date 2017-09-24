@@ -276,7 +276,9 @@ namespace TrackConverter.UI.Tools
 
             if (this == Program.winPoints)
             {
-                Vars.currentSelectedTrack = Points;
+                this.Points.Source = (DataTable)this.dataGridView1.DataSource;
+                Vars.currentSelectedTrack = this.Points;
+                Program.winConverter.UpdateSelectedTrack();
                 Program.RefreshWindows(this);
             }
 
@@ -453,7 +455,10 @@ namespace TrackConverter.UI.Tools
         private void dataGridView1_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
             isEdited = true;
-
+            this.Points.Source = (DataTable)this.dataGridView1.DataSource;
+            Vars.currentSelectedTrack = this.Points;
+            Program.winConverter.UpdateSelectedTrack();
+            Program.RefreshWindows(this);
             if (e.ColumnIndex == 1)
                 if ((string)dataGridView1[2, e.RowIndex].FormattedValue != string.Empty)
                     refreshAzimuthsToolStripMenuItem_Click(null, null);
@@ -525,6 +530,7 @@ namespace TrackConverter.UI.Tools
         /// <param name="e"></param>
         private void dataGridView1_SelectionChanged(object sender, EventArgs e)
         {
+            
             if (dataGridView1.SelectedRows.Count == 1)
             {
                 int ind = dataGridView1.SelectedRows[0].Index;

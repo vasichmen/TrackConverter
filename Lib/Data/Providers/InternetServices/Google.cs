@@ -421,6 +421,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
 
             //заполнение высот
             for (int i = 0; i < track.Count; i++)
+                if(double.IsNaN(track[i].MetrAltitude))
                 track[i].MetrAltitude = els[i];
             Vars.dataCache.Put(track, els, callback); //запись в кэш
             return track;

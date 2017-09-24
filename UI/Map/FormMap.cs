@@ -297,7 +297,7 @@ namespace TrackConverter.UI.Map
                 sf.InitialDirectory = Vars.Options.Common.LastFileSaveDirectory;
             if (Vars.Options.Common.IsExtension)
                 sf.FilterIndex = Vars.Options.Common.LastSaveExtensionNumberSaveOneTrack;
-            sf.FileName = Path.GetFileNameWithoutExtension(waypoints.FileName);
+            sf.FileName = "точки_" + DateTime.Now.ToString();
 
 
 
