@@ -428,7 +428,7 @@ namespace TrackConverter.UI.Map
                 trip.DaysRoutes.Remove(tf);
 
             TrackFile res = tfl.JoinTracks();
-            trip.DaysRoutes.Insert(startIndex, res);
+            trip.DaysRoutes.Insert(startIndex-1, res);
             FillDGV(trip);
         }
 
