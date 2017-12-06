@@ -692,6 +692,11 @@ namespace TrackConverter.UI.Converter
                     editRouteMapToolStripMenuItem.Text = "Редактировать на карте";
             }
 
+            //подготовка кнопки "открыть в проводнике"
+            openRouteFolderToolStripMenuItem.Visible = true;
+            foreach (DataGridViewRow dr in dataGridView1.SelectedRows)
+                openRouteFolderToolStripMenuItem.Visible &= File.Exists(Tracks[dr.Index].FilePath);
+
 
             //если элемент - первое контектное меню, то выбираем пункты на основе тегов
             if (sender.GetType() == typeof(ContextMenuStrip))
@@ -1165,7 +1170,7 @@ namespace TrackConverter.UI.Converter
 
 
             if (tf.FilePath != null && tf.FilePath.Length > 1)
-                Process.Start(Path.GetDirectoryName(tf.FilePath));
+                Process.Start(new ProcessStartInfo("explorer.exe", " /select, " + tf.FilePath));
             else
                 MessageBox.Show(this, "Этот маршрут еще не сохранен на диске", "Ошибка!", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
@@ -1606,8 +1611,11 @@ namespace TrackConverter.UI.Converter
         /// </summary>
         internal void UpdateSelectedTrack()
         {
-            int index = dataGridView1.SelectedRows[0].Index;
-            Tracks[index] = Vars.currentSelectedTrack;
+            if (dataGridView1.SelectedRows.Count > 0)
+            {
+                int index = dataGridView1.SelectedRows[0].Index;
+                Tracks[index] = Vars.currentSelectedTrack;
+            }
         }
 
         #endregion

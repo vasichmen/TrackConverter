@@ -283,13 +283,13 @@ namespace TrackConverter.UI.Tools
             }
 
             this.isEdited = true;
-            
+
             if (dataGridView1.Rows.Count != 0)
             {
                 if (first == 0)
                     first = 1;
                 dataGridView1.ClearSelection();
-                dataGridView1.Rows[first - 1].Selected = true; 
+                dataGridView1.Rows[first - 1].Selected = true;
             }
         }
 
@@ -504,10 +504,19 @@ namespace TrackConverter.UI.Tools
             FormEditPoint fep = new FormEditPoint(tt);
             if (fep.ShowDialog() == DialogResult.OK)
             {
-                Points[row] = fep.Result;
+                this.Points[row] = fep.Result;
+                Vars.currentSelectedTrack = this.Points;
+                Program.winConverter.UpdateSelectedTrack();
+                Program.RefreshWindows(this);
                 Points.CalculateAll();
                 FillDGV(Points.Source);
+                dataGridView1.Rows[e.RowIndex].ErrorText = null;
+                isEdited = true;
             }
+
+
+
+
         }
 
         /// <summary>
@@ -530,7 +539,7 @@ namespace TrackConverter.UI.Tools
         /// <param name="e"></param>
         private void dataGridView1_SelectionChanged(object sender, EventArgs e)
         {
-            
+
             if (dataGridView1.SelectedRows.Count == 1)
             {
                 int ind = dataGridView1.SelectedRows[0].Index;

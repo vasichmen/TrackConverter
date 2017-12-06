@@ -58,6 +58,8 @@
             this.removeElevationsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.approximateAltitudesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.normalizeTrackToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toTripRouteFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.joinToTripRouteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.показатьToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showWaypointsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showOnMapToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -68,8 +70,6 @@
             this.addComparisonToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.removeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.button1 = new System.Windows.Forms.Button();
-            this.toTripRouteFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.joinToTripRouteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.contextMenuStripDGW.SuspendLayout();
@@ -236,7 +236,7 @@
             this.addComparisonToolStripMenuItem,
             this.removeToolStripMenuItem});
             this.contextMenuStripDGW.Name = "contextMenuStripDGW";
-            this.contextMenuStripDGW.Size = new System.Drawing.Size(236, 224);
+            this.contextMenuStripDGW.Size = new System.Drawing.Size(218, 224);
             this.contextMenuStripDGW.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStripDGW_Opening);
             // 
             // informationToolStripMenuItem
@@ -244,7 +244,7 @@
             this.informationToolStripMenuItem.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             this.informationToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("informationToolStripMenuItem.Image")));
             this.informationToolStripMenuItem.Name = "informationToolStripMenuItem";
-            this.informationToolStripMenuItem.Size = new System.Drawing.Size(235, 22);
+            this.informationToolStripMenuItem.Size = new System.Drawing.Size(217, 22);
             this.informationToolStripMenuItem.Tag = "single";
             this.informationToolStripMenuItem.Text = "Подробная информация";
             this.informationToolStripMenuItem.ToolTipText = "Показать окно с подробной информацией о маршруте";
@@ -258,7 +258,7 @@
             this.saveWikimapiaContextToolStripMenuItem});
             this.saveAsToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("saveAsToolStripMenuItem.Image")));
             this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
-            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(235, 22);
+            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(217, 22);
             this.saveAsToolStripMenuItem.Text = "Сохранить как";
             // 
             // saveFileContextToolStripMenuItem1
@@ -293,7 +293,7 @@
             // 
             this.saveToolStripMenuItem1.Image = ((System.Drawing.Image)(resources.GetObject("saveToolStripMenuItem1.Image")));
             this.saveToolStripMenuItem1.Name = "saveToolStripMenuItem1";
-            this.saveToolStripMenuItem1.Size = new System.Drawing.Size(235, 22);
+            this.saveToolStripMenuItem1.Size = new System.Drawing.Size(217, 22);
             this.saveToolStripMenuItem1.Tag = "single";
             this.saveToolStripMenuItem1.Text = "Сохранить";
             this.saveToolStripMenuItem1.Click += new System.EventHandler(this.overwriteFileToolStripMenuItem_Click);
@@ -311,7 +311,7 @@
             this.joinToTripRouteToolStripMenuItem});
             this.изменитьToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("изменитьToolStripMenuItem.Image")));
             this.изменитьToolStripMenuItem.Name = "изменитьToolStripMenuItem";
-            this.изменитьToolStripMenuItem.Size = new System.Drawing.Size(235, 22);
+            this.изменитьToolStripMenuItem.Size = new System.Drawing.Size(217, 22);
             this.изменитьToolStripMenuItem.Text = "Изменить";
             // 
             // editRouteMapToolStripMenuItem
@@ -375,6 +375,25 @@
             this.normalizeTrackToolStripMenuItem.ToolTipText = "Удаление из трека погрешностей, создаваемых GPS";
             this.normalizeTrackToolStripMenuItem.Click += new System.EventHandler(this.normalizeTrackToolStripMenuItem_Click);
             // 
+            // toTripRouteFileToolStripMenuItem
+            // 
+            this.toTripRouteFileToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("toTripRouteFileToolStripMenuItem.Image")));
+            this.toTripRouteFileToolStripMenuItem.Name = "toTripRouteFileToolStripMenuItem";
+            this.toTripRouteFileToolStripMenuItem.Size = new System.Drawing.Size(241, 22);
+            this.toTripRouteFileToolStripMenuItem.Tag = "multy";
+            this.toTripRouteFileToolStripMenuItem.Text = "Преобразовать в путешествия";
+            this.toTripRouteFileToolStripMenuItem.ToolTipText = "Преобразование каждого выделенного маршрута в отдельное путешествие";
+            this.toTripRouteFileToolStripMenuItem.Click += new System.EventHandler(this.toTripRouteFileToolStripMenuItem_Click);
+            // 
+            // joinToTripRouteToolStripMenuItem
+            // 
+            this.joinToTripRouteToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("joinToTripRouteToolStripMenuItem.Image")));
+            this.joinToTripRouteToolStripMenuItem.Name = "joinToTripRouteToolStripMenuItem";
+            this.joinToTripRouteToolStripMenuItem.Size = new System.Drawing.Size(241, 22);
+            this.joinToTripRouteToolStripMenuItem.Tag = "multy";
+            this.joinToTripRouteToolStripMenuItem.Text = "Объединить в путешествие";
+            this.joinToTripRouteToolStripMenuItem.Click += new System.EventHandler(this.joinToTripRouteToolStripMenuItem_Click);
+            // 
             // показатьToolStripMenuItem
             // 
             this.показатьToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -384,7 +403,7 @@
             this.elevgraphToolStripMenuItem});
             this.показатьToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("показатьToolStripMenuItem.Image")));
             this.показатьToolStripMenuItem.Name = "показатьToolStripMenuItem";
-            this.показатьToolStripMenuItem.Size = new System.Drawing.Size(235, 22);
+            this.показатьToolStripMenuItem.Size = new System.Drawing.Size(217, 22);
             this.показатьToolStripMenuItem.Text = "Показать";
             // 
             // showWaypointsToolStripMenuItem
@@ -430,16 +449,16 @@
             // 
             this.openRouteFolderToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("openRouteFolderToolStripMenuItem.Image")));
             this.openRouteFolderToolStripMenuItem.Name = "openRouteFolderToolStripMenuItem";
-            this.openRouteFolderToolStripMenuItem.Size = new System.Drawing.Size(235, 22);
+            this.openRouteFolderToolStripMenuItem.Size = new System.Drawing.Size(217, 22);
             this.openRouteFolderToolStripMenuItem.Tag = "single";
-            this.openRouteFolderToolStripMenuItem.Text = "Открыть папку с маршрутом";
+            this.openRouteFolderToolStripMenuItem.Text = "Открыть в проводнике";
             this.openRouteFolderToolStripMenuItem.Click += new System.EventHandler(this.openRouteFolderToolStripMenuItem_Click);
             // 
             // addToJoinToolStripMenuItem
             // 
             this.addToJoinToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("addToJoinToolStripMenuItem.Image")));
             this.addToJoinToolStripMenuItem.Name = "addToJoinToolStripMenuItem";
-            this.addToJoinToolStripMenuItem.Size = new System.Drawing.Size(235, 22);
+            this.addToJoinToolStripMenuItem.Size = new System.Drawing.Size(217, 22);
             this.addToJoinToolStripMenuItem.Tag = "multy";
             this.addToJoinToolStripMenuItem.Text = "Добавить в объединение";
             this.addToJoinToolStripMenuItem.ToolTipText = "Добавить маршрут для объединения с другими маршрутами";
@@ -449,7 +468,7 @@
             // 
             this.addComparisonToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("addComparisonToolStripMenuItem.Image")));
             this.addComparisonToolStripMenuItem.Name = "addComparisonToolStripMenuItem";
-            this.addComparisonToolStripMenuItem.Size = new System.Drawing.Size(235, 22);
+            this.addComparisonToolStripMenuItem.Size = new System.Drawing.Size(217, 22);
             this.addComparisonToolStripMenuItem.Tag = "multy";
             this.addComparisonToolStripMenuItem.Text = "Добавить в сравнение";
             this.addComparisonToolStripMenuItem.Click += new System.EventHandler(this.addComparisonToolStripMenuItem_Click);
@@ -458,7 +477,7 @@
             // 
             this.removeToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("removeToolStripMenuItem.Image")));
             this.removeToolStripMenuItem.Name = "removeToolStripMenuItem";
-            this.removeToolStripMenuItem.Size = new System.Drawing.Size(235, 22);
+            this.removeToolStripMenuItem.Size = new System.Drawing.Size(217, 22);
             this.removeToolStripMenuItem.Tag = "multy";
             this.removeToolStripMenuItem.Text = "Удалить";
             this.removeToolStripMenuItem.ToolTipText = "Удаление маршрута из списка загруженных";
@@ -474,25 +493,6 @@
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Visible = false;
             this.button1.Click += new System.EventHandler(this.button1_Click);
-            // 
-            // toTripRouteFileToolStripMenuItem
-            // 
-            this.toTripRouteFileToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("toTripRouteFileToolStripMenuItem.Image")));
-            this.toTripRouteFileToolStripMenuItem.Name = "toTripRouteFileToolStripMenuItem";
-            this.toTripRouteFileToolStripMenuItem.Size = new System.Drawing.Size(241, 22);
-            this.toTripRouteFileToolStripMenuItem.Tag = "multy";
-            this.toTripRouteFileToolStripMenuItem.Text = "Преобразовать в путешествия";
-            this.toTripRouteFileToolStripMenuItem.ToolTipText = "Преобразование каждого выделенного маршрута в отдельное путешествие";
-            this.toTripRouteFileToolStripMenuItem.Click += new System.EventHandler(this.toTripRouteFileToolStripMenuItem_Click);
-            // 
-            // joinToTripRouteToolStripMenuItem
-            // 
-            this.joinToTripRouteToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("joinToTripRouteToolStripMenuItem.Image")));
-            this.joinToTripRouteToolStripMenuItem.Name = "joinToTripRouteToolStripMenuItem";
-            this.joinToTripRouteToolStripMenuItem.Size = new System.Drawing.Size(241, 22);
-            this.joinToTripRouteToolStripMenuItem.Tag = "multy";
-            this.joinToTripRouteToolStripMenuItem.Text = "Объединить в путешествие";
-            this.joinToTripRouteToolStripMenuItem.Click += new System.EventHandler(this.joinToTripRouteToolStripMenuItem_Click);
             // 
             // FormConverter
             // 

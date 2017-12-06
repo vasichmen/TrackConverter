@@ -1,1 +1,1 @@
-del /s D:\Clouds\GDrive\Projects\CS\TrackConverter\*.gmdb
+del /s D:\Clouds\Projects\CS\TrackConverter\*.gmdb

@@ -109,7 +109,8 @@ namespace TrackConverter.Lib.Tracking
         }
 
         /// <summary>
-        /// время создания этой точки
+        /// время создания этой точки.
+        /// Если время неизвестно, то значение null или DateTime.MinValue
         /// </summary>
         public DateTime Time { get; set; }
 

@@ -28,7 +28,7 @@ namespace TrackConverter.UI.Common.Dialogs
         /// <summary>
         /// редактируемая точка
         /// </summary>
-       private TrackPoint editingPoint;
+        private TrackPoint editingPoint;
 
         /// <summary>
         /// создает окно для редактирования точки
@@ -76,10 +76,21 @@ namespace TrackConverter.UI.Common.Dialogs
                 textBoxAlt.Text = point.MetrAltitude.ToString();
                 textBoxDescription.Text = point.Description;
 
-                if (point.Time > dateTimePickerDate.MinDate && point.Time < dateTimePickerDate.MaxDate)
-                    dateTimePickerDate.Value = point.Time;
-                if (point.Time > dateTimePickerTime.MinDate && point.Time < dateTimePickerTime.MaxDate)
-                    dateTimePickerTime.Value = point.Time;
+                //время создания точки
+                if (point.Time == null || point.Time == DateTime.MinValue)
+                {
+                    dateTimePickerDate.Value = DateTime.Now;
+                    dateTimePickerTime.Value = DateTime.Now;
+                }
+                else
+                {
+
+                    if (point.Time > dateTimePickerDate.MinDate && point.Time < dateTimePickerDate.MaxDate)
+                        dateTimePickerDate.Value = point.Time;
+                    if (point.Time > dateTimePickerTime.MinDate && point.Time < dateTimePickerTime.MaxDate)
+                        dateTimePickerTime.Value = point.Time;
+                }
+
 
                 switch (point.PointType)
                 {
@@ -143,7 +154,7 @@ namespace TrackConverter.UI.Common.Dialogs
                     default: throw new ApplicationException("неизвестный индекс точки " + comboBoxPointType.SelectedIndex);
                 }
 
-               
+
             }
         }
 
