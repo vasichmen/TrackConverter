@@ -421,8 +421,8 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
 
             //заполнение высот
             for (int i = 0; i < track.Count; i++)
-                if(double.IsNaN(track[i].MetrAltitude))
-                track[i].MetrAltitude = els[i];
+                if (double.IsNaN(track[i].MetrAltitude))
+                    track[i].MetrAltitude = els[i];
             Vars.dataCache.Put(track, els, callback); //запись в кэш
             return track;
         }
@@ -480,9 +480,22 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                                 XmlNode status = xml["DirectionsResponse"]["status"];
                                 if (status.InnerText != "OK")
                                     if (status.InnerText == "ZERO_RESULTS")
-                                        throw new ApplicationException("Не удалось проложить маршрут через одну или несколько точек");
+                                    {
+                                        //double sl_lat = double.Parse(xml["DirectionsResponse"]["route"]["leg"]["start_location"]["lat"].InnerText);
+                                        //double sl_lng = double.Parse(xml["DirectionsResponse"]["route"]["leg"]["start_location"]["lng"].InnerText);
+                                        //double fl_lat = double.Parse(xml["DirectionsResponse"]["route"]["leg"]["end_location"]["lat"].InnerText);
+                                        //double fl_lng = double.Parse(xml["DirectionsResponse"]["route"]["leg"]["end_location"]["lng"].InnerText);
+
+                                        //string sl_adr = xml["DirectionsResponse"]["route"]["leg"]["start_adress"].InnerText;
+                                        //string fl_adr = xml["DirectionsResponse"]["route"]["leg"]["end_adress"].InnerText;
+
+                                        TrackPoint sp = points[i];
+                                        TrackPoint fp = points[j];
+
+                                        throw new ApplicationException(string.Format("Не удалось проложить маршрут между точками:\r\nНачальная точка: {0}\r\nКонечная точка: {1}", sp.Name, fp.Name));
+                                    }
                                     else
-                                        throw new ApplicationException("Google error: " + status.InnerText);
+                                        throw new ApplicationException("Ошибка сервиса Google: " + status.InnerText);
 
                                 XmlNode r1 = xml["DirectionsResponse"]["route"]["leg"]["distance"]["value"];
                                 string routel = r1.InnerText;
@@ -531,7 +544,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                         if (callback != null)
                             callback.BeginInvoke("Построение оптимального маршрута: получение расстояний, завершено " + (k / all * 100d).ToString("0.0") + "%" + ", путей в очереди: " + queue.Count, null, null);
                         if (polyliner.Exception != null)
-                            throw polyliner.Exception;
+                            throw polyliner.Exception.InnerException;
                     }
                     k++;
                 }

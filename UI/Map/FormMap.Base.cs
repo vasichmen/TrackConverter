@@ -530,18 +530,18 @@ namespace TrackConverter.UI.Map
         /// <param name="lay">слой для добавления</param>
         /// <param name="clearBefore">очистить слой перед добавлением</param>
         /// <param name="addToWaypoints">если истина, то точки будут добавлены в список точек</param>
-        public void ShowWaypoints(BaseTrack waypoints, GMapOverlay lay, bool clearBefore, bool addToWaypoints)
+        public void ShowWaypoints(BaseTrack waypts, GMapOverlay lay, bool clearBefore, bool addToWaypoints)
         {
-            if (waypoints == null)
+            if (waypts == null)
                 return;
             if (clearBefore)
                 lay.Markers.Clear();
             gmapControlMap.SuspendLayout();
-            if (waypoints.GetType() == typeof(TrackFile))
-                foreach (TrackPoint tt in waypoints)
+            if (waypts.GetType() == typeof(TrackFile))
+                foreach (TrackPoint tt in waypts)
                     ShowWaypoint(tt, lay, addToWaypoints);
             else
-                foreach (TrackPoint tt in ((TripRouteFile)waypoints).Waypoints)
+                foreach (TrackPoint tt in ((TripRouteFile)waypts).Waypoints)
                     ShowWaypoint(tt, lay, addToWaypoints);
             gmapControlMap.ResumeLayout();
         }

@@ -367,7 +367,9 @@ namespace TrackConverter.Lib.Tracking
         /// <param name="point"></param>
         /// <returns></returns>
         public override bool Contains(TrackPoint point)
-        { return this.Track.Contains(point); }
+        {
+            return this.Track.Contains(point);
+        }
 
         /// <summary>
         /// инвертировать трек. Переставить все точки в обратном порядке

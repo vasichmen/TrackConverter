@@ -38,7 +38,7 @@ namespace TrackConverter.Lib.Tracking
                 //если расстояние задано через метод setDistance(double)
                 //то возвращаемое значение то, которое установлено через метод. 
                 //иначе, рассчитывается расстояние маршрута
-                 if (!lockDist)
+                if (!lockDist)
                     return CalculateDistance();
                 else
                     return
@@ -390,6 +390,27 @@ namespace TrackConverter.Lib.Tracking
 
             return res;
 
+        }
+
+        /// <summary>
+        /// Ищет в маршруте точку с заданными координатами. Если маршрут типа TripRouteFile, то поиск будет идти по Waypoints. 
+        /// Если точка не найдена, то результат null
+        /// </summary>
+        /// <param name="lat"></param>
+        /// <param name="lng"></param>
+        /// <returns></returns>
+        internal TrackPoint Find(double lat, double lng)
+        {
+            BaseTrack trf=null;
+            if (this.GetType() == typeof(TrackFile))
+                trf = this;
+            else if (this.GetType() == typeof(TripRouteFile))
+                trf = ((TripRouteFile)this).Waypoints;
+
+            foreach (TrackPoint tp in trf)
+                if (tp.Coordinates.Latitude.TotalDegrees == lat && tp.Coordinates.Longitude.TotalDegrees == lng)
+                    return tp;
+            return null;
         }
 
         #endregion

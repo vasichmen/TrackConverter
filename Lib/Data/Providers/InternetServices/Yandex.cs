@@ -12,6 +12,7 @@ using TrackConverter.Lib.Classes;
 using TrackConverter.Lib.Data.Interfaces;
 using TrackConverter.Lib.Tracking;
 using TrackConverter.Res.Properties;
+using Newtonsoft.Json;
 
 namespace TrackConverter.Lib.Data.Providers.InternetServices
 {
@@ -687,15 +688,17 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                         {
                             jo.SelectToken("data.features[0].features[0].properties.encodedCoordinates", true);
                         }
-                        catch (Exception e)
+                        catch (JsonException e)
                         {
-                            throw new ApplicationException("Ошибка при построении маршрута: не удалось проложить маршрут через одну или несколько точек.\r\n" + e.Message, e);
+                            TrackPoint sp = points[i];
+                            TrackPoint fp = points[j];
+                            throw new ApplicationException(string.Format("Не удалось проложить маршрут между точками:\r\nНачальная точка: {0}\r\nКонечная точка: {1}", sp.Name, fp.Name));
                         }
                         queue.Enqueue(jo);
                         if (callback != null)
                             callback.BeginInvoke("Построение оптимального маршрута: получение расстояний, завершено " + (k / all * 100d).ToString("0.0") + "%" + ", путей в очереди: " + queue.Count, null, null);
                         if (polyliner.Exception != null)
-                            throw new ApplicationException("Yandex error: " + polyliner.Exception.Message, polyliner.Exception);
+                            throw new ApplicationException("Ошибка сервиса Яндекс: " + polyliner.Exception.Message, polyliner.Exception);
                     }
                     k++;
                 }

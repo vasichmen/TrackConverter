@@ -534,7 +534,7 @@ namespace TrackConverter.Lib.Classes
 
             //return c1.strid == c2.strid;
             Coordinate d = (Coordinate)obj;
-            return (this.llat == d.llat) & (this.llon == d.llon);
+            return (this.Latitude.TotalDegrees == d.Latitude.TotalDegrees) && (this.Longitude.TotalDegrees == d.Longitude.TotalDegrees);
         }
 
         /// <summary>

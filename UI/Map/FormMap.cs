@@ -424,8 +424,8 @@ namespace TrackConverter.UI.Map
 
             Action<BaseTrack> after = new Action<BaseTrack>((tf) =>
             {
-                //ввод названия марщрута
-                readName:
+            //ввод названия марщрута
+            readName:
                 FormReadText fr = new FormReadText(DialogType.ReadText, "Введите название маршрута", "", false, false, false, false);
                 if (fr.ShowDialog(this) == DialogResult.OK)
                 {
@@ -873,8 +873,8 @@ namespace TrackConverter.UI.Map
                             //если надо открыть маршрут для редактирования
                             BeginEditRoute(route, (tf) =>
                         {
-                            //ввод названия марщрута
-                            readName:
+                        //ввод названия марщрута
+                        readName:
                             FormReadText fr = new FormReadText(DialogType.ReadText, "Введите название маршрута", "", false, false, false, false);
                             if (fr.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
                             {
@@ -1333,7 +1333,7 @@ namespace TrackConverter.UI.Map
 
             //загрузка точек с последнего запуска
             else if (gf != null)
-                ShowWaypoints(gf.Waypoints, baseOverlay, false);
+                ShowWaypoints(gf.Waypoints, baseOverlay, false, true);
 
             //последняя выделенная область карты
             gmapControlMap.SelectedArea = Vars.Options.Map.LastSelectedArea;
