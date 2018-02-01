@@ -41,6 +41,7 @@
             this.upDayToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.downDayToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.editDayToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.addIntermedPointsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.separateTrackToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.joinToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -68,7 +69,9 @@
             this.buttonAddDay = new System.Windows.Forms.Button();
             this.buttonExportDays = new System.Windows.Forms.Button();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.saveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.contextMenuStripNewRoute = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.paintNewRouteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.optimalNewRouteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewDays)).BeginInit();
             this.contextMenuStripDays.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewWaypoints)).BeginInit();
@@ -81,6 +84,7 @@
             this.tableLayoutPanel4.SuspendLayout();
             this.flowLayoutPanel7.SuspendLayout();
             this.flowLayoutPanel6.SuspendLayout();
+            this.contextMenuStripNewRoute.SuspendLayout();
             this.SuspendLayout();
             // 
             // buttonCancel
@@ -88,7 +92,7 @@
             this.buttonCancel.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.buttonCancel.Location = new System.Drawing.Point(511, 305);
             this.buttonCancel.Name = "buttonCancel";
-            this.buttonCancel.Size = new System.Drawing.Size(75 , 32);
+            this.buttonCancel.Size = new System.Drawing.Size(75, 32);
             this.buttonCancel.TabIndex = 0;
             this.buttonCancel.Text = "Отмена";
             this.toolTip1.SetToolTip(this.buttonCancel, "Отменить изменения");
@@ -97,7 +101,7 @@
             // 
             // buttonSave
             // 
-            this.buttonSave.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.buttonSave.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonSave.Location = new System.Drawing.Point(2, 0);
             this.buttonSave.Margin = new System.Windows.Forms.Padding(2, 0, 2, 2);
@@ -180,6 +184,14 @@
             this.editDayToolStripMenuItem.Text = "Редактировать";
             this.editDayToolStripMenuItem.ToolTipText = "Редактировать выделенный маршрут на карте";
             this.editDayToolStripMenuItem.Click += new System.EventHandler(this.editDayToolStripMenuItem_Click);
+            // 
+            // saveAsToolStripMenuItem
+            // 
+            this.saveAsToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("saveAsToolStripMenuItem.Image")));
+            this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
+            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(256, 22);
+            this.saveAsToolStripMenuItem.Text = "Сохранить как";
+            this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.saveAsToolStripMenuItem_Click);
             // 
             // addIntermedPointsToolStripMenuItem
             // 
@@ -491,13 +503,31 @@
             this.buttonExportDays.UseVisualStyleBackColor = true;
             this.buttonExportDays.Click += new System.EventHandler(this.buttonExportDays_Click);
             // 
-            // saveAsToolStripMenuItem
+            // contextMenuStripNewRoute
             // 
-            this.saveAsToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("saveAsToolStripMenuItem.Image")));
-            this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
-            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(256, 22);
-            this.saveAsToolStripMenuItem.Text = "Сохранить как";
-            this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.saveAsToolStripMenuItem_Click);
+            this.contextMenuStripNewRoute.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.paintNewRouteToolStripMenuItem,
+            this.optimalNewRouteToolStripMenuItem});
+            this.contextMenuStripNewRoute.Name = "contextMenuStrip1";
+            this.contextMenuStripNewRoute.Size = new System.Drawing.Size(214, 70);
+            // 
+            // paintNewRouteToolStripMenuItem
+            // 
+            this.paintNewRouteToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("paintNewRouteToolStripMenuItem.Image")));
+            this.paintNewRouteToolStripMenuItem.Name = "paintNewRouteToolStripMenuItem";
+            this.paintNewRouteToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
+            this.paintNewRouteToolStripMenuItem.Text = "Нарисовать на карте";
+            this.paintNewRouteToolStripMenuItem.ToolTipText = "Отметить на карте новый маршрут";
+            this.paintNewRouteToolStripMenuItem.Click += new System.EventHandler(this.paintNewRouteToolStripMenuItem_Click);
+            // 
+            // optimalNewRouteToolStripMenuItem
+            // 
+            this.optimalNewRouteToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("optimalNewRouteToolStripMenuItem.Image")));
+            this.optimalNewRouteToolStripMenuItem.Name = "optimalNewRouteToolStripMenuItem";
+            this.optimalNewRouteToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
+            this.optimalNewRouteToolStripMenuItem.Text = "Построить оптимальный";
+            this.optimalNewRouteToolStripMenuItem.ToolTipText = "Построить оптимальный маршрут через путевын точки этого путешествия";
+            this.optimalNewRouteToolStripMenuItem.Click += new System.EventHandler(this.optimalNewRouteToolStripMenuItem_Click);
             // 
             // FormEditTrip
             // 
@@ -524,6 +554,7 @@
             this.tableLayoutPanel4.ResumeLayout(false);
             this.flowLayoutPanel7.ResumeLayout(false);
             this.flowLayoutPanel6.ResumeLayout(false);
+            this.contextMenuStripNewRoute.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -566,5 +597,8 @@
         private System.Windows.Forms.ToolStripMenuItem addIntermedPointsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem joinToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveAsToolStripMenuItem;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStripNewRoute;
+        private System.Windows.Forms.ToolStripMenuItem paintNewRouteToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem optimalNewRouteToolStripMenuItem;
     }
 }

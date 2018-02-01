@@ -21,7 +21,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
     /// 
     /// Работа с маршрутихатором организована опытным путем
     /// </summary>
-    public class Yandex : BaseConnection, IRouterProvider, IGeoсoderProvider 
+    public class Yandex : BaseConnection, IRouterProvider, IGeoсoderProvider
     {
         /// <summary>
         /// временная папка для маршрутов
@@ -623,7 +623,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                         }
                         else //обработка JSON
                         {
-                            if (Vars.Options.Services.UseFSCacheForCreatingRoutes) //если надо использовать кэш ФС
+                            if (Vars.Options.Services.UseFSCacheForCreatingRoutes) //если надо использовать кэш ФС (не обрабатывать все пути, а только те, которые будут использоваться в маршурте)
                             {
                                 TrackFile res = new TrackFile();
                                 pr++;
@@ -632,7 +632,12 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                                 try
                                 {
                                     JToken r1 = jobj.SelectToken("data.features[0].properties", true);
-                                    JToken route = r1["RouteMetaData"]["Distance"]["value"];
+
+                                    string str = jobj.ToString(Newtonsoft.Json.Formatting.Indented);
+
+                                    //в зависимости от типа маршрута выбираем название поле с длиной маршрута
+                                    string distName = Vars.Options.Services.PathRouteMode == PathRouteMode.Driving ? "Distance" : Vars.Options.Services.PathRouteMode == PathRouteMode.Walk ? "WalkingDistance" : "";
+                                    JToken route = r1["RouteMetaData"][distName]["value"];
 
                                     //сохранения расстояния
                                     string routel = route.ToString();
@@ -678,8 +683,14 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                     else
                     {
                         JObject jo = GetRouteJSON(points[i].Coordinates, points[j].Coordinates);
-                        try { jo.SelectToken("data.features[0].features[0].properties.encodedCoordinates", true); }
-                        catch (Exception e) { throw new ApplicationException("Ошибка при построении маршрута: не удалось проложить маршрут через одну или несколько точек.\r\n" + e.Message, e); }
+                        try
+                        {
+                            jo.SelectToken("data.features[0].features[0].properties.encodedCoordinates", true);
+                        }
+                        catch (Exception e)
+                        {
+                            throw new ApplicationException("Ошибка при построении маршрута: не удалось проложить маршрут через одну или несколько точек.\r\n" + e.Message, e);
+                        }
                         queue.Enqueue(jo);
                         if (callback != null)
                             callback.BeginInvoke("Построение оптимального маршрута: получение расстояний, завершено " + (k / all * 100d).ToString("0.0") + "%" + ", путей в очереди: " + queue.Count, null, null);

@@ -67,7 +67,17 @@ namespace TrackConverter.Lib.Mathematic.Routing
                 for (int i = 0; i < way.Length - 1; i++)
                 {
                     TrackFile cur = routes[way[i]][way[i + 1]];
-                    res.Add(cur.GetRange(0, cur.Count - 1)); //получаем маршрут без последней точки
+                    int count = -1;
+                    if (i == way.Length - 2) 
+                        if (isCycled)
+                            count = cur.Count - 1;
+                        else
+                            count = cur.Count;// если эта точка последняя, то нужно взять все точки маршрута
+                    else
+                        count = cur.Count - 1;
+
+                    var range = cur.GetRange(0, count);
+                    res.Add(range); //получаем маршрут без последней точки
                 }
 
                 //замыкание маршрута, если надо
@@ -88,11 +98,13 @@ namespace TrackConverter.Lib.Mathematic.Routing
         {
             if (points.Count > 158)
                 throw new ArgumentOutOfRangeException("points.Count", "Количество точек должно быть меньше 158");
-            if (Vars.Options.Map.UseRouterInOptimal)
+            if (Vars.Options.Map.UseRouterInOptimal) //если надо использовать маршрутизацию при построении 
             {
                 router = new GeoRouter(Vars.Options.Services.PathRouteProvider);
                 return router.CreateRoutes(points, CallbackAction);
             }
+
+            //добавление прямых расстояний, если не требуется использование маршрутизатора
             List<List<TrackFile>> res = new List<List<TrackFile>>();
             double k = 0;
             double all = points.Count * points.Count;

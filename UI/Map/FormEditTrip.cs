@@ -15,6 +15,7 @@ using TrackConverter.Lib.Data;
 using TrackConverter.Lib.Tracking;
 using TrackConverter.UI.Common.Dialogs;
 using TrackConverter.UI.Converter;
+using TrackConverter.Lib.Mathematic.Routing;
 
 namespace TrackConverter.UI.Map
 {
@@ -428,7 +429,7 @@ namespace TrackConverter.UI.Map
                 trip.DaysRoutes.Remove(tf);
 
             TrackFile res = tfl.JoinTracks();
-            trip.DaysRoutes.Insert(startIndex-1, res);
+            trip.DaysRoutes.Insert(startIndex - 1, res);
             FillDGV(trip);
         }
 
@@ -589,14 +590,13 @@ namespace TrackConverter.UI.Map
 
         #endregion
 
-        #region обработчики кнопок
-
+        #region контекстное меню кнопки добавления маршрута
         /// <summary>
-        /// добавление маршрута 
+        /// Нарисовать маршрут на карте
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void buttonAddDay_Click(object sender, EventArgs e)
+        private void paintNewRouteToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.WindowState = FormWindowState.Minimized;
             TrackFile newt = new TrackFile();
@@ -615,6 +615,111 @@ namespace TrackConverter.UI.Map
                 this.WindowState = FormWindowState.Normal;
             });
             Program.winMap.BeginEditRoute(newt, afterAct, canc);
+        }
+
+        /// <summary>
+        /// Построить оптимальный через точки путешествия
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void optimalNewRouteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (trip.Waypoints.Count < 3)
+            {
+                MessageBox.Show(this, "Для построения оптимального маршрута надо поставить хотя бы 3 точки", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            TrackPoint startPoint = null;
+            TrackPoint endPoint = null;
+
+
+            FormSelectPoint fsp = new FormSelectPoint(trip.Waypoints, true, "Выберите начальную точку");
+            if (fsp.ShowDialog(Program.winMain) == DialogResult.OK)
+                startPoint = fsp.Result;
+            else return;
+
+            bool isCycled = startPoint == null;
+
+            if (Vars.Options.Map.OptimalRouteMethod == OptimalMethodType.PolarSearch && !isCycled)
+            {
+                FormSelectPoint fsp1 = new FormSelectPoint(trip.Waypoints, startPoint, false, "Выберите конечную точку");
+                if (fsp1.ShowDialog(Program.winMain) == DialogResult.OK)
+                    endPoint = fsp1.Result;
+                else return;
+            }
+
+            Program.winMain.BeginOperation();
+
+            //построение маршрута асинхронно
+            Task ts = new Task(new Action(() =>
+            {
+                try
+                {
+                    TrackFile route = null;
+                    DateTime start = DateTime.Now;
+                    switch (Vars.Options.Map.OptimalRouteMethod)
+                    {
+                        case OptimalMethodType.BranchBounds:
+                            route = new BranchBounds(Program.winMain.setCurrentOperation).Make(trip.Waypoints, startPoint, isCycled);
+                            break;
+                        case OptimalMethodType.Greedy:
+                            route = new Greedy(Program.winMain.setCurrentOperation).Make(trip.Waypoints, startPoint, isCycled);
+                            break;
+                        case OptimalMethodType.FullSearch:
+                            route = new FullSearch(Program.winMain.setCurrentOperation).Make(trip.Waypoints, startPoint, isCycled);
+                            break;
+                        case OptimalMethodType.PolarSearch:
+                            route = new PolarSearch(Program.winMain.setCurrentOperation).Make(trip.Waypoints, startPoint, endPoint, isCycled);
+                            break;
+                        default:
+                            route = new Greedy(Program.winMain.setCurrentOperation).Make(trip.Waypoints, startPoint, isCycled);
+                            break;
+                    }
+
+                    //вывод маршрута на карту в базовом потоке
+                    this.Invoke(new Action(() =>
+                    {
+                        route.CalculateAll();
+                        route.Name = "День " + (trip.DaysRoutes.Count + 1).ToString();
+                        route.Color = Vars.Options.Converter.GetColor();
+                        TimeSpan span = DateTime.Now - start;
+                        MessageBox.Show("Маршрут построен за:\r\n" + span.ToString(@"mm\:ss\.fff"));
+
+                        //если не надо открывать маршрут
+                        trip.DaysRoutes.Add(route);
+                        FillDGV(trip, true);
+                    }));
+
+                }
+                catch (Exception exx)
+                {
+                    this.Invoke(new Action(() =>
+                         MessageBox.Show(this, exx.Message + "\r\n" + (exx.InnerException != null ? exx.InnerException.Message : ""), "Ошибка при создании маршрута", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    ));
+                    return;
+                }
+                finally
+                {
+                    Program.winMain.EndOperation();
+                }
+            }));
+            ts.Start();
+
+        }
+
+        #endregion
+
+        #region обработчики кнопок
+
+        /// <summary>
+        /// Открытие контекстного меню выбора способа добавления маршрута
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void buttonAddDay_Click(object sender, EventArgs e)
+        {
+            contextMenuStripNewRoute.Show(Cursor.Position);
         }
 
         /// <summary>

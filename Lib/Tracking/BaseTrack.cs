@@ -25,6 +25,7 @@ namespace TrackConverter.Lib.Tracking
         /// длина маршрута в км или NaN, если длина еще не вычислена
         /// </summary>
         protected double distance = double.NaN;
+        private bool lockDist = false;
 
 
         /// <summary>
@@ -34,7 +35,14 @@ namespace TrackConverter.Lib.Tracking
         {
             get
             {
-                return CalculateDistance();
+                //если расстояние задано через метод setDistance(double)
+                //то возвращаемое значение то, которое установлено через метод. 
+                //иначе, рассчитывается расстояние маршрута
+                 if (!lockDist)
+                    return CalculateDistance();
+                else
+                    return
+                        distance;
             }
         }
 
@@ -310,6 +318,7 @@ namespace TrackConverter.Lib.Tracking
         public void setDistance(double newDist)
         {
             this.distance = newDist;
+            this.lockDist = true;
         }
 
         /// <summary>
