@@ -341,8 +341,8 @@
             this.loadElevationsToolStripMenuItem.Size = new System.Drawing.Size(241, 22);
             this.loadElevationsToolStripMenuItem.Tag = "multy";
             this.loadElevationsToolStripMenuItem.Text = "Загрузить высоты точек";
-            this.loadElevationsToolStripMenuItem.ToolTipText = "Записать в маршрут высоты все его точек. Если это путешествие, то будут записаны " +
-    "высоты путевых точек";
+            this.loadElevationsToolStripMenuItem.ToolTipText = "Записать в маршрут высоты всех его точек. Если это путешествие, то будут записаны" +
+    " высоты путевых точек и маршрутов";
             this.loadElevationsToolStripMenuItem.Click += new System.EventHandler(this.loadElevationsToolStripMenuItem_Click);
             // 
             // removeElevationsToolStripMenuItem
@@ -392,6 +392,7 @@
             this.joinToTripRouteToolStripMenuItem.Size = new System.Drawing.Size(241, 22);
             this.joinToTripRouteToolStripMenuItem.Tag = "multy";
             this.joinToTripRouteToolStripMenuItem.Text = "Объединить в путешествие";
+            this.joinToTripRouteToolStripMenuItem.ToolTipText = "Объединить выбранные маршруты в одно путешествие";
             this.joinToTripRouteToolStripMenuItem.Click += new System.EventHandler(this.joinToTripRouteToolStripMenuItem_Click);
             // 
             // показатьToolStripMenuItem

@@ -76,6 +76,8 @@
             this.label6 = new System.Windows.Forms.Label();
             this.checkBoxRestoreWptsRts = new System.Windows.Forms.CheckBox();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.linkLabelDownloadETOPO2 = new System.Windows.Forms.LinkLabel();
+            this.linkLabelDownloadETOPO1 = new System.Windows.Forms.LinkLabel();
             this.checkBoxUseCacheGeocoder = new System.Windows.Forms.CheckBox();
             this.buttonSelectETOPOFolder = new System.Windows.Forms.Button();
             this.label8 = new System.Windows.Forms.Label();
@@ -136,6 +138,7 @@
             this.groupBox2.TabIndex = 8;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Координаты магнитного северного полюса";
+            this.toolTip1.SetToolTip(this.groupBox2, "Координаты используются для вычисления магнитных склонений в точках");
             // 
             // label2
             // 
@@ -410,7 +413,7 @@
             this.label15.TabIndex = 17;
             this.label15.Text = "Минимальный угол нормализации";
             this.toolTip1.SetToolTip(this.label15, "Минимальный угол между направлениями на две соседние точки, при котором средняя т" +
-        "очка считается острой");
+        "очка считается ошибочной");
             // 
             // textBoxMinimalNormalizeAngle
             // 
@@ -418,6 +421,8 @@
             this.textBoxMinimalNormalizeAngle.Name = "textBoxMinimalNormalizeAngle";
             this.textBoxMinimalNormalizeAngle.Size = new System.Drawing.Size(51, 20);
             this.textBoxMinimalNormalizeAngle.TabIndex = 16;
+            this.toolTip1.SetToolTip(this.textBoxMinimalNormalizeAngle, "Минимальный угол между направлениями на две соседние точки, при котором средняя т" +
+        "очка считается ошибочной");
             // 
             // label14
             // 
@@ -448,6 +453,8 @@
             this.label12.Size = new System.Drawing.Size(191, 13);
             this.label12.TabIndex = 13;
             this.label12.Text = "Минимальная длина горки в метрах";
+            this.toolTip1.SetToolTip(this.label12, "Длина подъёма, после которого он считается горкой. Используется при сравнении мар" +
+        "шрутов");
             // 
             // textBoxMinimumRiseInterval
             // 
@@ -455,6 +462,8 @@
             this.textBoxMinimumRiseInterval.Name = "textBoxMinimumRiseInterval";
             this.textBoxMinimumRiseInterval.Size = new System.Drawing.Size(69, 20);
             this.textBoxMinimumRiseInterval.TabIndex = 12;
+            this.toolTip1.SetToolTip(this.textBoxMinimumRiseInterval, "Длина подъёма, после которого он считается горкой. Используется при сравнении мар" +
+        "шрутов");
             // 
             // labelApproxPower
             // 
@@ -495,11 +504,11 @@
             this.checkBoxIsapproximate.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBoxIsapproximate.Location = new System.Drawing.Point(10, 64);
             this.checkBoxIsapproximate.Name = "checkBoxIsapproximate";
-            this.checkBoxIsapproximate.Size = new System.Drawing.Size(166, 17);
+            this.checkBoxIsapproximate.Size = new System.Drawing.Size(244, 17);
             this.checkBoxIsapproximate.TabIndex = 9;
-            this.checkBoxIsapproximate.Text = "Аппроксимировать высоты";
+            this.checkBoxIsapproximate.Text = "Аппроксимировать высоты при сравнении";
+            this.toolTip1.SetToolTip(this.checkBoxIsapproximate, "Сглаживание значений высот при сравнении маршрутов");
             this.checkBoxIsapproximate.UseVisualStyleBackColor = true;
-            this.checkBoxIsapproximate.CheckedChanged += new System.EventHandler(this.checkBoxIsapproximate_CheckedChanged);
             // 
             // tabPage2
             // 
@@ -607,6 +616,7 @@
             this.textBoxOptimalMethodDescription.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.textBoxOptimalMethodDescription.Size = new System.Drawing.Size(289, 100);
             this.textBoxOptimalMethodDescription.TabIndex = 15;
+            this.toolTip1.SetToolTip(this.textBoxOptimalMethodDescription, "Краткое описание алгоритма");
             // 
             // label13
             // 
@@ -673,11 +683,13 @@
             this.checkBoxRestoreWptsRts.Size = new System.Drawing.Size(210, 17);
             this.checkBoxRestoreWptsRts.TabIndex = 3;
             this.checkBoxRestoreWptsRts.Text = "Восстанавливать точки и маршруты";
-            this.toolTip1.SetToolTip(this.checkBoxRestoreWptsRts, "Восстанавливать точки и маршруты, открытые на карте, при открытии программы");
+            this.toolTip1.SetToolTip(this.checkBoxRestoreWptsRts, "Восстанавливать точки и маршруты после перезапуска программы");
             this.checkBoxRestoreWptsRts.UseVisualStyleBackColor = true;
             // 
             // tabPage3
             // 
+            this.tabPage3.Controls.Add(this.linkLabelDownloadETOPO2);
+            this.tabPage3.Controls.Add(this.linkLabelDownloadETOPO1);
             this.tabPage3.Controls.Add(this.checkBoxUseCacheGeocoder);
             this.tabPage3.Controls.Add(this.buttonSelectETOPOFolder);
             this.tabPage3.Controls.Add(this.label8);
@@ -695,6 +707,30 @@
             this.tabPage3.ToolTipText = "Настройки источников географических данных";
             this.tabPage3.UseVisualStyleBackColor = true;
             // 
+            // linkLabelDownloadETOPO2
+            // 
+            this.linkLabelDownloadETOPO2.AutoSize = true;
+            this.linkLabelDownloadETOPO2.Location = new System.Drawing.Point(108, 109);
+            this.linkLabelDownloadETOPO2.Name = "linkLabelDownloadETOPO2";
+            this.linkLabelDownloadETOPO2.Size = new System.Drawing.Size(94, 13);
+            this.linkLabelDownloadETOPO2.TabIndex = 16;
+            this.linkLabelDownloadETOPO2.TabStop = true;
+            this.linkLabelDownloadETOPO2.Text = "Скачать ETOPO2";
+            this.toolTip1.SetToolTip(this.linkLabelDownloadETOPO2, "Разрешение 1 угловая минута (~2 км)");
+            this.linkLabelDownloadETOPO2.Click += new System.EventHandler(this.linkLabelDownloadETOPO2_Click);
+            // 
+            // linkLabelDownloadETOPO1
+            // 
+            this.linkLabelDownloadETOPO1.AutoSize = true;
+            this.linkLabelDownloadETOPO1.Location = new System.Drawing.Point(8, 109);
+            this.linkLabelDownloadETOPO1.Name = "linkLabelDownloadETOPO1";
+            this.linkLabelDownloadETOPO1.Size = new System.Drawing.Size(94, 13);
+            this.linkLabelDownloadETOPO1.TabIndex = 15;
+            this.linkLabelDownloadETOPO1.TabStop = true;
+            this.linkLabelDownloadETOPO1.Text = "Скачать ETOPO1";
+            this.toolTip1.SetToolTip(this.linkLabelDownloadETOPO1, "Разрешение 2 угловых минуты (~4 км)");
+            this.linkLabelDownloadETOPO1.Click += new System.EventHandler(this.linkLabelDownloadETOPO1_Click);
+            // 
             // checkBoxUseCacheGeocoder
             // 
             this.checkBoxUseCacheGeocoder.AutoSize = true;
@@ -703,6 +739,7 @@
             this.checkBoxUseCacheGeocoder.Size = new System.Drawing.Size(228, 17);
             this.checkBoxUseCacheGeocoder.TabIndex = 14;
             this.checkBoxUseCacheGeocoder.Text = "Кэшировать данные геокодера и высот";
+            this.toolTip1.SetToolTip(this.checkBoxUseCacheGeocoder, "Если активно, то загруженные высоты и адреса будут сохраняться");
             this.checkBoxUseCacheGeocoder.UseVisualStyleBackColor = true;
             // 
             // buttonSelectETOPOFolder
@@ -736,6 +773,7 @@
             this.textBoxDBETOPOFolder.Name = "textBoxDBETOPOFolder";
             this.textBoxDBETOPOFolder.Size = new System.Drawing.Size(225, 20);
             this.textBoxDBETOPOFolder.TabIndex = 11;
+            this.toolTip1.SetToolTip(this.textBoxDBETOPOFolder, "Адрес папки с базой данных ETOPO");
             // 
             // label4
             // 
@@ -860,7 +898,7 @@
             this.label9.Size = new System.Drawing.Size(79, 13);
             this.label9.TabIndex = 4;
             this.label9.Text = "Тип маршрута";
-            this.toolTip1.SetToolTip(this.label9, "сервис, который используезтся для построения маршрутов");
+            this.toolTip1.SetToolTip(this.label9, "Средство передвижения");
             // 
             // comboBoxPathRouteMode
             // 
@@ -883,7 +921,7 @@
             this.label3.Size = new System.Drawing.Size(65, 13);
             this.label3.TabIndex = 2;
             this.label3.Text = "Поставщик";
-            this.toolTip1.SetToolTip(this.label3, "сервис, который используезтся для построения маршрутов");
+            this.toolTip1.SetToolTip(this.label3, "Сервис, который используезтся для построения маршрутов");
             // 
             // comboBoxRoutePathingProvider
             // 
@@ -946,7 +984,6 @@
             this.checkBoxIsAddIntermediatePoints.Text = "Добавлять промежуточные точки";
             this.toolTip1.SetToolTip(this.checkBoxIsAddIntermediatePoints, "Добавлять промежуточные точки при постороении профиля высот по пути");
             this.checkBoxIsAddIntermediatePoints.UseVisualStyleBackColor = true;
-            this.checkBoxIsAddIntermediatePoints.CheckedChanged += new System.EventHandler(this.checkBoxIsAddIntermediatePoints_CheckedChanged);
             // 
             // textBoxIntermediateDistance
             // 
@@ -954,6 +991,8 @@
             this.textBoxIntermediateDistance.Name = "textBoxIntermediateDistance";
             this.textBoxIntermediateDistance.Size = new System.Drawing.Size(100, 20);
             this.textBoxIntermediateDistance.TabIndex = 3;
+            this.toolTip1.SetToolTip(this.textBoxIntermediateDistance, "При построении профилей высот промежуточные точки будут добавляться на указанном " +
+        "расстоянии друг от друга");
             // 
             // labelIntermedDist
             // 
@@ -964,7 +1003,7 @@
             this.labelIntermedDist.TabIndex = 4;
             this.labelIntermedDist.Text = "Расстояние между промежуточными точками в метрах";
             this.toolTip1.SetToolTip(this.labelIntermedDist, "При построении профилей высот промежуточные точки будут добавляться на указанном " +
-        "расстоянии");
+        "расстоянии друг от друга");
             // 
             // groupBox4
             // 
@@ -987,7 +1026,7 @@
             this.checkBoxYKm.Size = new System.Drawing.Size(136, 17);
             this.checkBoxYKm.TabIndex = 0;
             this.checkBoxYKm.Text = "Высота в километрах";
-            this.toolTip1.SetToolTip(this.checkBoxYKm, "Ось высоты (Y) имеет единицы измерения километры. Установить одинаковые единицы и" +
+            this.toolTip1.SetToolTip(this.checkBoxYKm, "Ось высоты (Y) имеет единицы измерения километры. Установите одинаковые единицы и" +
         "змерения для осей чтобы увидеть реальную картину рельефа");
             this.checkBoxYKm.UseVisualStyleBackColor = true;
             // 
@@ -999,7 +1038,7 @@
             this.checkBoxXKm.Size = new System.Drawing.Size(158, 17);
             this.checkBoxXKm.TabIndex = 1;
             this.checkBoxXKm.Text = "Расстояние в километрах";
-            this.toolTip1.SetToolTip(this.checkBoxXKm, "Ось расстояния (Х) имеет единицы измерения километры. Установить одинаковые едини" +
+            this.toolTip1.SetToolTip(this.checkBoxXKm, "Ось расстояния (Х) имеет единицы измерения километры. Установите одинаковые едини" +
         "цы измерения для осей чтобы увидеть реальную картину рельефа");
             this.checkBoxXKm.UseVisualStyleBackColor = true;
             // 
@@ -1146,5 +1185,7 @@
         private System.Windows.Forms.TextBox textBoxMinimalNormalizeAngle;
         private System.Windows.Forms.Label label17;
         private System.Windows.Forms.ComboBox comboBoxNormalizeBehavior;
+        private System.Windows.Forms.LinkLabel linkLabelDownloadETOPO1;
+        private System.Windows.Forms.LinkLabel linkLabelDownloadETOPO2;
     }
 }

@@ -100,8 +100,9 @@ namespace TrackConverter.Lib.Mathematic.Assessment
 
                 start = DateTime.Now;
 
-                if (tf.Distance / tf.Count > Vars.Options.Converter.MinimumRiseInterval)
-                    throw new ApplicationException("Для корректного сравнения маршрутов необходимо, чтобы минимальная длина горки была больше среднего расстояния между точками маршрута");
+                double aver = tf.Distance / tf.Count;
+                if (aver > Vars.Options.Converter.MinimumRiseInterval)
+                    throw new ApplicationException("Для корректного сравнения маршрутов необходимо, чтобы минимальная длина горки была больше среднего расстояния между точками маршрута.\r\nРекомендуемое значение: " + aver + 100 + " метров.\r\nИсправить настройки можно на вкладке \"Конвертер\"");
                 List<PointInfo> extrems = GetExtremePoints(tf, Vars.Options.Converter.MinimumRiseInterval);
 
                 //List<PointInfo> extrems = GetAllExtremePoints(tf);
@@ -127,7 +128,7 @@ namespace TrackConverter.Lib.Mathematic.Assessment
 
                 lock (res)
                 {
-                    res.LoadDataRow(new object[] { 
+                    res.LoadDataRow(new object[] {
                     tf.Name,  //имя
                     tf.Distance, //длина, км
                     elevDivision.ToString("00.000"), //перепад высот, м
@@ -281,7 +282,7 @@ namespace TrackConverter.Lib.Mathematic.Assessment
             foreach (KeyValuePair<int, int> kv in downs)
             {
                 //вычисление угла подъема через тангенс
-                double h = tf[kv.Key].MetrAltitude-tf[kv.Value].MetrAltitude; //высота начальной точки минус конечной
+                double h = tf[kv.Key].MetrAltitude - tf[kv.Value].MetrAltitude; //высота начальной точки минус конечной
                 double l = tf[kv.Value].StartDistance - tf[kv.Key].StartDistance; //расстояние от старта 
                 l *= 1000; //перевод расстояния в метры
                 double tan1 = h / l;

@@ -515,28 +515,6 @@ namespace TrackConverter.UI.Tools
         }
 
         /// <summary>
-        /// перевключение 
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void checkBoxIsapproximate_CheckedChanged(object sender, EventArgs e)
-        {
-            numericUpDownAmount.Enabled = checkBoxIsapproximate.Checked;
-            labelApproxPower.Enabled = checkBoxIsapproximate.Checked;
-        }
-
-        /// <summary>
-        /// изменение активности поля расстояния промежуточных точек
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void checkBoxIsAddIntermediatePoints_CheckedChanged(object sender, EventArgs e)
-        {
-            textBoxIntermediateDistance.Enabled = checkBoxIsAddIntermediatePoints.Checked;
-            labelIntermedDist.Enabled = checkBoxIsAddIntermediatePoints.Enabled;
-        }
-
-        /// <summary>
         /// изменение описания оптимального метода маршрута
         /// </summary>
         /// <param name="sender"></param>
@@ -569,6 +547,26 @@ namespace TrackConverter.UI.Tools
                     textBoxOptimalMethodDescription.Text = Resources.DescriptionGreedy;
                     break;
             }
+        }
+
+        /// <summary>
+        /// ссылка на страницу загрузки ETOPO2
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void linkLabelDownloadETOPO2_Click(object sender, EventArgs e)
+        {
+            Process.Start("https://www.ngdc.noaa.gov/mgg/global/relief/ETOPO2/");
+        }
+
+        private void linkLabelDownloadETOPO1_Click(object sender, EventArgs e)
+        {
+            Process.Start("https://www.ngdc.noaa.gov/mgg/global/relief/ETOPO1/");
+        }
+
+        private void linkLabelDownloadETOPO5_Click(object sender, EventArgs e)
+        {
+            Process.Start("https://www.ngdc.noaa.gov/mgg/global/relief/ETOPO5/");
         }
     }
 }

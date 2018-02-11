@@ -673,7 +673,7 @@ namespace TrackConverter.UI.Converter
             if (allTF)
             {
                 toTripRouteFileToolStripMenuItem.Visible = true;
-                joinToTripRouteToolStripMenuItem.Visible = true;
+                joinToTripRouteToolStripMenuItem.Visible = dataGridView1.SelectedRows.Count > 1; //объединение только если больше одного маршрута
             }
             else
             {
@@ -1622,17 +1622,6 @@ namespace TrackConverter.UI.Converter
 
         private void button1_Click(object sender, EventArgs e)
         {
-            Program.winPoints.dataGridView1.ClearSelection();
-            Program.winPoints.dataGridView1.Rows[2].Selected = true;
-
-            double rise = 0, set = 0;
-
-            TrackPoint tt = new TrackPoint(55, 37);
-            tt.TimeZone = new GeoCoder(GeoCoderProvider.Google).GetTimeZone(tt.Coordinates);
-
-            int d = 75089;
-            int f = Yandex.Perest(d);
-            int ff = Yandex.Perest(f);
 
 
             string one = "vVg_AmdVUgM="; //length 12
@@ -1653,8 +1642,16 @@ namespace TrackConverter.UI.Converter
             //55.684040,37.766343
             //55.674729,37.552109
 
+            string vlong = "VKRBArXMUgPQ_P__zQUAALz____7AAAACAAAAFkAAAAbAAAASgAAAHvv__-5AQAAzv7__ysAAABb____LwAAACD___94AAAAYf___yUAAAB2-v__oAAAAKb-__8UAAAAkPj__wYAAAAhAAAAVwIAACkAAACSAAAAVgAAAJoAAADdAAAA4AAAACYBAADoAAAAfwMAAIYCAAB1AAAAvv___zcAAACj____SwAAAPL8__8=";
+            string v2 = "zaRBAubLUgNx_P__aAYAAMr___96AAAA2f___7YAAAAUAAAAgAAAAIEAAABCAQAAJwIAABAFAABQAAAAhAEAAN4AAACZAAAAagIAADsBAAA__f__hwEAADT-___iAAAACfb__0UFAACW5f__Pg4AAIn-___nAAAACP___9sAAACb____gQAAAL7-__8IAgAASP___5wAAAD6_v__fgAAAGD___8sAAAAyP7__ycAAACy_v__-v___1D8__80____-vz__0T___-d_f__V____2n___-u____q____7z____Y____xv___8____8N____x_____D7___3____zv___8T___-n____mP___8P____0_v__vf___3D-___t____vf3________O____vP7__9j____U_f__lv___7r2__8=";
 
-            TrackFile t2 = Yandex.DecodePolyline(one);
+            Yandex yand = new Yandex();
+
+            DateTime start = DateTime.Now;
+            var x1 = yand.CreateRoute(new Lib.Classes.Coordinate(55.739298, 37.815652), new Lib.Classes.Coordinate(54.974780, 73.317424), null);
+            TimeSpan ts = DateTime.Now - start;
+
+
         }
 
     }

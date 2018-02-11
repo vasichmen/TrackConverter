@@ -147,7 +147,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                 foreach (JToken jt in route)
                 {
                     string coords = jt["properties"]["encodedCoordinates"].ToString();
-                    TrackFile part = Yandex.DecodePolyline(coords);
+                    TrackFile part = Yandex.DecodePolyline2(coords);
                     res.Add(part);
                 }
                 return res;
@@ -382,6 +382,9 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
             TrackFile res = new TrackFile();
             foreach (List<int> cd in coords)
                 res.Add(new TrackPoint((double)(cd[1] / 1000000d), (double)(cd[0] / 1000000d)));
+
+            //удаление последней точки (почему-то всегда лишняя)
+            res.RemoveAt(res.Count - 1);
 
             return res;
         }
