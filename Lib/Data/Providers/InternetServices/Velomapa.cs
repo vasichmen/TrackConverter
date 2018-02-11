@@ -30,6 +30,17 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         }
 
         /// <summary>
+        /// максимальное число попыток подключения
+        /// </summary>
+        public override int MaxAttempts
+        {
+            get
+            {
+                return 5;
+            }
+        }
+
+        /// <summary>
         /// отправить отчет о запуске программы
         /// </summary>
         /// <param name="guid">guid экземпляра</param>

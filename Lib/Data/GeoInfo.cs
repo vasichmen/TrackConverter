@@ -126,7 +126,7 @@ namespace TrackConverter.Lib.Data
                 foreach (TrackPoint tp in track)
                 {
                     if (callback != null)
-                        callback.Invoke("Обрабатывается " + track.Name + ", завершено " + (c / all * 100d).ToString("0.0") + "%");
+                        callback.Invoke("Получение высот точек маршрута " + track.Name + ", завершено " + (c / all * 100d).ToString("0.0") + "%");
                     if (double.IsNaN(tp.MetrAltitude))
                         tp.MetrAltitude = GetElevation(tp.Coordinates);
                     res.Add(tp);

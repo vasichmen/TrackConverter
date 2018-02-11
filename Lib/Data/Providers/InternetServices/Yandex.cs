@@ -41,6 +41,17 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         }
 
         /// <summary>
+        /// максимальное число попыток подключения
+        /// </summary>
+        public override int MaxAttempts
+        {
+            get
+            {
+                return 5;
+            }
+        }
+
+        /// <summary>
         /// проложить маршрут
         /// </summary>
         /// <param name="from">начальная точка</param>

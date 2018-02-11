@@ -866,6 +866,7 @@ namespace TrackConverter.UI.Map
                     this.Invoke(new Action(() =>
                     {
                         route.CalculateAll();
+                        route.Name = "Оптимальный маршрут";
                         TimeSpan span = DateTime.Now - start;
                         MessageBox.Show("Маршрут построен за:\r\n" + span.ToString(@"mm\:ss\.fff"));
 

@@ -47,6 +47,17 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         }
 
         /// <summary>
+        /// максимальное чилос попыток переподключения
+        /// </summary>
+        public override int MaxAttempts
+        {
+            get
+            {
+                return 5;
+            }
+        }
+
+        /// <summary>
         /// если истина, то это локальный источник данных
         /// </summary>
         public bool isLocal
@@ -56,6 +67,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                 return false;
             }
         }
+
 
         /// <summary>
         /// проложить с помощью гугла. Возвращает null, если произошла ошибка
@@ -382,7 +394,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
             {
                 double pers = (((i + 0.0) / (track.Count + 0.0)) * 100d);
                 if (callback != null)
-                    callback.Invoke("Обработка " + track.Name + ", завершено " + pers.ToString("0.0") + "%");
+                    callback.Invoke("Получение высот точек маршрута  " + track.Name + ", завершено " + pers.ToString("0.0") + "%");
                 //трек для текущего запроса
                 int length = track.Count - i < maxptperrequest ? track.Count - i : maxptperrequest;
                 BaseTrack trk = track.GetRange(i, length);
@@ -394,25 +406,46 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                     return track;
 
                 //ЕСЛИ НЕ ПОЛУЧИЛОСЬ ЗАГРУЗИТЬ ИЗ КЭША
-
                 //передача точек кодированной линией. Этим способом можно отправлять 500 точек за один раз
                 string pts = "enc:" + ConvertPolyline(trk);
 
                 string url = string.Format("https://maps.googleapis.com/maps/api/elevation/json?locations={0}", pts);
-                string json = SendStringGetRequest(url);
 
-                //разбор результата
-                JObject obj = JObject.Parse(json);
-                if (obj["status"].ToString() == "OK")
+                int attempt = 0;
+                while (attempt < this.MaxAttempts)
                 {
-                    foreach (JObject j in obj["results"])
+                    attempt++;
+                    string json = SendStringGetRequest(url);
+                    //разбор результата
+                    JObject obj = JObject.Parse(json);
+                    if (obj["status"].ToString() == "OK")
                     {
-                        double e = Convert.ToDouble(j["elevation"]);
-                        els.Add(e);
+                        foreach (JObject j in obj["results"])
+                        {
+                            double e = Convert.ToDouble(j["elevation"]);
+                            els.Add(e);
+                        }
+                        break;
+                    }
+                    //если сервер вернул ошибку
+                    else
+                    {
+                        string status = obj["status"].ToString();
+                        if (status != "OK")
+                            switch (status)
+                            {
+                                case "OVER_QUERY_LIMIT":
+                                    //попытка увеличить задержку и попробвать ещё раз
+                                    int sleep = (int)this.MinQueryInterval.TotalMilliseconds * 50;
+                                    callback.Invoke("Ошибка OVER_QUERY_LIMIT, попытка " + attempt + ", ожидание " + sleep / 1000 + " cекунд...");
+                                    Thread.Sleep(sleep);
+                                    continue;
+                                default: throw new ApplicationException("Ошибка сервиса Google: " + status);
+                            }
+                        if (attempt == MaxAttempts)//если достигли максимального числа попыток, то выход с ошибкой
+                            throw new ApplicationException("Ошибка сервиса Google: " + status);
                     }
                 }
-                //если сервер вернул ошибку
-                else throw new ApplicationException(obj["status"].ToString());
             }
 
             //если не все точки получены, то ошибка
@@ -477,26 +510,6 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                                 pr++;
 
                                 //получение длины маршрута
-                                XmlNode status = xml["DirectionsResponse"]["status"];
-                                if (status.InnerText != "OK")
-                                    if (status.InnerText == "ZERO_RESULTS")
-                                    {
-                                        //double sl_lat = double.Parse(xml["DirectionsResponse"]["route"]["leg"]["start_location"]["lat"].InnerText);
-                                        //double sl_lng = double.Parse(xml["DirectionsResponse"]["route"]["leg"]["start_location"]["lng"].InnerText);
-                                        //double fl_lat = double.Parse(xml["DirectionsResponse"]["route"]["leg"]["end_location"]["lat"].InnerText);
-                                        //double fl_lng = double.Parse(xml["DirectionsResponse"]["route"]["leg"]["end_location"]["lng"].InnerText);
-
-                                        //string sl_adr = xml["DirectionsResponse"]["route"]["leg"]["start_adress"].InnerText;
-                                        //string fl_adr = xml["DirectionsResponse"]["route"]["leg"]["end_adress"].InnerText;
-
-                                        TrackPoint sp = points[i];
-                                        TrackPoint fp = points[j];
-
-                                        throw new ApplicationException(string.Format("Не удалось проложить маршрут между точками:\r\nНачальная точка: {0}\r\nКонечная точка: {1}", sp.Name, fp.Name));
-                                    }
-                                    else
-                                        throw new ApplicationException("Ошибка сервиса Google: " + status.InnerText);
-
                                 XmlNode r1 = xml["DirectionsResponse"]["route"]["leg"]["distance"]["value"];
                                 string routel = r1.InnerText;
                                 double distance = double.Parse(routel);
@@ -539,12 +552,37 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                         queue.Enqueue(null);
                     else
                     {
-                        XmlDocument jo = CreateRouteXML(points[i].Coordinates, points[j].Coordinates);
-                        queue.Enqueue(jo);
-                        if (callback != null)
-                            callback.BeginInvoke("Построение оптимального маршрута: получение расстояний, завершено " + (k / all * 100d).ToString("0.0") + "%" + ", путей в очереди: " + queue.Count, null, null);
-                        if (polyliner.Exception != null)
-                            throw polyliner.Exception.InnerException;
+                        int attempt = 0;
+                        while (attempt < this.MaxAttempts)
+                        {
+                            attempt++;
+                            XmlDocument xml = CreateRouteXML(points[i].Coordinates, points[j].Coordinates);
+                            //проверка ответа на ошибку OVER_QUERY_LIMIT
+                            XmlNode status = xml["DirectionsResponse"]["status"];
+                            if (status.InnerText != "OK")
+                                switch (status.InnerText)
+                                {
+                                    case "ZERO_RESULTS":
+                                        throw new ApplicationException(string.Format("Не удалось проложить маршрут между точками:\r\nНачальная точка: {0}\r\nКонечная точка: {1}", points[i].Name, points[j].Name));
+                                    case "OVER_QUERY_LIMIT":
+                                        //попытка увеличить задержку и попробвать ещё раз
+                                        int sleep = (int)this.MinQueryInterval.TotalMilliseconds * 15;
+                                        callback.Invoke("Ошибка OVER_QUERY_LIMIT, попытка " + attempt + ", ожидание " + sleep / 1000 + " cекунд...");
+                                        Thread.Sleep(sleep);
+                                        if (attempt == MaxAttempts) //если достигли максимального числа попыток, то выход с ошибкой
+                                            throw new ApplicationException("Ошибка сервиса Google: " + status.InnerText);
+                                        continue;
+                                    default: throw new ApplicationException("Ошибка сервиса Google: " + status.InnerText);
+                                }
+
+                            queue.Enqueue(xml);
+                            if (callback != null)
+                                callback.BeginInvoke("Построение оптимального маршрута: получение расстояний, завершено " + (k / all * 100d).ToString("0.0") + "%" + ", путей в очереди: " + queue.Count, null, null);
+                            if (polyliner.Exception != null)
+                                throw polyliner.Exception.InnerException;
+                            break;
+                        }
+
                     }
                     k++;
                 }

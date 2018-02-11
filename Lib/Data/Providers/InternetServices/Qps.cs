@@ -22,6 +22,17 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         }
 
         /// <summary>
+        /// максимальное число попыток подключения
+        /// </summary>
+        public override int MaxAttempts
+        {
+            get
+            {
+                return 5;
+            }
+        }
+
+        /// <summary>
         /// сократить ссылку
         /// </summary>
         /// <param name="Link">длинная ссылка</param>

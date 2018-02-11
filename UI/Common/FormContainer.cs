@@ -27,6 +27,11 @@ namespace TrackConverter.UI.Common
         public Action<string> setCurrentOperation;
 
         /// <summary>
+        /// Счетчик одновременно запущенных операций.
+        /// </summary>
+        private int OperationCounter = 0;
+
+        /// <summary>
         /// создает экземпляр основного она
         /// </summary>
         public FormContainer()
@@ -233,18 +238,22 @@ namespace TrackConverter.UI.Common
             if (this.InvokeRequired)
                 this.Invoke(new Action(() =>
                 {
-                    toolStripStatusLabelCurrentOperation.Visible = false;
                     this.Cursor = Cursors.Arrow;
                     foreach (var f in this.MdiChildren)
                         f.Cursor = Cursors.Arrow;
+                    OperationCounter--;
+                    if (OperationCounter == 0)
+                        toolStripStatusLabelCurrentOperation.Visible = false;
                 }));
 
             else
             {
-                toolStripStatusLabelCurrentOperation.Visible = false;
                 this.Cursor = Cursors.Arrow;
                 foreach (var f in this.MdiChildren)
                     f.Cursor = Cursors.Arrow;
+                OperationCounter--;
+                if (OperationCounter == 0)
+                    toolStripStatusLabelCurrentOperation.Visible = false;
             }
         }
 
@@ -260,6 +269,7 @@ namespace TrackConverter.UI.Common
                     this.Cursor = Cursors.AppStarting;
                     foreach (var f in this.MdiChildren)
                         f.Cursor = Cursors.AppStarting;
+                    OperationCounter++;
                 }));
 
             else
@@ -268,6 +278,8 @@ namespace TrackConverter.UI.Common
                 this.Cursor = Cursors.AppStarting;
                 foreach (var f in this.MdiChildren)
                     f.Cursor = Cursors.AppStarting;
+                OperationCounter++;
+
             }
         }
 

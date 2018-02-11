@@ -28,6 +28,17 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         }
 
         /// <summary>
+        /// максимальное число попыток подключения
+        /// </summary>
+        public override int MaxAttempts
+        {
+            get
+            {
+                return 5;
+            }
+        }
+
+        /// <summary>
         /// минимальное время между запросами
         /// </summary>
         public override TimeSpan MinQueryInterval

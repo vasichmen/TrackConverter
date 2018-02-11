@@ -61,7 +61,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                 bool checkStatus = InternetGetConnectedState(ref flags, 0);
                 if (checkStatus)
                 {
-                    string[] serverList = new string[] { @"google.com"};
+                    string[] serverList = new string[] { @"google.com" };
                     bool haveAnInternetConnection = false;
                     Ping ping = new Ping();
                     for (int i = 0; i < serverList.Length; i++)
@@ -83,6 +83,11 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         /// Если время между запросами не прошло, SendStringRequest и SendXmlRequest будут ждать
         /// </summary>
         public abstract TimeSpan MinQueryInterval { get; }
+
+        /// <summary>
+        /// Максимальное число попыток переподключения
+        /// </summary>
+        public abstract int MaxAttempts { get; }
 
         /// <summary>
         /// проверка подключения к интернет
@@ -131,21 +136,16 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                 request.Headers[HttpRequestHeader.AcceptLanguage] = "ru - RU,ru; q = 0.8,en - US; q = 0.6,en; q = 0.4";
 
                 //Получаем ответ от интернет-ресурса.
-                    WebResponse response =
-                        request.GetResponse();
-              
-
+                WebResponse response = request.GetResponse();
                 //string lng = response.Headers[HttpRequestHeader.var];
 
                 //Экземпляр класса System.IO.Stream 
                 //для чтения данных из интернет-ресурса.
-                Stream dataStream =
-                    response.GetResponseStream();
+                Stream dataStream = response.GetResponseStream();
 
                 //Инициализируем новый экземпляр класса 
                 //System.IO.StreamReader для указанного потока.
-                StreamReader sreader =
-                    new StreamReader(dataStream);
+                StreamReader sreader = new StreamReader(dataStream);
 
                 //Считывает поток от текущего положения до конца.            
                 string responsereader = sreader.ReadToEnd();

@@ -13,6 +13,17 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
     /// </summary>
     class Clck :BaseConnection, ILinkShorterProvider
     {
+        /// <summary>
+        /// максимальное число попыток подключения
+        /// </summary>
+        public override int MaxAttempts
+        {
+            get
+            {
+                return 5;
+            }
+        }
+
         public override TimeSpan MinQueryInterval
         {
             get
