@@ -374,7 +374,7 @@ namespace TrackConverter.Lib.Data
             //            string all = "SELECT * FROM '" + table_name + @"'  ";
             //  List<Row> ar = ExecuteReader(all);
 
-            string sel = string.Format(@"SELECT * FROM '" + table_name + @"' WHERE latitude = {0} AND longitude = {1}",
+            string sel = string.Format(@"SELECT * FROM '" + table_name + @"' WHERE latitude = '{0}' AND longitude = '{1}' AND address IS NOT NULL",
                 Math.Round(coordinate.Latitude.TotalDegrees, decimal_digits).ToString().Replace(',', '.'),
                 Math.Round(coordinate.Longitude.TotalDegrees, decimal_digits).ToString().Replace(',', '.')
                 );
@@ -405,7 +405,8 @@ namespace TrackConverter.Lib.Data
         /// <returns></returns>
         public double GetElevation(Coordinate coordinate)
         {
-            string sel = string.Format(@"SELECT * FROM '" + table_name + @"' WHERE latitude = {0} AND longitude = {1} AND altitude != NULL",
+            //string sel = "SELECT * FROM " + table_name;
+            string sel = string.Format(@"SELECT * FROM " + table_name + @" WHERE latitude = '{0}' AND longitude = '{1}' AND altitude IS NOT NULL",
             Math.Round(coordinate.Latitude.TotalDegrees, decimal_digits).ToString().Replace(',', '.'),
             Math.Round(coordinate.Longitude.TotalDegrees, decimal_digits).ToString().Replace(',', '.')
             );
@@ -422,7 +423,7 @@ namespace TrackConverter.Lib.Data
         /// <returns></returns>
         public TimeZoneInfo GetTimeZone(Coordinate coordinates)
         {
-            string sel = string.Format(@"SELECT * FROM '" + table_name + @"' WHERE latitude = {0} AND longitude = {1} AND tzid != NULL AND tzname != NULL AND tzoffset != NULL",
+            string sel = string.Format(@"SELECT * FROM '" + table_name + @"' WHERE latitude = {0} AND longitude = {1} AND tzid IS NOT NULL AND tzname IS NOT NULL AND tzoffset IS NOT NULL",
            Math.Round(coordinates.Latitude.TotalDegrees, decimal_digits).ToString().Replace(',', '.'),
            Math.Round(coordinates.Longitude.TotalDegrees, decimal_digits).ToString().Replace(',', '.')
            );
