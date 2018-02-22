@@ -1622,34 +1622,7 @@ namespace TrackConverter.UI.Converter
 
         private void button1_Click(object sender, EventArgs e)
         {
-
-
-            string one = "vVg_AmdVUgM="; //length 12
-            //55.727464,37.705918
-
-            string two = "KEc-ApFnUgNoLAEA6GkAAA==";
-            //55.732114,37.635880
-            //55.759226,37.712784   27112   76904    
-
-            string three = "vVg_AmdVUgPKiAAAUiQAAPqoAABdKgAA";
-            //55.727464,37.705918
-            //55.736763,37.740937   9299    35019 
-            //55.747609,37.784196   10846   43259
-
-            string four = "vVg_AmdVUgNoLAEAPhsAAKG___8iO___J7v8_6Hb__8=";
-            //55.727464,37.705918
-            //55.734438,37.782822
-            //55.684040,37.766343
-            //55.674729,37.552109
-
-            string vlong = "VKRBArXMUgPQ_P__zQUAALz____7AAAACAAAAFkAAAAbAAAASgAAAHvv__-5AQAAzv7__ysAAABb____LwAAACD___94AAAAYf___yUAAAB2-v__oAAAAKb-__8UAAAAkPj__wYAAAAhAAAAVwIAACkAAACSAAAAVgAAAJoAAADdAAAA4AAAACYBAADoAAAAfwMAAIYCAAB1AAAAvv___zcAAACj____SwAAAPL8__8=";
-            string v2 = "zaRBAubLUgNx_P__aAYAAMr___96AAAA2f___7YAAAAUAAAAgAAAAIEAAABCAQAAJwIAABAFAABQAAAAhAEAAN4AAACZAAAAagIAADsBAAA__f__hwEAADT-___iAAAACfb__0UFAACW5f__Pg4AAIn-___nAAAACP___9sAAACb____gQAAAL7-__8IAgAASP___5wAAAD6_v__fgAAAGD___8sAAAAyP7__ycAAACy_v__-v___1D8__80____-vz__0T___-d_f__V____2n___-u____q____7z____Y____xv___8____8N____x_____D7___3____zv___8T___-n____mP___8P____0_v__vf___3D-___t____vf3________O____vP7__9j____U_f__lv___7r2__8=";
-
-            Yandex yand = new Yandex();
-
-            DateTime start = DateTime.Now;
-            var x1 = yand.CreateRoute(new Lib.Classes.Coordinate(55.739298, 37.815652), new Lib.Classes.Coordinate(54.974780, 73.317424), null);
-            TimeSpan ts = DateTime.Now - start;
+            //Window wnd = new MainWindow()
 
 
         }
