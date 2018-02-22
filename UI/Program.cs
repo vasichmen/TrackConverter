@@ -314,7 +314,8 @@ namespace TrackConverter.UI
 
 
             //запуск основного окна
-            Application.Run(winMain);
+            //Application.Run(winMain);
+            Application.Run(new FormMain());
 
 #if (!DEBUG)
             }
