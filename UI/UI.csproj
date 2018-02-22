@@ -509,10 +509,6 @@
       <Project>{44d81bc5-5baf-4562-88fe-180bec5b96dc}</Project>
       <Name>Res</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Shell\Shell.csproj">
-      <Project>{534e3716-2c0e-4313-92d7-34ae14d9eb85}</Project>
-      <Name>Shell</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Docs\change_log.txt">

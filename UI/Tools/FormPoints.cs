@@ -118,7 +118,7 @@ namespace TrackConverter.UI.Tools
         private void SaveFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
 
-            Points.Source = (DataTable)dataGridView1.DataSource;
+            Points.Source = (DataTable)dataGridViewPoints.DataSource;
 
             SaveFileDialog sf = new SaveFileDialog();
             sf.Filter = "Файл маршрута Androzic (*.rt2)|*.rt2";
@@ -208,9 +208,9 @@ namespace TrackConverter.UI.Tools
                 if (Points.Contains(pt))
                 {
                     int ind = Points.IndexOf(pt);
-                    dataGridView1.Rows[ind].Selected = true;
-                    dataGridView1.Rows[ind].Visible = true;
-                    dataGridView1.CurrentCell = dataGridView1[0, ind];
+                    dataGridViewPoints.Rows[ind].Selected = true;
+                    dataGridViewPoints.Rows[ind].Visible = true;
+                    dataGridViewPoints.CurrentCell = dataGridViewPoints[0, ind];
                 }
             }
             catch (NullReferenceException) { }
@@ -224,11 +224,11 @@ namespace TrackConverter.UI.Tools
         private void refreshAzimuthsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Validate();
-            dataGridView1.Update();
-            dataGridView1.EndEdit();
+            dataGridViewPoints.Update();
+            dataGridViewPoints.EndEdit();
             try
             {
-                DataTable dt = (DataTable)dataGridView1.DataSource;
+                DataTable dt = (DataTable)dataGridViewPoints.DataSource;
                 Points.Source = dt;
                 FillDGV(Points.Source);
             }
@@ -248,8 +248,8 @@ namespace TrackConverter.UI.Tools
         {
             if (this.Points == null || this.Points.Count == 0)
                 return;
-            this.Points.Source = (DataTable)dataGridView1.DataSource;
-            int row = dataGridView1.SelectedCells[0].RowIndex;
+            this.Points.Source = (DataTable)dataGridViewPoints.DataSource;
+            int row = dataGridViewPoints.SelectedCells[0].RowIndex;
             new FormTransformCoordinate(Points[row]).Show();
         }
 
@@ -260,11 +260,11 @@ namespace TrackConverter.UI.Tools
         /// <param name="e"></param>
         private void removeToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (dataGridView1.SelectedRows.Count == 0) return;
+            if (dataGridViewPoints.SelectedRows.Count == 0) return;
 
             int first = int.MaxValue;
             int i = 0;
-            foreach (DataGridViewRow r in dataGridView1.SelectedRows)
+            foreach (DataGridViewRow r in dataGridViewPoints.SelectedRows)
             {
                 Points.Remove(r.Index - i);
                 if (r.Index < first)
@@ -276,7 +276,7 @@ namespace TrackConverter.UI.Tools
 
             if (this == Program.winPoints)
             {
-                this.Points.Source = (DataTable)this.dataGridView1.DataSource;
+                this.Points.Source = (DataTable)this.dataGridViewPoints.DataSource;
                 Vars.currentSelectedTrack = this.Points;
                 Program.winConverter.UpdateSelectedTrack();
                 Program.RefreshWindows(this);
@@ -284,12 +284,12 @@ namespace TrackConverter.UI.Tools
 
             this.isEdited = true;
 
-            if (dataGridView1.Rows.Count != 0)
+            if (dataGridViewPoints.Rows.Count != 0)
             {
                 if (first == 0)
                     first = 1;
-                dataGridView1.ClearSelection();
-                dataGridView1.Rows[first - 1].Selected = true;
+                dataGridViewPoints.ClearSelection();
+                dataGridViewPoints.Rows[first - 1].Selected = true;
             }
         }
 
@@ -300,7 +300,7 @@ namespace TrackConverter.UI.Tools
         /// <param name="e"></param>
         private void showYandexToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            int row = dataGridView1.SelectedCells[0].RowIndex;
+            int row = dataGridViewPoints.SelectedCells[0].RowIndex;
             TrackPoint tt = Points[row];
             Process.Start(tt.Coordinates.ExportYandex());
         }
@@ -312,7 +312,7 @@ namespace TrackConverter.UI.Tools
         /// <param name="e"></param>
         private void showGoogleToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            int row = dataGridView1.SelectedCells[0].RowIndex;
+            int row = dataGridViewPoints.SelectedCells[0].RowIndex;
             TrackPoint tt = Points[row];
             Process.Start(tt.Coordinates.ExportGoogle());
         }
@@ -324,7 +324,7 @@ namespace TrackConverter.UI.Tools
         /// <param name="e"></param>
         private void addToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            int row = dataGridView1.SelectedCells[0].RowIndex;
+            int row = dataGridViewPoints.SelectedCells[0].RowIndex;
 
             FormEditPoint fep = new FormEditPoint();
 
@@ -345,7 +345,7 @@ namespace TrackConverter.UI.Tools
         /// <param name="e"></param>
         private void editToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            int row = dataGridView1.SelectedCells[0].RowIndex;
+            int row = dataGridViewPoints.SelectedCells[0].RowIndex;
             TrackPoint tt = Points[row];
             FormEditPoint fep = new FormEditPoint(tt);
             if (fep.ShowDialog() == DialogResult.OK)
@@ -371,7 +371,7 @@ namespace TrackConverter.UI.Tools
                 Program.winMap = new FormMap();
             if (!Program.winMap.Visible)
                 Program.winMap.Show();
-            int row = dataGridView1.SelectedCells[0].RowIndex;
+            int row = dataGridViewPoints.SelectedCells[0].RowIndex;
             TrackPoint tt = Points[row];
             Program.winMap.ShowWaypoint(tt, false);
             Program.winMap.Activate();
@@ -388,7 +388,7 @@ namespace TrackConverter.UI.Tools
         /// <param name="e"></param>
         private void dataGridView1_KeyDown(object sender, KeyEventArgs e)
         {
-            if (dataGridView1.RowCount == 0) return;
+            if (dataGridViewPoints.RowCount == 0) return;
             if (e.KeyData != Keys.Delete) return;
             removeToolStripMenuItem_Click(null, null);
         }
@@ -443,7 +443,7 @@ namespace TrackConverter.UI.Tools
             if (e.ColumnIndex == -1 || e.RowIndex == -1) return;
             if (e.Button == System.Windows.Forms.MouseButtons.Left || e.Button == System.Windows.Forms.MouseButtons.Right)
             {
-                dataGridView1[e.ColumnIndex, e.RowIndex].Selected = true;
+                dataGridViewPoints[e.ColumnIndex, e.RowIndex].Selected = true;
             }
         }
 
@@ -455,18 +455,18 @@ namespace TrackConverter.UI.Tools
         private void dataGridView1_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
             isEdited = true;
-            this.Points.Source = (DataTable)this.dataGridView1.DataSource;
+            this.Points.Source = (DataTable)this.dataGridViewPoints.DataSource;
             Vars.currentSelectedTrack = this.Points;
             Program.winConverter.UpdateSelectedTrack();
             Program.RefreshWindows(this);
             if (e.ColumnIndex == 1)
-                if ((string)dataGridView1[2, e.RowIndex].FormattedValue != string.Empty)
+                if ((string)dataGridViewPoints[2, e.RowIndex].FormattedValue != string.Empty)
                     refreshAzimuthsToolStripMenuItem_Click(null, null);
             if (e.ColumnIndex == 2)
-                if ((string)dataGridView1[1, e.RowIndex].FormattedValue != string.Empty)
+                if ((string)dataGridViewPoints[1, e.RowIndex].FormattedValue != string.Empty)
                     refreshAzimuthsToolStripMenuItem_Click(null, null);
             //сброс ошибок строк
-            dataGridView1.Rows[e.RowIndex].ErrorText = null;
+            dataGridViewPoints.Rows[e.RowIndex].ErrorText = null;
         }
 
         /// <summary>
@@ -476,8 +476,8 @@ namespace TrackConverter.UI.Tools
         /// <param name="e"></param>
         private void dataGridView1_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
         {
-            if (dataGridView1.Rows[e.RowIndex].IsNewRow) return;
-            if (dataGridView1.IsCurrentCellDirty) //если текущая ячейка редактируется
+            if (dataGridViewPoints.Rows[e.RowIndex].IsNewRow) return;
+            if (dataGridViewPoints.IsCurrentCellDirty) //если текущая ячейка редактируется
                 if (e.ColumnIndex == 1 || e.ColumnIndex == 2 || e.ColumnIndex == 3) //если это широта, долгота, высота
                     if (((string)e.FormattedValue).Trim() != "") //если не пустое значение
                         if (((string)e.FormattedValue).Trim() != "NaN") //если это не NotAvailableNumber
@@ -485,8 +485,8 @@ namespace TrackConverter.UI.Tools
                             {
                                 //то отменяем сохранение изменений и выводим сообщение
                                 e.Cancel = true;
-                                dataGridView1[e.ColumnIndex, e.RowIndex].Value = DBNull.Value;
-                                dataGridView1.Rows[e.RowIndex].ErrorText = "Значение должно быть числом или NaN";
+                                dataGridViewPoints[e.ColumnIndex, e.RowIndex].Value = DBNull.Value;
+                                dataGridViewPoints.Rows[e.RowIndex].ErrorText = "Значение должно быть числом или NaN";
                                 return;
                             }
 
@@ -499,7 +499,7 @@ namespace TrackConverter.UI.Tools
         /// <param name="e"></param>
         private void dataGridView1_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
-            int row = dataGridView1.SelectedCells[0].RowIndex;
+            int row = dataGridViewPoints.SelectedCells[0].RowIndex;
             TrackPoint tt = Points[row];
             FormEditPoint fep = new FormEditPoint(tt);
             if (fep.ShowDialog() == DialogResult.OK)
@@ -510,7 +510,7 @@ namespace TrackConverter.UI.Tools
                 Program.RefreshWindows(this);
                 Points.CalculateAll();
                 FillDGV(Points.Source);
-                dataGridView1.Rows[e.RowIndex].ErrorText = null;
+                dataGridViewPoints.Rows[e.RowIndex].ErrorText = null;
                 isEdited = true;
             }
 
@@ -528,7 +528,7 @@ namespace TrackConverter.UI.Tools
         {
             if (e.ColumnIndex == -1 || e.RowIndex == -1)
                 return;
-            dataGridView1.Rows[e.RowIndex].Selected = true;
+            dataGridViewPoints.Rows[e.RowIndex].Selected = true;
 
         }
 
@@ -540,9 +540,9 @@ namespace TrackConverter.UI.Tools
         private void dataGridView1_SelectionChanged(object sender, EventArgs e)
         {
 
-            if (dataGridView1.SelectedRows.Count == 1)
+            if (dataGridViewPoints.SelectedRows.Count == 1)
             {
-                int ind = dataGridView1.SelectedRows[0].Index;
+                int ind = dataGridViewPoints.SelectedRows[0].Index;
 
                 if (ind >= Points.Count)
                     return;
@@ -574,7 +574,7 @@ namespace TrackConverter.UI.Tools
             if (this != Program.winPoints) //если это не часть основного окна, то выполняем действие
                 if (endEditWaypointsAction != null)
                 {
-                    Points.Source = (DataTable)dataGridView1.DataSource;
+                    Points.Source = (DataTable)dataGridViewPoints.DataSource;
                     endEditWaypointsAction.Invoke(Points);
                 }
         }
@@ -633,10 +633,10 @@ namespace TrackConverter.UI.Tools
         /// <param name="source"></param>
         void FillDGV(object source)
         {
-            dataGridView1.DataSource = null;
-            dataGridView1.DataSource = source;
-            dataGridView1.Refresh();
-            foreach (DataGridViewColumn column in dataGridView1.Columns)
+            dataGridViewPoints.DataSource = null;
+            dataGridViewPoints.DataSource = source;
+            dataGridViewPoints.Refresh();
+            foreach (DataGridViewColumn column in dataGridViewPoints.Columns)
                 column.SortMode = DataGridViewColumnSortMode.NotSortable;
         }
 

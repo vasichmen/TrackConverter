@@ -43,7 +43,7 @@
             this.SaveWikimapiaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.SaveAllSeparateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveAllInOneFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.dataGridViewConverter = new System.Windows.Forms.DataGridView();
             this.contextMenuStripDGW = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.informationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -71,7 +71,7 @@
             this.removeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.button1 = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewConverter)).BeginInit();
             this.contextMenuStripDGW.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -197,31 +197,31 @@
             this.saveAllInOneFileToolStripMenuItem.ToolTipText = "Сохранить все маршруты в один файл";
             this.saveAllInOneFileToolStripMenuItem.Click += new System.EventHandler(this.saveAllInOneFileToolStripMenuItem_Click);
             // 
-            // dataGridView1
+            // dataGridViewConverter
             // 
-            this.dataGridView1.AllowDrop = true;
-            this.dataGridView1.AllowUserToAddRows = false;
-            this.dataGridView1.AllowUserToDeleteRows = false;
-            this.dataGridView1.AllowUserToResizeRows = false;
-            this.dataGridView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.dataGridViewConverter.AllowDrop = true;
+            this.dataGridViewConverter.AllowUserToAddRows = false;
+            this.dataGridViewConverter.AllowUserToDeleteRows = false;
+            this.dataGridViewConverter.AllowUserToResizeRows = false;
+            this.dataGridViewConverter.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.ContextMenuStrip = this.contextMenuStripDGW;
-            this.dataGridView1.Location = new System.Drawing.Point(0, 27);
-            this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.ReadOnly = true;
-            this.dataGridView1.Size = new System.Drawing.Size(294, 415);
-            this.dataGridView1.TabIndex = 8;
-            this.dataGridView1.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellClick);
-            this.dataGridView1.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.dataGridView1_CellFormatting);
-            this.dataGridView1.CellMouseDoubleClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dataGridView1_CellMouseDoubleClick);
-            this.dataGridView1.CellMouseDown += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dataGridView1_CellMouseDown);
-            this.dataGridView1.SelectionChanged += new System.EventHandler(this.dataGridView1_SelectionChanged);
-            this.dataGridView1.DragDrop += new System.Windows.Forms.DragEventHandler(this.dataGridView1_DragDrop);
-            this.dataGridView1.DragEnter += new System.Windows.Forms.DragEventHandler(this.dataGridView1_DragEnter);
-            this.dataGridView1.Paint += new System.Windows.Forms.PaintEventHandler(this.dataGridView1_Paint);
-            this.dataGridView1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.dataGridView1_KeyDown);
+            this.dataGridViewConverter.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridViewConverter.ContextMenuStrip = this.contextMenuStripDGW;
+            this.dataGridViewConverter.Location = new System.Drawing.Point(0, 27);
+            this.dataGridViewConverter.Name = "dataGridViewConverter";
+            this.dataGridViewConverter.ReadOnly = true;
+            this.dataGridViewConverter.Size = new System.Drawing.Size(294, 415);
+            this.dataGridViewConverter.TabIndex = 8;
+            this.dataGridViewConverter.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellClick);
+            this.dataGridViewConverter.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.dataGridView1_CellFormatting);
+            this.dataGridViewConverter.CellMouseDoubleClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dataGridView1_CellMouseDoubleClick);
+            this.dataGridViewConverter.CellMouseDown += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dataGridView1_CellMouseDown);
+            this.dataGridViewConverter.SelectionChanged += new System.EventHandler(this.dataGridView1_SelectionChanged);
+            this.dataGridViewConverter.DragDrop += new System.Windows.Forms.DragEventHandler(this.dataGridView1_DragDrop);
+            this.dataGridViewConverter.DragEnter += new System.Windows.Forms.DragEventHandler(this.dataGridView1_DragEnter);
+            this.dataGridViewConverter.Paint += new System.Windows.Forms.PaintEventHandler(this.dataGridView1_Paint);
+            this.dataGridViewConverter.KeyDown += new System.Windows.Forms.KeyEventHandler(this.dataGridView1_KeyDown);
             // 
             // contextMenuStripDGW
             // 
@@ -236,7 +236,7 @@
             this.addComparisonToolStripMenuItem,
             this.removeToolStripMenuItem});
             this.contextMenuStripDGW.Name = "contextMenuStripDGW";
-            this.contextMenuStripDGW.Size = new System.Drawing.Size(218, 224);
+            this.contextMenuStripDGW.Size = new System.Drawing.Size(218, 202);
             this.contextMenuStripDGW.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStripDGW_Opening);
             // 
             // informationToolStripMenuItem
@@ -503,7 +503,7 @@
             this.Controls.Add(this.button1);
             this.Controls.Add(this.labelProgress);
             this.Controls.Add(this.menuStrip1);
-            this.Controls.Add(this.dataGridView1);
+            this.Controls.Add(this.dataGridViewConverter);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FormConverter";
@@ -513,7 +513,7 @@
             this.Load += new System.EventHandler(this.FormConverter_Load);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewConverter)).EndInit();
             this.contextMenuStripDGW.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -525,7 +525,7 @@
         private System.Windows.Forms.ToolStripMenuItem ClearToolStripMenuItem;
         private System.Windows.Forms.Label labelProgress;
         private System.Windows.Forms.MenuStrip menuStrip1;
-        private System.Windows.Forms.DataGridView dataGridView1;
+        private System.Windows.Forms.DataGridView dataGridViewConverter;
         private System.Windows.Forms.ToolStripMenuItem FileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem загрузитьToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem SaveToolStripMenuItem;

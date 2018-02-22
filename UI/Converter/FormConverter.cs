@@ -195,13 +195,13 @@ namespace TrackConverter.UI.Converter
 
             //если кнопка контекстного меню
             if (((ToolStripMenuItem)sender).Name == "saveFileContextToolStripMenuItem1" || ((ToolStripMenuItem)sender).Name == "saveToolStripMenuItem1")
-                if (dataGridView1.SelectedRows.Count > 1) //если выделено больше одного маршрута, то сохранение в один файл
+                if (dataGridViewConverter.SelectedRows.Count > 1) //если выделено больше одного маршрута, то сохранение в один файл
                 {
                     saveAllInOneFileToolStripMenuItem_Click(sender, e);
                     return;
                 }
                 else
-                    tf = Tracks[dataGridView1.SelectedRows[0].Index];
+                    tf = Tracks[dataGridViewConverter.SelectedRows[0].Index];
             else
             {//если нажата кнопка главного меню
                 if (Tracks.Count > 1)
@@ -365,7 +365,7 @@ namespace TrackConverter.UI.Converter
             BaseTrack tf = null;
 
             if ((string)(((ToolStripMenuItem)sender).Name) == "saveYandexContextToolStripMenuItem")
-                tf = Tracks[dataGridView1.SelectedCells[0].RowIndex];
+                tf = Tracks[dataGridViewConverter.SelectedCells[0].RowIndex];
             else
             {
                 if (Tracks.Count > 1)
@@ -415,7 +415,7 @@ namespace TrackConverter.UI.Converter
             BaseTrack tf = null;
 
             if ((string)(((ToolStripMenuItem)sender).Name) == "saveWikimapiaContextToolStripMenuItem")
-                tf = Tracks[dataGridView1.SelectedCells[0].RowIndex];
+                tf = Tracks[dataGridViewConverter.SelectedCells[0].RowIndex];
             else
             {
                 if (Tracks.Count > 1)
@@ -473,13 +473,13 @@ namespace TrackConverter.UI.Converter
             //если контекстное меню, то выбираем выделенные маршруты
             if (sender.GetType() == typeof(ToolStripMenuItem))
             {
-                if (dataGridView1.SelectedRows.Count < 1)
+                if (dataGridViewConverter.SelectedRows.Count < 1)
                 {
                     MessageBox.Show(this, "Для сохранения сначала выделите маршруты!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
                 tfs = new TrackFileList();
-                foreach (DataGridViewRow row in dataGridView1.SelectedRows)
+                foreach (DataGridViewRow row in dataGridViewConverter.SelectedRows)
                     tfs.Add(Tracks[row.Index]);
             }
             //если главное меню, выбираем все загруженные маршруты
@@ -633,8 +633,8 @@ namespace TrackConverter.UI.Converter
         private void ClearToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Tracks.Clear();
-            dataGridView1.DataSource = Tracks.Source;
-            dataGridView1.Refresh();
+            dataGridViewConverter.DataSource = Tracks.Source;
+            dataGridViewConverter.Refresh();
             SaveToolStripMenuItem.Enabled = false;
             Program.winMap.Clear();
             Program.winPoints.Clear();
@@ -668,12 +668,12 @@ namespace TrackConverter.UI.Converter
         {
             //если все выделенные маршрты - TrackFile, то добавление пункта "преобразовать в путешествие и объединить в путешествие"
             bool allTF = true;
-            foreach (DataGridViewRow dr in dataGridView1.SelectedRows)
+            foreach (DataGridViewRow dr in dataGridViewConverter.SelectedRows)
                 allTF &= Tracks[dr.Index].GetType() == typeof(TrackFile);
             if (allTF)
             {
                 toTripRouteFileToolStripMenuItem.Visible = true;
-                joinToTripRouteToolStripMenuItem.Visible = dataGridView1.SelectedRows.Count > 1; //объединение только если больше одного маршрута
+                joinToTripRouteToolStripMenuItem.Visible = dataGridViewConverter.SelectedRows.Count > 1; //объединение только если больше одного маршрута
             }
             else
             {
@@ -682,9 +682,9 @@ namespace TrackConverter.UI.Converter
             }
 
             //если один выделенный маршрут - путешествие, то переименовываем кнопку редактирования
-            if (dataGridView1.SelectedRows.Count == 1)
+            if (dataGridViewConverter.SelectedRows.Count == 1)
             {
-                int ind = dataGridView1.SelectedRows[0].Index;
+                int ind = dataGridViewConverter.SelectedRows[0].Index;
                 BaseTrack bt = Tracks[ind];
                 if (bt.GetType() == typeof(TripRouteFile))
                     editRouteMapToolStripMenuItem.Text = "Редактировать путешествие";
@@ -694,7 +694,7 @@ namespace TrackConverter.UI.Converter
 
             //подготовка кнопки "открыть в проводнике"
             openRouteFolderToolStripMenuItem.Visible = true;
-            foreach (DataGridViewRow dr in dataGridView1.SelectedRows)
+            foreach (DataGridViewRow dr in dataGridViewConverter.SelectedRows)
                 openRouteFolderToolStripMenuItem.Visible &= File.Exists(Tracks[dr.Index].FilePath);
 
 
@@ -703,7 +703,7 @@ namespace TrackConverter.UI.Converter
             {
                 ContextMenuStrip menu = (ContextMenuStrip)sender;
                 //если не выделено ни одного элемента, то не выводим меню
-                if (dataGridView1.SelectedRows.Count < 1)
+                if (dataGridViewConverter.SelectedRows.Count < 1)
                 {
                     e.Cancel = true;
                     return;
@@ -736,12 +736,12 @@ namespace TrackConverter.UI.Converter
                 }
 
                 if ((string)item.Tag == "single")
-                    item.Visible = dataGridView1.SelectedRows.Count == 1;
+                    item.Visible = dataGridViewConverter.SelectedRows.Count == 1;
 
                 if (item.Name == "showWaypointsToolStripMenuItem" || item.Name == "showOnMapToolStripMenuItem")
-                    if (dataGridView1.SelectedRows.Count == 1)
+                    if (dataGridViewConverter.SelectedRows.Count == 1)
                     {
-                        BaseTrack tf = Tracks[dataGridView1.SelectedRows[0].Index];
+                        BaseTrack tf = Tracks[dataGridViewConverter.SelectedRows[0].Index];
                         if (item.Name == "showWaypointsToolStripMenuItem")
                             item.Checked = showingWaypointsList.Contains(tf);
                         if (item.Name == "showOnMapToolStripMenuItem")
@@ -759,12 +759,12 @@ namespace TrackConverter.UI.Converter
         /// <param name="e"></param>
         private void editWaypointsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (dataGridView1.SelectedRows.Count > 1)
+            if (dataGridViewConverter.SelectedRows.Count > 1)
             {
                 MessageBox.Show(this, "Для этого действия должен быть выделен только один маршрут!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-            int row = dataGridView1.SelectedCells[0].RowIndex;
+            int row = dataGridViewConverter.SelectedCells[0].RowIndex;
             new FormPoints(Tracks[row]) { FormBorderStyle = FormBorderStyle.Sizable }.Show(Program.winMain);
         }
 
@@ -776,7 +776,7 @@ namespace TrackConverter.UI.Converter
         private void removeToolStripMenuItem_Click(object sender, EventArgs e)
         {
             TrackFileList list = new TrackFileList();
-            foreach (DataGridViewRow dgvr in dataGridView1.SelectedRows)
+            foreach (DataGridViewRow dgvr in dataGridViewConverter.SelectedRows)
             {
                 int row = dgvr.Index;
                 BaseTrack tttt = Tracks[row];
@@ -793,12 +793,12 @@ namespace TrackConverter.UI.Converter
         /// <param name="e"></param>
         private void informationToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (dataGridView1.SelectedRows.Count > 1)
+            if (dataGridViewConverter.SelectedRows.Count > 1)
             {
                 MessageBox.Show(this, "Для этого действия должен быть выделен только один маршрут!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-            int row = dataGridView1.SelectedCells[0].RowIndex;
+            int row = dataGridViewConverter.SelectedCells[0].RowIndex;
             FormTrackInformation fti = new FormTrackInformation(Tracks[row]);
             if (fti.ShowDialog() == DialogResult.OK)
             {
@@ -817,12 +817,12 @@ namespace TrackConverter.UI.Converter
         /// <param name="e"></param>
         private void editRouteMapToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (dataGridView1.SelectedRows.Count > 1)
+            if (dataGridViewConverter.SelectedRows.Count > 1)
             {
                 MessageBox.Show(this, "Для этого действия должен быть выделен только один маршрут!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-            BaseTrack bt = Tracks[dataGridView1.SelectedRows[0].Index];
+            BaseTrack bt = Tracks[dataGridViewConverter.SelectedRows[0].Index];
             if (bt.GetType() == typeof(TrackFile))
                 BeginEditRoute(bt as TrackFile);
             else
@@ -837,7 +837,7 @@ namespace TrackConverter.UI.Converter
         private void normalizeTrackToolStripMenuItem_Click(object sender, EventArgs e)
         {
             int min = int.MaxValue;
-            foreach (DataGridViewRow r in dataGridView1.SelectedRows)
+            foreach (DataGridViewRow r in dataGridViewConverter.SelectedRows)
             {
                 if (Tracks[r.Index].GetType() == typeof(TrackFile))
                 {
@@ -847,8 +847,8 @@ namespace TrackConverter.UI.Converter
                 }
             }
             Program.RefreshWindows(this);
-            dataGridView1.ClearSelection();
-            dataGridView1.Rows[min].Selected = true;
+            dataGridViewConverter.ClearSelection();
+            dataGridViewConverter.Rows[min].Selected = true;
         }
 
         /// <summary>
@@ -858,7 +858,7 @@ namespace TrackConverter.UI.Converter
         /// <param name="e"></param>
         private void toTripRouteFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            foreach (DataGridViewRow dr in dataGridView1.SelectedRows)
+            foreach (DataGridViewRow dr in dataGridViewConverter.SelectedRows)
             {
                 int ind = dr.Index;
                 TrackFile tf = (TrackFile)Tracks[ind];
@@ -878,9 +878,9 @@ namespace TrackConverter.UI.Converter
         /// <param name="e"></param>
         private void joinToTripRouteToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            int first = dataGridView1.SelectedRows[0].Index;
+            int first = dataGridViewConverter.SelectedRows[0].Index;
             TrackFileList tfl = new TrackFileList();
-            foreach (DataGridViewRow dr in dataGridView1.SelectedRows)
+            foreach (DataGridViewRow dr in dataGridViewConverter.SelectedRows)
             {
                 int ind = dr.Index;
                 TrackFile tf = (TrackFile)Tracks[ind - tfl.Count];
@@ -901,7 +901,7 @@ namespace TrackConverter.UI.Converter
         /// <param name="e"></param>
         private void showRouteOnMapToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            foreach (DataGridViewRow r in dataGridView1.SelectedRows)
+            foreach (DataGridViewRow r in dataGridViewConverter.SelectedRows)
             {
 
                 BaseTrack tf = Tracks[r.Index];
@@ -939,7 +939,7 @@ namespace TrackConverter.UI.Converter
                 Task pr = new Task(new Action(() =>
                     {
                         Program.winMain.BeginOperation();
-                        foreach (DataGridViewRow row in dataGridView1.SelectedRows)
+                        foreach (DataGridViewRow row in dataGridViewConverter.SelectedRows)
                         {
                             int rowI = row.Index;
                             BaseTrack tf = Tracks[rowI].Clone();
@@ -969,7 +969,7 @@ namespace TrackConverter.UI.Converter
             Task pr = new Task(new Action(() =>
             {
                 Program.winMain.BeginOperation();
-                foreach (DataGridViewRow row in dataGridView1.SelectedRows)
+                foreach (DataGridViewRow row in dataGridViewConverter.SelectedRows)
                 {
                     int rowI = row.Index;
                     BaseTrack tf = Tracks[rowI];
@@ -991,7 +991,7 @@ namespace TrackConverter.UI.Converter
         /// <param name="e"></param>
         private void showWaypointsOnMapToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            foreach (DataGridViewRow r in dataGridView1.SelectedRows)
+            foreach (DataGridViewRow r in dataGridViewConverter.SelectedRows)
             {
                 BaseTrack tf = Tracks[r.Index];
                 if (showingWaypointsList.Contains(tf))
@@ -1019,7 +1019,7 @@ namespace TrackConverter.UI.Converter
             if (!Program.winJoinTrack.Visible)
                 Program.winJoinTrack.Show(Program.winMain);
 
-            foreach (DataGridViewRow dgvr in dataGridView1.SelectedRows)
+            foreach (DataGridViewRow dgvr in dataGridViewConverter.SelectedRows)
                 Program.winJoinTrack.AddTrack(Tracks[dgvr.Index]);
 
             Program.winJoinTrack.Activate();
@@ -1036,7 +1036,7 @@ namespace TrackConverter.UI.Converter
                 Program.winCompareTrack = new FormTrackComparison();
             if (!Program.winCompareTrack.Visible)
                 Program.winCompareTrack.Show(Program.winMain);
-            foreach (DataGridViewRow dgvr in dataGridView1.SelectedRows)
+            foreach (DataGridViewRow dgvr in dataGridViewConverter.SelectedRows)
                 Program.winCompareTrack.AddTrack(Tracks[dgvr.Index]);
             Program.winCompareTrack.CalculateComparison();
             Program.winCompareTrack.Activate();
@@ -1055,7 +1055,7 @@ namespace TrackConverter.UI.Converter
                 int er = 0;
                 try
                 {
-                    foreach (DataGridViewRow dgvr in dataGridView1.SelectedRows)
+                    foreach (DataGridViewRow dgvr in dataGridViewConverter.SelectedRows)
                     {
                         int row = dgvr.Index;
                         BaseTrack tf = Tracks[row];
@@ -1075,9 +1075,9 @@ namespace TrackConverter.UI.Converter
                     if (er == 0)
                     {
                         //если выделен один маршрут, то обновлям данные в окнах
-                        if (dataGridView1.SelectedRows.Count == 1)
+                        if (dataGridViewConverter.SelectedRows.Count == 1)
                         {
-                            int ind = dataGridView1.SelectedRows[0].Index;
+                            int ind = dataGridViewConverter.SelectedRows[0].Index;
                             Vars.currentSelectedTrack = this.Tracks[ind];
                             Program.RefreshWindows(this);
                         }
@@ -1097,7 +1097,7 @@ namespace TrackConverter.UI.Converter
         {
             if (MessageBox.Show(this, "Вы действительно хотите очистить высоты точек у выбранных маршрутов?", "Внимание!", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
             {
-                foreach (DataGridViewRow dgvr in dataGridView1.SelectedRows)
+                foreach (DataGridViewRow dgvr in dataGridViewConverter.SelectedRows)
                 {
                     int row = dgvr.Index;
                     BaseTrack tf = Tracks[row];
@@ -1105,9 +1105,9 @@ namespace TrackConverter.UI.Converter
                 }
 
                 //если выделен один маршрут, то обновлям данные в окнах
-                if (dataGridView1.SelectedRows.Count == 1)
+                if (dataGridViewConverter.SelectedRows.Count == 1)
                 {
-                    int ind = dataGridView1.SelectedRows[0].Index;
+                    int ind = dataGridViewConverter.SelectedRows[0].Index;
                     Vars.currentSelectedTrack = this.Tracks[ind];
                     Program.RefreshWindows(this);
                 }
@@ -1135,7 +1135,7 @@ namespace TrackConverter.UI.Converter
             if (frt.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
             {
                 int amount = (int)double.Parse(frt.Result);
-                foreach (DataGridViewRow dgvr in dataGridView1.SelectedRows)
+                foreach (DataGridViewRow dgvr in dataGridViewConverter.SelectedRows)
                 {
                     int row = dgvr.Index;
                     BaseTrack tf = Tracks[row];
@@ -1144,9 +1144,9 @@ namespace TrackConverter.UI.Converter
                 MessageBox.Show(this, "Обработка завершена", "Выполнено!", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                 //если выделен один маршрут, то одновлям данные в окнах
-                if (dataGridView1.SelectedRows.Count == 1)
+                if (dataGridViewConverter.SelectedRows.Count == 1)
                 {
-                    int ind = dataGridView1.SelectedRows[0].Index;
+                    int ind = dataGridViewConverter.SelectedRows[0].Index;
                     Vars.currentSelectedTrack = this.Tracks[ind];
                     Program.RefreshWindows(this);
                 }
@@ -1160,12 +1160,12 @@ namespace TrackConverter.UI.Converter
         /// <param name="e"></param>
         private void openRouteFolderToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (dataGridView1.SelectedRows.Count > 1)
+            if (dataGridViewConverter.SelectedRows.Count > 1)
             {
                 MessageBox.Show(this, "Для этого действия должен быть выделен только один маршрут!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-            int row = dataGridView1.SelectedRows[0].Index;
+            int row = dataGridViewConverter.SelectedRows[0].Index;
             BaseTrack tf = Tracks[row];
 
 
@@ -1182,7 +1182,7 @@ namespace TrackConverter.UI.Converter
         /// <param name="e"></param>
         private void overwriteFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            int row = dataGridView1.SelectedRows[0].Index;
+            int row = dataGridViewConverter.SelectedRows[0].Index;
             BaseTrack tf = Tracks[row];
 
 
@@ -1254,9 +1254,9 @@ namespace TrackConverter.UI.Converter
                 return;
             Keyboard ss = new Keyboard();
             if (!ss.CtrlKeyDown && e.Button != MouseButtons.Right)
-                dataGridView1.ClearSelection();
+                dataGridViewConverter.ClearSelection();
             if (e.Button == MouseButtons.Right)
-                dataGridView1.Rows[e.RowIndex].Selected = true;
+                dataGridViewConverter.Rows[e.RowIndex].Selected = true;
         }
 
         /// <summary>
@@ -1268,7 +1268,7 @@ namespace TrackConverter.UI.Converter
         {
             if (e.ColumnIndex == -1 || e.RowIndex == -1)
                 return;
-            dataGridView1.Rows[e.RowIndex].Selected = true;
+            dataGridViewConverter.Rows[e.RowIndex].Selected = true;
         }
 
         /// <summary>
@@ -1278,10 +1278,10 @@ namespace TrackConverter.UI.Converter
         /// <param name="e"></param>
         private void dataGridView1_Paint(object sender, PaintEventArgs e)
         {
-            if (dataGridView1.RowCount > 0 && dataGridView1.ColumnCount > 0 && Tracks.Count > 0)
+            if (dataGridViewConverter.RowCount > 0 && dataGridViewConverter.ColumnCount > 0 && Tracks.Count > 0)
             {
                 int i = 0;
-                foreach (DataGridViewRow dgvr in dataGridView1.Rows)
+                foreach (DataGridViewRow dgvr in dataGridViewConverter.Rows)
                 {
                     BaseTrack tf = Tracks[i];
                     DataGridViewCell cell = dgvr.Cells["Цвет"];
@@ -1299,9 +1299,9 @@ namespace TrackConverter.UI.Converter
         private void dataGridView1_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
             if (Tracks.Count == 0 || e.RowIndex >= Tracks.Count) return;
-            if ((e.ColumnIndex == this.dataGridView1.Columns[0].Index) && e.Value != null)
+            if ((e.ColumnIndex == this.dataGridViewConverter.Columns[0].Index) && e.Value != null)
             {
-                DataGridViewCell cell = this.dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex];
+                DataGridViewCell cell = this.dataGridViewConverter.Rows[e.RowIndex].Cells[e.ColumnIndex];
                 BaseTrack tf = Tracks[e.RowIndex];
                 string text = "Название: " + tf.Name + "\r\n";
                 text += "Длина: " + tf.Distance.ToString("00.00") + " км\r\n";
@@ -1322,9 +1322,9 @@ namespace TrackConverter.UI.Converter
         private void dataGridView1_SelectionChanged(object sender, EventArgs e)
         {
 
-            if (dataGridView1.SelectedRows.Count != 1)
+            if (dataGridViewConverter.SelectedRows.Count != 1)
                 return;
-            int ind = dataGridView1.SelectedRows[0].Index;
+            int ind = dataGridViewConverter.SelectedRows[0].Index;
 
             BaseTrack tf = Tracks[ind];
 
@@ -1339,8 +1339,8 @@ namespace TrackConverter.UI.Converter
         /// <param name="e"></param>
         private void dataGridView1_CellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
         {
-            dataGridView1.ClearSelection();
-            dataGridView1.Rows[e.RowIndex].Selected = true;
+            dataGridViewConverter.ClearSelection();
+            dataGridViewConverter.Rows[e.RowIndex].Selected = true;
             if (Tracks[e.RowIndex].GetType() == typeof(TripRouteFile))
                 editRouteMapToolStripMenuItem_Click(sender, new EventArgs());
             else
@@ -1354,7 +1354,7 @@ namespace TrackConverter.UI.Converter
         /// <param name="e"></param>
         private void dataGridView1_KeyDown(object sender, KeyEventArgs e)
         {
-            if (dataGridView1.RowCount == 0) return;
+            if (dataGridViewConverter.RowCount == 0) return;
             if (e.KeyData != Keys.Delete) return;
             removeToolStripMenuItem_Click(null, null);
         }
@@ -1548,21 +1548,21 @@ namespace TrackConverter.UI.Converter
         /// </summary>
         internal void RefreshData()
         {
-            dataGridView1.DataSource = null;
-            dataGridView1.DataSource = Tracks.Source;
-            dataGridView1.Refresh();
+            dataGridViewConverter.DataSource = null;
+            dataGridViewConverter.DataSource = Tracks.Source;
+            dataGridViewConverter.Refresh();
 
-            foreach (DataGridViewColumn column in dataGridView1.Columns)
+            foreach (DataGridViewColumn column in dataGridViewConverter.Columns)
                 column.SortMode = DataGridViewColumnSortMode.NotSortable;
 
             RefreshRecentFiles(); //обновление списка последних файлов
-            dataGridView1.ClearSelection();
+            dataGridViewConverter.ClearSelection();
 
             if (Vars.currentSelectedTrack != null)
             {
                 int ind = Tracks.IndexOf(Vars.currentSelectedTrack);
                 if (ind == -1) return;
-                dataGridView1.Rows[ind].Selected = true;
+                dataGridViewConverter.Rows[ind].Selected = true;
             }
         }
 
@@ -1611,9 +1611,9 @@ namespace TrackConverter.UI.Converter
         /// </summary>
         internal void UpdateSelectedTrack()
         {
-            if (dataGridView1.SelectedRows.Count > 0)
+            if (dataGridViewConverter.SelectedRows.Count > 0)
             {
-                int index = dataGridView1.SelectedRows[0].Index;
+                int index = dataGridViewConverter.SelectedRows[0].Index;
                 Tracks[index] = Vars.currentSelectedTrack;
             }
         }
