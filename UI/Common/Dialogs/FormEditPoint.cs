@@ -207,15 +207,15 @@ namespace TrackConverter.UI.Common.Dialogs
         private void buttonAdditionInfo_Click(object sender, EventArgs e)
         {
             this.editingPoint.CalculateParametres();
-            if (Program.winMap.ActiveWhatThereForms == null)
-                Program.winMap.ActiveWhatThereForms = new Dictionary<TrackPoint, FormWhatsthere>();
-            if (Program.winMap.ActiveWhatThereForms.ContainsKey(this.editingPoint))
-                Program.winMap.ActiveWhatThereForms[this.editingPoint].Activate();
+            if (Program.winMain.ActiveWhatThereForms == null)
+                Program.winMain.ActiveWhatThereForms = new Dictionary<TrackPoint, FormWhatsthere>();
+            if (Program.winMain.ActiveWhatThereForms.ContainsKey(this.editingPoint))
+                Program.winMain.ActiveWhatThereForms[this.editingPoint].Activate();
             else
             {
                 FormWhatsthere fw = new FormWhatsthere(this.editingPoint);
                 fw.Show(Program.winMain);
-                Program.winMap.ActiveWhatThereForms.Add(this.editingPoint, fw);
+                Program.winMain.ActiveWhatThereForms.Add(this.editingPoint, fw);
             }
         }
 
@@ -265,7 +265,7 @@ namespace TrackConverter.UI.Common.Dialogs
                 Coordinate cd = new GeoCoder(Vars.Options.DataSources.GeoCoderProvider).GetCoordinate(adr);
                 textBoxLat.Text = cd.Latitude.TotalDegrees.ToString();
                 textBoxLon.Text = cd.Longitude.TotalDegrees.ToString();
-                Program.winMap.gmapControlMap.Position = cd.GMap;
+                Program.winMain.gmapControlMap.Position = cd.GMap;
             }
             catch (Exception)
             {

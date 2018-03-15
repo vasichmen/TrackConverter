@@ -2315,6 +2315,5 @@ namespace TrackConverter.UI.Map
 
 
         #endregion
-
     }
 }

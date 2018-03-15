@@ -92,9 +92,9 @@ namespace TrackConverter.UI.Tools
                         break;
                     case "open":
                         if (com.Length == 3 && com[1] == "file")
-                            Program.winConverter.OpenFile(com[2]);
+                            Program.winMain.converterHelper.OpenFile(com[2]);
                         if (com.Length == 3 && com[1] == "link")
-                            Program.winConverter.OpenLink(com[2]);
+                            Program.winMain.converterHelper.OpenLink(com[2]);
                         break;
                     case "export":
                         if (com.Length == 5)

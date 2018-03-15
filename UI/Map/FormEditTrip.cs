@@ -132,10 +132,10 @@ namespace TrackConverter.UI.Map
         /// <param name="centring">если истина, то карта будет отцентрована по маршруту</param>
         private void RefreshOverlay(TripRouteFile tripRoute, bool centring = false)
         {
-            Program.winMap.creatingTripOverlay.Clear();
+            Program.winMain.creatingTripOverlay.Clear();
             foreach (TrackFile tfl in tripRoute.DaysRoutes)
-                Program.winMap.ShowRoute(tfl, Program.winMap.creatingTripOverlay, centring);
-            Program.winMap.ShowWaypoints(tripRoute.Waypoints, Program.winMap.creatingTripOverlay, false, false);
+                Program.winMain.mapHelper.ShowRoute(tfl, Program.winMain.creatingTripOverlay, centring);
+            Program.winMain.mapHelper.ShowWaypoints(tripRoute.Waypoints, Program.winMain.creatingTripOverlay, false, false);
         }
 
         /// <summary>
@@ -157,7 +157,7 @@ namespace TrackConverter.UI.Map
                     DialogResult = DialogResult.Yes;
                     if (cancelAction != null)
                         cancelAction.Invoke();
-                    Program.winMap.creatingTripOverlay.Clear();
+                    Program.winMain.creatingTripOverlay.Clear();
                 }
                 if (msg == DialogResult.No)
                     e.Cancel = true;
@@ -239,7 +239,10 @@ namespace TrackConverter.UI.Map
                 return;
             this.WindowState = FormWindowState.Minimized;
             Vars.currentSelectedTrack = null;
-            Program.RefreshWindows(this);
+            Program.winMain.mapHelper.RefreshData();
+            Program.winMain.converterHelper.RefreshData();
+            Program.winMain.graphHelper.RefreshData();
+            Program.winMain.pointsHelper.RefreshData();
             Action<TrackFile> after = new Action<TrackFile>((tr) =>
             {
                 this.WindowState = FormWindowState.Normal;
@@ -251,7 +254,7 @@ namespace TrackConverter.UI.Map
             {
                 this.WindowState = FormWindowState.Normal;
             });
-            Program.winMap.BeginEditRoute(selectedTrack as TrackFile, after, canc);
+            Program.winMain.mapHelper.BeginEditRoute(selectedTrack as TrackFile, after, canc);
         }
 
 
@@ -493,7 +496,10 @@ namespace TrackConverter.UI.Map
                 dataGridViewDays.Rows[first - 1].Selected = true;
 
             Vars.currentSelectedTrack = null;
-            Program.RefreshWindows(this); //обновление окон для того, чтобы убрать выделенный трек с карты
+            Program.winMain.mapHelper.RefreshData();
+            Program.winMain.converterHelper.RefreshData();
+            Program.winMain.graphHelper.RefreshData();
+            Program.winMain.pointsHelper.RefreshData();//обновление окон для того, чтобы убрать выделенный трек с карты
         }
 
         /// <summary>
@@ -614,7 +620,7 @@ namespace TrackConverter.UI.Map
             {
                 this.WindowState = FormWindowState.Normal;
             });
-            Program.winMap.BeginEditRoute(newt, afterAct, canc);
+            Program.winMain.mapHelper.BeginEditRoute(newt, afterAct, canc);
         }
 
         /// <summary>
@@ -771,21 +777,21 @@ namespace TrackConverter.UI.Map
             Action<TrackPoint> after = new Action<TrackPoint>((point) =>
             {
                 this.WindowState = FormWindowState.Normal;
-                Program.winMap.isSelectingPoint = false;
-                Program.winMap.gmapControlMap.DragButton = MouseButtons.Left;
-                Program.winMap.gmapControlMap.Cursor = Cursors.Arrow;
+                Program.winMain.isSelectingPoint = false;
+                Program.winMain.gmapControlMap.DragButton = MouseButtons.Left;
+                Program.winMain.gmapControlMap.Cursor = Cursors.Arrow;
                 this.trip.Waypoints.Add(point);
                 FillDGV(trip);
             });
 
             Action canc = new Action(() =>
             {
-                Program.winMap.isSelectingPoint = false;
+                Program.winMain.isSelectingPoint = false;
                 this.WindowState = FormWindowState.Normal;
-                Program.winMap.gmapControlMap.DragButton = MouseButtons.Left;
-                Program.winMap.gmapControlMap.Cursor = Cursors.Arrow;
+                Program.winMain.gmapControlMap.DragButton = MouseButtons.Left;
+                Program.winMain.gmapControlMap.Cursor = Cursors.Arrow;
             });
-            Program.winMap.BeginSelectPoint(after, canc);
+            Program.winMain.mapHelper.BeginSelectPoint(after, canc);
         }
 
         /// <summary>
@@ -1068,7 +1074,7 @@ namespace TrackConverter.UI.Map
             {
                 int ind = dataGridViewWaypoints.SelectedRows[0].Index;
                 this.selectedPoint = trip.Waypoints[ind];
-                Program.winMap.gmapControlMap.Position = this.selectedPoint.GMap;
+                Program.winMain.gmapControlMap.Position = this.selectedPoint.GMap;
             }
         }
 
@@ -1142,7 +1148,10 @@ namespace TrackConverter.UI.Map
                 if (ind == 0)
                     this.selectedTrack = trip;
                 Vars.currentSelectedTrack = this.selectedTrack.Clone();
-                Program.RefreshWindows(this);
+                Program.winMain.mapHelper.RefreshData();
+                Program.winMain.converterHelper.RefreshData();
+                Program.winMain.graphHelper.RefreshData();
+                Program.winMain.pointsHelper.RefreshData();
             }
         }
 

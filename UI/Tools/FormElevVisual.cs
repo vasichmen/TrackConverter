@@ -50,7 +50,7 @@ namespace TrackConverter.UI.Tools
             Task pr = new Task(new Action(() =>
             {
                 Program.winMain.BeginOperation();
-                Program.winMain.setCurrentOperation.Invoke("Построение профиля...");
+                Program.winMain.setCurrentOperation("Построение профиля...");
                 ConfigureGraph();
                 Program.winMain.EndOperation();
             }));
@@ -130,14 +130,14 @@ namespace TrackConverter.UI.Tools
 
                 //if (Program.winMap.tracks.Contains(tf)) //если идет выбор точки из всех треков
 
-                Program.winMap.SelectPoint(pt);
+                Program.winMain.mapHelper.SelectPoint(pt);
 
                 #endregion
 
                 #region выделение точки в списке точек
 
 
-                Program.winPoints.SelectPoint(pt);
+                Program.winMain.pointsHelper.SelectPoint(pt);
 
                 #endregion
 
@@ -154,7 +154,7 @@ namespace TrackConverter.UI.Tools
         private void zedGraph_MouseLeave(object sender, EventArgs e)
         {
             RemLastSelPoint(); //очистка графика
-            Program.winMap.DeselectPoints(); //очитска карты
+            Program.winMain.mapHelper.DeselectPoints(); //очитска карты
         }
 
         /// <summary>
@@ -311,36 +311,37 @@ namespace TrackConverter.UI.Tools
             }
 
             //ДОБАВЛЕНИЕ ВЫДЕЛЕННОГО ТРЕКА
-            if (this == Program.winElevVisual) // если это окно - часть главного окна, то проверяем выделенный маршрут
-                if (Vars.currentSelectedTrack != null)
-                {
-                    PointPairList list = new PointPairList();
-                    BaseTrack selTrack = Vars.currentSelectedTrack;
-                    string name = selTrack.Name;
-                    foreach (TrackPoint tt in selTrack)
-                    {
-                        //значения в километрах
-                        double x = tt.StartDistance * 1000.000;
-                        double y = tt.MetrAltitude;
+            //if (this == Program.winElevVisual) // если это окно - часть главного окна, то проверяем выделенный маршрут
+            //    if (Vars.currentSelectedTrack != null)
+            //    {
+            //        PointPairList list = new PointPairList();
+            //        BaseTrack selTrack = Vars.currentSelectedTrack;
+            //        string name = selTrack.Name;
+            //        foreach (TrackPoint tt in selTrack)
+            //        {
+            //            //значения в километрах
+            //            double x = tt.StartDistance * 1000.000;
+            //            double y = tt.MetrAltitude;
 
-                        //если настройки требуют, то перевод в метры
-                        if (Vars.Options.Graphs.isXKm)
-                            x /= 1000.000;
-                        if (Vars.Options.Graphs.isYKm)
-                            y /= 1000.000;
+            //            //если настройки требуют, то перевод в метры
+            //            if (Vars.Options.Graphs.isXKm)
+            //                x /= 1000.000;
+            //            if (Vars.Options.Graphs.isYKm)
+            //                y /= 1000.000;
 
-                        //добавление пары
-                        list.Add(x, y);
-                    }
+            //            //добавление пары
+            //            list.Add(x, y);
+            //        }
 
-                    curveSelectedTrack = new LineItem(name, list, selTrack.Color, SymbolType.None);
-                    curveSelectedTrack.Line.IsSmooth = true;
-                    curveSelectedTrack.Tag = "selectedTrack";
+            //        curveSelectedTrack = new LineItem(name, list, selTrack.Color, SymbolType.None);
+            //        curveSelectedTrack.Line.IsSmooth = true;
+            //        curveSelectedTrack.Tag = "selectedTrack";
 
-                    mainCurves.Add(curveSelectedTrack);
-                    gp.CurveList.Add(curveSelectedTrack);
-                }
-                else Clear();
+            //        mainCurves.Add(curveSelectedTrack);
+            //        gp.CurveList.Add(curveSelectedTrack);
+            //    }
+            //    else
+                    Clear();
 
             zedGraph.AxisChange();
             zedGraph.Invalidate();

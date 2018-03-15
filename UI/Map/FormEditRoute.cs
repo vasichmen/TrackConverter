@@ -49,7 +49,7 @@ namespace TrackConverter.UI.Map
             this.route = route;
             this.overlay = overlay;
             this.Text = Title;
-            Program.winMap.selectedPointIndex = route.Count-1;
+            Program.winMain.selectedPointIndex = route.Count-1;
         }
 
         /// <summary>
@@ -65,27 +65,27 @@ namespace TrackConverter.UI.Map
             if (this.route.Count == 0) { return; }
 
             //удаление из списка точек
-            this.route.Remove(Program.winMap.selectedPointIndex);
+            this.route.Remove(Program.winMain.selectedPointIndex);
             //удаление из списка маркеров
-            this.overlay.Markers.RemoveAt(Program.winMap.selectedPointIndex);
+            this.overlay.Markers.RemoveAt(Program.winMain.selectedPointIndex);
 
             //если можно, уменьшение индекса
-            if (Program.winMap.selectedPointIndex > 0)
-                Program.winMap.selectedPointIndex--;
+            if (Program.winMain.selectedPointIndex > 0)
+                Program.winMain.selectedPointIndex--;
             else
                 //если уменьшать некуда, но есть еще точки, то выделяем первую точку
                 if (this.route.Count > 0)
-                    Program.winMap.selectedPointIndex = 0;
+                    Program.winMain.selectedPointIndex = 0;
 
             //обновление карты
-            if (Program.winMap.isCreatingRoute)
-                Program.winMap.ShowCreatingRoute(Program.winMap.creatingRouteOverlay, Program.winMap.creatingRoute);
-            if (Program.winMap.isRuling)
-                Program.winMap.ShowCreatingRoute(Program.winMap.rulerRouteOverlay, Program.winMap.rulerRoute);
+            if (Program.winMain.isCreatingRoute)
+                Program.winMain.mapHelper.ShowCreatingRoute(Program.winMain.creatingRouteOverlay, Program.winMain.creatingRoute);
+            if (Program.winMain.isRuling)
+                Program.winMain.mapHelper.ShowCreatingRoute(Program.winMain.rulerRouteOverlay, Program.winMain.rulerRoute);
                 
 
             this.route.CalculateAll();
-            Program.winMap.toolStripStatusLabelInfo.Text = "Расстояние: " + this.route.Distance + " км";
+            Program.winMain.toolStripStatusLabelInfo.Text = "Расстояние: " + this.route.Distance + " км";
         }
 
         /// <summary>
@@ -123,17 +123,17 @@ namespace TrackConverter.UI.Map
         {
             if (this.userCancel && cancelAction != null)
                 cancelAction.Invoke();
-            if (Program.winMap.isCreatingRoute)
+            if (Program.winMain.isCreatingRoute)
             {
-                Program.winMap.isCreatingRoute = false;
-                Program.winMap.creatingRouteOverlay.Clear();
+                Program.winMain.isCreatingRoute = false;
+                Program.winMain.creatingRouteOverlay.Clear();
             }
-            if (Program.winMap.isRuling)
-                Program.winMap.isRuling = false;
-            Program.winMap.toolStripStatusLabelInfo.Text = "";
+            if (Program.winMain.isRuling)
+                Program.winMain.isRuling = false;
+            Program.winMain.toolStripStatusLabelInfo.Text = "";
             this.overlay.Clear();
-            Program.winMap.selectedPointIndex = 0;
-            Program.winMap.gmapControlMap.DragButton = MouseButtons.Left;
+            Program.winMain.selectedPointIndex = 0;
+            Program.winMain.gmapControlMap.DragButton = MouseButtons.Left;
         }
     }
 }

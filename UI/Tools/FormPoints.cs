@@ -187,14 +187,7 @@ namespace TrackConverter.UI.Tools
         private void OpenOnMapToolStripMenuItem_Click(object sender, EventArgs e)
         {
             refreshAzimuthsToolStripMenuItem_Click(null, null);
-            if (Program.winMapNullOrDisposed)
-            {
-                Program.winMap = new FormMap();
-            }
-            if (!Program.winMap.Visible)
-                Program.winMap.Show();
-            Program.winMap.ShowWaypoints(Points, false, false);
-            Program.winMap.Activate();
+            Program.winMain.mapHelper.ShowWaypoints(Points, false, false);
         }
 
         /// <summary>
@@ -273,15 +266,6 @@ namespace TrackConverter.UI.Tools
             }
 
             FillDGV(Points.Source);
-
-            if (this == Program.winPoints)
-            {
-                this.Points.Source = (DataTable)this.dataGridViewPoints.DataSource;
-                Vars.currentSelectedTrack = this.Points;
-                Program.winConverter.UpdateSelectedTrack();
-                Program.RefreshWindows(this);
-            }
-
             this.isEdited = true;
 
             if (dataGridViewPoints.Rows.Count != 0)
@@ -356,7 +340,6 @@ namespace TrackConverter.UI.Tools
                 this.isEdited = true;
 
                 Vars.currentSelectedTrack = this.Points;
-                Program.RefreshWindows(this);
             }
         }
 
@@ -367,14 +350,9 @@ namespace TrackConverter.UI.Tools
         /// <param name="e"></param>
         private void showMapToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (Program.winMapNullOrDisposed)
-                Program.winMap = new FormMap();
-            if (!Program.winMap.Visible)
-                Program.winMap.Show();
             int row = dataGridViewPoints.SelectedCells[0].RowIndex;
             TrackPoint tt = Points[row];
-            Program.winMap.ShowWaypoint(tt, false);
-            Program.winMap.Activate();
+            Program.winMain.mapHelper.ShowWaypoint(tt, false);
         }
 
         #endregion
@@ -447,27 +425,6 @@ namespace TrackConverter.UI.Tools
             }
         }
 
-        /// <summary>
-        /// обновление столбцов и сохранение в this.Points при изменении значений координат
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void dataGridView1_CellValueChanged(object sender, DataGridViewCellEventArgs e)
-        {
-            isEdited = true;
-            this.Points.Source = (DataTable)this.dataGridViewPoints.DataSource;
-            Vars.currentSelectedTrack = this.Points;
-            Program.winConverter.UpdateSelectedTrack();
-            Program.RefreshWindows(this);
-            if (e.ColumnIndex == 1)
-                if ((string)dataGridViewPoints[2, e.RowIndex].FormattedValue != string.Empty)
-                    refreshAzimuthsToolStripMenuItem_Click(null, null);
-            if (e.ColumnIndex == 2)
-                if ((string)dataGridViewPoints[1, e.RowIndex].FormattedValue != string.Empty)
-                    refreshAzimuthsToolStripMenuItem_Click(null, null);
-            //сброс ошибок строк
-            dataGridViewPoints.Rows[e.RowIndex].ErrorText = null;
-        }
 
         /// <summary>
         /// проверка правильного ввода значений долготы, широты, высоты
@@ -506,8 +463,6 @@ namespace TrackConverter.UI.Tools
             {
                 this.Points[row] = fep.Result;
                 Vars.currentSelectedTrack = this.Points;
-                Program.winConverter.UpdateSelectedTrack();
-                Program.RefreshWindows(this);
                 Points.CalculateAll();
                 FillDGV(Points.Source);
                 dataGridViewPoints.Rows[e.RowIndex].ErrorText = null;
@@ -532,27 +487,6 @@ namespace TrackConverter.UI.Tools
 
         }
 
-        /// <summary>
-        /// обновление окон при выделении точки
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void dataGridView1_SelectionChanged(object sender, EventArgs e)
-        {
-
-            if (dataGridViewPoints.SelectedRows.Count == 1)
-            {
-                int ind = dataGridViewPoints.SelectedRows[0].Index;
-
-                if (ind >= Points.Count)
-                    return;
-
-                TrackPoint tt = Points[ind];
-                Program.winMap.SelectPoint(tt);
-                Program.winElevVisual.SelectPoint(tt);
-            }
-        }
-
         #endregion
 
 
@@ -563,20 +497,12 @@ namespace TrackConverter.UI.Tools
         /// <param name="e"></param>
         private void FormPoints_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (this == Program.winPoints) //если это часть основного окна, то подтверждение выхода
-                if (isEdited)
-                    if (MessageBox.Show(this, "Точки не сохранены, вы действительно хотите выйти?", "Внимание!", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) == DialogResult.No)
-                    {
-                        e.Cancel = true;
-                        return;
-                    }
-
-            if (this != Program.winPoints) //если это не часть основного окна, то выполняем действие
-                if (endEditWaypointsAction != null)
-                {
-                    Points.Source = (DataTable)dataGridViewPoints.DataSource;
-                    endEditWaypointsAction.Invoke(Points);
-                }
+            //if (this != Program.winPoints) //если это не часть основного окна, то выполняем действие
+            if (endEditWaypointsAction != null)
+            {
+                Points.Source = (DataTable)dataGridViewPoints.DataSource;
+                endEditWaypointsAction.Invoke(Points);
+            }
         }
 
         #endregion

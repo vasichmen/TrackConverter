@@ -38,6 +38,7 @@ using TrackConverter.UI.Common.Dialogs;
 using TrackConverter.UI.Converter;
 using TrackConverter.UI.Map;
 using TrackConverter.UI.Tools;
+using TrackConverter.UI.Shell;
 
 namespace TrackConverter.UI
 {
@@ -48,20 +49,11 @@ namespace TrackConverter.UI
     {
         #region Окна
 
-        /// <summary>
-        /// основное окно конвертера
-        /// </summary>
-        public static FormConverter winConverter;
 
         /// <summary>
         /// окно редактирования путешествия
         /// </summary>
         public static FormEditTrip winTripEditor;
-
-        /// <summary>
-        /// окно с картой
-        /// </summary>
-        public static FormMap winMap;
 
         /// <summary>
         /// окно объединения треков
@@ -94,19 +86,9 @@ namespace TrackConverter.UI
         public static FormWaiting winWaiting;
 
         /// <summary>
-        /// Окно графиков высот
-        /// </summary>
-        public static FormElevVisual winElevVisual;
-
-        /// <summary>
         /// Основное окно программы
         /// </summary>
-        public static FormContainer winMain;
-
-        /// <summary>
-        /// Окно редактирования точек
-        /// </summary>
-        public static FormPoints winPoints;
+        public static FormMain winMain;
 
         /// <summary>
         /// Окно сохранения карты
@@ -115,71 +97,19 @@ namespace TrackConverter.UI
 
         #endregion
 
-        #region Свойства окон
-
-        /// <summary>
-        /// Истина, если окно конвертера не содано или закрыто
-        /// </summary>
-        public static bool winConverterNullOrDisposed { get { return winConverter == null || winConverter.IsDisposed; } }
-
-        /// <summary>
-        /// Истина, если окно конвертера не содано или закрыто
-        /// </summary>
-        public static bool winSaveMapNullOrDisposed { get { return winSaveMap == null || winSaveMap.IsDisposed; } }
-
-        /// <summary>
-        /// Истина, если окно карты не содано или закрыто
-        /// </summary>
-        public static bool winMapNullOrDisposed { get { return winMap == null || winMap.IsDisposed; } }
-
-        /// <summary>
-        /// Истина, если окно объединения треков не содано или закрыто
-        /// </summary>
-        public static bool winJoinTrackNullOrDisposed { get { return winJoinTrack == null || winJoinTrack.IsDisposed; } }
-
-        /// <summary>
-        /// Истина, если окно настроек не содано или закрыто
-        /// </summary>
-        public static bool winOptionsNullOrDisposed { get { return winOptions == null || winOptions.IsDisposed; } }
-
-        /// <summary>
-        /// Истина, если окно навигации не содано или закрыто
-        /// </summary>
-        public static bool winNavigatorNullOrDisposed { get { return winNavigator == null || winNavigator.IsDisposed; } }
-
-        /// <summary>
-        /// Истина, если окно редактирования маршрута не содано или закрыто
-        /// </summary>
-        public static bool winRouteEditorNullOrDisposed { get { return winRouteEditor == null || winRouteEditor.IsDisposed; } }
-
-        /// <summary>
-        /// Истина, если окно сравнения маршрутов не содано или закрыто
-        /// </summary>
-        public static bool winCompareTrackNullOrDisposed { get { return winCompareTrack == null || winCompareTrack.IsDisposed; } }
-
-        /// <summary>
-        /// Истина, если окно ожидания не содано или закрыто
-        /// </summary>
-        public static bool winWaitingNullOrDisposed { get { return winWaiting == null || winWaiting.IsDisposed; } }
-
-        /// <summary>
-        /// истина, если окно редактирования точек не создано или закрыто
-        /// </summary>
-        public static bool winPointsNullOrDisposed { get { return winWaiting == null || winWaiting.IsDisposed; } }
-
-        /// <summary>
-        /// Истина, если окно графиков высот не содано или закрыто
-        /// </summary>
-        public static bool winElevVisualNullOrDisposed { get { return winElevVisual == null || winElevVisual.IsDisposed; } }
-
-
-
-        #endregion
 
         /// <summary>
         /// иконка в панели задач
         /// </summary>
         static TrayIcon trayIcon = null;
+
+
+        internal static bool winNavigatorNullOrDisposed { get { return winNavigator == null || winNavigator.IsDisposed; } }
+        public static bool winJoinTrackNullOrDisposed { get { return winJoinTrack == null || winJoinTrack.IsDisposed; } }
+        public static bool winCompareTrackNullOrDisposed { get { return winJoinTrack == null || winJoinTrack.IsDisposed; } }
+        public static bool winWaitingNullOrDisposed { get { return winWaiting == null || winWaiting.IsDisposed; } }
+        public static bool winSaveMapNullOrDisposed { get { return winSaveMap == null || winSaveMap.IsDisposed; } }
+        public static bool winOptionsNullOrDisposed { get { return winOptions == null || winOptions.IsDisposed; } }
 
 
         /// <summary>
@@ -235,19 +165,13 @@ namespace TrackConverter.UI
             #region создание окон
 
             //создание основного окна
-            winMain = new FormContainer()
+            winMain = new FormMain(args)
             {
                 WindowState = Vars.Options.Container.WinState,
                 Size = Vars.Options.Container.WinSize,
                 Left = Vars.Options.Container.WinPosition.X,
                 Top = Vars.Options.Container.WinPosition.Y
             };
-
-            //дочерние окна
-            winMap = new FormMap() { MdiParent = winMain };
-            winElevVisual = new FormElevVisual(null) { MdiParent = winMain };
-            winPoints = new FormPoints() { MdiParent = winMain };
-            winConverter = new FormConverter() { MdiParent = winMain };
 
             //создание окна ожидания
             winWaiting = new FormWaiting();
@@ -303,19 +227,12 @@ namespace TrackConverter.UI
                 winNavigator.Show(winMain);
             }
 
-            winMap.Show();
-            winConverter.Show();
-            winElevVisual.Show();
-            winPoints.Show();
-
-            winConverter.LoadFiles(args);
-
             #endregion
 
 
             //запуск основного окна
             //Application.Run(winMain);
-            Application.Run(new FormMain());
+            Application.Run(winMain);
 
 #if (!DEBUG)
             }
@@ -336,20 +253,6 @@ namespace TrackConverter.UI
 #endif
         }
 
-        /// <summary>
-        /// обновление окон после изменния выделенного маршрута
-        /// </summary>
-        public static void RefreshWindows(Form sender)
-        {
-            if (sender != winMap)
-                winMap.RefreshData();
-            if (sender != winElevVisual)
-                winElevVisual.RefreshData();
-            if (sender != winPoints)
-                winPoints.RefreshData();
-            if (sender.GetType() != typeof(FormConverter))
-                winConverter.RefreshData();
-        }
 
         /// <summary>
         /// выход из приложения и сохранение данных

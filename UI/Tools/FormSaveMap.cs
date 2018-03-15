@@ -40,9 +40,9 @@ namespace TrackConverter.UI.Tools
             foreach (MapProviderRecord mpr in Vars.Options.Map.AllProviders)
                 comboBoxSaveMapProvider.Items.Add(mpr.Title);
             comboBoxSaveMapProvider.SelectedIndex = Vars.Options.Map.MapProvider.ID;
-            numericUpDownZoom.Minimum = Program.winMap.gmapControlMap.MinZoom;
-            numericUpDownZoom.Maximum = Program.winMap.gmapControlMap.MaxZoom;
-            numericUpDownZoom.Value = (int)Program.winMap.gmapControlMap.Zoom;
+            numericUpDownZoom.Minimum = Program.winMain.gmapControlMap.MinZoom;
+            numericUpDownZoom.Maximum = Program.winMain.gmapControlMap.MaxZoom;
+            numericUpDownZoom.Value = (int)Program.winMain.gmapControlMap.Zoom;
         }
 
         /// <summary>
@@ -111,7 +111,7 @@ namespace TrackConverter.UI.Tools
                     throw new NotSupportedException("Этот поставщик карты не поддерживается " + Vars.Options.Map.MapProvider.Enum);
             }
 
-            GMapControl parent = Program.winMap.gmapControlMap;
+            GMapControl parent = Program.winMain.gmapControlMap;
             gmc = new GMapControl();
             gmc.CacheLocation = parent.CacheLocation;
             gmc.SelectedArea = parent.SelectedArea;

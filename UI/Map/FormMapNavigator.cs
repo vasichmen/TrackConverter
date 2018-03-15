@@ -61,7 +61,7 @@ namespace TrackConverter.UI.Map
         /// <param name="e"></param>
         private void buttonZoomOut_Click(object sender, EventArgs e)
         {
-            Program.winMap.gmapControlMap.Zoom--;
+            Program.winMain.gmapControlMap.Zoom--;
         }
 
         /// <summary>
@@ -71,7 +71,7 @@ namespace TrackConverter.UI.Map
         /// <param name="e"></param>
         private void buttonZoomIn_Click(object sender, EventArgs e)
         {
-            Program.winMap.gmapControlMap.Zoom++;
+            Program.winMain.gmapControlMap.Zoom++;
         }
 
       
@@ -83,7 +83,7 @@ namespace TrackConverter.UI.Map
         /// <param name="e"></param>
         private void buttonMoveMap_MouseUp(object sender, MouseEventArgs e)
         {
-            Program.winMap.canMoveMap = false;
+            Program.winMain.canMoveMap = false;
         }
 
         /// <summary>
@@ -93,20 +93,20 @@ namespace TrackConverter.UI.Map
         /// <param name="e"></param>
         private void buttonMoveMap_MouseDown(object sender, MouseEventArgs e)
         {
-            Program.winMap.canMoveMap = true;
+            Program.winMain.canMoveMap = true;
             switch (((Button)sender).Name)
             {
                 case "buttonLeft":
-                    Program.winMap.canMoveMapDirection = Keys.Left;
+                    Program.winMain.canMoveMapDirection = Keys.Left;
                     break;
                 case "buttonRight":
-                    Program.winMap.canMoveMapDirection = Keys.Right;
+                    Program.winMain.canMoveMapDirection = Keys.Right;
                     break;
                 case "buttonUp":
-                    Program.winMap.canMoveMapDirection = Keys.Up;
+                    Program.winMain.canMoveMapDirection = Keys.Up;
                     break;
                 case "buttonDown":
-                    Program.winMap.canMoveMapDirection = Keys.Down;
+                    Program.winMain.canMoveMapDirection = Keys.Down;
                     break;
 
             }
@@ -119,13 +119,13 @@ namespace TrackConverter.UI.Map
         /// <param name="e"></param>
         private void buttonGoBack_Click(object sender, EventArgs e)
         {
-            if (Program.winMap.PositionsStack.Count != 0)
+            if (Program.winMain.PositionsStack.Count != 0)
             {
-                Program.winMap.PositionsStack.Pop();
-                if (Program.winMap.PositionsStack.Count == 0) return;
-                KeyValuePair<string,Coordinate> ques = Program.winMap.PositionsStack.Peek();
-                Program.winMap.gmapControlMap.Position = ques.Value.GMap;
-                Program.winMap.toolStripComboBoxGoTo.Text = ques.Key;
+                Program.winMain.PositionsStack.Pop();
+                if (Program.winMain.PositionsStack.Count == 0) return;
+                KeyValuePair<string,Coordinate> ques = Program.winMain.PositionsStack.Peek();
+                Program.winMain.gmapControlMap.Position = ques.Value.GMap;
+                Program.winMain.toolStripComboBoxGoTo.Text = ques.Key;
             }
 
         }

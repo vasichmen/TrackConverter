@@ -145,8 +145,8 @@ namespace TrackConverter.UI.Map
         /// <param name="e"></param>
         private void FormWhatsthere_FormClosed(object sender, FormClosedEventArgs e)
         {
-            if (Program.winMap.ActiveWhatThereForms.ContainsKey(point))
-                Program.winMap.ActiveWhatThereForms.Remove(point);
+            if (Program.winMain.ActiveWhatThereForms.ContainsKey(point))
+                Program.winMain.ActiveWhatThereForms.Remove(point);
             timer.Stop();
         }
 
@@ -167,7 +167,7 @@ namespace TrackConverter.UI.Map
         /// <param name="e"></param>
         private void buttonCenter_Click(object sender, EventArgs e)
         {
-            Program.winMap.gmapControlMap.Position = this.point.Coordinates.GMap;
+            Program.winMain.gmapControlMap.Position = this.point.Coordinates.GMap;
         }
     }
 }

@@ -102,7 +102,7 @@ namespace TrackConverter.UI.Converter
             else
                 return;
 
-            Program.winConverter.AddRouteToList(tf);
+            Program.winMain.converterHelper.AddRouteToList(tf);
             Close();
         }
 

@@ -76,7 +76,7 @@ namespace TrackConverter.UI.Map
             this.editWaypointsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.elevationGraphRouteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.createOptimalRouteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.gmapControlMap = new GMapControl();
+            this.gmapControlMap = new GMap.NET.WindowsForms.GMapControl();
             this.contextMenuStripMap = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolStripMenuItemAddWaypoint = new System.Windows.Forms.ToolStripMenuItem();
             this.созданиеМаршрутаToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -399,7 +399,7 @@ namespace TrackConverter.UI.Map
     "но попасть только один раз";
             this.createOptimalRouteToolStripMenuItem.Click += new System.EventHandler(this.createOptimalRouteToolStripMenuItem_Click);
             // 
-            // gmapControlMapCunstructorField
+            // gmapControlMap
             // 
             this.gmapControlMap.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
@@ -415,6 +415,7 @@ namespace TrackConverter.UI.Map
             this.gmapControlMap.MarkersEnabled = true;
             this.gmapControlMap.MaxZoom = 23;
             this.gmapControlMap.MinZoom = 2;
+            this.gmapControlMap.MouseWheelZoomEnabled = true;
             this.gmapControlMap.MouseWheelZoomType = GMap.NET.MouseWheelZoomType.MousePositionWithoutCenter;
             this.gmapControlMap.Name = "gmapControlMap";
             this.gmapControlMap.NegativeMode = false;
@@ -451,7 +452,7 @@ namespace TrackConverter.UI.Map
             this.toolStripMenuItemWhatsThere,
             this.copyCoordinatesToolStripMenuItem});
             this.contextMenuStripMap.Name = "contextMenuStripMap";
-            this.contextMenuStripMap.Size = new System.Drawing.Size(210, 92);
+            this.contextMenuStripMap.Size = new System.Drawing.Size(210, 114);
             this.contextMenuStripMap.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStripMap_Opening);
             // 
             // toolStripMenuItemAddWaypoint
