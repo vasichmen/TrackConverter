@@ -315,11 +315,6 @@ namespace TrackConverter.UI.Shell
         internal BaseTrack Points;
 
         /// <summary>
-        /// если истина, то при закрытии окна будет вызван метод map.EndEditWaypoints
-        /// </summary>
-        internal Action<BaseTrack> endEditWaypointsAction;
-
-        /// <summary>
         /// если истина, то есть несохраненные изменения
         /// </summary>
         internal bool isEditedPoints = false;
@@ -376,8 +371,82 @@ namespace TrackConverter.UI.Shell
             //если есть аргументы командной строки 
             if (args.Length > 0)
             {
-
+                //загрузка файлов из параметров
+                gjghjgh
             }
+
+            #region СПИСОК МАРШРУТОВ
+
+            Tracks = new TrackFileList();
+            showingRoutesList = new TrackFileList();
+            showingWaypointsList = new TrackFileList();
+            mainHelper.RefreshRecentFiles(); //обновление писка последних загруженных файлов
+
+            #endregion
+
+            #region КАРТА
+
+            //стек перехода по поиску мест
+            this.PositionsStack = new Stack<KeyValuePair<string, Coordinate>>();
+
+            //стек последних изменнений на карте
+            this.LastEditsStack = new Stack<StackItem>();
+
+            //для работы кнопок навигации
+            this.KeyPreview = true;
+
+            //добавление поставщиков карты в основное меню
+            //добавление поставщиков карты в меню инструментов
+            toolStripDropDownButtonMapProvider.DropDownItems.Clear();
+            mapProviderToolStripMenuItem.DropDownItems.Clear();
+            foreach (MapProviderRecord mpr in Vars.Options.Map.AllProviders)
+            {
+                ToolStripMenuItem it1 = new ToolStripMenuItem();
+                it1.Text = mpr.Title;
+                it1.Click += mapHelper.mpProvider_Click;
+                it1.Tag = mpr;
+                it1.Image = new Bitmap(Application.StartupPath + mpr.IconName);
+                if (mpr.Enum == Vars.Options.Map.MapProvider.Enum)
+                    it1.Checked = true;
+
+                ToolStripMenuItem it2 = new ToolStripMenuItem();
+                it2.Text = mpr.Title;
+                it2.Click += mapHelper.mpProvider_Click;
+                it2.Tag = mpr;
+                it2.Image = new Bitmap(Application.StartupPath + mpr.IconName);
+                if (mpr.Enum == Vars.Options.Map.MapProvider.Enum)
+                    it2.Checked = true;
+
+                toolStripDropDownButtonMapProvider.DropDownItems.Add(it1);
+                mapProviderToolStripMenuItem.DropDownItems.Add(it2);
+            }
+
+            #endregion
+
+            #region ТОЧКИ
+
+            if (waypoints == null)
+                waypoints = new TrackFile();
+
+            this.Points = waypoints;
+            pointsHelper.FillDGV(Points.Source);
+
+            #endregion
+
+            #region ГРАФИКИ
+
+            Task pr = new Task(new Action(() =>
+            {
+                BeginOperation();
+                setCurrentOperation("Построение профиля...");
+                graphHelper.ConfigureGraph();
+                EndOperation();
+            }));
+            pr.Start();
+
+            #endregion
+
+
         }
 
         private void FormMain_Load(object sender, EventArgs e)
@@ -390,6 +459,7 @@ namespace TrackConverter.UI.Shell
                     Vars.TaskLoadingETOPO.Start();
                 }
 
+            #region КАРТА
             TripRouteFile gf = null;
             try
             {
@@ -421,6 +491,62 @@ namespace TrackConverter.UI.Shell
             //последняя выделенная область карты
             gmapControlMap.SelectedArea = Vars.Options.Map.LastSelectedArea;
             gmapControlMap.Refresh();
+
+            #endregion
+
+            #region КОНВЕРТЕР
+
+            //открытие последних файлов
+            if (this.Tracks == null || this.Tracks.Count == 0)
+            {
+                this.Tracks = Serializer.DeserializeTrackFileList(Vars.Options.Converter.LastLoadedTracks);
+               converterHelper.RefreshData();
+            }
+
+
+            if (this.Tracks.Count != 0)
+            {
+                Vars.currentSelectedTrack = Tracks[0];
+                mapHelper.RefreshData();
+                pointsHelper.RefreshData();
+                graphHelper.RefreshData();
+            }
+
+            //завершение открытия файлов, при запуске программы
+            if (openingFile != null)
+            {
+                Task ts = new Task(new Action(() =>
+                {
+                    BaseTrack pts = null;
+                    Program.winMain.BeginOperation();
+                    //метод обновления информации о выполняемой операции
+
+                    pts = Serializer.DeserializeTrackFile(openingFile, Program.winMain.setCurrentOperation);
+                    openingFile = null;
+                    //обработка результатов
+                    this.Invoke(new Action(() =>
+                    {
+                        EndOperation();
+                        mapHelper.Clear();
+                        mapHelper.ShowWaypoints(pts, false, false);
+                    }));
+                }));
+                ts.Start();
+            }
+
+            #endregion
+
+            #region ТОЧКИ
+
+
+
+            #endregion
+
+            #region ГРАФИКИ
+
+
+
+            #endregion
         }
 
         private void FormMain_FormClosing(object sender, FormClosingEventArgs e)
@@ -436,6 +562,11 @@ namespace TrackConverter.UI.Shell
             Vars.Options.Container.WinSize = this.Size;
             Vars.Options.Container.WinState = this.WindowState;
             Vars.Options.Container.WinPosition = new Point(Left, Top);
+        }
+
+        private void FormMain_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            Vars.Options.Converter.LastLoadedTracks = this.Tracks.FilePaths;
         }
 
         #region Управление состоянием статус бар панели внизу экрана
@@ -608,6 +739,17 @@ namespace TrackConverter.UI.Shell
         #endregion
 
         #region контекстные меню карты
+
+
+        private void contextMenuStripMap_Opening(object sender, CancelEventArgs e)
+        {
+            mapHelper.ContextMenuMapOpening(sender, e);
+        }
+
+        private void contextMenuStripMarker_Opening(object sender, CancelEventArgs e)
+        {
+            mapHelper.ContextMenuMarkerOpening(sender, e);
+        }
 
         private void toolStripMenuItemAddWaypoint_Click(object sender, EventArgs e)
         {

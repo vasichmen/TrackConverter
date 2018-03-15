@@ -57,7 +57,7 @@ namespace TrackConverter.UI.Shell
         /// заполнение таблицы
         /// </summary>
         /// <param name="source"></param>
-        void FillDGV(object source)
+        public void FillDGV(object source)
         {
             formMain.dataGridViewPoints.DataSource = null;
             formMain.dataGridViewPoints.DataSource = source;

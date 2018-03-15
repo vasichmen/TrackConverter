@@ -206,7 +206,8 @@ namespace TrackConverter.UI
             #region настройки объектов
 
             //открытие БД кэша геокодера
-            Vars.dataCache = new SQLiteCache(Application.StartupPath + Resources.cache_directory + "\\geocoder");
+            new Task(new Action(() => { Vars.dataCache = new SQLiteCache(Application.StartupPath + Resources.cache_directory + "\\geocoder"); })).Start();
+           
 
             //метод загрузки базы данных ETOPO
             Vars.TaskLoadingETOPO = GetETOPOLoadingTask();

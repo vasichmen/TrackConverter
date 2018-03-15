@@ -26,12 +26,14 @@ namespace TrackConverter.UI.Shell
         {
             this.formMain = formMain;
         }
+      
+        
         #region вспомогательные методы
 
         /// <summary>
         /// обновление графика
         /// </summary>
-        private void ConfigureGraph()
+        public void ConfigureGraph()
         {
             GraphPane gp = formMain.zedGraph.GraphPane;
             gp.Title.IsVisible = false;

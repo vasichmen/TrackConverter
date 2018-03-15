@@ -19,6 +19,7 @@ using TrackConverter.Res.Properties;
 using TrackConverter.UI.Common.Dialogs;
 using TrackConverter.UI.Map;
 using static TrackConverter.Lib.Classes.StackEdits.Actions;
+using System.ComponentModel;
 
 namespace TrackConverter.UI.Shell
 {
@@ -51,6 +52,7 @@ namespace TrackConverter.UI.Shell
             GMaps.Instance.MemoryCache.Capacity = 100; //максимальный размер кэша в МБ
 
             //zoom
+            formMain.gmapControlMap.MaxZoom = 20;
             formMain.gmapControlMap.Zoom = Vars.Options.Map.Zoom;
             OnMapZoomChanged();
 
@@ -164,6 +166,7 @@ namespace TrackConverter.UI.Shell
         }
 
         #region События карты
+
 
         internal void OnMapZoomChanged()
         {
@@ -435,6 +438,17 @@ namespace TrackConverter.UI.Shell
                 RefreshWaypoints();
                 return;
             }
+
+            //вывод контекстного меню если не перемещается карта и мышь не на маршруте
+            if (e.Button == MouseButtons.Right && !formMain.gmapControlMap.IsDragging && !formMain.gmapControlMap.IsMouseOverRoute)
+            {
+                if (!formMain.gmapControlMap.IsMouseOverMarker)
+                {
+                    formMain.contextMenuStripMap.Show(formMain.gmapControlMap, new Point(e.X, e.Y));
+                    formMain.pointClicked = formMain.gmapControlMap.FromLocalToLatLng(e.X, e.Y);
+                }
+                return;
+            }
         }
 
         internal void MouseMove(MouseEventArgs e)
@@ -570,9 +584,70 @@ namespace TrackConverter.UI.Shell
             formMain.gmapControlMap.Zoom--;
         }
 
+
+        internal void mpProvider_Click(object sender, EventArgs e)
+        {
+            MapProviderRecord mpr = (MapProviderRecord)((ToolStripMenuItem)sender).Tag;
+            switch (mpr.Enum)
+            {
+                case MapProviders.GoogleHybridMap:
+                    formMain.gmapControlMap.MapProvider = GMapProviders.GoogleHybridMap;
+                    break;
+                case MapProviders.GoogleMap:
+                    formMain.gmapControlMap.MapProvider = GMapProviders.GoogleMap;
+                    break;
+                case MapProviders.GoogleSatelliteMap:
+                    formMain.gmapControlMap.MapProvider = GMapProviders.GoogleSatelliteMap;
+                    break;
+                case MapProviders.OpenCycleMap:
+                    formMain.gmapControlMap.MapProvider = GMapProviders.OpenCycleMap;
+                    break;
+                case MapProviders.YandexHybridMap:
+                    formMain.gmapControlMap.MapProvider = GMapProviders.YandexHybridMap;
+                    break;
+                case MapProviders.YandexMap:
+                    formMain.gmapControlMap.MapProvider = GMapProviders.YandexMap;
+                    break;
+                case MapProviders.YandexSatelliteMap:
+                    formMain.gmapControlMap.MapProvider = GMapProviders.YandexSatelliteMap;
+                    break;
+                case MapProviders.WikimapiaMap:
+                    formMain.gmapControlMap.MapProvider = GMapProviders.WikiMapiaMap;
+                    break;
+                default:
+                    throw new NotSupportedException("Этот поставщик карты не поддерживается " + mpr.Enum);
+            }
+
+
+            Vars.Options.Map.MapProvider = mpr;
+
+            foreach (ToolStripMenuItem ti in formMain.toolStripDropDownButtonMapProvider.DropDownItems)
+                if (((MapProviderRecord)(ti.Tag)).ID == mpr.ID)
+                    ti.Checked = true;
+                else
+                    ti.Checked = false;
+
+            foreach (ToolStripMenuItem ti in formMain.mapProviderToolStripMenuItem.DropDownItems)
+                if (((MapProviderRecord)(ti.Tag)).ID == mpr.ID)
+                    ti.Checked = true;
+                else
+                    ti.Checked = false;
+        }
+
         #endregion
 
         #region Контекстные меню
+
+        internal void ContextMenuMapOpening(object sender, CancelEventArgs e)
+        {
+           formMain.clearFromtoMarkersToolStripMenuItem.Visible = formMain.fromToOverlay.Markers.Count != 0;
+        }
+        
+        internal void ContextMenuMarkerOpening(object sender, CancelEventArgs e)
+        {
+            bool canEdit = formMain.markerClicked.Tag.Type != MarkerTypes.WhatThere & formMain.markerClicked.Tag.Type != MarkerTypes.PathingRoute;
+            formMain.editMarkerToolStripMenuItem.Visible = canEdit;
+        }
 
         internal void toolStripDeleteRoute(EventArgs e)
         {
@@ -1048,7 +1123,6 @@ namespace TrackConverter.UI.Shell
             formMain.CancelSelectPointAction = cancelAct;
         }
 
-
         /// <summary>
         /// завершение редактирования путевых точек
         /// </summary>
@@ -1059,8 +1133,6 @@ namespace TrackConverter.UI.Shell
             this.DeselectPoints();
             this.ShowWaypoints(formMain.waypoints, true, false);
         }
-
-        #endregion
 
         /// <summary>
         /// выделить определенную точку на карте. 
@@ -1085,5 +1157,6 @@ namespace TrackConverter.UI.Shell
             formMain.gmapControlMap.Position = cop.Coordinates.GMap;
         }
 
+        #endregion
     }
 }

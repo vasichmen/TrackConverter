@@ -202,7 +202,7 @@ namespace TrackConverter.UI.Shell
             this.saveFileWaypointsRoutesToolStripMenuItem});
             this.сохранитьToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("сохранитьToolStripMenuItem.Image")));
             this.сохранитьToolStripMenuItem.Name = "сохранитьToolStripMenuItem";
-            this.сохранитьToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.сохранитьToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
             this.сохранитьToolStripMenuItem.Text = "Сохранить";
             // 
             // saveFileWaypointsToolStripMenuItem
@@ -227,7 +227,7 @@ namespace TrackConverter.UI.Shell
             // 
             this.openToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("openToolStripMenuItem.Image")));
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
             this.openToolStripMenuItem.Text = "Открыть ";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
             // 
@@ -238,7 +238,7 @@ namespace TrackConverter.UI.Shell
             this.createTripToolStripMenuItem});
             this.toolStripMenuItem1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripMenuItem1.Image")));
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(132, 22);
             this.toolStripMenuItem1.Text = "Создать";
             // 
             // createRouteToolStripMenuItem
@@ -260,13 +260,13 @@ namespace TrackConverter.UI.Shell
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(149, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(129, 6);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("exitToolStripMenuItem.Image")));
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
             this.exitToolStripMenuItem.Text = "Выход";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
@@ -554,32 +554,31 @@ namespace TrackConverter.UI.Shell
             // toolStripStatusLabelCurrentOperation
             // 
             this.toolStripStatusLabelCurrentOperation.Name = "toolStripStatusLabelCurrentOperation";
-            this.toolStripStatusLabelCurrentOperation.Size = new System.Drawing.Size(118, 17);
-            this.toolStripStatusLabelCurrentOperation.Text = "toolStripStatusLabel1";
+            this.toolStripStatusLabelCurrentOperation.Size = new System.Drawing.Size(0, 17);
             // 
             // toolStripStatusLabelFromStart
             // 
             this.toolStripStatusLabelFromStart.Name = "toolStripStatusLabelFromStart";
-            this.toolStripStatusLabelFromStart.Size = new System.Drawing.Size(118, 17);
-            this.toolStripStatusLabelFromStart.Text = "toolStripStatusLabel1";
+            this.toolStripStatusLabelFromStart.Size = new System.Drawing.Size(10, 17);
+            this.toolStripStatusLabelFromStart.Text = " ";
             // 
             // toolStripStatusLabelLon
             // 
             this.toolStripStatusLabelLon.Name = "toolStripStatusLabelLon";
-            this.toolStripStatusLabelLon.Size = new System.Drawing.Size(118, 17);
-            this.toolStripStatusLabelLon.Text = "toolStripStatusLabel1";
+            this.toolStripStatusLabelLon.Size = new System.Drawing.Size(10, 17);
+            this.toolStripStatusLabelLon.Text = " ";
             // 
             // toolStripStatusLabelLat
             // 
             this.toolStripStatusLabelLat.Name = "toolStripStatusLabelLat";
-            this.toolStripStatusLabelLat.Size = new System.Drawing.Size(118, 17);
-            this.toolStripStatusLabelLat.Text = "toolStripStatusLabel1";
+            this.toolStripStatusLabelLat.Size = new System.Drawing.Size(10, 17);
+            this.toolStripStatusLabelLat.Text = " ";
             // 
             // toolStripStatusLabelInfo
             // 
             this.toolStripStatusLabelInfo.Name = "toolStripStatusLabelInfo";
-            this.toolStripStatusLabelInfo.Size = new System.Drawing.Size(118, 17);
-            this.toolStripStatusLabelInfo.Text = "toolStripStatusLabel1";
+            this.toolStripStatusLabelInfo.Size = new System.Drawing.Size(10, 17);
+            this.toolStripStatusLabelInfo.Text = " ";
             // 
             // splitContainer1
             // 
@@ -621,6 +620,7 @@ namespace TrackConverter.UI.Shell
             this.dataGridViewConverter.AllowUserToAddRows = false;
             this.dataGridViewConverter.AllowUserToDeleteRows = false;
             this.dataGridViewConverter.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridViewConverter.ContextMenuStrip = this.contextMenuStripConverter;
             this.dataGridViewConverter.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridViewConverter.Location = new System.Drawing.Point(0, 0);
             this.dataGridViewConverter.Name = "dataGridViewConverter";
@@ -642,6 +642,7 @@ namespace TrackConverter.UI.Shell
             this.dataGridViewPoints.AllowUserToAddRows = false;
             this.dataGridViewPoints.AllowUserToDeleteRows = false;
             this.dataGridViewPoints.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridViewPoints.ContextMenuStrip = this.contextMenuStripPoints;
             this.dataGridViewPoints.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridViewPoints.Location = new System.Drawing.Point(0, 0);
             this.dataGridViewPoints.Name = "dataGridViewPoints";
@@ -690,7 +691,7 @@ namespace TrackConverter.UI.Shell
             this.gmapControlMap.MaxZoom = 2;
             this.gmapControlMap.MinZoom = 2;
             this.gmapControlMap.MouseWheelZoomEnabled = true;
-            this.gmapControlMap.MouseWheelZoomType = GMap.NET.MouseWheelZoomType.MousePositionAndCenter;
+            this.gmapControlMap.MouseWheelZoomType = GMap.NET.MouseWheelZoomType.MousePositionWithoutCenter;
             this.gmapControlMap.Name = "gmapControlMap";
             this.gmapControlMap.NegativeMode = false;
             this.gmapControlMap.PolygonsEnabled = true;
@@ -701,7 +702,7 @@ namespace TrackConverter.UI.Shell
             this.gmapControlMap.ShowTileGridLines = false;
             this.gmapControlMap.Size = new System.Drawing.Size(956, 362);
             this.gmapControlMap.TabIndex = 1;
-            this.gmapControlMap.Zoom = 0D;
+            this.gmapControlMap.Zoom = 2D;
             this.gmapControlMap.OnMarkerClick += new GMap.NET.WindowsForms.MarkerClick(this.gmapControlMap_OnMarkerClick);
             this.gmapControlMap.OnRouteClick += new GMap.NET.WindowsForms.RouteClick(this.gmapControlMap_OnRouteClick);
             this.gmapControlMap.OnMarkerEnter += new GMap.NET.WindowsForms.MarkerEnter(this.gmapControlMap_OnMarkerEnter);
@@ -855,6 +856,7 @@ namespace TrackConverter.UI.Shell
             this.copyCoordinatesToolStripMenuItem});
             this.contextMenuStripMap.Name = "contextMenuStripMap";
             this.contextMenuStripMap.Size = new System.Drawing.Size(210, 92);
+            this.contextMenuStripMap.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStripMap_Opening);
             // 
             // toolStripMenuItemAddWaypoint
             // 
@@ -934,13 +936,14 @@ namespace TrackConverter.UI.Shell
             this.editMarkerToolStripMenuItem,
             this.deleteMarkerToolStripMenuItem});
             this.contextMenuStripMarker.Name = "contextMenuStripMarker";
-            this.contextMenuStripMarker.Size = new System.Drawing.Size(129, 48);
+            this.contextMenuStripMarker.Size = new System.Drawing.Size(153, 70);
+            this.contextMenuStripMarker.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStripMarker_Opening);
             // 
             // editMarkerToolStripMenuItem
             // 
             this.editMarkerToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("editMarkerToolStripMenuItem.Image")));
             this.editMarkerToolStripMenuItem.Name = "editMarkerToolStripMenuItem";
-            this.editMarkerToolStripMenuItem.Size = new System.Drawing.Size(128, 22);
+            this.editMarkerToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.editMarkerToolStripMenuItem.Text = "Изменить";
             this.editMarkerToolStripMenuItem.Click += new System.EventHandler(this.editMarkerToolStripMenuItem_Click);
             // 
@@ -1320,6 +1323,7 @@ namespace TrackConverter.UI.Shell
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "TrackConverter";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormMain_FormClosing);
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.FormMain_FormClosed);
             this.Load += new System.EventHandler(this.FormMain_Load);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
@@ -1372,7 +1376,6 @@ namespace TrackConverter.UI.Shell
         private System.Windows.Forms.ToolStripMenuItem справкаToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
-        private System.Windows.Forms.ToolStripDropDownButton toolStripDropDownButtonMapProvider;
         public System.Windows.Forms.ToolStripComboBox toolStripComboBoxGoTo;
         private System.Windows.Forms.ToolStripLabel toolStripLabel1;
         private System.Windows.Forms.ToolStrip toolStrip2;
@@ -1388,7 +1391,6 @@ namespace TrackConverter.UI.Shell
         private System.Windows.Forms.ToolStripMenuItem createTripToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem картаToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem mapProviderToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem источникДанныхToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem selectMapToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem очисткаToolStripMenuItem;
@@ -1415,10 +1417,8 @@ namespace TrackConverter.UI.Shell
         private System.Windows.Forms.ToolStripMenuItem fromToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem intermediatePointToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem clearFromtoMarkersToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemWhatsThere;
         private System.Windows.Forms.ToolStripMenuItem copyCoordinatesToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem editMarkerToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem deleteMarkerToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem editRouteToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem removeRouteToolStripMenuItem;
@@ -1469,6 +1469,10 @@ namespace TrackConverter.UI.Shell
         internal System.Windows.Forms.DataGridView dataGridViewPoints;
         internal ZedGraph.ZedGraphControl zedGraph;
         internal System.Windows.Forms.ToolStripMenuItem FileToolStripMenuItem;
+        internal System.Windows.Forms.ToolStripDropDownButton toolStripDropDownButtonMapProvider;
+        public System.Windows.Forms.ToolStripMenuItem mapProviderToolStripMenuItem;
+        internal System.Windows.Forms.ToolStripMenuItem clearFromtoMarkersToolStripMenuItem;
+        internal System.Windows.Forms.ToolStripMenuItem editMarkerToolStripMenuItem;
     }
 }
 

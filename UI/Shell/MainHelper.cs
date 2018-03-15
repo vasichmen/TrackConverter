@@ -21,6 +21,61 @@ namespace TrackConverter.UI.Shell
     {
         private FormMain formMain;
 
+        #region вспомогательные методы
+
+        /// <summary>
+        /// обновление списка последних загруженных файлов
+        /// </summary>
+        public void RefreshRecentFiles()
+        {
+            for (int i = 0; i < formMain.FileToolStripMenuItem.DropDownItems.Count; i += 0)
+            {
+                if (formMain.FileToolStripMenuItem.DropDownItems[i].Name.Contains("tsmiRecentButt"))
+                {
+                    formMain.FileToolStripMenuItem.DropDownItems.RemoveAt(i);
+                    continue;
+                }
+                i++;
+            }
+
+            if (Vars.Options.Converter.RecentFiles != null)
+            {
+                int i = 0;
+                foreach (string str in Vars.Options.Converter.RecentFiles)
+                {
+                    ToolStripMenuItem nm = new ToolStripMenuItem(str);
+                    nm.Click += nm_Click;
+                    nm.Tag = str;
+                    nm.ToolTipText = str;
+                    nm.Text = Path.GetFileName(str);
+                    nm.Name = "tsmiRecentButt" + i;
+                    formMain.FileToolStripMenuItem.DropDownItems.Add(nm);
+                    i++;
+                }
+            }
+        }
+
+        /// <summary>
+        /// нажатие на пункт меню последний открытый файл
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void nm_Click(object sender, EventArgs e)
+        {
+            ToolStripMenuItem item = (ToolStripMenuItem)sender;
+            try
+            {
+                formMain.converterHelper.OpenFile((string)item.Tag);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(formMain, ex.Message, "Ошибка!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Vars.Options.Converter.RecentFiles.Remove((string)item.Tag);
+                RefreshRecentFiles();
+            }
+        }
+
+        #endregion
 
         #region основное меню
 

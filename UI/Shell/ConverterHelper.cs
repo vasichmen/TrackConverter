@@ -572,23 +572,21 @@ namespace TrackConverter.UI.Shell
 
         internal void toolStripShowRouteOnMap(EventArgs e)
         {
-            TrackFileList tfl = new TrackFileList();
-            Task pr = new Task(new Action(() =>
+            foreach (DataGridViewRow r in formMain.dataGridViewConverter.SelectedRows)
             {
-                Program.winMain.BeginOperation();
-                foreach (DataGridViewRow row in formMain.dataGridViewConverter.SelectedRows)
-                {
-                    int rowI = row.Index;
-                    BaseTrack tf = formMain.Tracks[rowI];
 
-                    tf = new GeoInfo(Vars.Options.DataSources.GeoInfoProvider).GetElevation(tf, Program.winMain.setCurrentOperation);
-                    tf.CalculateAll();
-                    tfl.Add(tf);
+                BaseTrack tf = formMain.Tracks[r.Index];
+                if (formMain.showingRoutesList.Contains(tf))
+                    formMain.showingRoutesList.Remove(tf);
+                else
+                {
+                    if (tf.Color.IsEmpty)
+                        tf.Color = Vars.Options.Converter.GetColor();
+                    formMain.showingRoutesList.Add(tf);
                 }
-                formMain.Invoke(new Action(() => new FormElevVisual(tfl) { FormBorderStyle = FormBorderStyle.Sizable }.Show(Program.winMain)));
-                Program.winMain.EndOperation();
-            }));
-            pr.Start();
+                tf.IsVisible = !tf.IsVisible;
+                formMain.mapHelper.RefreshData();
+            }
         }
 
         internal void toolStripShowWaypoints(EventArgs e)
