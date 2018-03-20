@@ -1,6 +1,7 @@
 ﻿using GMap.NET;
 using GMap.NET.MapProviders;
 using GMap.NET.WindowsForms;
+using Microsoft.VisualBasic.Devices;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -109,6 +110,11 @@ namespace TrackConverter.UI.Shell
         /// слой вывода создаваемого путешествия
         /// </summary>
         public GMapOverlay creatingTripOverlay;
+
+        /// <summary>
+        /// слой маркеров найденых результатов поиска
+        /// </summary>
+        public GMapOverlay searchOverlay;
 
         /// <summary>
         /// измерение расстояния
@@ -247,6 +253,11 @@ namespace TrackConverter.UI.Shell
         /// слой маркеров "что здесь"
         /// </summary>
         public readonly string whatThereOverlayID = "whatThereOverlay";
+
+        /// <summary>
+        /// слой маркеров найденых результатов поиска
+        /// </summary>
+        public readonly string searchOverlayID = "searchOverlay";
         #endregion
 
         #region работа интерфейса
@@ -368,12 +379,6 @@ namespace TrackConverter.UI.Shell
         public FormMain(string[] args)
             : this()
         {
-            //если есть аргументы командной строки 
-            if (args.Length > 0)
-            {
-                //загрузка файлов из параметров
-                gjghjgh
-            }
 
             #region СПИСОК МАРШРУТОВ
 
@@ -446,7 +451,15 @@ namespace TrackConverter.UI.Shell
 
             #endregion
 
-
+            //если есть аргументы командной строки 
+            if (args.Length > 0)
+            {
+                //загрузка файлов из параметров
+                foreach (string arg in args)
+                {
+                    converterHelper.OpenFile(arg);
+                }
+            }
         }
 
         private void FormMain_Load(object sender, EventArgs e)
@@ -500,7 +513,7 @@ namespace TrackConverter.UI.Shell
             if (this.Tracks == null || this.Tracks.Count == 0)
             {
                 this.Tracks = Serializer.DeserializeTrackFileList(Vars.Options.Converter.LastLoadedTracks);
-               converterHelper.RefreshData();
+                converterHelper.RefreshData();
             }
 
 
@@ -562,12 +575,14 @@ namespace TrackConverter.UI.Shell
             Vars.Options.Container.WinSize = this.Size;
             Vars.Options.Container.WinState = this.WindowState;
             Vars.Options.Container.WinPosition = new Point(Left, Top);
+            Vars.Options.Converter.LastLoadedTracks = this.Tracks.FilePaths;
+
+            //размеры окон
+           Vars.Options.Container.VerticalSplitter = splitContainerVertical.SplitterDistance;
+            Vars.Options.Container.HorizontalLeftSplitter = splitContainerHorizontalLeft.SplitterDistance;
+            Vars.Options.Container.HorizontalRightSplitter = splitContainerHorizontalRight.SplitterDistance;
         }
 
-        private void FormMain_FormClosed(object sender, FormClosedEventArgs e)
-        {
-            Vars.Options.Converter.LastLoadedTracks = this.Tracks.FilePaths;
-        }
 
         #region Управление состоянием статус бар панели внизу экрана
 
@@ -720,6 +735,55 @@ namespace TrackConverter.UI.Shell
             mapHelper.UndoClick(e);
         }
 
+        /// <summary>
+        /// Кнопка поиска
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void toolStripButtonFind_Click(object sender, EventArgs e)
+        {
+mapHelper.ButtonFindClick(sender, e);
+        }
+
+        /// <summary>
+        /// Удалить найденные объекты с карты
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void toolStripButtonClearSearchMarks_Click(object sender, EventArgs e)
+        {
+            mapHelper.ButtonClearSearchMarks(sender, e);
+        }
+
+        /// <summary>
+        /// Нажатие кнопки Enter  в поле поиска
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void toolStripComboBoxSearch_KeyDown(object sender, KeyEventArgs e)
+        {
+            mapHelper.BoxSearchKeyDown(sender, e);
+        }
+
+        /// <summary>
+        /// добавление элементов последних запросов в список
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void toolStripComboBoxSearch_DropDown(object sender, EventArgs e)
+        {
+            mapHelper.toolStripComboBoxSearch_DropDown(sender, e);
+        }
+
+        /// <summary>
+        /// поиск при выборе из последних результатов
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void toolStripComboBoxSearch_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            mapHelper.ButtonFindClick(sender, e);
+        }
 
         private void toolStripButtonZoomIn_Click(object sender, EventArgs e)
         {
@@ -858,6 +922,16 @@ namespace TrackConverter.UI.Shell
         private void loadElevationsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             converterHelper.toolStripLoadElevations(e);
+        }
+
+        /// <summary>
+        /// на основе точек маршрута построить оптимальный маршрут
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void createOptimalOnBaseToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            converterHelper.toolStripCreateOptimalOnBase(sender, e);
         }
 
         private void removeElevationsToolStripMenuItem_Click(object sender, EventArgs e)

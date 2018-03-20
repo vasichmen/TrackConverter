@@ -125,7 +125,7 @@ namespace TrackConverter.UI.Map
                 if (Program.winMain.PositionsStack.Count == 0) return;
                 KeyValuePair<string,Coordinate> ques = Program.winMain.PositionsStack.Peek();
                 Program.winMain.gmapControlMap.Position = ques.Value.GMap;
-                Program.winMain.toolStripComboBoxGoTo.Text = ques.Key;
+                Program.winMain.toolStripComboBoxSearch.Text = ques.Key;
             }
 
         }

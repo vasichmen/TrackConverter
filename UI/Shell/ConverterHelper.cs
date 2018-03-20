@@ -10,10 +10,12 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using TrackConverter.Lib.Data;
 using TrackConverter.Lib.Mathematic.Assessment;
+using TrackConverter.Lib.Mathematic.Routing;
 using TrackConverter.Lib.Tracking;
 using TrackConverter.UI.Common;
 using TrackConverter.UI.Common.Dialogs;
 using TrackConverter.UI.Converter;
+using TrackConverter.UI.Map;
 using TrackConverter.UI.Tools;
 
 namespace TrackConverter.UI.Shell
@@ -259,24 +261,41 @@ namespace TrackConverter.UI.Shell
         /// <param name="FileName"> имя файла</param>
         public void OpenFile(string FileName)
         {
+            if (!File.Exists(FileName))
+                return;
             BaseTrack toShow = null;
-            if (Path.GetExtension(FileName).ToLower() == ".trr")
+
+            string ext = Path.GetExtension(FileName).ToLower();
+            switch (ext)
             {
-                TripRouteFile tr = Serializer.DeserializeTripRouteFile(FileName);
-                AddRouteToList(tr);
-                formMain.mapHelper.Clear();
-                toShow = tr;
+                case ".trr": //файл путешествия
+                    TripRouteFile tr = Serializer.DeserializeTripRouteFile(FileName);
+                    AddRouteToList(tr);
+                    formMain.mapHelper.Clear();
+                    toShow = tr;
+                    break;
+                case ".adrs"://файл списка адресов
+                    //открывается в новом потоке т.к. открытие идёт долго
+                    new Task(new Action(() =>
+                    {
+                        BaseTrack tf = Serializer.DeserializeTrackFile(FileName, formMain.setCurrentOperation);
+                        formMain.Invoke(new Action(() =>
+                        {
+                            AddRouteToList(tf);
+                        }));
+                    })).Start();
+                    break;
+                default://остальные файлы (где один маршрут на файл)
+                    TrackFileList tfl = Serializer.DeserializeTrackFileList(FileName);
+                    if (tfl.Count > 0)
+                    {
+                        toShow = tfl[0];
+                        AddRouteToList(tfl);
+                    }
+                    break;
             }
-            else
-            {
-                TrackFileList tfl = Serializer.DeserializeTrackFileList(FileName);
-                if (tfl.Count > 0)
-                {
-                    toShow = tfl[0];
-                    AddRouteToList(tfl);
-                }
-            }
-            Vars.Options.Converter.AddRecentFile(FileName); //добавление последнего файла
+
+            Vars.Options.Converter.AddRecentFile(FileName); //добавление последнего открытого файла в список в меню
             Vars.Options.Common.LastFileLoadDirectory = Path.GetDirectoryName(FileName); //послденяя открытая папка
             if (formMain.Tracks.Count > 0)
                 Vars.currentSelectedTrack = formMain.Tracks[0];
@@ -434,6 +453,11 @@ namespace TrackConverter.UI.Shell
             foreach (DataGridViewRow dr in formMain.dataGridViewConverter.SelectedRows)
                 formMain.openRouteFolderToolStripMenuItem.Visible &= File.Exists(formMain.Tracks[dr.Index].FilePath);
 
+            //если файл один и не путешествие, то видна кнопка построения оптимального маршурта
+            int index = formMain.dataGridViewConverter.SelectedRows[0].Index;
+            BaseTrack t = formMain.Tracks[index];
+            bool vis = t.GetType() == typeof(TrackFile) && formMain.dataGridViewConverter.SelectedRows.Count == 1;
+            formMain.createOptimalOnBaseToolStripMenuItem.Visible = vis;
 
             //если элемент - первое контектное меню, то выбираем пункты на основе тегов
             if (sender.GetType() == typeof(ContextMenuStrip))
@@ -663,6 +687,142 @@ namespace TrackConverter.UI.Shell
             formMain.dataGridViewConverter.Rows[min].Selected = true;
         }
 
+        /// <summary>
+        /// построение оптимального маршрута на основе 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        internal void toolStripCreateOptimalOnBase(object sender, EventArgs e)
+        {
+            if (formMain.dataGridViewConverter.SelectedRows.Count > 1)
+            {
+                MessageBox.Show(formMain, "Для этого действия должен быть выделен только один маршрут!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            int row = formMain.dataGridViewConverter.SelectedCells[0].RowIndex;
+            if(formMain.Tracks[row].GetType() != typeof(TrackFile))
+            {
+                MessageBox.Show(formMain, "Для этого действия должен быть выделен маршрут, а не путешествие!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            TrackFile track = (TrackFile)formMain.Tracks[row];
+
+            if (track.Count < 3)
+            {
+                MessageBox.Show(formMain, "Для построения оптимального маршрута надо поставить хотя бы 3 точки", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            TrackPoint startPoint = null;
+            TrackPoint endPoint = null;
+
+
+            FormSelectPoint fsp = new FormSelectPoint(track, true, "Выберите начальную точку");
+            if (fsp.ShowDialog(Program.winMain) == DialogResult.OK)
+                startPoint = fsp.Result;
+            else return;
+
+            bool isCycled = startPoint == null;
+
+            if (Vars.Options.Map.OptimalRouteMethod == OptimalMethodType.PolarSearch && !isCycled)
+            {
+                FormSelectPoint fsp1 = new FormSelectPoint(track, startPoint, false, "Выберите конечную точку");
+                if (fsp1.ShowDialog(Program.winMain) == DialogResult.OK)
+                    endPoint = fsp1.Result;
+                else return;
+            }
+
+            Program.winMain.BeginOperation();
+
+            //построение маршрута асинхронно
+            Task ts = new Task(new Action(() =>
+            {
+                try
+                {
+                    TrackFile route = null;
+                    DateTime start = DateTime.Now;
+                    switch (Vars.Options.Map.OptimalRouteMethod)
+                    {
+                        case OptimalMethodType.BranchBounds:
+                            route = new BranchBounds(Program.winMain.setCurrentOperation).Make(track, startPoint, isCycled);
+                            break;
+                        case OptimalMethodType.Greedy:
+                            route = new Greedy(Program.winMain.setCurrentOperation).Make(track, startPoint, isCycled);
+                            break;
+                        case OptimalMethodType.FullSearch:
+                            route = new FullSearch(Program.winMain.setCurrentOperation).Make(track, startPoint, isCycled);
+                            break;
+                        case OptimalMethodType.PolarSearch:
+                            route = new PolarSearch(Program.winMain.setCurrentOperation).Make(track, startPoint, endPoint, isCycled);
+                            break;
+                        default:
+                            route = new Greedy(Program.winMain.setCurrentOperation).Make(track, startPoint, isCycled);
+                            break;
+                    }
+
+                    //вывод маршрута на карту в базовом потоке
+                    formMain.Invoke(new Action(() =>
+                    {
+                        route.CalculateAll();
+                        route.Name = "Оптимальный маршрут";
+                        TimeSpan span = DateTime.Now - start;
+                        MessageBox.Show("Маршрут построен за:\r\n" + span.ToString(@"mm\:ss\.fff"));
+
+                        if (Vars.Options.Services.ChangePathedRoute)
+                            //если надо открыть маршрут для редактирования
+                            formMain.mapHelper.BeginEditRoute(route, (tf) =>
+                            {
+                            //ввод названия марщрута
+                            readName:
+                                FormReadText fr = new FormReadText(DialogType.ReadText, "Введите название маршрута", "", false, false, false, false);
+                                if (fr.ShowDialog(formMain) == DialogResult.OK)
+                                {
+                                    tf.Name = fr.Result;
+                                    //вычисление параметров
+                                    tf.CalculateAll();
+                                    //добавление в основное окно списка маршрутов
+                                    formMain.converterHelper.AddRouteToList(tf);
+                                    //вывод на карту
+                                    formMain.mapHelper.ShowRoute(formMain.creatingRoute);
+                                    //добавление в список маршрутов на карте
+                                    formMain.converterHelper.AddRouteToList(route);
+                                }
+                                else
+                                    switch (MessageBox.Show(formMain, "Отменить создание маршрута? Все именения будут потеряны!", "Внимание!", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1))
+                                    {
+                                        case System.Windows.Forms.DialogResult.No:
+                                            //открываем заново ввод названия
+                                            goto readName;
+                                        case System.Windows.Forms.DialogResult.Yes:
+                                            return;
+                                    }
+                            });
+                        else
+                        {
+                            //если не надо открывать маршрут
+                            AddRouteToList(route);
+                            formMain.mapHelper.ShowRoute(route);
+                        }
+                    }));
+
+                }
+                catch (Exception exx)
+                {
+                    formMain.Invoke(new Action(() =>
+                         MessageBox.Show(formMain, exx.Message + "\r\n" + (exx.InnerException != null ? exx.InnerException.Message : ""), "Ошибка при создании маршрута", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    ));
+                    return;
+                }
+                finally
+                {
+                    Program.winMain.EndOperation();
+                }
+            }));
+            ts.Start();
+
+        }
+
         internal void toolStripApproximateAltitudes(EventArgs e)
         {
             FormReadText frt = new FormReadText(
@@ -815,7 +975,7 @@ namespace TrackConverter.UI.Shell
                 BeginEditTrip(bt as TripRouteFile);
         }
 
-        internal void toolStripSaveAsWikimapia(object sender,EventArgs e)
+        internal void toolStripSaveAsWikimapia(object sender, EventArgs e)
         {
             BaseTrack tf = null;
 
@@ -859,7 +1019,7 @@ namespace TrackConverter.UI.Shell
             }
         }
 
-        internal void toolStripSaveAsYandex(object sender,EventArgs e)
+        internal void toolStripSaveAsYandex(object sender, EventArgs e)
         {
             BaseTrack tf = null;
 
@@ -1080,7 +1240,7 @@ namespace TrackConverter.UI.Shell
         {
             if (formMain.dataGridViewConverter.RowCount == 0) return;
             if (e.KeyData != Keys.Delete) return;
-            toolStripRemove( null);
+            toolStripRemove(null);
         }
 
         internal void dataGridViewDragEnter(DragEventArgs e)
@@ -1117,12 +1277,12 @@ namespace TrackConverter.UI.Shell
                 formMain.dataGridViewConverter.Rows[e.RowIndex].Selected = true;
         }
 
-        internal void dataGridViewCellMouseDoubleClick(object sender,DataGridViewCellMouseEventArgs e)
+        internal void dataGridViewCellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
         {
             formMain.dataGridViewConverter.ClearSelection();
             formMain.dataGridViewConverter.Rows[e.RowIndex].Selected = true;
             if (formMain.Tracks[e.RowIndex].GetType() == typeof(TripRouteFile))
-                toolStripEditRoute( new EventArgs());
+                toolStripEditRoute(new EventArgs());
             else
                 toolStripInformation(new EventArgs());
         }

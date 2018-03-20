@@ -21,6 +21,9 @@ namespace TrackConverter.Res
         public const int marker_start = 72;
         public const int marker_finish = 73;
         public const int what_there = 74;
+        public const int search_result_icon = 75;
+        public const int selected_point_icon = 76;
+       
 
         /// <summary>
         /// возращает отступы по осям для отображения маркера на карте для заданной иконки.
@@ -48,8 +51,13 @@ namespace TrackConverter.Res
             //иконка без сдвига
             if (icon == ZeroOffset) return new Point(0, 0);
 
+            //иконка результатов поиска
+            if (icon == search_result_icon)
+                return new Point(0, -16);
 
-
+            //иконка выделенной точки на карте
+            if (icon == selected_point_icon)
+                return new Point(0, 0);
 
 
             //ИКОНКИ ИЗ ПАПКИ ИКОНОК

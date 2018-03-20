@@ -168,7 +168,12 @@ namespace TrackConverter
         /// <summary>
         /// выделенная точка
         /// </summary>
-        SelectedPoint
+        SelectedPoint,
+
+        /// <summary>
+        /// Результат поиска
+        /// </summary>
+        SearchResult
     }
 
     /// <summary>

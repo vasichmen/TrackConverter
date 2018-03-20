@@ -178,6 +178,7 @@ namespace TrackConverter.UI.Shell
                 of.Filter += "|Файл маршрутов OziExplorer(*.rte)|*.rte";
                 of.Filter += "|Файл OpenStreetMaps(*.osm)|*.osm";
                 of.Filter += "|Файл NMEA(*.nmea)|*.nmea";
+                of.Filter += "|Файл списка адресов(*.adrs)|*.adrs";
                 of.Filter += "|Файл Excel(*.csv)|*.csv";
                 of.Filter += "|Текстовый файл(*.txt)|*.txt";
                 of.Filter += "|Маршрут Track Converter(*.trr)|*.trr";

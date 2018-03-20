@@ -436,6 +436,8 @@ namespace TrackConverter.Lib.Tracking
             }
 
             TrackFile res = new GeoCoder(Vars.Options.DataSources.GeoCoderProvider).GetCoordinates(ads, callback);
+            res.FilePath = FilePath;
+            res.Name = res.FileName;
             return res;
         }
 

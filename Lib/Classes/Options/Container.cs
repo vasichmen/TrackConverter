@@ -12,7 +12,7 @@ namespace TrackConverter.Lib.Classes.Options
     /// <summary>
     /// настройки окна-контейнера
     /// </summary>
-   public class Container
+    public class Container
     {
         /// <summary>
         /// создает новый экземпляр настроек с настройками по умолчанию
@@ -21,8 +21,27 @@ namespace TrackConverter.Lib.Classes.Options
         {
             this.WinState = FormWindowState.Maximized;
             this.WinSize = new System.Drawing.Size(1000, 600);
-            this.WinPosition = new System.Drawing.Point(50,50);
+            this.WinPosition = new System.Drawing.Point(50, 50);
+
+            this.HorizontalRightSplitter = 387;
+            this.HorizontalLeftSplitter = 387;
+            this.VerticalSplitter = 331;
         }
+
+        /// <summary>
+        /// положение разделителей окна
+        /// </summary>
+        public int HorizontalLeftSplitter { get; set; }
+
+        /// <summary>
+        /// положение разделителей окна
+        /// </summary>
+        public int HorizontalRightSplitter { get; set; }
+
+        /// <summary>
+        /// положение разделителей окна
+        /// </summary>
+        public int VerticalSplitter { get; set; }
 
         /// <summary>
         /// координаты окна

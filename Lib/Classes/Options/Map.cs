@@ -31,6 +31,7 @@ namespace TrackConverter.Lib.Classes.Options
             this.LastSelectedArea = RectLatLng.Empty;
             this.OptimalRouteMethod = OptimalMethodType.PolarSearch;
             this.RestoreRoutesWaypoints = true;
+            this.LastSearchRequests = new List<string>();
         }
 
         /// <summary>
@@ -116,5 +117,10 @@ namespace TrackConverter.Lib.Classes.Options
         /// последняя выделенная область карты
         /// </summary>
         public RectLatLng LastSelectedArea { get; set; }
+
+        /// <summary>
+        /// Список последних запросов в поле поиска по карте
+        /// </summary>
+        public List<string> LastSearchRequests { get; set; }
     }
 }

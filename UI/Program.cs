@@ -160,6 +160,15 @@ namespace TrackConverter.UI
             //проверка файлов программы
             CheckFiles();
 
+            //открытие БД кэша геокодера
+            new Task(new Action(() => { Vars.dataCache = new SQLiteCache(Application.StartupPath + Resources.cache_directory + "\\geocoder"); })).Start();
+
+
+            //метод загрузки базы данных ETOPO
+            Vars.TaskLoadingETOPO = GetETOPOLoadingTask();
+
+
+
             #endregion
 
             #region создание окон
@@ -172,6 +181,10 @@ namespace TrackConverter.UI
                 Left = Vars.Options.Container.WinPosition.X,
                 Top = Vars.Options.Container.WinPosition.Y
             };
+
+            //winMain.splitContainerHorizontalLeft.SplitterDistance  = Vars.Options.Container.HorizontalLeftSplitter;
+            //winMain.splitContainerHorizontalRight.SplitterDistance = Vars.Options.Container.HorizontalRightSplitter;
+            //winMain.splitContainerVertical.SplitterDistance = Vars.Options.Container.VerticalSplitter;
 
             //создание окна ожидания
             winWaiting = new FormWaiting();
@@ -205,14 +218,7 @@ namespace TrackConverter.UI
 
             #region настройки объектов
 
-            //открытие БД кэша геокодера
-            new Task(new Action(() => { Vars.dataCache = new SQLiteCache(Application.StartupPath + Resources.cache_directory + "\\geocoder"); })).Start();
-           
-
-            //метод загрузки базы данных ETOPO
-            Vars.TaskLoadingETOPO = GetETOPOLoadingTask();
-
-
+            
 
             //применение настроек
             AcceptOptions();

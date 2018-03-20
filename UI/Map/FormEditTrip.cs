@@ -1074,7 +1074,7 @@ namespace TrackConverter.UI.Map
             {
                 int ind = dataGridViewWaypoints.SelectedRows[0].Index;
                 this.selectedPoint = trip.Waypoints[ind];
-                Program.winMain.gmapControlMap.Position = this.selectedPoint.GMap;
+                Program.winMain.gmapControlMap.Position = this.selectedPoint.Coordinates.GMap;
             }
         }
 

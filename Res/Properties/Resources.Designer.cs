@@ -357,6 +357,16 @@ namespace TrackConverter.Res.Properties {
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Drawing.Icon, аналогичного (Значок).
         /// </summary>
+        public static System.Drawing.Icon search_result_icon {
+            get {
+                object obj = ResourceManager.GetObject("search_result_icon", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Icon, аналогичного (Значок).
+        /// </summary>
         public static System.Drawing.Icon selected_point {
             get {
                 object obj = ResourceManager.GetObject("selected_point", resourceCulture);

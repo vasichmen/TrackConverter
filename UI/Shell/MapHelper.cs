@@ -57,7 +57,7 @@ namespace TrackConverter.UI.Shell
             OnMapZoomChanged();
 
             //информация о масштабе карты
-            formMain.gmapControlMap.MapScaleInfoEnabled = true;
+            formMain.gmapControlMap.MapScaleInfoEnabled = false;
 
             //включение кэша карт, маршрутов итд
             formMain.gmapControlMap.Manager.UseDirectionsCache = true;
@@ -151,6 +151,7 @@ namespace TrackConverter.UI.Shell
             formMain.fromToOverlay = new GMapOverlay(formMain.fromToOverlayID);
             formMain.whatThereOverlay = new GMapOverlay(formMain.whatThereOverlayID);
             formMain.creatingTripOverlay = new GMapOverlay(formMain.creatingTripOverlayID);
+            formMain.searchOverlay = new GMapOverlay(formMain.searchOverlayID);
 
             //добавление слоев на карту
             formMain.gmapControlMap.Overlays.Add(formMain.selectedPointsOverlay);
@@ -161,6 +162,7 @@ namespace TrackConverter.UI.Shell
             formMain.gmapControlMap.Overlays.Add(formMain.fromToOverlay);
             formMain.gmapControlMap.Overlays.Add(formMain.creatingTripOverlay);
             formMain.gmapControlMap.Overlays.Add(formMain.whatThereOverlay);
+            formMain.gmapControlMap.Overlays.Add(formMain.searchOverlay);
 
             #endregion
         }
@@ -464,11 +466,12 @@ namespace TrackConverter.UI.Shell
             formMain.toolStripStatusLabelLon.Text = cr.Longitude.ToString("ddºmm'ss.s\"H");
 
             //передвижение маркера
-            //Проверка, что нажата левая клавиша мыши и не происходит перемещение карты
-            if (formMain.currentMarker != null &&
-                e.Button == MouseButtons.Left &&
-                formMain.isLeftButtonDown &&
-                (formMain.currentMarker.Tag.Type != MarkerTypes.WhatThere))
+            //Проверка, что нажата левая клавиша мыши и не происходит перемещение карты 
+            if (formMain.currentMarker != null && //маркер выбран
+                e.Button == MouseButtons.Left && formMain.isLeftButtonDown && //левая кнопка мыши нажата
+                formMain.currentMarker.Tag.Type != MarkerTypes.WhatThere && //маркер не "что здесь"
+                formMain.currentMarker.Tag.Type != MarkerTypes.SearchResult // маркер не результат поиска
+                )
             {
 
                 if (!formMain.isMarkerMoving) //если движение маркера только начинается, то запоминаемего положение для отмены
@@ -506,6 +509,75 @@ namespace TrackConverter.UI.Shell
             //сброс текущего маркера
             if (!formMain.gmapControlMap.IsMouseOverMarker)
                 formMain.currentMarker = null;
+        }
+
+        internal void ButtonClearSearchMarks(object sender, EventArgs e)
+        {
+            formMain.searchOverlay.Clear();
+            formMain.gmapControlMap.Refresh();
+        }
+
+        internal void ButtonFindClick(object sender, EventArgs e)
+        {
+            //поиск объектов и вывод на карту
+            //выход и очистка окна, если пустой запрос
+            if (formMain.toolStripComboBoxSearch.Text.Length == 0)
+            {
+                formMain.toolStripComboBoxSearch.DroppedDown = false;
+                formMain.toolStripComboBoxSearch.Items.Clear();
+                return;
+            }
+
+            //выход, если запрос меньше 4 символов
+            if (formMain.toolStripComboBoxSearch.Text.Length < 4)
+            {
+                MessageBox.Show(formMain, "Длина запроса должна быть более 4-х символов!", "Поиск адресов", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1);
+                return;
+            }
+
+            if (!Vars.Options.Map.LastSearchRequests.Contains(formMain.toolStripComboBoxSearch.Text.ToLower()))
+                Vars.Options.Map.LastSearchRequests.Add(formMain.toolStripComboBoxSearch.Text.ToLower());
+
+            //формирование списка точек
+            Dictionary<string, Coordinate> adrs = new GeoCoder(Vars.Options.DataSources.GeoCoderProvider).GetAddresses(formMain.toolStripComboBoxSearch.Text);
+
+            //если не нашлось ничего
+            if (adrs.Count == 0)
+            {
+                MessageBox.Show(formMain, "Поиск не дал результатов!", "Поиск адресов", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
+                return;
+            }
+
+            //добавление точек на карту
+            foreach (KeyValuePair<string, Coordinate> kv in adrs)
+            {
+                bool contains = false;
+                foreach (GMapMarker m in formMain.searchOverlay.Markers)
+                    if (m.Position == kv.Value.GMap)
+                    { contains = true; break; }
+
+                if (!contains) //если такой точки нет, то добавляем
+                {
+                    TrackPoint t = new TrackPoint(kv.Value);
+                    t.Name = kv.Key;
+                    t.Icon = IconOffsets.search_result_icon;
+                    this.ShowWaypoint(t, formMain.searchOverlay, Resources.search_result_icon, MarkerTypes.SearchResult, MarkerTooltipMode.OnMouseOver);
+                }
+            }
+            formMain.gmapControlMap.ZoomAndCenterMarkers(formMain.searchOverlayID);
+        }
+
+        internal void toolStripComboBoxSearch_DropDown(object sender, EventArgs e)
+        {
+            formMain.toolStripComboBoxSearch.Items.Clear();
+            formMain.toolStripComboBoxSearch.Items.AddRange(Vars.Options.Map.LastSearchRequests.ToArray());
+            formMain.toolStripComboBoxSearch.MaxDropDownItems = 6;
+        }
+
+        internal void BoxSearchKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyData == Keys.Enter)
+                ButtonFindClick(sender, null);
         }
 
         internal void MouseDoubleClick(MouseEventArgs e)
@@ -579,6 +651,8 @@ namespace TrackConverter.UI.Shell
             Program.winRouteEditor.Show(Program.winMain); ;
         }
 
+  
+
         internal void ZoomOutClick(EventArgs e)
         {
             formMain.gmapControlMap.Zoom--;
@@ -640,9 +714,9 @@ namespace TrackConverter.UI.Shell
 
         internal void ContextMenuMapOpening(object sender, CancelEventArgs e)
         {
-           formMain.clearFromtoMarkersToolStripMenuItem.Visible = formMain.fromToOverlay.Markers.Count != 0;
+            formMain.clearFromtoMarkersToolStripMenuItem.Visible = formMain.fromToOverlay.Markers.Count != 0;
         }
-        
+
         internal void ContextMenuMarkerOpening(object sender, CancelEventArgs e)
         {
             bool canEdit = formMain.markerClicked.Tag.Type != MarkerTypes.WhatThere & formMain.markerClicked.Tag.Type != MarkerTypes.PathingRoute;
@@ -787,7 +861,7 @@ namespace TrackConverter.UI.Shell
             formMain.IntermediatePoints = null;
         }
 
-        internal void toolStripCreateRoute(object sender,EventArgs e)
+        internal void toolStripCreateRoute(object sender, EventArgs e)
         {
             TryPathRoute((string)((ToolStripMenuItem)sender).Tag, true);
         }
@@ -868,7 +942,6 @@ namespace TrackConverter.UI.Shell
             RefreshToolTipsCreatingRoute(overlay);
             formMain.toolStripStatusLabelInfo.Text = "Расстояние: " + track.Distance + " км, количество точек: " + track.Count;
         }
-
 
         /// <summary>
         /// обновление состояния кнопки отмены действия
@@ -1003,7 +1076,6 @@ namespace TrackConverter.UI.Shell
             if (formMain.selectedPointsOverlay != null)
                 formMain.selectedPointsOverlay.Markers.Clear();
         }
-
 
         /// <summary>
         /// обновление подсказок над маркерами создаваемого маршрута
@@ -1150,7 +1222,7 @@ namespace TrackConverter.UI.Shell
 
             formMain.selectedPointsOverlay.Markers.Clear();
             TrackPoint cop = point.Clone();
-            cop.Icon = 75;
+            cop.Icon = IconOffsets.selected_point_icon;
             ShowWaypoint(cop, formMain.selectedPointsOverlay, Resources.selected_point, MarkerTypes.SelectedPoint);
 
             //центр на точку

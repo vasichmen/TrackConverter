@@ -13,6 +13,7 @@ using TrackConverter.Lib.Mathematic.Geodesy;
 using TrackConverter.Lib.Mathematic.Astronomy;
 using Newtonsoft.Json.Serialization;
 using Newtonsoft.Json;
+using GMap.NET.WindowsForms;
 
 namespace TrackConverter.Lib.Tracking
 {
@@ -264,6 +265,8 @@ namespace TrackConverter.Lib.Tracking
         /// координаты в формате GMap
         /// </summary>
         public PointLatLng GMap { get {
+               // return  GMapIconMarker(this.Coordinates.GMap);
+                //return this.Coordinates.GMap;
                 return new PointLatLng(Coordinates.Latitude.TotalDegrees,Coordinates.Longitude.TotalDegrees);
             } }
 
