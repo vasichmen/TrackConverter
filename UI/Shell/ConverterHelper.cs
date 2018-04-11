@@ -700,7 +700,7 @@ namespace TrackConverter.UI.Shell
                 return;
             }
             int row = formMain.dataGridViewConverter.SelectedCells[0].RowIndex;
-            if(formMain.Tracks[row] is TrackFile)
+            if(!(formMain.Tracks[row] is TrackFile))
             {
                 MessageBox.Show(formMain, "Для этого действия должен быть выделен маршрут, а не путешествие!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
