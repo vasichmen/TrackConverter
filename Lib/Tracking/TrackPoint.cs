@@ -367,10 +367,10 @@ namespace TrackConverter.Lib.Tracking
         /// <returns></returns>
         public override bool Equals(object obj)
         {
-            if (obj.GetType() != typeof(TrackPoint))
-                return false;
+            if (obj is TrackPoint)
+               return this.Coordinates.Equals(((TrackPoint)obj).Coordinates);
             else
-                return this.Coordinates.Equals(((TrackPoint)obj).Coordinates);
+                 return false;
         }
 
 

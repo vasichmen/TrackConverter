@@ -325,11 +325,11 @@ namespace TrackConverter.Lib.Data
                         id = Convert.ToInt32(dr["id"]),
                         lat = Convert.ToDouble(dr["latitude"]),
                         lon = Convert.ToDouble(dr["longitude"]),
-                        alt = dr["altitude"].GetType() == typeof(DBNull) ? double.NaN : Convert.ToDouble(dr["altitude"]),
-                        adr = dr["address"].GetType() == typeof(DBNull) ? null : Convert.ToString(dr["address"]),
-                        TZid = dr["tzid"].GetType() == typeof(DBNull) ? null : Convert.ToString(dr["tzid"]),
-                        TZname = dr["tzname"].GetType() == typeof(DBNull) ? null : Convert.ToString(dr["tzname"]),
-                        TZoffset = dr["tzoffset"].GetType() == typeof(DBNull) ? double.NaN : Convert.ToDouble(dr["tzoffset"]),
+                        alt = dr["altitude"] is DBNull ? double.NaN : Convert.ToDouble(dr["altitude"]),
+                        adr = dr["address"] is DBNull ? null : Convert.ToString(dr["address"]),
+                        TZid = dr["tzid"] is DBNull ? null : Convert.ToString(dr["tzid"]),
+                        TZname = dr["tzname"] is DBNull ? null : Convert.ToString(dr["tzname"]),
+                        TZoffset = dr["tzoffset"] is DBNull ? double.NaN : Convert.ToDouble(dr["tzoffset"]),
                     });
                 }
 

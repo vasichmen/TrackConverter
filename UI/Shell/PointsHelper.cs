@@ -25,7 +25,7 @@ namespace TrackConverter.UI.Shell
         {
             if (Vars.currentSelectedTrack != null)
             {
-                if (Vars.currentSelectedTrack.GetType() == typeof(TripRouteFile))
+                if (Vars.currentSelectedTrack is TripRouteFile)
                 {
                     formMain.Points.Clear();
                 }

@@ -195,7 +195,7 @@ namespace TrackConverter.UI.Shell
         /// <param name="centring">если истина, то после отрисовки карта будет подогнана под маршрут по центру и масштбу</param>
         public void ShowRoute(BaseTrack route, GMapOverlay lay, bool centring)
         {
-            if (route.GetType() == typeof(TrackFile))
+            if (route is TrackFile)
                 ShowTrackFile(route as TrackFile, lay, centring);
             else
                 ShowTripRoute(route as TripRouteFile, lay, centring);
@@ -263,7 +263,7 @@ namespace TrackConverter.UI.Shell
             if (clearBefore)
                 lay.Markers.Clear();
             formMain.gmapControlMap.SuspendLayout();
-            if (waypts.GetType() == typeof(TrackFile))
+            if (waypts is TrackFile)
                 foreach (TrackPoint tt in waypts)
                     ShowWaypoint(tt, lay, addToWaypoints);
             else

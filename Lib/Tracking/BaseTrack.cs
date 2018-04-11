@@ -340,7 +340,7 @@ namespace TrackConverter.Lib.Tracking
         public TrackFile SortWaypoints(TrackFile waypoints)
         {
             TrackFile track = null;
-            if (this.GetType() == typeof(TripRouteFile))
+            if (this is TripRouteFile)
                 track = ((TripRouteFile)this).TotalTrack;
             else
                 track = (TrackFile)this;
@@ -402,9 +402,9 @@ namespace TrackConverter.Lib.Tracking
         internal TrackPoint Find(double lat, double lng)
         {
             BaseTrack trf=null;
-            if (this.GetType() == typeof(TrackFile))
+            if (this is TrackFile)
                 trf = this;
-            else if (this.GetType() == typeof(TripRouteFile))
+            else if (this is TripRouteFile)
                 trf = ((TripRouteFile)this).Waypoints;
 
             foreach (TrackPoint tp in trf)

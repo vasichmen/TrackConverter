@@ -325,7 +325,7 @@ namespace TrackConverter.UI.Shell
             TrackFileList tfs;
 
             //если контекстное меню, то выбираем выделенные маршруты
-            if (sender.GetType() == typeof(ToolStripMenuItem))
+            if (sender is ToolStripMenuItem)
             {
                 if (formMain.dataGridViewConverter.SelectedRows.Count < 1)
                 {
@@ -425,7 +425,7 @@ namespace TrackConverter.UI.Shell
             //если все выделенные маршрты - TrackFile, то добавление пункта "преобразовать в путешествие и объединить в путешествие"
             bool allTF = true;
             foreach (DataGridViewRow dr in formMain.dataGridViewConverter.SelectedRows)
-                allTF &= formMain.Tracks[dr.Index].GetType() == typeof(TrackFile);
+                allTF &= formMain.Tracks[dr.Index] is TrackFile;
             if (allTF)
             {
                 formMain.toTripRouteFileToolStripMenuItem.Visible = true;
@@ -442,7 +442,7 @@ namespace TrackConverter.UI.Shell
             {
                 int ind = formMain.dataGridViewConverter.SelectedRows[0].Index;
                 BaseTrack bt = formMain.Tracks[ind];
-                if (bt.GetType() == typeof(TripRouteFile))
+                if (bt is TripRouteFile)
                     formMain.editRouteMapToolStripMenuItem.Text = "Редактировать путешествие";
                 else
                     formMain.editRouteMapToolStripMenuItem.Text = "Редактировать на карте";
@@ -456,11 +456,11 @@ namespace TrackConverter.UI.Shell
             //если файл один и не путешествие, то видна кнопка построения оптимального маршурта
             int index = formMain.dataGridViewConverter.SelectedRows[0].Index;
             BaseTrack t = formMain.Tracks[index];
-            bool vis = t.GetType() == typeof(TrackFile) && formMain.dataGridViewConverter.SelectedRows.Count == 1;
+            bool vis = t is TrackFile && formMain.dataGridViewConverter.SelectedRows.Count == 1;
             formMain.createOptimalOnBaseToolStripMenuItem.Visible = vis;
 
             //если элемент - первое контектное меню, то выбираем пункты на основе тегов
-            if (sender.GetType() == typeof(ContextMenuStrip))
+            if (sender is ContextMenuStrip)
             {
                 ContextMenuStrip menu = (ContextMenuStrip)sender;
                 //если не выделено ни одного элемента, то не выводим меню
@@ -473,7 +473,7 @@ namespace TrackConverter.UI.Shell
             }
 
             //если элемент - пункт с дочерними элементами, то выбираем пункты
-            if (sender.GetType() == typeof(ToolStripMenuItem))
+            if (sender is ToolStripMenuItem)
             {
                 ToolStripMenuItem menu = (ToolStripMenuItem)sender;
                 prepareToolStripMenuItemList(menu.DropDownItems);
@@ -673,7 +673,7 @@ namespace TrackConverter.UI.Shell
             int min = int.MaxValue;
             foreach (DataGridViewRow r in formMain.dataGridViewConverter.SelectedRows)
             {
-                if (formMain.Tracks[r.Index].GetType() == typeof(TrackFile))
+                if (formMain.Tracks[r.Index] is TrackFile)
                 {
                     if (min > r.Index)
                         min = r.Index;
@@ -700,7 +700,7 @@ namespace TrackConverter.UI.Shell
                 return;
             }
             int row = formMain.dataGridViewConverter.SelectedCells[0].RowIndex;
-            if(formMain.Tracks[row].GetType() != typeof(TrackFile))
+            if(formMain.Tracks[row] is TrackFile)
             {
                 MessageBox.Show(formMain, "Для этого действия должен быть выделен маршрут, а не путешествие!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
@@ -969,7 +969,7 @@ namespace TrackConverter.UI.Shell
                 return;
             }
             BaseTrack bt = formMain.Tracks[formMain.dataGridViewConverter.SelectedRows[0].Index];
-            if (bt.GetType() == typeof(TrackFile))
+            if (bt is TrackFile)
                 BeginEditRoute(bt as TrackFile);
             else
                 BeginEditTrip(bt as TripRouteFile);
@@ -1175,7 +1175,7 @@ namespace TrackConverter.UI.Shell
                         Serializer.Serialize(sf.FileName, tf, FileFormats.CsvFile);
                         break;
                     case ".rte":
-                        if (tf.GetType() == typeof(TripRouteFile))
+                        if (tf is TripRouteFile)
                             Serializer.Serialize(sf.FileName, (tf as TripRouteFile).DaysRoutes, FileFormats.RteFile);
                         else
                             Serializer.Serialize(sf.FileName, new TrackFileList() { tf }, FileFormats.RteFile);
@@ -1281,7 +1281,7 @@ namespace TrackConverter.UI.Shell
         {
             formMain.dataGridViewConverter.ClearSelection();
             formMain.dataGridViewConverter.Rows[e.RowIndex].Selected = true;
-            if (formMain.Tracks[e.RowIndex].GetType() == typeof(TripRouteFile))
+            if (formMain.Tracks[e.RowIndex] is TripRouteFile)
                 toolStripEditRoute(new EventArgs());
             else
                 toolStripInformation(new EventArgs());

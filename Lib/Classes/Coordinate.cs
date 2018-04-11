@@ -522,7 +522,7 @@ namespace TrackConverter.Lib.Classes
         /// <returns></returns>
         public override bool Equals(object obj)
         {
-            if (obj.GetType() != typeof(Coordinate))
+            if (!(obj is Coordinate))
                 return false;
 
             if (obj == null)

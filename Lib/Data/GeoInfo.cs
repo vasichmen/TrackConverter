@@ -97,7 +97,7 @@ namespace TrackConverter.Lib.Data
         public BaseTrack GetElevation(BaseTrack track, Action<string> callback = null)
         {
             //если путешествие, то обрабатываем части
-            if (track.GetType() == typeof(TripRouteFile))
+            if (track is TripRouteFile)
             {
                 TripRouteFile trip = track as TripRouteFile;
                 trip.Waypoints = (TrackFile)GetElevation(trip.Waypoints, callback);

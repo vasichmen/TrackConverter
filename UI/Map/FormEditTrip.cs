@@ -235,7 +235,7 @@ namespace TrackConverter.UI.Map
         /// <param name="e"></param>
         private void editDayToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (selectedTrack.GetType() == typeof(TripRouteFile))
+            if (selectedTrack is TripRouteFile)
                 return;
             this.WindowState = FormWindowState.Minimized;
             Vars.currentSelectedTrack = null;

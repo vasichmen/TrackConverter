@@ -122,7 +122,7 @@ namespace TrackConverter.Lib.Mathematic.Routing.BranchBoundsElements
             //положительное — если значение вызывающего объекта больше, чем у объекта другого other;
             //и отрицательное — если значение вызывающего объекта меньше, чем у другого объекта other.
 
-            if (typeof(Tree) != obj.GetType())
+            if (!(obj is Tree ))
                 throw new ArgumentException("несовпадающие типы");
 
             Tree t = obj as Tree;

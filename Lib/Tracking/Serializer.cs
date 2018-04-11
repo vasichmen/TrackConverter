@@ -59,15 +59,15 @@ namespace TrackConverter.Lib.Tracking
                     ExportDOC(FileName, track);
                     return null;
                 case FileFormats.KmlFile:
-                    if (track.GetType() == typeof(TrackFile))
+                    if (track is TrackFile)
                         ExportKML(FileName, new TrackFileList(track));
-                    if (track.GetType() == typeof(TripRouteFile))
+                    if (track is TripRouteFile)
                         ExportKML(FileName, (track as TripRouteFile).DaysRoutes);
                     return null;
                 case FileFormats.KmzFile:
-                    if (track.GetType() == typeof(TrackFile))
+                    if (track is TrackFile)
                         ExportKMZ(FileName, new TrackFileList(track));
-                    if (track.GetType() == typeof(TripRouteFile))
+                    if (track is TripRouteFile)
                         ExportKMZ(FileName, (track as TripRouteFile).DaysRoutes);
                     return null;
                 case FileFormats.OsmFile:
@@ -89,9 +89,9 @@ namespace TrackConverter.Lib.Tracking
                     ExportTrr(FileName, track);
                     return null;
                 case FileFormats.RteFile:
-                    if (track.GetType() == typeof(TrackFile))
+                    if (track is TrackFile)
                         ExportRTE(FileName, new TrackFileList(track));
-                    if (track.GetType() == typeof(TripRouteFile))
+                    if (track is TripRouteFile)
                         ExportRTE(FileName, (track as TripRouteFile).DaysRoutes);
                     return null;
                 case FileFormats.YandexLink:
@@ -1656,7 +1656,7 @@ namespace TrackConverter.Lib.Tracking
         private static void ExportTrr(string fileName, BaseTrack tripIns)
         {
             TripRouteFile trip;
-            if (tripIns.GetType() == typeof(TrackFile))
+            if (tripIns is TrackFile)
                 trip = ((TrackFile)tripIns).ToTripRoute();
             else
                 trip = tripIns as TripRouteFile;

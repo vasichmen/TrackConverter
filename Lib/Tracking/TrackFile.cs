@@ -180,23 +180,22 @@ namespace TrackConverter.Lib.Tracking
                 this.Clear();
                 foreach (DataRow dr in value.Rows)
                 {
-                    double lat = dr["Широта, º"].GetType() == typeof(DBNull) ? 0 : ((double)dr["Широта, º"]);
-                    double lon = dr["Долгота, º"].GetType() == typeof(DBNull) ? 0 : ((double)dr["Долгота, º"]);
+                    double lat = dr["Широта, º"] is  DBNull ? 0 : ((double)dr["Широта, º"]);
+                    double lon = dr["Долгота, º"] is DBNull ? 0 : ((double)dr["Долгота, º"]);
 
                     TrackPoint np = new TrackPoint(lat, lon);
 
                     //просто так почему-то высота не записываетс\я
                     object alt = dr.ItemArray[3];
-                    Type tt = alt.GetType();
-                    np.MetrAltitude = (alt == null || tt == typeof(DBNull) || double.IsNaN((double)alt)) ? -777 : (double)alt /* double.Parse(((string)alt).Replace('.',','))*/;
+                    np.MetrAltitude = (alt == null || alt is DBNull || double.IsNaN((double)alt)) ? -777 : (double)alt /* double.Parse(((string)alt).Replace('.',','))*/;
 
                     //np.MetrAltitude = dr["Высота, м"].GetType() == typeof(DBNull) ? -777 :((string)dr["Высота, м"]) == "не число"?-777: double.Parse(((string)dr["Высота, м"]).Replace('.', Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0]));
-                    np.Description = dr["Описание"].GetType() == typeof(DBNull) ? "" : (string)dr["Описание"];
+                    np.Description = dr["Описание"] is DBNull ? "" : (string)dr["Описание"];
                     np.Description.Replace(',', '_');
-                    np.Name = (dr["Название"].GetType() == typeof(DBNull) ? "" : (string)dr["Название"]).Replace(',', '_');
+                    np.Name = (dr["Название"] is DBNull ? "" : (string)dr["Название"]).Replace(',', '_');
                     np.Description.Replace(',', '_');
                     np.KmphSpeed = 0;
-                    np.Time = dr["Время"].GetType() == typeof(DBNull) ? DateTime.MinValue : (DateTime)dr["Время"];
+                    np.Time = dr["Время"] is DBNull ? DateTime.MinValue : (DateTime)dr["Время"];
                     this.Add(np);
                 }
                 this.CalculateAll();

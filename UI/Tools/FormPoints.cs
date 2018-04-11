@@ -535,7 +535,7 @@ namespace TrackConverter.UI.Tools
         {
             if (Vars.currentSelectedTrack != null)
             {
-                if (Vars.currentSelectedTrack.GetType() == typeof(TripRouteFile))
+                if (Vars.currentSelectedTrack is TripRouteFile)
                 {
                     this.Points.Clear();
                 }
