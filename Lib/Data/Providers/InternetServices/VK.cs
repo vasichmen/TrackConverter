@@ -40,6 +40,9 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         /// <returns></returns>
         public string Short(string Link)
         {
+            //получение токена
+            //https://vk.com/dev/implicit_flow_user
+            //https://oauth.vk.com/authorize?client_id=6171546&display=page&redirect_uri=https://oauth.vk.com/blank.html&scope=friends&response_type=token&v=5.74&state=123456
             string token = Resources.VK_access_token;
             string enc = HttpUtility.UrlEncodeUnicode(Link); //кодирование ссылки. Без него точки не сохранятся
             //enc = enc.Replace("amp%3B", "");

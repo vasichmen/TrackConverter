@@ -384,7 +384,7 @@ namespace TrackConverter.Res.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на 7a9588127a9588127aca2bb0b07acffa5f77a957a958812225c2a32c3c076b4a82f95c8.
+        ///   Ищет локализованную строку, похожую на bede91df389731c98287332b289568cad8e7adbbb803c91b3a617e8aa4d05a1b477fdab8b158be77f2259.
         /// </summary>
         public static string VK_access_token {
             get {
