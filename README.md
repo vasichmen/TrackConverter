@@ -13,4 +13,4 @@ Apart from file formats program works with links Yandex.ru, Wikimapia.org.
 * Generation altitude shape.
 * Exporting static map image
 
-Binaries are available here: http://velomapa.ru/programs.php?item=trackconverter
+Binaries are available here: https://cloud.mail.ru/public/7iJG/LhQjivrZV
