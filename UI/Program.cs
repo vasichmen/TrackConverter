@@ -171,6 +171,13 @@ namespace TrackConverter.UI
 
             #endregion
 
+            #region настройки объектов
+
+            //применение настроек
+            AcceptOptions();
+
+            #endregion
+
             #region создание окон
 
             //создание основного окна
@@ -216,14 +223,6 @@ namespace TrackConverter.UI
 
             #endregion
 
-            #region настройки объектов
-
-            
-
-            //применение настроек
-            AcceptOptions();
-
-            #endregion
 
             #region открытие окон
 
