@@ -560,6 +560,15 @@ namespace TrackConverter.UI.Shell
 
 
             #endregion
+
+            #region ВНЕШНИЙ ВИД ОКНА
+
+            splitContainerHorizontalLeft.SplitterDistance = Vars.Options.Container.HorizontalLeftSplitter;
+            splitContainerHorizontalRight.SplitterDistance = Vars.Options.Container.HorizontalRightSplitter;
+            splitContainerVertical.SplitterDistance = Vars.Options.Container.VerticalSplitter;
+
+            #endregion
+
         }
 
         private void FormMain_FormClosing(object sender, FormClosingEventArgs e)
@@ -578,7 +587,7 @@ namespace TrackConverter.UI.Shell
             Vars.Options.Converter.LastLoadedTracks = this.Tracks.FilePaths;
 
             //размеры окон
-           Vars.Options.Container.VerticalSplitter = splitContainerVertical.SplitterDistance;
+            Vars.Options.Container.VerticalSplitter = splitContainerVertical.SplitterDistance;
             Vars.Options.Container.HorizontalLeftSplitter = splitContainerHorizontalLeft.SplitterDistance;
             Vars.Options.Container.HorizontalRightSplitter = splitContainerHorizontalRight.SplitterDistance;
         }
@@ -742,7 +751,7 @@ namespace TrackConverter.UI.Shell
         /// <param name="e"></param>
         private void toolStripButtonFind_Click(object sender, EventArgs e)
         {
-mapHelper.ButtonFindClick(sender, e);
+            mapHelper.ButtonFindClick(sender, e);
         }
 
         /// <summary>
@@ -1300,6 +1309,10 @@ mapHelper.ButtonFindClick(sender, e);
 
         #endregion
 
+        private void button1_Click(object sender, EventArgs e)
+        {
+            //splitContainerHorizontalRight.SplitterDistance = 10;
+        }
     }
 }
 
