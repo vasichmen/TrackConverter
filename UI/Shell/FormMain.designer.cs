@@ -146,6 +146,7 @@
             this.contextMenuStripRoute = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.editRouteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.removeRouteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.separateRouteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerVertical)).BeginInit();
@@ -664,7 +665,7 @@
             this.addComparisonToolStripMenuItem,
             this.removeToolStripMenuItem});
             this.contextMenuStripConverter.Name = "contextMenuStripConverter";
-            this.contextMenuStripConverter.Size = new System.Drawing.Size(218, 202);
+            this.contextMenuStripConverter.Size = new System.Drawing.Size(218, 224);
             this.contextMenuStripConverter.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStripConverter_Opening);
             // 
             // informationToolStripMenuItem
@@ -737,7 +738,8 @@
             this.normalizeTrackToolStripMenuItem,
             this.toTripRouteFileToolStripMenuItem,
             this.joinToTripRouteToolStripMenuItem,
-            this.createOptimalOnBaseToolStripMenuItem});
+            this.createOptimalOnBaseToolStripMenuItem,
+            this.separateRouteToolStripMenuItem});
             this.изменитьToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("изменитьToolStripMenuItem.Image")));
             this.изменитьToolStripMenuItem.Name = "изменитьToolStripMenuItem";
             this.изменитьToolStripMenuItem.Size = new System.Drawing.Size(217, 22);
@@ -1351,6 +1353,14 @@
             this.removeRouteToolStripMenuItem.Text = "Удалить";
             this.removeRouteToolStripMenuItem.Click += new System.EventHandler(this.removeRouteToolStripMenuItem_Click);
             // 
+            // separateRouteToolStripMenuItem
+            // 
+            this.separateRouteToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("separateRouteToolStripMenuItem.Image")));
+            this.separateRouteToolStripMenuItem.Name = "separateRouteToolStripMenuItem";
+            this.separateRouteToolStripMenuItem.Size = new System.Drawing.Size(267, 22);
+            this.separateRouteToolStripMenuItem.Text = "Разделить маршрут";
+            this.separateRouteToolStripMenuItem.Click += new System.EventHandler(this.separateRouteToolStripMenuItem_Click);
+            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1517,6 +1527,7 @@
         public System.Windows.Forms.SplitContainer splitContainerHorizontalRight;
         public System.Windows.Forms.ToolStripMenuItem createOptimalOnBaseToolStripMenuItem;
         private System.Windows.Forms.Button button1;
+        internal System.Windows.Forms.ToolStripMenuItem separateRouteToolStripMenuItem;
     }
 }
 

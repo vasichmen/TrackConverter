@@ -449,6 +449,7 @@ namespace TrackConverter.Lib.Tracking
 
             TrackPoint startPt = null;
 
+            //ищем начальную точку (длина start)
             int startPos = -1;
             for (int i = 0; i < this.Count; i++)
                 if (start < this[i].StartDistance * 1000)
@@ -461,17 +462,18 @@ namespace TrackConverter.Lib.Tracking
             if (startPos == -1)
                 throw new ApplicationException();
 
+            //ищем конечную точку (start + length)
             for (int i = startPos; i < this.Count; i++)
                 if (this[i].StartDistance * 1000 - startPt.StartDistance * 1000 >= length)
                 {
-                    return this.Subtrack(startPos, i - 1);
+                    return this.Subtrack(startPos, i - 1); //выделяем и копируем маршрут
                 }
 
-            return this.Subtrack(startPos, this.Count - 1);
+            return this.Subtrack(startPos, this.Count - 1); //если коенчную точку не нашли, то копируем весь оставшийся маршрут
         }
 
         /// <summary>
-        /// Отрезок маршрута между указанными точками
+        /// Возвращает отрезок маршрута между точками c указанными номерами (включительно)
         /// </summary>
         /// <param name="start">номер первой точки</param>
         /// <param name="end">номр последней точки</param>
@@ -486,7 +488,7 @@ namespace TrackConverter.Lib.Tracking
         }
 
         /// <summary>
-        /// возвращает отрезок маршрута между указанными точками
+        /// возвращает отрезок маршрута между указанными точками(включительно)
         /// </summary>
         /// <param name="start">первая точка</param>
         /// <param name="end">последняя точка</param>
@@ -561,6 +563,27 @@ namespace TrackConverter.Lib.Tracking
                 res.Add(npts);
             }
 
+            return res;
+        }
+
+        /// <summary>
+        /// Возвращает точку в маршруте, которая ближе всего к заданной точке point
+        /// </summary>
+        /// <param name="point">заданная точка для поиска</param>
+        /// <returns></returns>
+        public TrackPoint GetNearestPoint(TrackPoint point)
+        {
+            double min = double.MaxValue;
+            TrackPoint res = null;
+            foreach (TrackPoint t in this)
+            {
+                double len = Vars.CurrentGeosystem.CalculateDistance(t, point);
+                if (len < min)
+                {
+                    res = t;
+                    min = len;
+                }
+            }
             return res;
         }
 

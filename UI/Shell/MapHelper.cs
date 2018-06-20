@@ -243,16 +243,7 @@ namespace TrackConverter.UI.Shell
             {
                 PointLatLng pt = formMain.gmapControlMap.FromLocalToLatLng(e.X, e.Y);
                 TrackPoint newpt = new TrackPoint(pt);
-                FormEditPoint fep = new FormEditPoint(newpt);
-                DialogResult res = fep.ShowDialog();
-                if (res == DialogResult.OK)
-                {
-                    TrackPoint newPoint = fep.Result;
-                    formMain.AfterSelectPointAction.Invoke(newPoint);
-                }
-                if (res == DialogResult.Cancel)
-                    if (formMain.CancelSelectPointAction != null)
-                        formMain.CancelSelectPointAction.Invoke();
+                formMain.AfterSelectPointAction.Invoke(newpt);
             }
 
             #endregion
@@ -265,6 +256,11 @@ namespace TrackConverter.UI.Shell
             Vars.Options.Map.LastCenterPoint = point;
         }
 
+        /// <summary>
+        /// событие при нажатии на маркер
+        /// </summary>
+        /// <param name="itm"></param>
+        /// <param name="e"></param>
         internal void OnMarkerClick(GMapMarker itm, MouseEventArgs e)
         {
             MapMarker item = itm as MapMarker;
@@ -1082,16 +1078,19 @@ namespace TrackConverter.UI.Shell
         /// </summary>
         private void RefreshToolTipsCreatingRoute(GMapOverlay overlay)
         {
-            foreach (MapMarker item in overlay.Markers)
+            if (Vars.Options.Map.ShowAziMarkers)
             {
-                item.ToolTip = new GMapToolTip(item);
-                item.ToolTipMode = MarkerTooltipMode.Always;
-                item.ToolTip.Fill = new SolidBrush(Color.Transparent);
-                item.ToolTip.Foreground = new SolidBrush(Color.Black);
-                item.ToolTip.Stroke = new Pen(Color.Black, 1);
-                item.ToolTip.Font = new Font("Times New Roman", 10, FontStyle.Bold);
-                item.ToolTipText = item.Tag.Info.Distance.ToString("00.000") + " км";
-                item.ToolTipText += !double.IsNaN(item.Tag.Info.TrueAzimuth) ? "\r\nАзимут: " + item.Tag.Info.TrueAzimuth + "º" : "";
+                foreach (MapMarker item in overlay.Markers)
+                {
+                    item.ToolTip = new GMapToolTip(item);
+                    item.ToolTipMode = MarkerTooltipMode.Always;
+                    item.ToolTip.Fill = new SolidBrush(Color.Transparent);
+                    item.ToolTip.Foreground = new SolidBrush(Color.Black);
+                    item.ToolTip.Stroke = new Pen(Color.Black, 1);
+                    item.ToolTip.Font = new Font("Times New Roman", 10, FontStyle.Bold);
+                    item.ToolTipText = item.Tag.Info.Distance.ToString("00.000") + " км";
+                    item.ToolTipText += !double.IsNaN(item.Tag.Info.TrueAzimuth) ? "\r\nАзимут: " + item.Tag.Info.TrueAzimuth + "º" : "";
+                }
             }
         }
 
@@ -1183,8 +1182,7 @@ namespace TrackConverter.UI.Shell
         /// начало выбора точки на карте
         /// </summary>
         /// <param name="after"></param>
-        /// <param name="cancelAct">действие при отмене выделения точки</param>
-        internal void BeginSelectPoint(Action<TrackPoint> after, Action cancelAct)
+        internal void BeginSelectPoint(Action<TrackPoint> after)
         {
             formMain.isSelectingPoint = true;
             formMain.gmapControlMap.DragButton = MouseButtons.Right;
@@ -1192,7 +1190,6 @@ namespace TrackConverter.UI.Shell
             if (formMain.isCreatingRoute)
                 Program.winRouteEditor.Close();
             formMain.AfterSelectPointAction = after;
-            formMain.CancelSelectPointAction = cancelAct;
         }
 
         /// <summary>

@@ -171,6 +171,8 @@ namespace TrackConverter.UI.Tools
             //глубина рекурсивного перебора
             numericUpDownRecursiveDepth.Value = Vars.Options.Map.MaxFullSearchNodes;
 
+            //Не показывать маркеры азимутов
+            checkBoxShowAziMarkers.Checked = Vars.Options.Map.ShowAziMarkers;
 
             //использование маршрутизации
             checkBoxUseRouter.Checked = Vars.Options.Map.UseRouterInOptimal;
@@ -332,6 +334,8 @@ namespace TrackConverter.UI.Tools
             //метод ветвей и границ для рекурсивного перебора
             Vars.Options.Map.UseBranchBoundsInPolarSearch = checkBoxUseBranchBounds.Checked;
 
+            //Не показывать маркеры азимутов
+            Vars.Options.Map.ShowAziMarkers = checkBoxShowAziMarkers.Checked;
 
             #endregion
 

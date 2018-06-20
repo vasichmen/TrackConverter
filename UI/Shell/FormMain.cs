@@ -19,6 +19,7 @@ using TrackConverter.Lib.Maping.GMap;
 using TrackConverter.Lib.Tracking;
 using TrackConverter.Res.Properties;
 using TrackConverter.UI.Map;
+using TrackConverter.UI.Tools;
 using ZedGraph;
 
 namespace TrackConverter.UI.Shell
@@ -296,7 +297,7 @@ namespace TrackConverter.UI.Shell
         #region КОНВЕРТЕР
 
         /// <summary>
-        /// список загруженных маршрутов
+        /// список загруженных маршрутов в списке маршрутов
         /// </summary>
         internal TrackFileList Tracks;
 
@@ -605,8 +606,6 @@ namespace TrackConverter.UI.Shell
                 this.Invoke(new Action(() =>
                 {
                     this.Cursor = Cursors.Arrow;
-                    foreach (var f in this.MdiChildren)
-                        f.Cursor = Cursors.Arrow;
                     OperationCounter--;
                     if (OperationCounter == 0)
                         toolStripStatusLabelCurrentOperation.Visible = false;
@@ -615,8 +614,6 @@ namespace TrackConverter.UI.Shell
             else
             {
                 this.Cursor = Cursors.Arrow;
-                foreach (var f in this.MdiChildren)
-                    f.Cursor = Cursors.Arrow;
                 OperationCounter--;
                 if (OperationCounter == 0)
                     toolStripStatusLabelCurrentOperation.Visible = false;
@@ -633,8 +630,6 @@ namespace TrackConverter.UI.Shell
                 {
                     toolStripStatusLabelCurrentOperation.Visible = true;
                     this.Cursor = Cursors.AppStarting;
-                    foreach (var f in this.MdiChildren)
-                        f.Cursor = Cursors.AppStarting;
                     OperationCounter++;
                 }));
 
@@ -642,8 +637,6 @@ namespace TrackConverter.UI.Shell
             {
                 toolStripStatusLabelCurrentOperation.Visible = true;
                 this.Cursor = Cursors.AppStarting;
-                foreach (var f in this.MdiChildren)
-                    f.Cursor = Cursors.AppStarting;
                 OperationCounter++;
             }
         }
@@ -926,6 +919,11 @@ namespace TrackConverter.UI.Shell
         private void editWaypointsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             converterHelper.toolStripEditWaypoints(e);
+        }
+
+        private void separateRouteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            converterHelper.toolStripSeparateRoute(sender, e);
         }
 
         private void loadElevationsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1311,8 +1309,10 @@ namespace TrackConverter.UI.Shell
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //splitContainerHorizontalRight.SplitterDistance = 10;
+           
+
         }
+
     }
 }
 

@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using TrackConverter.Lib.Data;
@@ -458,6 +459,7 @@ namespace TrackConverter.UI.Shell
             BaseTrack t = formMain.Tracks[index];
             bool vis = t is TrackFile && formMain.dataGridViewConverter.SelectedRows.Count == 1;
             formMain.createOptimalOnBaseToolStripMenuItem.Visible = vis;
+            formMain.separateRouteToolStripMenuItem.Visible = vis; // видимость кнопки "разделить маршрут"
 
             //если элемент - первое контектное меню, то выбираем пункты на основе тегов
             if (sender is ContextMenuStrip)
@@ -700,7 +702,7 @@ namespace TrackConverter.UI.Shell
                 return;
             }
             int row = formMain.dataGridViewConverter.SelectedCells[0].RowIndex;
-            if(!(formMain.Tracks[row] is TrackFile))
+            if (!(formMain.Tracks[row] is TrackFile))
             {
                 MessageBox.Show(formMain, "Для этого действия должен быть выделен маршрут, а не путешествие!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
@@ -773,8 +775,8 @@ namespace TrackConverter.UI.Shell
                             //если надо открыть маршрут для редактирования
                             formMain.mapHelper.BeginEditRoute(route, (tf) =>
                             {
-                            //ввод названия марщрута
-                            readName:
+                                //ввод названия марщрута
+                                readName:
                                 FormReadText fr = new FormReadText(DialogType.ReadText, "Введите название маршрута", "", false, false, false, false);
                                 if (fr.ShowDialog(formMain) == DialogResult.OK)
                                 {
@@ -821,6 +823,131 @@ namespace TrackConverter.UI.Shell
             }));
             ts.Start();
 
+        }
+
+        /// <summary>
+        /// разделение маршрута на 2 части
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        internal void toolStripSeparateRoute(object sender, EventArgs e)
+        {
+            //1. выбор способа: по точке или по расстоянию
+            //2. раделение маршурта и добавление в список
+            if (formMain.dataGridViewConverter.SelectedRows.Count != 1)
+            {
+                MessageBox.Show(formMain, "Должен быть выделен только один маршрут!", "Разбиение маршрута", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            int ind = formMain.dataGridViewConverter.SelectedRows[0].Index;
+            TrackFile route = (TrackFile)formMain.Tracks[ind]; //разделяемый маршрут
+            TrackFile first = null, second = null; //будущие отрезки маршрута
+
+            #region добавление отрезков в список
+            Action addList = new Action(() =>
+            {
+                //первая часть маршрута
+                first.CalculateAll();
+                first.Color = route.Color;
+                first.Name = route.Name + " 1";
+                first.Description = route.Description;
+
+                //вторая часть
+                second.CalculateAll();
+                second.Color = Vars.Options.Converter.GetColor();
+                second.Name = route.Name + " 2";
+                second.Description = route.Description;
+
+                //добавление в список маршрутов
+                formMain.Tracks.Insert(ind, second);
+                formMain.Tracks.Insert(ind, first);
+                formMain.Tracks.Remove(route);
+
+                //только при добавлении в список маршуртов
+                if (formMain.Tracks.Count > 0)
+                    Vars.currentSelectedTrack = formMain.Tracks[0];
+                else
+                    Vars.currentSelectedTrack = null;
+                this.RefreshData();
+                formMain.mapHelper.RefreshData();
+                formMain.graphHelper.RefreshData();
+                formMain.pointsHelper.RefreshData();
+
+            });
+
+            #endregion
+
+            FormSeparateTrackTypeDialog fstt = new FormSeparateTrackTypeDialog("Выберите один из способов разделения маршрута", "Разделение маршрута");
+            if (fstt.ShowDialog(formMain) == DialogResult.OK)
+            {
+                SeparateRouteType sep_type = fstt.Result;
+                bool addCommon = fstt.ResultAddCommon;
+                switch (sep_type)
+                {
+                    case SeparateRouteType.Length:
+                        #region разделение по длине
+                        readLength:
+                        FormReadText frt = new FormReadText(DialogType.ReadNumber, "Введите длину первого отрезка в км. Максимальная длина " + route.Distance.ToString("0.0") + " км.", "", false, false, false, false);
+                        if (frt.ShowDialog(formMain) == DialogResult.OK)
+                        {
+                            double length = double.Parse(frt.Result
+                                .Trim()
+                                .Replace('.', Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0])
+                                .Replace(',', Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0]));
+
+                            if (length >= route.Distance)
+                            {
+                                MessageBox.Show(formMain, "Длина первого отрезка должна быть меньше длины маршрута", "Разделение маршрута", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                                goto readLength;
+                            }
+
+                            first = route.Subtrack(0, length * 1000); //передаём длину в метрах
+                            second = route.Subtrack(length * 1000, double.MaxValue);
+                            addList.Invoke();
+                        }
+
+                        #endregion
+                        break;
+                    case SeparateRouteType.Nearest:
+                        #region разделение по ближайшей точке
+                        Action<TrackPoint> after = new Action<TrackPoint>((pt) =>
+                        {
+                            TrackPoint nearest = route.GetNearestPoint(pt);
+                            int indn = route.IndexOf(nearest);
+                            if (indn == 0) //если ближайшая точка - первая в маршруте
+                            {
+                                first = new TrackFile() { nearest };
+                                second = route.Subtrack(addCommon ? 0 : 1, route.Count - 1);
+                            }
+                            else
+                            if (indn == route.Count - 1) //если ближайшая  - последняя в маршруте
+                            {
+                                second = new TrackFile() { nearest };
+                                first = route.Subtrack(0, route.Count - (addCommon ? 1 : 2));
+                            }
+                            else //если ближайшая точка внутри маршрута
+                            {
+                                first = route.Subtrack(0, indn);
+                                second = route.Subtrack(indn + (addCommon ? 0 : 1), route.Count - 1);
+                            }
+
+                            //сброс курсоров и флажка выбора
+                            formMain.isSelectingPoint = false;
+                            formMain.gmapControlMap.Cursor = Cursors.Arrow;
+
+                            //добавление в список
+                            addList.Invoke();
+                        });
+                        formMain.mapHelper.BeginSelectPoint(after);
+                        #endregion
+                        break;
+                    case SeparateRouteType.None:
+                        return;
+                }
+            }
+            else
+                return;
         }
 
         internal void toolStripApproximateAltitudes(EventArgs e)

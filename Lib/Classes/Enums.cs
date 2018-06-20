@@ -177,6 +177,27 @@ namespace TrackConverter
     }
 
     /// <summary>
+    /// тип разделения маршрута (по ближайшей точке, по расстоянию)
+    /// </summary>
+    public enum SeparateRouteType
+    {
+        /// <summary>
+        /// Разделение маршрута по ближайшей заданной точке
+        /// </summary>
+        Nearest,
+
+        /// <summary>
+        /// Разделение маршрута по заданной длине первого отрезка
+        /// </summary>
+        Length,
+
+        /// <summary>
+        /// Без типа (при отмене)
+        /// </summary>
+        None
+    }
+
+    /// <summary>
     /// тип точки при прокладке маршрута
     /// </summary>
     public enum PathingType

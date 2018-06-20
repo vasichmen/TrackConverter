@@ -367,46 +367,105 @@ namespace TrackConverter.UI.Map
         /// <param name="e"></param>
         private void separateTrackToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
+            //TODO: Сделать разделение маршрута по точке на карте
             int ind = dataGridViewDays.SelectedRows[0].Index - 1; //первый маршрут в списке - всё путешествие
-            TrackFile tf = (TrackFile)trip.DaysRoutes[ind];
-        readLength:
-            FormReadText frt = new FormReadText(DialogType.ReadNumber, "Введите длину первого отрезка в км. Максимальная длина " + tf.Distance.ToString("0.0") + " км.", "", false, false, false, false);
-            if (frt.ShowDialog(this) == DialogResult.OK)
+            TrackFile route = (TrackFile)trip.DaysRoutes[ind]; //разделяемый маршрут
+            TrackFile first = null, second = null; //будущие отрезки маршрута
+
+            #region добавление отрезков в список
+            Action addList = new Action(() =>
             {
-                double length = double.Parse(frt.Result
-                    .Trim()
-                    .Replace('.', Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0])
-                    .Replace(',', Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0]));
-
-                if (length >= tf.Distance)
-                {
-                    MessageBox.Show(this, "Длина первого отрезка не может быть больше длины маршрута", "Разбиение маршурта", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    goto readLength;
-                }
-
-                TrackFile first = tf.Subtrack(0, length * 1000); //передаём длину в метрах
-                TrackFile second = tf.Subtrack(length * 1000, double.MaxValue);
-
                 //первая часть маршрута
                 first.CalculateAll();
-                first.Color = tf.Color;
-                first.Name = tf.Name + " 1";
-                first.Description = tf.Description;
+                first.Color = route.Color;
+                first.Name = route.Name + " 1";
+                first.Description = route.Description;
 
                 //вторая часть
                 second.CalculateAll();
                 second.Color = Vars.Options.Converter.GetColor();
-                second.Name = tf.Name + " 2";
-                second.Description = tf.Description;
+                second.Name = route.Name + " 2";
+                second.Description = route.Description;
 
-                //добавление в список по дням
+                //добавление в список маршрутов
                 trip.DaysRoutes.Insert(ind, second);
                 trip.DaysRoutes.Insert(ind, first);
-                trip.DaysRoutes.Remove(tf);
-
+                trip.DaysRoutes.Remove(route);
                 FillDGV(trip);
+            });
+
+            #endregion
+
+            FormSeparateTrackTypeDialog fstt = new FormSeparateTrackTypeDialog("Выберите один из способов разделения маршрута", "Разделение маршрута");
+            if (fstt.ShowDialog(this) == DialogResult.OK)
+            {
+                SeparateRouteType sep_type = fstt.Result;
+                bool addCommon = fstt.ResultAddCommon;
+                switch (sep_type)
+                {
+                    case SeparateRouteType.Length:
+                        #region разделение по длине
+                        readLength:
+                        FormReadText frt = new FormReadText(DialogType.ReadNumber, "Введите длину первого отрезка в км. Максимальная длина " + route.Distance.ToString("0.0") + " км.", "", false, false, false, false);
+                        if (frt.ShowDialog(this) == DialogResult.OK)
+                        {
+                            double length = double.Parse(frt.Result
+                                .Trim()
+                                .Replace('.', Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0])
+                                .Replace(',', Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0]));
+
+                            if (length >= route.Distance)
+                            {
+                                MessageBox.Show(this, "Длина первого отрезка должна быть меньше длины маршрута", "Разделение маршрута", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                                goto readLength;
+                            }
+
+                            first = route.Subtrack(0, length * 1000); //передаём длину в метрах
+                            second = route.Subtrack(length * 1000, double.MaxValue);
+                            addList.Invoke();
+                        }
+
+                        #endregion
+                        break;
+                    case SeparateRouteType.Nearest:
+                        #region разделение по ближайшей точке
+                        Action<TrackPoint> after = new Action<TrackPoint>((pt) =>
+                     {
+                         TrackPoint nearest = route.GetNearestPoint(pt);
+                         int indn = route.IndexOf(nearest);
+                         if (indn == 0) //если ближайшая точка - первая в маршруте
+                            {
+                             first = new TrackFile() { nearest };
+                             second = route.Subtrack(addCommon ? 0 : 1, route.Count - 1);
+                         }
+                         else
+                         if (indn == route.Count - 1) //если ближайшая  - последняя в маршруте
+                            {
+                             second = new TrackFile() { nearest };
+                             first = route.Subtrack(0, route.Count - (addCommon ? 1 : 2));
+                         }
+                         else //если ближайшая точка внутри маршрута
+                            {
+                             first = route.Subtrack(0, indn);
+                             second = route.Subtrack(indn + (addCommon ? 0 : 1), route.Count - 1);
+                         }
+
+                            //сброс курсоров и флажка выбора
+                            Program.winMain.isSelectingPoint = false;
+                         Program.winMain.gmapControlMap.Cursor = Cursors.Arrow;
+
+                            //добавление в список
+                            addList.Invoke();
+                     });
+                        Program.winMain.mapHelper.BeginSelectPoint(after);
+                        #endregion
+                        break;
+                    case SeparateRouteType.None:
+                        return;
+                }
             }
+            else
+                return;
         }
 
         /// <summary>
@@ -776,22 +835,20 @@ namespace TrackConverter.UI.Map
             this.WindowState = FormWindowState.Minimized;
             Action<TrackPoint> after = new Action<TrackPoint>((point) =>
             {
-                this.WindowState = FormWindowState.Normal;
+                FormEditPoint fep = new FormEditPoint(point);
+                DialogResult res = fep.ShowDialog();
+                if (res == DialogResult.OK)
+                {
+                    TrackPoint newPoint = fep.Result;
+                    this.trip.Waypoints.Add(newPoint);
+                    FillDGV(trip);
+                }
                 Program.winMain.isSelectingPoint = false;
                 Program.winMain.gmapControlMap.DragButton = MouseButtons.Left;
-                Program.winMain.gmapControlMap.Cursor = Cursors.Arrow;
-                this.trip.Waypoints.Add(point);
-                FillDGV(trip);
-            });
-
-            Action canc = new Action(() =>
-            {
-                Program.winMain.isSelectingPoint = false;
                 this.WindowState = FormWindowState.Normal;
-                Program.winMain.gmapControlMap.DragButton = MouseButtons.Left;
                 Program.winMain.gmapControlMap.Cursor = Cursors.Arrow;
             });
-            Program.winMain.mapHelper.BeginSelectPoint(after, canc);
+            Program.winMain.mapHelper.BeginSelectPoint(after);
         }
 
         /// <summary>

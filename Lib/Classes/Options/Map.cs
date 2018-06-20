@@ -32,6 +32,7 @@ namespace TrackConverter.Lib.Classes.Options
             this.OptimalRouteMethod = OptimalMethodType.PolarSearch;
             this.RestoreRoutesWaypoints = true;
             this.LastSearchRequests = new List<string>();
+            this.ShowAziMarkers = true;
         }
 
         /// <summary>
@@ -122,5 +123,10 @@ namespace TrackConverter.Lib.Classes.Options
         /// Список последних запросов в поле поиска по карте
         /// </summary>
         public List<string> LastSearchRequests { get; set; }
+
+        /// <summary>
+        /// Если истина, то при редактировании не будут показываться маркеры азимутов
+        /// </summary>
+        public bool ShowAziMarkers { get; set; }
     }
 }

@@ -107,6 +107,7 @@
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.checkBoxShowAziMarkers = new System.Windows.Forms.CheckBox();
             this.groupBox2.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage5.SuspendLayout();
@@ -512,6 +513,7 @@
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.checkBoxShowAziMarkers);
             this.tabPage2.Controls.Add(this.groupBox6);
             this.tabPage2.Controls.Add(this.comboBoxMapLanguange);
             this.tabPage2.Controls.Add(this.label6);
@@ -538,7 +540,7 @@
             this.groupBox6.Controls.Add(this.label13);
             this.groupBox6.Controls.Add(this.label11);
             this.groupBox6.Controls.Add(this.trackBarOptimalMethodType);
-            this.groupBox6.Location = new System.Drawing.Point(6, 56);
+            this.groupBox6.Location = new System.Drawing.Point(8, 84);
             this.groupBox6.Name = "groupBox6";
             this.groupBox6.Size = new System.Drawing.Size(302, 229);
             this.groupBox6.TabIndex = 14;
@@ -1065,6 +1067,18 @@
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.buttonOK_Click);
             // 
+            // checkBoxShowAziMarkers
+            // 
+            this.checkBoxShowAziMarkers.AutoSize = true;
+            this.checkBoxShowAziMarkers.Location = new System.Drawing.Point(6, 56);
+            this.checkBoxShowAziMarkers.Name = "checkBoxShowAziMarkers";
+            this.checkBoxShowAziMarkers.Size = new System.Drawing.Size(293, 17);
+            this.checkBoxShowAziMarkers.TabIndex = 15;
+            this.checkBoxShowAziMarkers.Text = "Показывать макеры азимутов  при редактировании";
+            this.toolTip1.SetToolTip(this.checkBoxShowAziMarkers, "Отключение маркеров азимута может увеличить производительность при больших маршру" +
+        "тах");
+            this.checkBoxShowAziMarkers.UseVisualStyleBackColor = true;
+            // 
             // FormOptions
             // 
             this.AcceptButton = this.buttonOK;
@@ -1187,5 +1201,6 @@
         private System.Windows.Forms.ComboBox comboBoxNormalizeBehavior;
         private System.Windows.Forms.LinkLabel linkLabelDownloadETOPO1;
         private System.Windows.Forms.LinkLabel linkLabelDownloadETOPO2;
+        private System.Windows.Forms.CheckBox checkBoxShowAziMarkers;
     }
 }

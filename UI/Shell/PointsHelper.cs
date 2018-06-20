@@ -46,7 +46,7 @@ namespace TrackConverter.UI.Shell
             try
             {
                 DataTable dt = (DataTable)formMain.dataGridViewPoints.DataSource;
-              formMain.Points.Source = dt;
+                formMain.Points.Source = dt;
                 FillDGV(formMain.Points.Source);
             }
             catch (Exception ex) { MessageBox.Show(ex.Message); }
@@ -157,14 +157,17 @@ namespace TrackConverter.UI.Shell
             if (formMain.dataGridViewPoints.SelectedRows.Count == 0) return;
 
             int first = int.MaxValue;
-            int i = 0;
+            List<int> inds = new List<int>();
             foreach (DataGridViewRow r in formMain.dataGridViewPoints.SelectedRows)
             {
-                formMain.Points.Remove(r.Index - i);
+                inds.Add(r.Index);
                 if (r.Index < first)
                     first = r.Index;
-                i++;
             }
+            inds.Sort((a, b) => { if (a > b) return -1; else if (b > a) return 1; return 0; });
+            for (int i = 0; i < inds.Count; i++)
+                formMain.Points.Remove(inds[i]);
+
 
             FillDGV(formMain.Points.Source);
 
@@ -186,6 +189,7 @@ namespace TrackConverter.UI.Shell
                     first = 1;
                 formMain.dataGridViewPoints.ClearSelection();
                 formMain.dataGridViewPoints.Rows[first - 1].Selected = true;
+                formMain.dataGridViewPoints.FirstDisplayedScrollingRowIndex = first - 1;
             }
         }
 
@@ -265,7 +269,7 @@ namespace TrackConverter.UI.Shell
             //сброс ошибок строк
             formMain.dataGridViewPoints.Rows[e.RowIndex].ErrorText = null;
         }
-       
+
 
         internal void dataGridKeyDown(object sender, KeyEventArgs e)
         {
