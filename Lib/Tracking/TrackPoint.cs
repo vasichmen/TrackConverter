@@ -72,7 +72,7 @@ namespace TrackConverter.Lib.Tracking
             this.Coordinates = cd;
             this.MagneticAzimuth = double.NaN;
             this.TrueAzimuth = double.NaN;
-            this.Icon = IconOffsets.ZeroOffset;
+            this.Icon = IconOffsets.marker;
             this.MetrAltitude = double.NaN;
             this.PointType = RouteWaypointType.None;
         }

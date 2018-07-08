@@ -377,6 +377,10 @@ namespace TrackConverter.UI.Shell
             mainHelper = new MainHelper(this);
         }
 
+        /// <summary>
+        /// создаёт новое окно с параметрами коандной строки (файлы для загрузки)
+        /// </summary>
+        /// <param name="args"></param>
         public FormMain(string[] args)
             : this()
         {

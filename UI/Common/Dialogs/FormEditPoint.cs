@@ -33,7 +33,7 @@ namespace TrackConverter.UI.Common.Dialogs
         /// <summary>
         /// создает окно для редактирования точки
         /// </summary>
-        /// <param name="point"></param>
+        /// <param name="point">Информация о точке или null для создания новой</param>
         public FormEditPoint(TrackPoint point)
         {
             InitializeComponent();
@@ -61,13 +61,45 @@ namespace TrackConverter.UI.Common.Dialogs
             comboBoxSelectImage.ResumeLayout();
 
 
-            //заполнение информации о точке
-            if (point == null || point.Icon == 70 || point.Icon == IconOffsets.ZeroOffset)
-                comboBoxSelectImage.SelectedIndex = 0;
-            else
-                comboBoxSelectImage.SelectedIndex = point.Icon;
+            #region  заполнение информации о точке
 
-            comboBoxPointType.SelectedIndex = 0;
+            //если это результат поиска, маркеры построения маршрута, 
+            //то все элементы только для чтения и кнопка "Сохранить" становится "Сохранить как"
+            if (point != null && (
+                point.Icon == IconOffsets.search_result_icon ||
+                point.Icon == IconOffsets.marker_finish ||
+                point.Icon == IconOffsets.marker_intermediate ||
+                point.Icon == IconOffsets.marker_start))
+            {
+                comboBoxPointType.Enabled = false;
+                comboBoxSelectImage.Enabled = false;
+                textBoxAlt.ReadOnly = true;
+                textBoxDescription.ReadOnly = true;
+                textBoxLat.ReadOnly = true;
+                textBoxLon.ReadOnly = true;
+                textBoxName.ReadOnly = true;
+                dateTimePickerDate.Enabled = false;
+                dateTimePickerTime.Enabled = false;
+                buttonCancel.Text = "OK";
+                linkLabelFindCoordinates.Enabled = false;
+                this.Text = "Информация о точке (только для чтения)";
+                this.buttonSave.Text = "Сохранить как";
+                this.buttonSave.Click -= buttonSave_Click;
+                this.buttonSave.Click += (sender, e) =>
+                {
+                    TrackPoint ntp = point.Clone();
+                    ntp.Icon = IconOffsets.marker;
+                    ntp.PointType = RouteWaypointType.None;
+                    FormEditPoint fep = new FormEditPoint(ntp);
+                    if (fep.ShowDialog(Program.winMain) == DialogResult.OK)
+                    {
+                        Program.winMain.mapHelper.ShowWaypoint(fep.Result, Program.winMain.baseOverlay, true);
+                    }
+                    this.Close();
+                };
+            }
+
+            //заполнение информации о точке (если есть)
             if (point != null)
             {
                 textBoxName.Text = string.IsNullOrWhiteSpace(point.Name) ? "Точка" : point.Name;
@@ -91,11 +123,12 @@ namespace TrackConverter.UI.Common.Dialogs
                         dateTimePickerTime.Value = point.Time;
                 }
 
-
+                //установка типа точки (начало, стоянка итд)
+                comboBoxPointType.SelectedIndex = -1;
                 switch (point.PointType)
                 {
                     case RouteWaypointType.None:
-                        comboBoxPointType.SelectedIndex = 6;
+                        comboBoxPointType.SelectedIndex = 6; //просто точка
                         break;
                     case RouteWaypointType.Start:
                         comboBoxPointType.SelectedIndex = 0; //старт
@@ -116,14 +149,34 @@ namespace TrackConverter.UI.Common.Dialogs
                         comboBoxPointType.SelectedIndex = 5; //Финиш
                         break;
                     case RouteWaypointType.WaterSource:
-                        comboBoxPointType.SelectedIndex = 6; //источник воды
+                        comboBoxPointType.SelectedIndex = 8; //источник воды
                         break;
                     case RouteWaypointType.Shop:
                         comboBoxPointType.SelectedIndex = 7; //магазин
                         break;
                     default: throw new ApplicationException("неизвестный индекс точки " + comboBoxPointType.SelectedIndex);
                 }
+
+                //если иконки точки нет в списке, то выделяем первую иконку
+                //иконка ставится только после типа точки (при изменении типа точки менется иконка для некоторых типов в событии comboBoxPointType.SelectedIndexChanged)
+                if (point == null ||
+                    point.Icon == IconOffsets.marker ||
+                    point.Icon == IconOffsets.search_result_icon ||
+                    point.Icon == IconOffsets.marker_finish ||
+                    point.Icon == IconOffsets.marker_intermediate ||
+                    point.Icon == IconOffsets.marker_start
+                    )
+                    comboBoxSelectImage.SelectedIndex = 0;
+                else
+                    comboBoxSelectImage.SelectedIndex = point.Icon; //если есть - иконку по номеру
+
+                #endregion
             }
+        }
+
+        private void ButtonSave_Click(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
         }
 
         /// <summary>

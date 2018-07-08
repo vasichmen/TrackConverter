@@ -26,8 +26,7 @@ namespace TrackConverter.UI.Shell
     internal partial class MapHelper
     {
         private FormMain formMain;
-
-
+        
 
         public MapHelper(FormMain formMain)
         {
@@ -972,7 +971,7 @@ namespace TrackConverter.UI.Shell
                     tt.Icon = IconOffsets.marker_start;
                     DeleteWaypoint(formMain.fromPoint, formMain.fromToOverlay);
                     ShowWaypoint(tt, formMain.fromToOverlay, Resources.marker_start, MarkerTypes.PathingRoute, PathingType.Start, MarkerTooltipMode.Never);
-                    tt.Name = "from";
+                    tt.Name = "Начало маршрута";
                     formMain.fromPoint = tt;
                 }
                 if (tag == "to")
@@ -980,16 +979,16 @@ namespace TrackConverter.UI.Shell
                     tt.Icon = IconOffsets.marker_finish;
                     DeleteWaypoint(formMain.toPoint, formMain.fromToOverlay);
                     ShowWaypoint(tt, formMain.fromToOverlay, Resources.marker_finish, MarkerTypes.PathingRoute, PathingType.Finish, MarkerTooltipMode.Never);
-                    tt.Name = "to";
+                    tt.Name = "Конец маршрута";
                     formMain.toPoint = tt;
                 }
                 if (tag == "intermediate")
                 {
-                    tt.Icon = IconOffsets.ZeroOffset;
+                    tt.Icon = IconOffsets.marker_intermediate;
                     ShowWaypoint(tt, formMain.fromToOverlay, Resources.intermed_point, MarkerTypes.PathingRoute, PathingType.Intermed, MarkerTooltipMode.Never);
                     if (formMain.IntermediatePoints == null)
                         formMain.IntermediatePoints = new TrackFile();
-                    tt.Name = "intermediate";
+                    tt.Name = "Промежуточная точка";
                     formMain.IntermediatePoints.Add(tt);
                 }
             }

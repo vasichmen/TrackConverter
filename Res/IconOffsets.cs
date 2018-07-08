@@ -17,13 +17,40 @@ namespace TrackConverter.Res
         /// </summary>
         public static int ZeroOffset = 9999;
 
+        /// <summary>
+        /// иконка маркера обычной точки (красный баллон)
+        /// </summary>
         public const int marker = 70;
+
+        /// <summary>
+        /// иконка начала маршрута
+        /// </summary>
         public const int marker_start = 72;
+
+        /// <summary>
+        /// иконка конца маршрута
+        /// </summary>
         public const int marker_finish = 73;
+
+        /// <summary>
+        /// иконка промежуточной точки при построении маршрута
+        /// </summary>
+        public const int marker_intermediate = 77;
+
+        /// <summary>
+        /// иконка "что здесь"
+        /// </summary>
         public const int what_there = 74;
+
+        /// <summary>
+        /// исконка результатов поиска на карте
+        /// </summary>
         public const int search_result_icon = 75;
+
+        /// <summary>
+        /// выделенная иконка при выделении из графика или списка (большой красный круг)
+        /// </summary>
         public const int selected_point_icon = 76;
-       
 
         /// <summary>
         /// возращает отступы по осям для отображения маркера на карте для заданной иконки.
@@ -49,7 +76,7 @@ namespace TrackConverter.Res
             if (icon == what_there) return new Point(0, -16);
 
             //иконка без сдвига
-            if (icon == ZeroOffset) return new Point(0, 0);
+            if (icon == marker_intermediate) return new Point(0, 0);
 
             //иконка результатов поиска
             if (icon == search_result_icon)

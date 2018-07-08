@@ -189,7 +189,7 @@
             this.buttonSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.buttonSave.Location = new System.Drawing.Point(15, 351);
             this.buttonSave.Name = "buttonSave";
-            this.buttonSave.Size = new System.Drawing.Size(75, 23);
+            this.buttonSave.Size = new System.Drawing.Size(95, 23);
             this.buttonSave.TabIndex = 14;
             this.buttonSave.Text = "Сохранить";
             this.toolTip1.SetToolTip(this.buttonSave, "Сохранить изменения");
@@ -422,7 +422,7 @@
             // buttonAdditionInfo
             // 
             this.buttonAdditionInfo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonAdditionInfo.Location = new System.Drawing.Point(143, 351);
+            this.buttonAdditionInfo.Location = new System.Drawing.Point(149, 351);
             this.buttonAdditionInfo.Name = "buttonAdditionInfo";
             this.buttonAdditionInfo.Size = new System.Drawing.Size(146, 23);
             this.buttonAdditionInfo.TabIndex = 24;

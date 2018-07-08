@@ -609,7 +609,9 @@
             // 
             // splitContainerHorizontalLeft.Panel1
             // 
+#if(DEBUG)
             this.splitContainerHorizontalLeft.Panel1.Controls.Add(this.button1);
+#endif
             this.splitContainerHorizontalLeft.Panel1.Controls.Add(this.dataGridViewConverter);
             // 
             // splitContainerHorizontalLeft.Panel2
