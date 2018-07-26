@@ -262,6 +262,9 @@
         #endregion
 
         private System.Windows.Forms.MenuStrip menuStrip1;
+        /// <summary>
+        /// таблица точек выделенного трека
+        /// </summary>
         public System.Windows.Forms.DataGridView dataGridViewPoints;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem openConverterToolStripMenuItem;

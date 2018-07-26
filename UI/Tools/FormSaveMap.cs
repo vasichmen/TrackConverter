@@ -37,7 +37,7 @@ namespace TrackConverter.UI.Tools
             InitializeComponent();
 
             //поставщик карты
-            foreach (MapProviderRecord mpr in Vars.Options.Map.AllProviders)
+            foreach (MapProviderRecord mpr in Vars.Options.Map.AllMapProviders)
                 comboBoxSaveMapProvider.Items.Add(mpr.Title);
             comboBoxSaveMapProvider.SelectedIndex = Vars.Options.Map.MapProvider.ID;
             numericUpDownZoom.Minimum = Program.winMain.gmapControlMap.MinZoom;

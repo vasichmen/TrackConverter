@@ -13,11 +13,6 @@ namespace TrackConverter.Res
     public static class IconOffsets
     {
         /// <summary>
-        /// нулевой сдвиг иконки
-        /// </summary>
-        public static int ZeroOffset = 9999;
-
-        /// <summary>
         /// иконка маркера обычной точки (красный баллон)
         /// </summary>
         public const int marker = 70;
@@ -36,6 +31,11 @@ namespace TrackConverter.Res
         /// иконка промежуточной точки при построении маршрута
         /// </summary>
         public const int marker_intermediate = 77;
+
+        /// <summary>
+        /// иконки при построении маршрута
+        /// </summary>
+        public const int creating_route_marker = 78;
 
         /// <summary>
         /// иконка "что здесь"
@@ -82,8 +82,8 @@ namespace TrackConverter.Res
             if (icon == search_result_icon)
                 return new Point(0, -16);
 
-            //иконка выделенной точки на карте
-            if (icon == selected_point_icon)
+            //иконка выделенной точки на карте или иконки построения маршрута
+            if (icon == selected_point_icon || icon == creating_route_marker)
                 return new Point(0, 0);
 
 

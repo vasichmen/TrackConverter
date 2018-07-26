@@ -403,6 +403,15 @@ namespace TrackConverter.Res.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на 087ECBE0-7869F692-405FA237-852AD116-23CA037A-A588C4C0-2000C58D-5A0D8212.
+        /// </summary>
+        public static string wikimapia_key {
+            get {
+                return ResourceManager.GetString("wikimapia_key", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на \Templates\template.dot.
         /// </summary>
         public static string word_template {

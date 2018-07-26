@@ -10,9 +10,10 @@ using TrackConverter.Res.Properties;
 
 namespace TrackConverter.UI.Shell
 {
-    internal partial class MapHelper
+    class MapHelperBase
     {
 
+        protected FormMain formMain;
 
         #region отрисовка карты
 

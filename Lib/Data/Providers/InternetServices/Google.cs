@@ -361,8 +361,8 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
             //https://maps.googleapis.com/maps/api/elevation/json?locations=39.7391536,-104.9847034&api_key=
 
             string url = string.Format("https://maps.googleapis.com/maps/api/elevation/xml?locations={0},{1}&api_key={2}",
-                coordinate.Latitude.TotalDegrees.ToString().Replace(Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0], '.'),
-                coordinate.Longitude.TotalDegrees.ToString().Replace(Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0], '.'),
+                coordinate.Latitude.TotalDegrees.ToString().Replace(Vars.DecimalSeparator, '.'),
+                coordinate.Longitude.TotalDegrees.ToString().Replace(Vars.DecimalSeparator, '.'),
                 Resources.google_elevation_api_key);
 
             XmlDocument xml = SendXmlGetRequest(url);
@@ -370,7 +370,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
             if (status.InnerText == "OK")
             {
                 string el = xml.GetElementsByTagName("elevation")[0].InnerText;
-                double ell = double.Parse(el.Replace('.', Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0]));
+                double ell = double.Parse(el.Replace('.', Vars.DecimalSeparator));
                 return ell;
             }
             else
@@ -629,8 +629,8 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
             //https://maps.googleapis.com/maps/api/timezone/xml?location=39.6034810,-119.6822510&timestamp=1331161200&key=YOUR_API_KEY
             int timestamp = (int)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
             string url = string.Format("https://maps.googleapis.com/maps/api/timezone/xml?location={0},{1}&timestamp={2}&language=ru&api_key={3}",
-                coordinate.Latitude.TotalDegrees.ToString().Replace(Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0], '.'),
-                coordinate.Longitude.TotalDegrees.ToString().Replace(Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0], '.'),
+                coordinate.Latitude.TotalDegrees.ToString().Replace(Vars.DecimalSeparator, '.'),
+                coordinate.Longitude.TotalDegrees.ToString().Replace(Vars.DecimalSeparator, '.'),
                 timestamp,
                 Resources.google_elevation_api_key);
 
@@ -639,9 +639,9 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
             if (status.InnerText == "OK")
             {
                 string raw_offset = xml.GetElementsByTagName("raw_offset")[0].InnerText;
-                double raw_offset2 = double.Parse(raw_offset.Replace('.', Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0]));
+                double raw_offset2 = double.Parse(raw_offset.Replace('.', Vars.DecimalSeparator));
                 string dst_offset = xml.GetElementsByTagName("dst_offset")[0].InnerText;
-                double dst_offset2 = double.Parse(dst_offset.Replace('.', Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0]));
+                double dst_offset2 = double.Parse(dst_offset.Replace('.', Vars.DecimalSeparator));
                 string time_zone_id2 = xml.GetElementsByTagName("time_zone_id")[0].InnerText;
                 string time_zone_name2 = xml.GetElementsByTagName("time_zone_name")[0].InnerText;
 

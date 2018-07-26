@@ -13,6 +13,10 @@ namespace TrackConverter.Lib.Classes.Options
     /// </summary>
     public class Map
     {
+        /// <summary>
+        /// максимальный масштаб карты
+        /// </summary>
+        public readonly int MaximalZoom = 21;
 
         /// <summary>
         /// создает новый экземпляр с нстройками по умолчанию
@@ -22,7 +26,8 @@ namespace TrackConverter.Lib.Classes.Options
             this.AccessMode = AccessMode.ServerAndCache;
             this.LastCenterPoint = new PointLatLng(55, 37);
             this.Zoom = 10;
-            this.MapProvider = this.AllProviders[3];
+            this.MapProvider = this.AllMapProviders[3];
+            this.LayerProvider = this.AllLayerProviders[0];
             this.IsFormNavigatorShow = true;
             this.MapLanguange = LanguageType.Russian;
             this.MaxFullSearchNodes = 14;
@@ -51,9 +56,14 @@ namespace TrackConverter.Lib.Classes.Options
         public double Zoom { get; set; }
 
         /// <summary>
-        /// пставщик карты
+        /// пoставщик карты
         /// </summary>
         public MapProviderRecord MapProvider { get; set; }
+
+        /// <summary>
+        /// поставщик слоя на карте
+        /// </summary>
+        public VectorMapLayerProviderRecord LayerProvider { get; set; }
 
         /// <summary>
         /// Если истина, то при открытии карты будут восстанавливаться последние маршруты и точки
@@ -63,7 +73,7 @@ namespace TrackConverter.Lib.Classes.Options
         /// <summary>
         /// список всех поддерживаемых поставщиков карт
         /// </summary>
-        public List<MapProviderRecord> AllProviders
+        public List<MapProviderRecord> AllMapProviders
         {
             get
             {
@@ -81,7 +91,20 @@ namespace TrackConverter.Lib.Classes.Options
             set { }
         }
 
-
+        /// <summary>
+        /// список всех поддерживаемых поставщиков слоёв
+        /// </summary>
+        public List<VectorMapLayerProviderRecord> AllLayerProviders
+        {
+            get
+            {
+                return new List<VectorMapLayerProviderRecord>() {
+                        new VectorMapLayerProviderRecord(){ Enum = VectorMapLayerProviders.None, ID=0, Title = "Нет Слоя",IconName="\\Images\\layers\\none.png", MaxParallelPool = 1},
+                        new VectorMapLayerProviderRecord(){ Enum = VectorMapLayerProviders.Wikimapia, ID=1, Title = "Слой карты Wikimapia",IconName="\\Images\\layers\\wikimapia.png", MaxParallelPool = 1}
+                    };
+            }
+            set { }
+        }
 
 
         /// <summary>
@@ -128,5 +151,5 @@ namespace TrackConverter.Lib.Classes.Options
         /// Если истина, то при редактировании не будут показываться маркеры азимутов
         /// </summary>
         public bool ShowAziMarkers { get; set; }
-    }
+            }
 }

@@ -252,9 +252,9 @@ namespace TrackConverter.Lib.Classes
                         throw new FormatException("Неподдерживаемый формат координат");
                 }
 
-                Min = double.Parse(min.Replace('.', Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0]));
-                Deg = double.Parse(grad.Replace('.', Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0]));
-                Sec = double.Parse(sec.Replace('.', Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0]));
+                Min = double.Parse(min.Replace('.', Vars.DecimalSeparator));
+                Deg = double.Parse(grad.Replace('.', Vars.DecimalSeparator));
+                Sec = double.Parse(sec.Replace('.', Vars.DecimalSeparator));
                 double td = Deg + Min / 60 + Sec / 3600;
 
                 CoordinateChar cc = CoordinateChar.N;
@@ -294,31 +294,31 @@ namespace TrackConverter.Lib.Classes
                 switch (format)
                 {
                     case "Hddmm.mmm":
-                        res = this.Char.ToString() + Degrees.ToString() + Math.Round((Math.Abs(TotalDegrees) - Degrees) * 60, 3).ToString("00.000").Replace(Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0], '.');
+                        res = this.Char.ToString() + Degrees.ToString() + Math.Round((Math.Abs(TotalDegrees) - Degrees) * 60, 3).ToString("00.000").Replace(Vars.DecimalSeparator, '.');
                         break;
                     case "ddmm.mmm,H":
-                        res = Degrees.ToString() + Math.Round((Math.Abs(TotalDegrees) - Degrees) * 60, 3).ToString("00.000").Replace(Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0], '.') + "," + this.Char.ToString();
+                        res = Degrees.ToString() + Math.Round((Math.Abs(TotalDegrees) - Degrees) * 60, 3).ToString("00.000").Replace(Vars.DecimalSeparator, '.') + "," + this.Char.ToString();
                         break;
                     case "Hdd mm.mmm":
-                        res = this.Char.ToString() + Degrees.ToString() + " " + Math.Round((Math.Abs(TotalDegrees) - Degrees) * 60, 3).ToString("00.000").Replace(Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0], '.');
+                        res = this.Char.ToString() + Degrees.ToString() + " " + Math.Round((Math.Abs(TotalDegrees) - Degrees) * 60, 3).ToString("00.000").Replace(Vars.DecimalSeparator, '.');
                         break;
                     case "ddº mm.mmmm' H":
-                        res = this.Degrees.ToString() + "º " + Math.Round((Math.Abs(TotalDegrees) - Degrees) * 60, 4).ToString("00.0000").Replace(Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0], '.') + "' " + this.Char.ToString();
+                        res = this.Degrees.ToString() + "º " + Math.Round((Math.Abs(TotalDegrees) - Degrees) * 60, 4).ToString("00.0000").Replace(Vars.DecimalSeparator, '.') + "' " + this.Char.ToString();
                         break;
                     case "ddº mm' ss.ssss\" H":
-                        res = this.Degrees.ToString() + "º " + this.Minutes.ToString() + "' " + this.Seconds.ToString("00.0000").Replace(Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0], '.') + "\" " + this.Char.ToString();
+                        res = this.Degrees.ToString() + "º " + this.Minutes.ToString() + "' " + this.Seconds.ToString("00.0000").Replace(Vars.DecimalSeparator, '.') + "\" " + this.Char.ToString();
                         break;
                     case "ddºmm'ss.s\"H":
-                        res = this.Degrees.ToString() + "º" + this.Minutes.ToString() + "'" + this.Seconds.ToString("00.0").Replace(Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0], '.') + "\"" + this.Char.ToString();
+                        res = this.Degrees.ToString() + "º" + this.Minutes.ToString() + "'" + this.Seconds.ToString("00.0").Replace(Vars.DecimalSeparator, '.') + "\"" + this.Char.ToString();
                         break;
                     case "00.000000":
-                        res = this.TotalDegrees.ToString("00.000000").Replace(Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0], '.');
+                        res = this.TotalDegrees.ToString("00.000000").Replace(Vars.DecimalSeparator, '.');
                         break;
                     case "00.000":
-                        res = this.TotalDegrees.ToString("00.000").Replace(Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0], '.');
+                        res = this.TotalDegrees.ToString("00.000").Replace(Vars.DecimalSeparator, '.');
                         break;
                     case "dd, mm.mmmm,H":
-                        res = this.Degrees.ToString() +", " + Math.Round((Math.Abs(TotalDegrees) - Degrees) * 60, 4).ToString("0.0000").Replace(Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0], '.') +"," + this.Char.ToString();
+                        res = this.Degrees.ToString() +", " + Math.Round((Math.Abs(TotalDegrees) - Degrees) * 60, 4).ToString("0.0000").Replace(Vars.DecimalSeparator, '.') +"," + this.Char.ToString();
                         break;
                     default:
                         throw new FormatException("Неподдерживаемый формат координат");
@@ -395,13 +395,14 @@ namespace TrackConverter.Lib.Classes
         public Coordinate(double lat, double lon)
             : this(new CoordinateRecord(lat, lat >= 0 ? Coordinate.CoordinateChar.N : Coordinate.CoordinateChar.S), new CoordinateRecord(lon, lon >= 0 ? Coordinate.CoordinateChar.E : Coordinate.CoordinateChar.W)) { }
 
+
         /// <summary>
         /// создает новый экземпляр с указанными координатами формата dd.dddddd
         /// </summary>
         /// <param name="lat">широта</param>
         /// <param name="lon">широта</param>
         public Coordinate(string lat, string lon)
-            : this(double.Parse(lat.Replace('.', Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0])), double.Parse(lon.Replace('.', Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0]))) { }
+            : this(double.Parse(lat.Replace('.', Vars.DecimalSeparator)), double.Parse(lon.Replace('.', Vars.DecimalSeparator))) { }
 
         /// <summary>
         /// создает новый экземпляр Coordinate с заданными координатами
@@ -494,8 +495,8 @@ namespace TrackConverter.Lib.Classes
         {
             //https://www.google.ru/maps/place/55%C2%B040'51.6%22N+37%C2%B058'18.9%22E/@55.680696,37.9729728,17z/
             string ex = string.Format(@"https://www.google.ru/maps/place/{2}+{3}/@{0},{1},10z/",
-                this.Latitude.TotalDegrees.ToString("00.000000").Replace(Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0], '.'),
-                this.Longitude.TotalDegrees.ToString("00.000000").Replace(Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0], '.'),
+                this.Latitude.TotalDegrees.ToString("00.000000").Replace(Vars.DecimalSeparator, '.'),
+                this.Longitude.TotalDegrees.ToString("00.000000").Replace(Vars.DecimalSeparator, '.'),
                 this.Latitude.ToString("ddºmm'ss.s\"H"),
                 this.Longitude.ToString("ddºmm'ss.s\"H")
                 );
@@ -509,7 +510,7 @@ namespace TrackConverter.Lib.Classes
         public string ExportYandex()
         {
             //https://yandex.ru/maps/213/moscow/?ll=37.598420%2C55.760155&z=10&z=17&mt=map&p=37.598420%2C55.760155&whatshere%5Bpoint%5D=37.679444%2C55.750087&whatshere%5Bzoom%5D=10
-            string ex = string.Format(@"https://yandex.ru/maps/?ll={1}%2C{0}&z=10&z=17&mt=map&p={1}%2C{0}&whatshere%5Bpoint%5D={1}%2C{0}&whatshere%5Bzoom%5D=10", this.Latitude.TotalDegrees.ToString("00.000000").Replace(Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0], '.'), this.Longitude.TotalDegrees.ToString("00.000000").Replace(Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0], '.'));
+            string ex = string.Format(@"https://yandex.ru/maps/?ll={1}%2C{0}&z=10&z=17&mt=map&p={1}%2C{0}&whatshere%5Bpoint%5D={1}%2C{0}&whatshere%5Bzoom%5D=10", this.Latitude.TotalDegrees.ToString("00.000000").Replace(Vars.DecimalSeparator, '.'), this.Longitude.TotalDegrees.ToString("00.000000").Replace(Vars.DecimalSeparator, '.'));
             return ex;
 
         }

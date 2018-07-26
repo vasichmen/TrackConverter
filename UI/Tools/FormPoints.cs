@@ -32,7 +32,7 @@ namespace TrackConverter.UI.Tools
         /// <summary>
         /// если истина, то есть несохраненные изменения
         /// </summary>
-        private bool isEdited = false;
+        public bool isEdited = false;
 
         #region конструкторы
 

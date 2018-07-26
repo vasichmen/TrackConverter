@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Threading;
 using System.Windows.Forms;
 using TrackConverter.Lib.Mathematic;
 using TrackConverter.Lib.Tracking;
@@ -48,10 +49,10 @@ namespace TrackConverter.UI.Tools
 
             try
             {
-                lat1 = double.Parse(textBoxLat1.Text.Replace('.', ','));
-                lat2 = double.Parse(textBoxLat2.Text.Replace('.', ','));
-                lon1 = double.Parse(textBoxLon1.Text.Replace('.', ','));
-                lon2 = double.Parse(textBoxLon2.Text.Replace('.', ','));
+                lat1 = double.Parse(textBoxLat1.Text.Replace('.', Vars.DecimalSeparator));
+                lat2 = double.Parse(textBoxLat2.Text.Replace('.', Vars.DecimalSeparator));
+                lon1 = double.Parse(textBoxLon1.Text.Replace('.', Vars.DecimalSeparator));
+                lon2 = double.Parse(textBoxLon2.Text.Replace('.', Vars.DecimalSeparator));
             }
             catch (FormatException ee)
             {

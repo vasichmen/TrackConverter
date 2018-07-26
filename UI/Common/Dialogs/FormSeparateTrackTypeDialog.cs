@@ -9,6 +9,9 @@ using System.Windows.Forms;
 
 namespace TrackConverter.UI.Common.Dialogs
 {
+    /// <summary>
+    /// окно выбора типа разделения маршрута (по расстоянию, по ближайшей точке)
+    /// </summary>
     public partial class FormSeparateTrackTypeDialog : Form
     {
         /// <summary>

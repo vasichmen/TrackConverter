@@ -23,21 +23,26 @@ using System.ComponentModel;
 
 namespace TrackConverter.UI.Shell
 {
-    internal partial class MapHelper
-    {
-        private FormMain formMain;
-        
 
+    /// <summary>
+    /// вспомогательные функции для работы интерфейса карты
+    /// </summary>
+    internal partial class MapHelper : MapHelperBase
+    {
+
+        /// <summary>
+        /// Создает новый экземпляр с заданным главным окном программы
+        /// </summary>
+        /// <param name="formMain"></param>
         public MapHelper(FormMain formMain)
         {
             this.formMain = formMain;
-            ConfigureGMapControl();
         }
 
         /// <summary>
         /// настройки браузера карты
         /// </summary>
-        private void ConfigureGMapControl()
+        public void ConfigureGMapControl()
         {
 
             #region системные настройки
@@ -51,7 +56,7 @@ namespace TrackConverter.UI.Shell
             GMaps.Instance.MemoryCache.Capacity = 100; //максимальный размер кэша в МБ
 
             //zoom
-            formMain.gmapControlMap.MaxZoom = 20;
+            formMain.gmapControlMap.MaxZoom = Vars.Options.Map.MaximalZoom;
             formMain.gmapControlMap.Zoom = Vars.Options.Map.Zoom;
             OnMapZoomChanged();
 
@@ -74,6 +79,15 @@ namespace TrackConverter.UI.Shell
 
             //язык карты
             GMapProvider.Language = Vars.Options.Map.MapLanguange;
+
+            //центральная точка
+            if (Vars.Options.Map.LastCenterPoint != null)
+                formMain.gmapControlMap.Position = Vars.Options.Map.LastCenterPoint;
+            else
+            {
+                formMain.gmapControlMap.Position = new PointLatLng(37, 55);
+                Vars.Options.Map.LastCenterPoint = formMain.gmapControlMap.Position;
+            }
 
             //поставщик карты
             switch (Vars.Options.Map.MapProvider.Enum)
@@ -106,20 +120,15 @@ namespace TrackConverter.UI.Shell
                     throw new NotSupportedException("Этот поставщик карты не поддерживается " + Vars.Options.Map.MapProvider.Enum);
             }
 
+            //поставщик слоя
+            formMain.gmapControlMap.LayerProvider = Vars.Options.Map.LayerProvider.Enum;
+
 
             //Если вы используете интернет через прокси сервер,
             //указываем свои учетные данные.
             GMapProvider.WebProxy = WebRequest.GetSystemWebProxy();
             GMapProvider.WebProxy.Credentials = CredentialCache.DefaultCredentials;
 
-            //центральная точка
-            if (Vars.Options.Map.LastCenterPoint != null)
-                formMain.gmapControlMap.Position = Vars.Options.Map.LastCenterPoint;
-            else
-            {
-                formMain.gmapControlMap.Position = new PointLatLng(37, 55);
-                Vars.Options.Map.LastCenterPoint = formMain.gmapControlMap.Position;
-            }
 
             //вид пустых тайлов
             formMain.gmapControlMap.EmptyMapBackground = Color.White;
@@ -199,13 +208,13 @@ namespace TrackConverter.UI.Shell
                     //если выделена последняя точка, то добавляем
                     if (formMain.selectedPointIndex == formMain.creatingRoute.Count)
                     {
-                        formMain.creatingRoute.Add(new TrackPoint(pt));
+                        formMain.creatingRoute.Add(new TrackPoint(pt) { Icon = IconOffsets.creating_route_marker });
                         formMain.selectedPointIndex = formMain.creatingRoute.Count - 1;
                     }
                     //если выделена точка в середине маршрута, то вставляем после нее
                     else
                     {
-                        formMain.creatingRoute.Insert(formMain.selectedPointIndex + 1, new TrackPoint(pt));
+                        formMain.creatingRoute.Insert(formMain.selectedPointIndex + 1, new TrackPoint(pt) { Icon = IconOffsets.creating_route_marker });
                         formMain.selectedPointIndex++;
                     }
 
@@ -219,13 +228,13 @@ namespace TrackConverter.UI.Shell
                     //если выделена последняя точка, то добавляем
                     if (formMain.selectedPointIndex == formMain.rulerRoute.Count)
                     {
-                        formMain.rulerRoute.Add(new TrackPoint(pt));
+                        formMain.rulerRoute.Add(new TrackPoint(pt) { Icon = IconOffsets.creating_route_marker });
                         formMain.selectedPointIndex = formMain.rulerRoute.Count - 1;
                     }
                     //если выделена точка в середине маршрута, то вставляем после нее
                     else
                     {
-                        formMain.rulerRoute.Insert(formMain.selectedPointIndex + 1, new TrackPoint(pt));
+                        formMain.rulerRoute.Insert(formMain.selectedPointIndex + 1, new TrackPoint(pt) { Icon = IconOffsets.creating_route_marker });
                         formMain.selectedPointIndex++;
                     }
 
@@ -330,6 +339,37 @@ namespace TrackConverter.UI.Shell
             }
         }
 
+        /// <summary>
+        /// нажатие на полигон на карте
+        /// </summary>
+        /// <param name="item"></param>
+        /// <param name="e"></param>
+        internal void OnPolygonClick(GMapPolygon item, MouseEventArgs e)
+        {
+
+            //если не идёт создание маршрута, линейка, перемещение маркера, перемещение карты, то обрабатываем нажатие
+            if (!formMain.isCreatingRoute && !formMain.isRuling && !formMain.isMarkerMoving && !formMain.gmapControlMap.IsDragging)
+            {
+                List<VectorMapLayerObject> objs = formMain.gmapControlMap.GetVectorObjectsUnderCursor();
+                VectorMapLayerObject obj;
+                if (objs.Count == 1)
+                    obj = objs[0];
+                else
+                {
+                    FormChooseVariant fcv = new FormChooseVariant(objs, "Выбор объекта", SelectionMode.One);
+                    if (fcv.ShowDialog(Program.winMain) == DialogResult.OK)
+                    {
+                        if (fcv.Result.Count != 1)
+                            return;
+                        obj = objs[fcv.Result[0]];
+                    }
+                    else
+                        return;
+                }
+               new FormShowObjectInfo(obj).Show();
+            }
+        }
+
         internal void OnMarkerEnter(GMapMarker itm)
         {
             MapMarker item = itm as MapMarker;
@@ -361,9 +401,15 @@ namespace TrackConverter.UI.Shell
             }
         }
 
+        /// <summary>
+        /// при уходе мыши с маркера
+        /// </summary>
+        /// <param name="item"></param>
         internal void OnMarkerLeave(GMapMarker item)
         {
-            formMain.toolStripStatusLabelFromStart.Text = "";
+            if (item.Tag != null)
+                if ((item.Tag as MapMarker).Tag.Type == MarkerTypes.CreatingRoute)
+                    formMain.toolStripStatusLabelFromStart.Text = "";
         }
 
         internal void MapTypeChanged(GMapProvider type)
@@ -378,6 +424,9 @@ namespace TrackConverter.UI.Shell
             formMain.gmapControlMap.MinZoom = type.MinZoom;
         }
 
+        /// <summary>
+        /// событие движения карты
+        /// </summary>
         internal void OnMapDrag()
         {
             formMain.currentMarker = null;
@@ -505,6 +554,7 @@ namespace TrackConverter.UI.Shell
             if (!formMain.gmapControlMap.IsMouseOverMarker)
                 formMain.currentMarker = null;
         }
+
 
         internal void ButtonClearSearchMarks(object sender, EventArgs e)
         {
@@ -646,14 +696,18 @@ namespace TrackConverter.UI.Shell
             Program.winRouteEditor.Show(Program.winMain); ;
         }
 
-  
+
 
         internal void ZoomOutClick(EventArgs e)
         {
             formMain.gmapControlMap.Zoom--;
         }
 
-
+        /// <summary>
+        /// переключение поставщиков карты
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         internal void mpProvider_Click(object sender, EventArgs e)
         {
             MapProviderRecord mpr = (MapProviderRecord)((ToolStripMenuItem)sender).Tag;
@@ -698,6 +752,31 @@ namespace TrackConverter.UI.Shell
 
             foreach (ToolStripMenuItem ti in formMain.mapProviderToolStripMenuItem.DropDownItems)
                 if (((MapProviderRecord)(ti.Tag)).ID == mpr.ID)
+                    ti.Checked = true;
+                else
+                    ti.Checked = false;
+        }
+
+        /// <summary>
+        /// событие нажатия на копку переключения слоёв карты
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        internal void lrProvider_Click(object sender, EventArgs e)
+        {
+            VectorMapLayerProviderRecord lpr = (VectorMapLayerProviderRecord)((ToolStripMenuItem)sender).Tag;
+            switch (lpr.Enum)
+            {
+                case VectorMapLayerProviders.None:
+                case VectorMapLayerProviders.Wikimapia:
+                    formMain.gmapControlMap.LayerProvider = lpr.Enum;
+                    break;
+                default:
+                    throw new NotSupportedException("Этот поставщик слоя не поддерживается " + lpr.Enum);
+            }
+            Vars.Options.Map.LayerProvider = lpr;
+            foreach (ToolStripMenuItem ti in formMain.layerProviderToolStripMenuItem.DropDownItems)
+                if (((VectorMapLayerProviderRecord)(ti.Tag)).ID == lpr.ID)
                     ti.Checked = true;
                 else
                     ti.Checked = false;

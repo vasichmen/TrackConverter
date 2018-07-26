@@ -44,12 +44,11 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         /// отправить отчет о запуске программы
         /// </summary>
         /// <param name="guid">guid экземпляра</param>
-        /// <param name="name">имя пользователя</param>
-        private void AttachGuid(string guid, string name)
+        private void AttachGuid(string guid)
         {
             string site = Vars.Options.Common.SiteAddress;
             string ver = Vars.Options.Common.VersionText;
-            string url = string.Format("{0}/receiver.php?mode=attach&program_guid={1}&user_name={2}&version={3}", site, guid, name,ver);
+            string url = string.Format("{0}/receiver.php?mode=attach&program_guid={1}&version={2}", site, guid,ver);
             string ans = this.SendStringGetRequest(url);
             if (ans != "OK")
                 throw new WebException(ans);
@@ -117,8 +116,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                     {
                         i++;
                         string guid = Vars.Options.Common.ApplicationGuid;
-                        string name = Environment.UserName;
-                        AttachGuid(guid, name);
+                        AttachGuid(guid);
                         f = false;
                     }
                     catch (WebException)

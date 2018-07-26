@@ -367,7 +367,6 @@ namespace TrackConverter.UI.Map
         /// <param name="e"></param>
         private void separateTrackToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            //TODO: Сделать разделение маршрута по точке на карте
             int ind = dataGridViewDays.SelectedRows[0].Index - 1; //первый маршрут в списке - всё путешествие
             TrackFile route = (TrackFile)trip.DaysRoutes[ind]; //разделяемый маршрут
             TrackFile first = null, second = null; //будущие отрезки маршрута
@@ -411,8 +410,8 @@ namespace TrackConverter.UI.Map
                         {
                             double length = double.Parse(frt.Result
                                 .Trim()
-                                .Replace('.', Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0])
-                                .Replace(',', Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0]));
+                                .Replace('.', Vars.DecimalSeparator)
+                                .Replace(',', Vars.DecimalSeparator));
 
                             if (length >= route.Distance)
                             {
@@ -509,8 +508,8 @@ namespace TrackConverter.UI.Map
             {
                 double length = double.Parse(frt.Result
                     .Trim()
-                    .Replace('.', Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0])
-                    .Replace(',', Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0]));
+                    .Replace('.', Vars.DecimalSeparator)
+                    .Replace(',', Vars.DecimalSeparator));
 
                 foreach (DataGridViewRow dr in dataGridViewDays.SelectedRows)
                 {

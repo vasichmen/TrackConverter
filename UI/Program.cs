@@ -161,7 +161,7 @@ namespace TrackConverter.UI
             CheckFiles();
 
             //открытие БД кэша геокодера
-            new Task(new Action(() => { Vars.dataCache = new SQLiteCache(Application.StartupPath + Resources.cache_directory + "\\geocoder"); })).Start();
+            new Task(new Action(() => { Vars.dataCache = new SQLiteCache(Application.StartupPath + Resources.cache_directory + "\\geocoder", Vars.Options.Map.MaximalZoom); })).Start();
 
 
             //метод загрузки базы данных ETOPO
@@ -330,7 +330,7 @@ namespace TrackConverter.UI
                 Application.Exit();
             }
 
-            foreach (MapProviderRecord mpr in Vars.Options.Map.AllProviders)
+            foreach (MapProviderRecord mpr in Vars.Options.Map.AllMapProviders)
                 if (!File.Exists(Application.StartupPath + mpr.IconName))
                 {
                     MessageBox.Show(null, "Файл карты " + mpr.IconName + " не был найден в папке " + Application.StartupPath, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);

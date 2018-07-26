@@ -189,7 +189,7 @@ namespace TrackConverter.Lib.Tracking
                     object alt = dr.ItemArray[3];
                     np.MetrAltitude = (alt == null || alt is DBNull || double.IsNaN((double)alt)) ? -777 : (double)alt /* double.Parse(((string)alt).Replace('.',','))*/;
 
-                    //np.MetrAltitude = dr["Высота, м"].GetType() == typeof(DBNull) ? -777 :((string)dr["Высота, м"]) == "не число"?-777: double.Parse(((string)dr["Высота, м"]).Replace('.', Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0]));
+                    //np.MetrAltitude = dr["Высота, м"].GetType() == typeof(DBNull) ? -777 :((string)dr["Высота, м"]) == "не число"?-777: double.Parse(((string)dr["Высота, м"]).Replace('.', Vars.DecimalSeparator));
                     np.Description = dr["Описание"] is DBNull ? "" : (string)dr["Описание"];
                     np.Description.Replace(',', '_');
                     np.Name = (dr["Название"] is DBNull ? "" : (string)dr["Название"]).Replace(',', '_');

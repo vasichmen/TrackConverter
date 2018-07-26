@@ -162,7 +162,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         }
 
         /// <summary>
-        /// отправка запроса с результатом в виде строки
+        /// отправка запроса с результатом в виде объекта JSON
         /// </summary>
         /// <param name="url">запрос</param>
         /// <returns></returns>

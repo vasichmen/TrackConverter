@@ -103,7 +103,7 @@ namespace TrackConverter.Lib.Mathematic.Geodesy.MapCalibrations
             double pix = pxDelta.X;
             double scale = dist / pix;
 
-            char separator = Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0];
+            char separator = Vars.DecimalSeparator;
 
             //информация о карте
             text += "Projection Setup,,,,,,,,,,\r\n" +

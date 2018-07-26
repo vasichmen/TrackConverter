@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using TrackConverter.Lib;
@@ -129,8 +130,8 @@ namespace TrackConverter.UI.Tools
                 textBoxDegLonDeg.Text = textBoxDegLonDeg.Text.Trim();
                 try
                 {
-                    double.Parse(textBoxDegLatDeg.Text.Replace('.', ','));
-                    double.Parse(textBoxDegLonDeg.Text.Replace('.', ','));
+                    double.Parse(textBoxDegLatDeg.Text.Replace('.', Vars.DecimalSeparator));
+                    double.Parse(textBoxDegLonDeg.Text.Replace('.', Vars.DecimalSeparator));
                 }
                 catch (FormatException fe)
                 {
@@ -149,8 +150,8 @@ namespace TrackConverter.UI.Tools
                 {
                     int.Parse(textBoxDegminLatDeg.Text);
                     int.Parse(textBoxDegminLonDeg.Text);
-                    double.Parse(textBoxDegminLatMin.Text.Replace('.', ','));
-                    double.Parse(textBoxDegminLonMin.Text.Replace('.', ','));
+                    double.Parse(textBoxDegminLatMin.Text.Replace('.', Vars.DecimalSeparator));
+                    double.Parse(textBoxDegminLonMin.Text.Replace('.', Vars.DecimalSeparator));
                 }
                 catch (FormatException fe)
                 {
@@ -173,8 +174,8 @@ namespace TrackConverter.UI.Tools
                     int.Parse(textBoxDegminsecLonDeg.Text);
                     int.Parse(textBoxDegminsecLatMin.Text);
                     int.Parse(textBoxDegminsecLonMin.Text);
-                    double.Parse(textBoxDegminsecLatSec.Text.Replace('.', ','));
-                    double.Parse(textBoxDegminsecLonSec.Text.Replace('.', ','));
+                    double.Parse(textBoxDegminsecLatSec.Text.Replace('.', Vars.DecimalSeparator));
+                    double.Parse(textBoxDegminsecLonSec.Text.Replace('.', Vars.DecimalSeparator));
                 }
                 catch (FormatException fe)
                 {
@@ -193,11 +194,11 @@ namespace TrackConverter.UI.Tools
                 {
                     Coordinate cr = new Coordinate(
                         new Coordinate.CoordinateRecord(
-                            double.Parse(textBoxDegLatDeg.Text.Replace('.', ',')),
-                            double.Parse(textBoxDegLatDeg.Text.Replace('.', ',')) <= 0 ? Coordinate.CoordinateChar.S : Coordinate.CoordinateChar.N),
+                            double.Parse(textBoxDegLatDeg.Text.Replace('.', Vars.DecimalSeparator)),
+                            double.Parse(textBoxDegLatDeg.Text.Replace('.', Vars.DecimalSeparator)) <= 0 ? Coordinate.CoordinateChar.S : Coordinate.CoordinateChar.N),
                         new Coordinate.CoordinateRecord(
-                            double.Parse(textBoxDegLonDeg.Text.Replace('.', ',')),
-                            double.Parse(textBoxDegLonDeg.Text.Replace('.', ',')) <= 0 ? Coordinate.CoordinateChar.W : Coordinate.CoordinateChar.E)
+                            double.Parse(textBoxDegLonDeg.Text.Replace('.', Vars.DecimalSeparator)),
+                            double.Parse(textBoxDegLonDeg.Text.Replace('.', Vars.DecimalSeparator)) <= 0 ? Coordinate.CoordinateChar.W : Coordinate.CoordinateChar.E)
                     );
 
                     //градусы, минуты
@@ -255,15 +256,15 @@ namespace TrackConverter.UI.Tools
                 {
                     Coordinate cr = new Coordinate(
                         new Coordinate.CoordinateRecord(
-                            int.Parse(textBoxDegminsecLatDeg.Text.Replace('.', ',')),
-                            int.Parse(textBoxDegminsecLatMin.Text.Replace('.', ',')),
-                            double.Parse(textBoxDegminsecLatSec.Text.Replace('.', ',')),
+                            int.Parse(textBoxDegminsecLatDeg.Text),
+                            int.Parse(textBoxDegminsecLatMin.Text),
+                            double.Parse(textBoxDegminsecLatSec.Text.Replace('.', Vars.DecimalSeparator)),
                             comboBoxDegminsecLat.SelectedIndex == 0 ? Coordinate.CoordinateChar.N : Coordinate.CoordinateChar.S
                             ),
                         new Coordinate.CoordinateRecord(
-                            int.Parse(textBoxDegminsecLonDeg.Text.Replace('.', ',')),
-                            int.Parse(textBoxDegminsecLonMin.Text.Replace('.', ',')),
-                            double.Parse(textBoxDegminsecLonSec.Text.Replace('.', ',')),
+                            int.Parse(textBoxDegminsecLonDeg.Text),
+                            int.Parse(textBoxDegminsecLonMin.Text),
+                            double.Parse(textBoxDegminsecLonSec.Text.Replace('.', Vars.DecimalSeparator)),
                             comboBoxDegminsecLon.SelectedIndex == 0 ? Coordinate.CoordinateChar.E : Coordinate.CoordinateChar.W
                             )
                     );
@@ -308,13 +309,13 @@ namespace TrackConverter.UI.Tools
                 {
                     Coordinate cr = new Coordinate(
                         new Coordinate.CoordinateRecord(
-                            int.Parse(textBoxDegminLatDeg.Text.Replace('.', ',')),
-                            double.Parse(textBoxDegminLatMin.Text.Replace('.', ',')),
+                            int.Parse(textBoxDegminLatDeg.Text),
+                            double.Parse(textBoxDegminLatMin.Text.Replace('.', Vars.DecimalSeparator)),
                             comboBoxDegminLat.SelectedIndex == 0 ? Coordinate.CoordinateChar.N : Coordinate.CoordinateChar.S
                             ),
                         new Coordinate.CoordinateRecord(
-                            int.Parse(textBoxDegminLonDeg.Text.Replace('.', ',')),
-                            double.Parse(textBoxDegminLonMin.Text.Replace('.', ',')),
+                            int.Parse(textBoxDegminLonDeg.Text),
+                            double.Parse(textBoxDegminLonMin.Text.Replace('.', Vars.DecimalSeparator)),
                             comboBoxDegminLon.SelectedIndex == 0 ? Coordinate.CoordinateChar.E : Coordinate.CoordinateChar.W)
                     );
 
@@ -383,11 +384,11 @@ namespace TrackConverter.UI.Tools
             {
                 Coordinate cr = new Coordinate(
                            new Coordinate.CoordinateRecord(
-                               double.Parse(textBoxDegLatDeg.Text.Replace('.', ',')),
-                               double.Parse(textBoxDegLatDeg.Text.Replace('.', ',')) <= 0 ? Coordinate.CoordinateChar.S : Coordinate.CoordinateChar.N),
+                               double.Parse(textBoxDegLatDeg.Text.Replace('.', Vars.DecimalSeparator)),
+                               double.Parse(textBoxDegLatDeg.Text.Replace('.', Vars.DecimalSeparator)) <= 0 ? Coordinate.CoordinateChar.S : Coordinate.CoordinateChar.N),
                            new Coordinate.CoordinateRecord(
-                               double.Parse(textBoxDegLonDeg.Text.Replace('.', ',')),
-                               double.Parse(textBoxDegLonDeg.Text.Replace('.', ',')) <= 0 ? Coordinate.CoordinateChar.W : Coordinate.CoordinateChar.E)
+                               double.Parse(textBoxDegLonDeg.Text.Replace('.', Vars.DecimalSeparator)),
+                               double.Parse(textBoxDegLonDeg.Text.Replace('.', Vars.DecimalSeparator)) <= 0 ? Coordinate.CoordinateChar.W : Coordinate.CoordinateChar.E)
                        );
 
                 string link = cr.ExportYandex();
@@ -411,11 +412,11 @@ namespace TrackConverter.UI.Tools
             {
                 Coordinate cr = new Coordinate(
                            new Coordinate.CoordinateRecord(
-                               double.Parse(textBoxDegLatDeg.Text.Replace('.', ',')),
-                               double.Parse(textBoxDegLatDeg.Text.Replace('.', ',')) <= 0 ? Coordinate.CoordinateChar.S : Coordinate.CoordinateChar.N),
+                               double.Parse(textBoxDegLatDeg.Text.Replace('.', Vars.DecimalSeparator)),
+                               double.Parse(textBoxDegLatDeg.Text.Replace('.', Vars.DecimalSeparator)) <= 0 ? Coordinate.CoordinateChar.S : Coordinate.CoordinateChar.N),
                            new Coordinate.CoordinateRecord(
-                               double.Parse(textBoxDegLonDeg.Text.Replace('.', ',')),
-                               double.Parse(textBoxDegLonDeg.Text.Replace('.', ',')) <= 0 ? Coordinate.CoordinateChar.W : Coordinate.CoordinateChar.E)
+                               double.Parse(textBoxDegLonDeg.Text.Replace('.', Vars.DecimalSeparator)),
+                               double.Parse(textBoxDegLonDeg.Text.Replace('.', Vars.DecimalSeparator)) <= 0 ? Coordinate.CoordinateChar.W : Coordinate.CoordinateChar.E)
                        );
 
                 string link = cr.ExportGoogle();

@@ -308,7 +308,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
 
 
         /// <summary>
-        /// декодиорвание ломаной.
+        /// Старый алгоритм декодиорвания0 ломаной(через строки "в лоб")
         /// Алгоритм кодирования: 
         /// https://tech.yandex.ru/maps/doc/jsapi/1.x/dg/tasks/how-to-add-polyline-docpage/#encoding-polyline-points
         /// Для Python:
@@ -504,7 +504,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         {
             string url = string.Format(
                "https://geocode-maps.yandex.ru/1.x/?geocode={0}&results=1",
-               coordinate.Longitude.TotalDegrees.ToString().Replace(Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0], '.') + "," + coordinate.Latitude.TotalDegrees.ToString().Replace(Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0], '.'));
+               coordinate.Longitude.TotalDegrees.ToString().Replace(Vars.DecimalSeparator, '.') + "," + coordinate.Latitude.TotalDegrees.ToString().Replace(Vars.DecimalSeparator, '.'));
             XmlDocument dc = SendXmlGetRequest(url);
 
             XmlNode found = dc.GetElementsByTagName("found")[0];

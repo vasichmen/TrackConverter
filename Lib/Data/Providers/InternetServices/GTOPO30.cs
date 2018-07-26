@@ -59,8 +59,8 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
             //http://api.geonames.org/gtopo30?lat=47.01&lng=10.2&username=demo 
 
             string url = string.Format("http://api.geonames.org/gtopo30?lat={0}&lng={1}&username=demo",
-               coordinate.Latitude.TotalDegrees.ToString().Replace(Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0],'.'),
-                coordinate.Longitude.TotalDegrees.ToString().Replace(Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0],'.')
+               coordinate.Latitude.TotalDegrees.ToString().Replace(Vars.DecimalSeparator,'.'),
+                coordinate.Longitude.TotalDegrees.ToString().Replace(Vars.DecimalSeparator,'.')
                 );
 
             string ans = SendStringGetRequest(url);

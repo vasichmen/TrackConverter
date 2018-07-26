@@ -6,6 +6,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Xml;
+using TrackConverter.Lib.Classes;
 
 namespace TrackConverter.Lib.Tracking.Helpers
 {
@@ -135,6 +136,41 @@ namespace TrackConverter.Lib.Tracking.Helpers
         }
 
         /// <summary>
+        /// разбор ответа сайта Wikimapia с объектами в хаданной области
+        /// </summary>
+        /// <param name="kml">текстовый ответ в формате KML</param>
+        /// <returns></returns>
+        internal static List<VectorMapLayerObject> ParseWikimapiaObjectsAnswer(string kml)
+        {
+            XmlDocument doc = new XmlDocument();
+            doc.LoadXml(kml);
+            XmlNode folder = doc.DocumentElement["Document"]["Folder"];
+
+            List<VectorMapLayerObject> res = new List<VectorMapLayerObject>();
+            foreach (XmlNode placemark in folder.ChildNodes)
+            {
+                //ID
+                string wid = placemark.Attributes["id"].InnerText.TrimStart(new[] { 'w', 'm' });
+                int id = int.Parse(wid);
+
+                //LINK
+                string link = "http://wikimapia.org/" + id + "/#ge";
+
+                //NAME
+                string raw_desc = placemark["description"].InnerText;
+                raw_desc = raw_desc.Replace("![CDATA[", "").Replace("]]", "").Replace("View or update this place information at Wikimapia.", "").Replace("\n", "");
+                string name = Regex.Replace(raw_desc, "<[^>]+>", string.Empty).Trim();
+
+                //GEOMETRY
+                string linestring = placemark["MultiGeometry"]["LineString"]["coordinates"].InnerText;
+                linestring = linestring.Replace("\n", " ").Trim().Trim();
+                TrackFile geometry = ParseLineString(linestring);
+                res.Add(new VectorMapLayerObject(geometry,name) { ID = id, Link = link, LayerProvider = VectorMapLayerProviders.Wikimapia });
+            }
+            return res;
+        }
+
+        /// <summary>
         /// распознает точки из строки координат с высотами
         /// </summary>
         /// <param name="lineString">строка координат, координаты разделены пробелами</param>
@@ -160,10 +196,10 @@ namespace TrackConverter.Lib.Tracking.Helpers
         {
             MatchCollection arr = Regex.Matches(pointString, @"\d+\:\d+|\d+[.,]\d+");
             string al = "0";
-            string lo = arr[0].ToString().Replace('.', Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0]).Trim();
-            string la = arr[1].ToString().Replace('.', Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0]).Trim();
+            string lo = arr[0].ToString().Replace('.', Vars.DecimalSeparator).Trim();
+            string la = arr[1].ToString().Replace('.', Vars.DecimalSeparator).Trim();
             if (arr.Count == 3)
-                al = arr[2].ToString().Replace('.', Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0]).Trim();
+                al = arr[2].ToString().Replace('.', Vars.DecimalSeparator).Trim();
             TrackPoint nv = new TrackPoint(la, lo)
             {
                 MetrAltitude = Convert.ToDouble(al) //высота в метрах
@@ -215,9 +251,9 @@ namespace TrackConverter.Lib.Tracking.Helpers
             //координаты
             string cords = "";
             foreach (TrackPoint pt in tf)
-                cords += pt.Coordinates.Longitude.TotalDegrees.ToString("00.0000000000000").Replace(Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0], '.').Trim() + ","
-                    + pt.Coordinates.Latitude.TotalDegrees.ToString("00.0000000000000").Replace(Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0], '.').Trim() + ","
-                    + pt.MetrAltitude.ToString("00.000").Replace(Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0], '.').Trim() + " ";
+                cords += pt.Coordinates.Longitude.TotalDegrees.ToString("00.0000000000000").Replace(Vars.DecimalSeparator, '.').Trim() + ","
+                    + pt.Coordinates.Latitude.TotalDegrees.ToString("00.0000000000000").Replace(Vars.DecimalSeparator, '.').Trim() + ","
+                    + pt.MetrAltitude.ToString("00.000").Replace(Vars.DecimalSeparator, '.').Trim() + " ";
 
             //LineString
             XmlNode pmlnstr = parentDoc.CreateNode(XmlNodeType.Element, "LineString", null);
@@ -259,9 +295,9 @@ namespace TrackConverter.Lib.Tracking.Helpers
 
             //точка
             XmlNode ppoint = parentDoc.CreateNode(XmlNodeType.Element, "Point", null);
-            string cords = tt.Coordinates.Longitude.TotalDegrees.ToString("00.0000000000000").Replace(Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0], '.').Trim() + ","
-                + tt.Coordinates.Latitude.TotalDegrees.ToString("00.0000000000000").Replace(Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0], '.').Trim() + ","
-                + tt.MetrAltitude.ToString("00.000").Replace(Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0], '.').Trim() + " ";
+            string cords = tt.Coordinates.Longitude.TotalDegrees.ToString("00.0000000000000").Replace(Vars.DecimalSeparator, '.').Trim() + ","
+                + tt.Coordinates.Latitude.TotalDegrees.ToString("00.0000000000000").Replace(Vars.DecimalSeparator, '.').Trim() + ","
+                + tt.MetrAltitude.ToString("00.000").Replace(Vars.DecimalSeparator, '.').Trim() + " ";
             ppoint.InnerXml = string.Format(@"<extrude>1</extrude><coordinates>{0}</coordinates>", cords);
             placemark.AppendChild(ppoint);
 

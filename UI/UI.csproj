@@ -102,13 +102,12 @@
       <HintPath>..\packages\SharpZipLib.0.86.0\lib\20\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualBasic" />
-    <Reference Include="OpenTK.GLControl, Version=1.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Data.SQLite, Version=1.0.107.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Data.SQLite.Core.1.0.107.0\lib\net40\System.Data.SQLite.dll</HintPath>
+    <Reference Include="System.Data.SQLite, Version=1.0.108.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Data.SQLite.Core.1.0.108.0\lib\net40\System.Data.SQLite.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System.DirectoryServices" />
@@ -131,11 +130,23 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Common\Dialogs\FormChooseVariant.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Common\Dialogs\FormChooseVariant.Designer.cs">
+      <DependentUpon>FormChooseVariant.cs</DependentUpon>
+    </Compile>
     <Compile Include="Common\Dialogs\FormSeparateTrackTypeDialog.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Common\Dialogs\FormSeparateTrackTypeDialog.Designer.cs">
       <DependentUpon>FormSeparateTrackTypeDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Common\Dialogs\FormShowPicture.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Common\Dialogs\FormShowPicture.Designer.cs">
+      <DependentUpon>FormShowPicture.cs</DependentUpon>
     </Compile>
     <Compile Include="Common\Dialogs\FormUpdateDialog.cs">
       <SubType>Form</SubType>
@@ -156,6 +167,15 @@
       <DependentUpon>FormBrowser.cs</DependentUpon>
     </Compile>
     <Compile Include="Common\TrayIcon.cs" />
+    <Compile Include="Ext\GMapControlExt.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Map\FormShowObjectInfo.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Map\FormShowObjectInfo.Designer.cs">
+      <DependentUpon>FormShowObjectInfo.cs</DependentUpon>
+    </Compile>
     <Compile Include="Shell\ConverterHelper.cs" />
     <Compile Include="Shell\FormMain.cs">
       <SubType>Form</SubType>
@@ -363,6 +383,12 @@
     <Content Include="Images\icons\022.ico">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Images\layers\none.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\layers\wikimapia.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Images\maps\google_hibride.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -393,11 +419,17 @@
     <Content Include="readme.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <EmbeddedResource Include="Common\Dialogs\FormChooseVariant.resx">
+      <DependentUpon>FormChooseVariant.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Common\Dialogs\FormSeparateTrackTypeDialog.ja.resx">
       <DependentUpon>FormSeparateTrackTypeDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Common\Dialogs\FormSeparateTrackTypeDialog.resx">
       <DependentUpon>FormSeparateTrackTypeDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Common\Dialogs\FormShowPicture.resx">
+      <DependentUpon>FormShowPicture.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Common\Dialogs\FormUpdateDialog.resx">
       <DependentUpon>FormUpdateDialog.cs</DependentUpon>
@@ -410,6 +442,9 @@
     <EmbeddedResource Include="Common\FormBrowser.resx">
       <DependentUpon>FormBrowser.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Map\FormShowObjectInfo.resx">
+      <DependentUpon>FormShowObjectInfo.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Shell\FormMain.resx">
       <DependentUpon>FormMain.cs</DependentUpon>
@@ -550,12 +585,12 @@
     <PostBuildEvent>
     </PostBuildEvent>
   </PropertyGroup>
-  <Import Project="..\packages\System.Data.SQLite.Core.1.0.107.0\build\net40\System.Data.SQLite.Core.targets" Condition="Exists('..\packages\System.Data.SQLite.Core.1.0.107.0\build\net40\System.Data.SQLite.Core.targets')" />
+  <Import Project="..\packages\System.Data.SQLite.Core.1.0.108.0\build\net40\System.Data.SQLite.Core.targets" Condition="Exists('..\packages\System.Data.SQLite.Core.1.0.108.0\build\net40\System.Data.SQLite.Core.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>Данный проект ссылается на пакеты NuGet, отсутствующие на этом компьютере. Используйте восстановление пакетов NuGet, чтобы скачать их.  Дополнительную информацию см. по адресу: http://go.microsoft.com/fwlink/?LinkID=322105. Отсутствует следующий файл: {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\packages\System.Data.SQLite.Core.1.0.107.0\build\net40\System.Data.SQLite.Core.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\System.Data.SQLite.Core.1.0.107.0\build\net40\System.Data.SQLite.Core.targets'))" />
+    <Error Condition="!Exists('..\packages\System.Data.SQLite.Core.1.0.108.0\build\net40\System.Data.SQLite.Core.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\System.Data.SQLite.Core.1.0.108.0\build\net40\System.Data.SQLite.Core.targets'))" />
   </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

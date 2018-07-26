@@ -53,7 +53,7 @@ namespace TrackConverter.Lib.Tracking
         ///  <param name="lat">широта</param>
         /// <param name="lon">долгота</param>
         public TrackPoint(string lat, string lon)
-            : this(double.Parse(lat.Replace('.', Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0])), double.Parse(lon.Replace('.', Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0]))) { }
+            : this(double.Parse(lat.Replace('.', Vars.DecimalSeparator)), double.Parse(lon.Replace('.', Vars.DecimalSeparator))) { }
 
         /// <summary>
         ///  создает  экземпляр TrackPoint с заданными координатами

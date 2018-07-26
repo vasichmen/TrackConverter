@@ -9,6 +9,7 @@ using TrackConverter.Lib.Classes.Options;
 using TrackConverter.Lib.Data;
 using TrackConverter.Lib.Tracking;
 using TrackConverter.Lib.Mathematic.Geodesy.Models;
+using System.Threading;
 
 namespace TrackConverter
 {
@@ -83,5 +84,10 @@ namespace TrackConverter
         /// если истина, то при закрытии программа снова будет запущена
         /// </summary>
         public static bool needRestart = false;
+
+        /// <summary>
+        /// разделитель десятичных разрядов в этой операционной системе
+        /// </summary>
+        public static char DecimalSeparator { get { return Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0]; } }
     }
 }

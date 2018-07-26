@@ -304,4 +304,8 @@
   <data name="search_result_icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\search_result_icon.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="wikimapia_key" xml:space="preserve">
+    <value>087ECBE0-7869F692-405FA237-852AD116-23CA037A-A588C4C0-2000C58D-5A0D8212</value>
+    <comment>Ключ доступа к API викимапии</comment>
+  </data>
 </root>

@@ -8,10 +8,11 @@ using TrackConverter.Lib.Mathematic.Geodesy.Models;
 
 namespace TrackConverter.Lib.Mathematic.Base
 {
+    /// <summary>
+    /// математические функции расчётов на сфере
+    /// </summary>
     public class SphereCalculations
     {
-
-
         /// <summary>
         /// рассчет угла криволинейного треугольника на сфере. 
         /// Возвращает угол ВАС в градусах.  Угол отсчитывается по часовой стрелке!!
@@ -89,16 +90,30 @@ namespace TrackConverter.Lib.Mathematic.Base
         /// рассчет расстояния между двумя точками в градусах по модифицированной теореме гаверсинусов.
         /// Для получения расстояния надо умножить на радиус сферы
         /// </summary>
-        /// <param name="p1"></param>
-        /// <param name="p2"></param>
+        /// <param name="c1"></param>
+        /// <param name="c2"></param>
         /// <returns></returns>
-        public static double CalculateDistance(Coordinate p1, Coordinate p2)
+        public static double CalculateDistance(Coordinate c1, Coordinate c2)
+        {
+            return CalculateDistance(c1.Latitude.TotalDegrees, c1.Longitude.TotalDegrees, c2.Latitude.TotalDegrees, c2.Longitude.TotalDegrees);
+        }
+
+        /// <summary>
+        /// рассчет расстояния между двумя точками в градусах по модифицированной теореме гаверсинусов.
+        /// Для получения расстояния надо умножить на радиус сферы
+        /// </summary>
+        /// <param name="lat1"></param>
+        /// <param name="lon1"></param>
+        /// <param name="lat2"></param>
+        /// <param name="lon2"></param>
+        /// <returns></returns>
+        public static double CalculateDistance(double lat1, double lon1, double lat2, double lon2)
         {
             double rad1d = Math.PI / 180;
-            double f1 = p1.Latitude.TotalDegrees * rad1d; //широта первой точки в радианах
-            double f2 = p2.Latitude.TotalDegrees * rad1d; //широта второй точки в радианах
-            double l1 = p1.Longitude.TotalDegrees * rad1d; //долгота первой точки в радианах
-            double l2 = p2.Longitude.TotalDegrees * rad1d; //долгота второй точки в радианах
+            double f1 = lat1 * rad1d; //широта первой точки в радианах
+            double f2 = lat2 * rad1d; //широта второй точки в радианах
+            double l1 = lon1 * rad1d; //долгота первой точки в радианах
+            double l2 = lon2 * rad1d; //долгота второй точки в радианах
 
             double f_1 = Math.Pow((Math.Cos(f2) * Math.Sin(l2 - l1)), 2) + Math.Pow((Math.Cos(f1) * Math.Sin(f2) - Math.Sin(f1) * Math.Cos(f2) * Math.Cos(l2 - l1)), 2);
 

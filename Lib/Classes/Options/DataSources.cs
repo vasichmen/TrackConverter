@@ -22,6 +22,7 @@ namespace TrackConverter.Lib.Classes.Options
             GeoInfoProvider = GeoInfoProvider.Google;
             UseGeocoderCache = true;
             UseSystemTimeZones = false;
+            UseMapLayerCache = true;
         }
 
         /// <summary>
@@ -48,5 +49,10 @@ namespace TrackConverter.Lib.Classes.Options
         /// Использовать системные часовые пояса. (в противном случае используются данные геокодера)
         /// </summary>
         public bool UseSystemTimeZones { get;  set; }
+
+        /// <summary>
+        /// если истина, то будет использоваться кэш объектов слоя карты
+        /// </summary>
+        public bool UseMapLayerCache { get;  set; }
     }
 }

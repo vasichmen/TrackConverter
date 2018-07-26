@@ -118,6 +118,7 @@ namespace TrackConverter.UI.Tools
 
             //использовать кэш
             checkBoxUseCacheGeocoder.Checked = Vars.Options.DataSources.UseGeocoderCache;
+            checkBoxUseMaplayerCache.Checked = Vars.Options.DataSources.UseMapLayerCache;
 
             //папка ETOPO
             textBoxDBETOPOFolder.Text = Vars.Options.DataSources.ETOPODBFolder;
@@ -272,9 +273,9 @@ namespace TrackConverter.UI.Tools
 
             #region Конвертер
 
-            Vars.Options.Converter.NorthPoleLatitude = double.Parse(textBoxMagnNPLat.Text.Replace('.', ','));
-            Vars.Options.Converter.NorthPoleLongitude = double.Parse(textBoxMagnNPLon.Text.Replace('.', ','));
-            Vars.Options.Converter.MinimumRiseInterval = double.Parse(textBoxMinimumRiseInterval.Text.Replace('.', ','));
+            Vars.Options.Converter.NorthPoleLatitude = double.Parse(textBoxMagnNPLat.Text.Replace('.', Vars.DecimalSeparator));
+            Vars.Options.Converter.NorthPoleLongitude = double.Parse(textBoxMagnNPLon.Text.Replace('.', Vars.DecimalSeparator));
+            Vars.Options.Converter.MinimumRiseInterval = double.Parse(textBoxMinimumRiseInterval.Text.Replace('.', Vars.DecimalSeparator));
 
             //аппроксимация высот
             Vars.Options.Converter.IsApproximateAltitudes = checkBoxIsapproximate.Checked;
@@ -292,7 +293,7 @@ namespace TrackConverter.UI.Tools
             if (comboBoxNormalizeBehavior.SelectedIndex == 1)
                 Vars.Options.Converter.NormalizerBehavior = NormalizerBehavior.AddCritical;
             double ang = 45;
-            bool f = double.TryParse(textBoxMinimalNormalizeAngle.Text.Trim().Replace('.', Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0]), out ang);
+            bool f = double.TryParse(textBoxMinimalNormalizeAngle.Text.Trim().Replace('.', Vars.DecimalSeparator), out ang);
             if (!f || ang >= 180)
             {
                 MessageBox.Show(this, "Ошибка ввода.\r\nМинимальный угол нормализации должен быть в пределах от 0 до 180 градусов", "Настройки", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -359,6 +360,7 @@ namespace TrackConverter.UI.Tools
 
             //использовать кэш
             Vars.Options.DataSources.UseGeocoderCache = checkBoxUseCacheGeocoder.Checked;
+            Vars.Options.DataSources.UseMapLayerCache = checkBoxUseMaplayerCache.Checked;
 
             //папка ETOPO
             Vars.Options.DataSources.ETOPODBFolder = textBoxDBETOPOFolder.Text;
@@ -402,7 +404,7 @@ namespace TrackConverter.UI.Tools
 
             Vars.Options.Graphs.isXKm = checkBoxXKm.Checked;
             Vars.Options.Graphs.isYKm = checkBoxYKm.Checked;
-            Vars.Options.Graphs.IntermediateDistance = double.Parse(textBoxIntermediateDistance.Text.Replace('.', ','));
+            Vars.Options.Graphs.IntermediateDistance = double.Parse(textBoxIntermediateDistance.Text.Replace('.', Vars.DecimalSeparator));
             Vars.Options.Graphs.IsAddIntermediatePoints = checkBoxIsAddIntermediatePoints.Checked;
             #endregion
 

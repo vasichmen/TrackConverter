@@ -893,8 +893,8 @@ namespace TrackConverter.UI.Shell
                         {
                             double length = double.Parse(frt.Result
                                 .Trim()
-                                .Replace('.', Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0])
-                                .Replace(',', Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0]));
+                                .Replace('.', Vars.DecimalSeparator)
+                                .Replace('.', Vars.DecimalSeparator));
 
                             if (length >= route.Distance)
                             {

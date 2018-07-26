@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using TrackConverter.Lib.Classes;
@@ -208,7 +209,7 @@ namespace TrackConverter.UI.Common.Dialogs
             Result = new TrackPoint(new Coordinate(textBoxLat.Text, textBoxLon.Text))
             {
                 Description = textBoxDescription.Text,
-                MetrAltitude = textBoxAlt.Text != "" ? double.Parse(textBoxAlt.Text.Replace('.', ',')) : -777,
+                MetrAltitude = textBoxAlt.Text != "" ? double.Parse(textBoxAlt.Text.Replace('.', Vars.DecimalSeparator)) : -777,
                 Name = textBoxName.Text,
                 Icon = comboBoxSelectImage.SelectedIndex == 0 ? 70 : comboBoxSelectImage.SelectedIndex
             };

@@ -34,9 +34,9 @@ namespace TrackConverter.Lib.Tracking.Helpers
                     i, //<номер точки в маршруте>
                     pt.Name, //<имя точки>
                     pt.Description, //<описание точки>
-                    pt.Coordinates.Latitude.TotalDegrees.ToString().Replace(Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0], '.'), //<широта>
-                    pt.Coordinates.Longitude.TotalDegrees.ToString().Replace(Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0], '.'), //<долгота>
-                    pt.Time.ToOADate().ToString().Replace(Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0], '.'), //<время>
+                    pt.Coordinates.Latitude.TotalDegrees.ToString().Replace(Vars.DecimalSeparator, '.'), //<широта>
+                    pt.Coordinates.Longitude.TotalDegrees.ToString().Replace(Vars.DecimalSeparator, '.'), //<долгота>
+                    pt.Time.ToOADate().ToString().Replace(Vars.DecimalSeparator, '.'), //<время>
                     "",
                     "",
                     "",
@@ -46,7 +46,7 @@ namespace TrackConverter.Lib.Tracking.Helpers
                     0,
                     0,
                     0,
-                    pt.FeetAltitude.ToString().Replace(Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0], '.')); //высота в футах
+                    pt.FeetAltitude.ToString().Replace(Vars.DecimalSeparator, '.')); //высота в футах
                 i++;
                 outputS.WriteLine(line);
             }

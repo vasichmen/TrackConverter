@@ -33,12 +33,7 @@ namespace TrackConverter.UI.Tools
         /// основные линии на графике, не включая линию выдленного трека
         /// </summary>
         private List<LineItem> mainCurves;
-
-        /// <summary>
-        /// линия высот выделенного трека
-        /// </summary>
-        private LineItem curveSelectedTrack;
-
+        
         /// <summary>
         /// создает новый объект FormElevVisual с заданным списком треков
         /// </summary>

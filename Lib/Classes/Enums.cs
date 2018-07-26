@@ -475,6 +475,22 @@ namespace TrackConverter
     }
 
     /// <summary>
+    /// поставщики слоёв на карте
+    /// </summary>
+    public enum VectorMapLayerProviders
+    {
+        /// <summary>
+        /// Wikimapia
+        /// </summary>
+        Wikimapia,
+
+        /// <summary>
+        /// отсутствует слой
+        /// </summary>
+        None
+    }
+
+    /// <summary>
     /// форматы представления маршрута
     /// </summary>
     public enum FileFormats

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using GMap.NET;
 using TrackConverter.Lib.Classes;
 using TrackConverter.Lib.Tracking;
 
@@ -46,6 +48,20 @@ namespace TrackConverter.Lib.Mathematic.Geodesy.Models
         double CalculateDistance(Coordinate c1, Coordinate c2);
 
         /// <summary>
+        /// расчет длины периметра многоугольника в метрах
+        /// </summary>
+        /// <param name="points">координаты вершин многоугольника</param>
+        /// <returns></returns>
+        double  CalculateDistance(List<PointLatLng> points);
+
+        /// <summary>
+        /// расчет расстояния между двумя координатами в метрах 
+        /// </summary>
+        /// <param name="p1">первая точка</param>
+        /// <param name="p2">вторая точка</param>
+        double CalculateDistance(PointLatLng p1, PointLatLng p2);
+
+        /// <summary>
         /// Вычисление магнитного склонения в заданной точке в градусах
         /// </summary>
         /// <param name="p1">точка, в которой определяется магнитное склонение</param>
@@ -67,6 +83,5 @@ namespace TrackConverter.Lib.Mathematic.Geodesy.Models
         /// <param name="p2">конечная точка</param>
         /// <returns></returns>
         double CalculateTrueAzimuth(TrackPoint p1, TrackPoint p2);
-
     }
 }

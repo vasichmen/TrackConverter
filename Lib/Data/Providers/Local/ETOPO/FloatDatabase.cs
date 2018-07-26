@@ -117,12 +117,12 @@ namespace TrackConverter.Lib.Data.Providers.Local.ETOPO
                         {
                             int _ = line.IndexOf(" ");
                             string num = line.Substring(_);
-                            xllcorner = double.Parse(num.Trim().Replace('.', Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0]));
+                            xllcorner = double.Parse(num.Trim().Replace('.', Vars.DecimalSeparator));
                         } if (line.ToLower().Contains("yllcorner"))
                         {
                             int _ = line.IndexOf(" ");
                             string num = line.Substring(_);
-                            yllcorner = double.Parse(num.Trim().Replace('.', Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0]));
+                            yllcorner = double.Parse(num.Trim().Replace('.', Vars.DecimalSeparator));
                         }if (line.ToLower().Contains("yllcenter") || line.ToLower().Contains("xllcenter"))
                         {
                             throw new ApplicationException("Заголовочный файл должен содержать записи xllcorner и yllcorner.\r\nСкорее всего, указана grid-registred БД. Используйте cell-registred БД.\r\nПроблема в файле " + this.headerFile);
@@ -130,22 +130,22 @@ namespace TrackConverter.Lib.Data.Providers.Local.ETOPO
                         {
                             int _ = line.IndexOf(" ");
                             string num = line.Substring(_);
-                            cellSize = double.Parse(num.Trim().Replace('.', Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0]));
+                            cellSize = double.Parse(num.Trim().Replace('.', Vars.DecimalSeparator));
                         } if (line.ToLower().Contains("nodata_value"))
                         {
                             int _ = line.IndexOf(" ");
                             string num = line.Substring(_);
-                            nodata = float.Parse(num.Trim().Replace('.', Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0]));
+                            nodata = float.Parse(num.Trim().Replace('.', Vars.DecimalSeparator));
                         } if (line.ToLower().Contains("min_value"))
                         {
                             int _ = line.IndexOf(" ");
                             string num = line.Substring(_);
-                            min = float.Parse(num.Trim().Replace('.', Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0]));
+                            min = float.Parse(num.Trim().Replace('.', Vars.DecimalSeparator));
                         } if (line.ToLower().Contains("max_value"))
                         {
                             int _ = line.IndexOf(" ");
                             string num = line.Substring(_);
-                            max = float.Parse(num.Trim().Replace('.', Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0]));
+                            max = float.Parse(num.Trim().Replace('.', Vars.DecimalSeparator));
                         } if (line.ToLower().Contains("byteorder"))
                         {
                             int _ = line.IndexOf(" ");

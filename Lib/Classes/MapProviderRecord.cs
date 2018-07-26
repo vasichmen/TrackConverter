@@ -43,7 +43,7 @@ namespace TrackConverter.Lib.Classes {
         /// <param name="id">ID поставщика</param>
         /// <returns></returns>
         public static MapProviderRecord FromID( int id ) {
-           foreach ( MapProviderRecord m in Vars.Options.Map.AllProviders )
+           foreach ( MapProviderRecord m in Vars.Options.Map.AllMapProviders )
                if ( m.ID == id )
                    return m;
            throw new ArgumentOutOfRangeException( "Поставщика карты с id " + id + " не обнаружено!" );

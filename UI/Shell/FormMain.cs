@@ -409,7 +409,7 @@ namespace TrackConverter.UI.Shell
             //добавление поставщиков карты в меню инструментов
             toolStripDropDownButtonMapProvider.DropDownItems.Clear();
             mapProviderToolStripMenuItem.DropDownItems.Clear();
-            foreach (MapProviderRecord mpr in Vars.Options.Map.AllProviders)
+            foreach (MapProviderRecord mpr in Vars.Options.Map.AllMapProviders)
             {
                 ToolStripMenuItem it1 = new ToolStripMenuItem();
                 it1.Text = mpr.Title;
@@ -429,6 +429,21 @@ namespace TrackConverter.UI.Shell
 
                 toolStripDropDownButtonMapProvider.DropDownItems.Add(it1);
                 mapProviderToolStripMenuItem.DropDownItems.Add(it2);
+            }
+
+            //добавление поставщиков слоёв в основное меню
+            layerProviderToolStripMenuItem.DropDownItems.Clear();
+            foreach (VectorMapLayerProviderRecord lpr in Vars.Options.Map.AllLayerProviders)
+            {
+                ToolStripMenuItem it1 = new ToolStripMenuItem();
+                it1.Text = lpr.Title;
+                it1.Click += mapHelper.lrProvider_Click;
+                it1.Tag = lpr;
+                it1.Image = new Bitmap(Application.StartupPath + lpr.IconName);
+                if (lpr.Enum == Vars.Options.Map.LayerProvider.Enum)
+                    it1.Checked = true;
+                
+                layerProviderToolStripMenuItem.DropDownItems.Add(it1);
             }
 
             #endregion
@@ -478,6 +493,8 @@ namespace TrackConverter.UI.Shell
                 }
 
             #region КАРТА
+
+            mapHelper.ConfigureGMapControl();
             TripRouteFile gf = null;
             try
             {
@@ -716,6 +733,16 @@ namespace TrackConverter.UI.Shell
         private void gmapControlMap_OnMarkerClick(GMapMarker item, MouseEventArgs e)
         {
             mapHelper.OnMarkerClick(item, e);
+        }
+
+        /// <summary>
+        /// нажатие на полигон на карте
+        /// </summary>
+        /// <param name="item"></param>
+        /// <param name="e"></param>
+        private void gmapControlMap_OnPolygonClick(GMapPolygon item, MouseEventArgs e)
+        {
+            mapHelper.OnPolygonClick(item, e);
         }
 
         private void gmapControlMap_OnMapZoomChanged()
@@ -1200,9 +1227,6 @@ namespace TrackConverter.UI.Shell
         {
             mainHelper.toolStripRouteToPoints(sender, e);
         }
-
-
-
 
         #endregion
 

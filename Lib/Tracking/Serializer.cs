@@ -401,7 +401,7 @@ namespace TrackConverter.Lib.Tracking
             {
                 string[] line = Regex.Split(inputS.ReadLine(), "w*,w*");
                 TrackPoint pt = new TrackPoint(line[1], line[2]);
-                pt.MetrAltitude = Convert.ToDouble(line[3].Replace('.', Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0]));
+                pt.MetrAltitude = Convert.ToDouble(line[3].Replace('.', Vars.DecimalSeparator));
                 pt.Time = DateTime.Parse(line[4]);
                 TimeSpan tod = TimeSpan.Parse(line[5]);
                 pt.Time = pt.Time.Add(tod);
@@ -535,7 +535,7 @@ namespace TrackConverter.Lib.Tracking
                     string lat = nd.Attributes["lat"].Value;
                     string lon = nd.Attributes["lon"].Value;
                     string alt = nd.Attributes["alt"] == null ? "-777" : nd.Attributes["alt"].Value;
-                    double Alt = double.Parse(alt.Replace('.', Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0]));
+                    double Alt = double.Parse(alt.Replace('.', Vars.DecimalSeparator));
                     TrackPoint tp = new TrackPoint(lat, lon)
                     {
                         MetrAltitude = Alt,
@@ -596,7 +596,7 @@ namespace TrackConverter.Lib.Tracking
                                 tim = (cd.Name.ToLower() == "time") ? cd.InnerText : tim;
                             }
 
-                            double altD = alt == "" ? -777 : Convert.ToDouble(alt.Replace('.', Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0]));
+                            double altD = alt == "" ? -777 : Convert.ToDouble(alt.Replace('.', Vars.DecimalSeparator));
                             DateTime dt = tim == "" || tim == "01.01.0001 0:00:00" ? DateTime.MinValue : Convert.ToDateTime(tim) - Vars.Options.Converter.UTCDifferrent;
                             TrackPoint nv = new TrackPoint(lat, lon)
                             {
@@ -644,7 +644,7 @@ namespace TrackConverter.Lib.Tracking
 
                 //высота в футах
                 double f = double.NaN;
-                bool ff = double.TryParse(arr[4].Replace('.', Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0]), out f);
+                bool ff = double.TryParse(arr[4].Replace('.', Vars.DecimalSeparator), out f);
                 nv.FeetAltitude = ff ? f : double.NaN;
 
                 res.Add(nv);
@@ -703,12 +703,12 @@ namespace TrackConverter.Lib.Tracking
                 string[] arr = Regex.Split(line, "w*,w*");
                 TrackPoint nv = new TrackPoint(arr[0], arr[1])
                 {
-                    Time = arr[4] == "" ? DateTime.MinValue : DateTime.FromOADate(Convert.ToDouble(arr[4].Replace('.', Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0]).Trim())) + Vars.Options.Converter.UTCDifferrent
+                    Time = arr[4] == "" ? DateTime.MinValue : DateTime.FromOADate(Convert.ToDouble(arr[4].Replace('.', Vars.DecimalSeparator).Trim())) + Vars.Options.Converter.UTCDifferrent
                 };
 
                 //высота в футах
                 double f = double.NaN;
-                bool ff = double.TryParse(arr[3].Replace('.', Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0]), out f);
+                bool ff = double.TryParse(arr[3].Replace('.', Vars.DecimalSeparator), out f);
                 nv.FeetAltitude = ff ? f : double.NaN;
 
                 res.Add(nv);
@@ -747,12 +747,12 @@ namespace TrackConverter.Lib.Tracking
                 TrackPoint pt = new TrackPoint(line[2], line[3]);
                 pt.Name = line[1]; //имя точки
                 //время
-                pt.Time = line[4] == "" ? DateTime.MinValue : DateTime.FromOADate(Convert.ToDouble(line[4].Replace('.', Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0]).Trim())) + Vars.Options.Converter.UTCDifferrent;
+                pt.Time = line[4] == "" ? DateTime.MinValue : DateTime.FromOADate(Convert.ToDouble(line[4].Replace('.', Vars.DecimalSeparator).Trim())) + Vars.Options.Converter.UTCDifferrent;
                 //описание точки
                 pt.Description = line[10];
                 //высота в метрах
                 double f = double.NaN;
-                bool ff = double.TryParse(line[14].Replace('.', Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0]), out f);
+                bool ff = double.TryParse(line[14].Replace('.', Vars.DecimalSeparator), out f);
                 pt.MetrAltitude = ff ? f : double.NaN;
                 //иконка
                 pt.Icon = int.Parse(line[5]);
@@ -797,7 +797,7 @@ namespace TrackConverter.Lib.Tracking
 
                 //высота в футах
                 double f = double.NaN;
-                bool ff = double.TryParse(line[2].Replace('.', Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0]), out f);
+                bool ff = double.TryParse(line[2].Replace('.', Vars.DecimalSeparator), out f);
                 pt.MetrAltitude = ff ? f : double.NaN;
 
                 pt.Time = DateTime.Parse(line[3]) + Vars.Options.Converter.UTCDifferrent;
@@ -856,8 +856,8 @@ namespace TrackConverter.Lib.Tracking
                 else
                 {
                     //долгота, широта
-                    double nlon = Convert.ToDouble(pair[0].Replace('.', Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0]));
-                    double nlat = Convert.ToDouble(pair[1].Replace('.', Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0]));
+                    double nlon = Convert.ToDouble(pair[0].Replace('.', Vars.DecimalSeparator));
+                    double nlat = Convert.ToDouble(pair[1].Replace('.', Vars.DecimalSeparator));
                     npt = new TrackPoint(nlat + res[res.Count - 1].Coordinates.Latitude.TotalDegrees, nlon + res[res.Count - 1].Coordinates.Longitude.TotalDegrees);
                 }
                 res.Add(npt);
@@ -939,8 +939,8 @@ namespace TrackConverter.Lib.Tracking
             {
                 string f0 = "W";
                 string f1 = "RWPT" + i.ToString();
-                string lat = pt.Coordinates.Latitude.TotalDegrees.ToString().Replace(Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0], '.');
-                string lon = pt.Coordinates.Longitude.TotalDegrees.ToString().Replace(Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0], '.');
+                string lat = pt.Coordinates.Latitude.TotalDegrees.ToString().Replace(Vars.DecimalSeparator, '.');
+                string lon = pt.Coordinates.Longitude.TotalDegrees.ToString().Replace(Vars.DecimalSeparator, '.');
                 string f4 = pt.FeetAltitude.ToString().Replace(",", ".");
                 outputS.WriteLine("{0},{1},{2},{3},{4}", f0, f1, lat, lon, f4);
                 i++;
@@ -1032,13 +1032,13 @@ namespace TrackConverter.Lib.Tracking
             int i = 0;
             foreach (TrackPoint pt in Track)
             {
-                string lat = pt.Coordinates.Latitude.TotalDegrees.ToString().Replace(Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0], '.');
-                string lon = pt.Coordinates.Longitude.TotalDegrees.ToString().Replace(Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0], '.');
+                string lat = pt.Coordinates.Latitude.TotalDegrees.ToString().Replace(Vars.DecimalSeparator, '.');
+                string lon = pt.Coordinates.Longitude.TotalDegrees.ToString().Replace(Vars.DecimalSeparator, '.');
                 string f4 = "0";
                 string al = ((int)(pt.FeetAltitude)).ToString();
                 DateTime NullDate = pt.Time.ToUniversalTime();
                 string tm = (pt.Time.Ticks != 0) ? NullDate.ToOADate().ToString() : "0";
-                tm = tm.Replace(Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0], '.');
+                tm = tm.Replace(Vars.DecimalSeparator, '.');
                 string date = NullDate.Date.ToString("ddMMyy");
                 string time = NullDate.TimeOfDay.ToString("hhmmss") + "." + NullDate.TimeOfDay.Milliseconds;
                 outputS.WriteLine("{0},{1},{2},{3},{4},{5},{6}", lat, lon, f4, al, tm, date, time);
@@ -1072,10 +1072,10 @@ namespace TrackConverter.Lib.Tracking
             {
                 string f0 = i.ToString(); //номер
                 string f1 = pt.Name; //имя точки
-                string lat = pt.Coordinates.Latitude.TotalDegrees.ToString().Replace(Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0], '.'); //широта
-                string lon = pt.Coordinates.Longitude.TotalDegrees.ToString().Replace(Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0], '.');//долгота
+                string lat = pt.Coordinates.Latitude.TotalDegrees.ToString().Replace(Vars.DecimalSeparator, '.'); //широта
+                string lon = pt.Coordinates.Longitude.TotalDegrees.ToString().Replace(Vars.DecimalSeparator, '.');//долгота
                 string f4 = (pt.Time.Ticks != 0) ? pt.Time.AddHours(-4).ToOADate().ToString() : "0"; //дата
-                f4 = f4.Replace(Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0], '.');
+                f4 = f4.Replace(Vars.DecimalSeparator, '.');
                 string f5 = pt.Icon.ToString(); //иконка
                 string f6 = "1"; //статус
                 string f7 = "4"; //формат
@@ -1120,9 +1120,9 @@ namespace TrackConverter.Lib.Tracking
             int i = 0;
             foreach (TrackPoint pt in Track)
             {
-                string lat = pt.Coordinates.Latitude.TotalDegrees.ToString().Replace(Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0], '.');
-                string lon = pt.Coordinates.Longitude.TotalDegrees.ToString().Replace(Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0], '.');
-                string alt = pt.MetrAltitude.ToString().Replace(Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0], '.');
+                string lat = pt.Coordinates.Latitude.TotalDegrees.ToString().Replace(Vars.DecimalSeparator, '.');
+                string lon = pt.Coordinates.Longitude.TotalDegrees.ToString().Replace(Vars.DecimalSeparator, '.');
+                string alt = pt.MetrAltitude.ToString().Replace(Vars.DecimalSeparator, '.');
                 outputS.WriteLine("{0};{1};{2};{3};{4};{5}", lat, lon, alt, pt.Time.ToUniversalTime(), pt.Name, pt.Description);
                 i++;
             }
@@ -1243,9 +1243,9 @@ namespace TrackConverter.Lib.Tracking
             int i = 1;
             foreach (TrackPoint pt in Track)
             {
-                string lat = pt.Coordinates.Latitude.TotalDegrees.ToString().Replace(Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0], '.');
-                string lon = pt.Coordinates.Longitude.TotalDegrees.ToString().Replace(Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0], '.');
-                string alt = pt.MetrAltitude.ToString().Replace(Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0], '.');
+                string lat = pt.Coordinates.Latitude.TotalDegrees.ToString().Replace(Vars.DecimalSeparator, '.');
+                string lon = pt.Coordinates.Longitude.TotalDegrees.ToString().Replace(Vars.DecimalSeparator, '.');
+                string alt = pt.MetrAltitude.ToString().Replace(Vars.DecimalSeparator, '.');
                 string date = pt.Time.Date.ToString("yyyy/MM/dd").Replace('.', '/');
                 string time = pt.Time.TimeOfDay.ToString();
                 outputS.WriteLine("{0},{1},{2},{3},{4},{5}", i, lat, lon, alt, date, time);
@@ -1277,7 +1277,7 @@ namespace TrackConverter.Lib.Tracking
             foreach (TrackPoint pt in Track)
             {
                 string position = pt.Coordinates.ToString("{lon} {lat}", "Hdd mm.mmm");
-                string alt = pt.MetrAltitude.ToString().Replace(Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0], '.');
+                string alt = pt.MetrAltitude.ToString().Replace(Vars.DecimalSeparator, '.');
                 string tm = pt.Time.TimeOfDay.ToString();
                 outputS.WriteLine("{0}\t{1}\t{2}\t{3}", pt.Name, position, tm, alt);
             }
@@ -1311,8 +1311,8 @@ namespace TrackConverter.Lib.Tracking
                 return ExportYandex(100, Track);
 
             string lon, lat;
-            lon = Track[0].Coordinates.Longitude.TotalDegrees.ToString("00.00000000").Replace(Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0], '.');
-            lat = Track[0].Coordinates.Latitude.TotalDegrees.ToString("00.00000000").Replace(Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0], '.');
+            lon = Track[0].Coordinates.Longitude.TotalDegrees.ToString("00.00000000").Replace(Vars.DecimalSeparator, '.');
+            lat = Track[0].Coordinates.Latitude.TotalDegrees.ToString("00.00000000").Replace(Vars.DecimalSeparator, '.');
             string res = string.Format("http://maps.yandex.ru/?ll={0}%2C{1}&spn=0.322723%2C0.156041&z=10&l=map&", lon, lat);
             res += string.Format("rl={0}%2C{1}", lon, lat);
             for (int i = 1; i < Track.Count; i++)
@@ -1320,7 +1320,7 @@ namespace TrackConverter.Lib.Tracking
                 string ndata = "";
                 double dlon = Math.Round(Track[i].Coordinates.Longitude.TotalDegrees - Track[i - 1].Coordinates.Longitude.TotalDegrees, 8);
                 double dlat = Math.Round(Track[i].Coordinates.Latitude.TotalDegrees - Track[i - 1].Coordinates.Latitude.TotalDegrees, 8);
-                ndata += "~" + dlon.ToString("0.00000000").Replace(Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0], '.') + "%2C" + dlat.ToString("#0.00000000").Replace(Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0], '.');
+                ndata += "~" + dlon.ToString("0.00000000").Replace(Vars.DecimalSeparator, '.') + "%2C" + dlat.ToString("#0.00000000").Replace(Vars.DecimalSeparator, '.');
                 res += ndata;
             }
             return res;
@@ -1341,8 +1341,8 @@ namespace TrackConverter.Lib.Tracking
             int step = (int)(Track.Count / count);
 
             string lon, lat;
-            lon = Track[0].Coordinates.Longitude.TotalDegrees.ToString("00.00000000").Replace(Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0], '.');
-            lat = Track[0].Coordinates.Latitude.TotalDegrees.ToString("00.00000000").Replace(Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0], '.');
+            lon = Track[0].Coordinates.Longitude.TotalDegrees.ToString("00.00000000").Replace(Vars.DecimalSeparator, '.');
+            lat = Track[0].Coordinates.Latitude.TotalDegrees.ToString("00.00000000").Replace(Vars.DecimalSeparator, '.');
             string res = string.Format("http://maps.yandex.ru/?ll={0}%2C{1}&spn=0.322723%2C0.156041&z=10&l=map&", lon, lat);
             res += string.Format("rl={0}%2C{1}", lon, lat);
             for (int i = 1; i < Track.Count; i += step)
@@ -1351,7 +1351,7 @@ namespace TrackConverter.Lib.Tracking
                 int prev = (i - step < 0) ? 1 : (i - step);
                 double dlon = Math.Round(Track[i].Coordinates.Longitude.TotalDegrees - Track[prev].Coordinates.Longitude.TotalDegrees, 8);
                 double dlat = Math.Round(Track[i].Coordinates.Latitude.TotalDegrees - Track[prev].Coordinates.Latitude.TotalDegrees, 8);
-                ndata += "~" + dlon.ToString("0.00000000").Replace(Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0], '.') + "%2C" + dlat.ToString("#0.00000000").Replace(Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0], '.');
+                ndata += "~" + dlon.ToString("0.00000000").Replace(Vars.DecimalSeparator, '.') + "%2C" + dlat.ToString("#0.00000000").Replace(Vars.DecimalSeparator, '.');
                 res += ndata;
             }
             //добавление последней точки
@@ -1360,7 +1360,7 @@ namespace TrackConverter.Lib.Tracking
             int prev1 = (j - step < 0) ? 1 : (j - step);
             double dlon1 = Math.Round(Track[j].Coordinates.Longitude.TotalDegrees - Track[prev1].Coordinates.Longitude.TotalDegrees, 8);
             double dlat1 = Math.Round(Track[j].Coordinates.Latitude.TotalDegrees - Track[prev1].Coordinates.Latitude.TotalDegrees, 8);
-            ndata1 += "~" + dlon1.ToString("0.00000000").Replace(Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0], '.') + "%2C" + dlat1.ToString("#0.00000000").Replace(Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0], '.');
+            ndata1 += "~" + dlon1.ToString("0.00000000").Replace(Vars.DecimalSeparator, '.') + "%2C" + dlat1.ToString("#0.00000000").Replace(Vars.DecimalSeparator, '.');
             res += ndata1;
             return res;
         }
@@ -1375,8 +1375,8 @@ namespace TrackConverter.Lib.Tracking
 
             //http://wikimapia.org/#lang=ru&lat=55.735374&lon=37.861032&z=14&m=ys&gz=0;378486728;557230014;123596;77576;0;0;478076;235824
             string lon, lat;
-            lon = (Track[0].Coordinates.Longitude.TotalDegrees).ToString("00.000000").Replace(Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0], '.');
-            lat = (Track[0].Coordinates.Latitude.TotalDegrees).ToString("00.000000").Replace(Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0], '.');
+            lon = (Track[0].Coordinates.Longitude.TotalDegrees).ToString("00.000000").Replace(Vars.DecimalSeparator, '.');
+            lat = (Track[0].Coordinates.Latitude.TotalDegrees).ToString("00.000000").Replace(Vars.DecimalSeparator, '.');
             //при формировании ссылки в части, отвечающей за установку курсора, сначала  широта,  потом долгота
             //в части, где записываются точки наоборот - сначала долгота, потом широта
             string res = string.Format("http://wikimapia.org/#lang=ru&lat={1}&lon={0}&z=12&m=ys&gz=0;", lon, lat);
@@ -1412,8 +1412,8 @@ namespace TrackConverter.Lib.Tracking
 
             int step = (int)(Track.Count / count);
             string lon, lat;
-            lon = (Track[0].Coordinates.Longitude.TotalDegrees).ToString("00.000000").Replace(Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0], '.');
-            lat = (Track[0].Coordinates.Latitude.TotalDegrees).ToString("00.000000").Replace(Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0], '.');
+            lon = (Track[0].Coordinates.Longitude.TotalDegrees).ToString("00.000000").Replace(Vars.DecimalSeparator, '.');
+            lat = (Track[0].Coordinates.Latitude.TotalDegrees).ToString("00.000000").Replace(Vars.DecimalSeparator, '.');
             //при формировании ссылки в части, отвечающей за установку курсора, сначала  широта,  потом долгота
             //в части, где записываются точки наоборот - сначала долгота, потом широта
             string res = string.Format("http://wikimapia.org/#lang=ru&lat={1}&lon={0}&z=12&m=ys&gz=0;", lon, lat);
@@ -1500,8 +1500,8 @@ namespace TrackConverter.Lib.Tracking
                         TrackPoint np = new TrackPoint(arr[5], arr[6]);
                         np.Description = arr[13];
                         np.Name = arr[3];
-                        np.FeetAltitude = Convert.ToDouble(arr[17].Replace('.', Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0]));
-                        np.Time = DateTime.FromOADate(Convert.ToDouble(arr[7].Replace('.', Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0]).Trim()));
+                        np.FeetAltitude = Convert.ToDouble(arr[17].Replace('.', Vars.DecimalSeparator));
+                        np.Time = DateTime.FromOADate(Convert.ToDouble(arr[7].Replace('.', Vars.DecimalSeparator).Trim()));
                         ntf += np;
                         break;
                 }

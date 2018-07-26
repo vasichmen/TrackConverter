@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using GMap.NET;
 using TrackConverter.Lib.Classes;
 using TrackConverter.Lib.Mathematic.Astronomy;
 using TrackConverter.Lib.Mathematic.Base;
@@ -16,7 +17,7 @@ namespace TrackConverter.Lib.Mathematic.Geodesy.Models
     /// Теория:
     /// http://blog.foxylab.com/prakticheskaya-kartografiya/
     /// </summary>
-    public abstract class BaseModel : IEarthModel 
+    public abstract class BaseModel : IEarthModel
     {
 
         #region параметры эллипсоида
@@ -90,9 +91,47 @@ namespace TrackConverter.Lib.Mathematic.Geodesy.Models
         /// <returns></returns>
         public double CalculateDistance(Coordinate c1, Coordinate c2)
         {
-            double d = SphereCalculations.CalculateDistance(c1,c2);
+            return CalculateDistance(c1.Latitude.TotalDegrees, c1.Longitude.TotalDegrees, c2.Latitude.TotalDegrees, c2.Longitude.TotalDegrees);
+        }
+
+        /// <summary>
+        /// расчет расстояния между двумя точками в метрах
+        /// </summary>
+        /// <param name="p1">точка 1</param>
+        /// <param name="p2">точка 2</param>
+        /// <returns></returns>
+        public double CalculateDistance(PointLatLng p1, PointLatLng p2)
+        {
+            return CalculateDistance(p1.Lat, p1.Lng, p2.Lat, p2.Lng);
+        }
+
+        /// <summary>
+        /// расчет расстояния между двумя точками в метрах
+        /// </summary>
+        /// <param name="lat1">широта 1 точки</param>
+        /// <param name="lon1">долгота 1 точки</param>
+        /// <param name="lat2">широта 2 точки</param>
+        /// <param name="lon2">долгота 2 точки</param>
+        /// <returns></returns>
+        private double CalculateDistance(double lat1, double lon1, double lat2, double lon2)
+        {
+            double d = SphereCalculations.CalculateDistance(lat1, lon1, lat2, lon2);
             double D = d * this.AverageRadius;
             return D;
+        }
+
+        /// <summary>
+        /// расчет длины многоугольника в метрах
+        /// </summary>
+        /// <param name="points">координаты вершин многоугольника</param>
+        /// <returns></returns>
+        public double CalculateDistance(List<PointLatLng> points)
+        {
+            double res = 0;
+            for (int i = 0; i < points.Count - 1; i++)
+                res += CalculateDistance(points[i], points[i + 1]);
+            res += CalculateDistance(points[points.Count - 1], points[0]);
+            return res;
         }
 
         /// <summary>
@@ -149,6 +188,10 @@ namespace TrackConverter.Lib.Mathematic.Geodesy.Models
 
             return SphereCalculations.CalculateAngle(p1.Coordinates, new Coordinate(90, 0), p2.Coordinates, AngleMeasure.Degrees);
         }
+
+
+
+
 
         #endregion
 

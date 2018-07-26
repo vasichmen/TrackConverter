@@ -116,7 +116,7 @@
             this.textBoxDescription.Multiline = true;
             this.textBoxDescription.Name = "textBoxDescription";
             this.textBoxDescription.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBoxDescription.Size = new System.Drawing.Size(422, 125);
+            this.textBoxDescription.Size = new System.Drawing.Size(422, 124);
             this.textBoxDescription.TabIndex = 4;
             this.toolTip1.SetToolTip(this.textBoxDescription, "Подробное описание точки. Можно использовать HTML");
             // 
@@ -187,7 +187,7 @@
             // buttonSave
             // 
             this.buttonSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonSave.Location = new System.Drawing.Point(15, 351);
+            this.buttonSave.Location = new System.Drawing.Point(15, 350);
             this.buttonSave.Name = "buttonSave";
             this.buttonSave.Size = new System.Drawing.Size(95, 23);
             this.buttonSave.TabIndex = 14;
@@ -200,7 +200,7 @@
             // 
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.buttonCancel.Location = new System.Drawing.Point(341, 351);
+            this.buttonCancel.Location = new System.Drawing.Point(341, 350);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 15;
@@ -422,7 +422,7 @@
             // buttonAdditionInfo
             // 
             this.buttonAdditionInfo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonAdditionInfo.Location = new System.Drawing.Point(149, 351);
+            this.buttonAdditionInfo.Location = new System.Drawing.Point(149, 350);
             this.buttonAdditionInfo.Name = "buttonAdditionInfo";
             this.buttonAdditionInfo.Size = new System.Drawing.Size(146, 23);
             this.buttonAdditionInfo.TabIndex = 24;
@@ -468,7 +468,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.buttonCancel;
-            this.ClientSize = new System.Drawing.Size(442, 379);
+            this.ClientSize = new System.Drawing.Size(442, 378);
             this.Controls.Add(this.comboBoxPointType);
             this.Controls.Add(this.label8);
             this.Controls.Add(this.buttonAdditionInfo);
