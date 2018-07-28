@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.IO;
 using System.Net;
 using System.Net.NetworkInformation;
@@ -50,11 +51,29 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         }
 
         /// <summary>
+        /// загрузка изображения по заданной ссылке
+        /// </summary>
+        /// <param name="url"></param>
+        /// <returns></returns>
+        public static Image GetImage(string url)
+        {
+            HttpWebRequest request1 = (HttpWebRequest)WebRequest.Create(url);
+            request1.Method = "GET";
+            request1.KeepAlive = true;
+            HttpWebResponse response1 = (HttpWebResponse)request1.GetResponse();
+            Image res = Image.FromStream(response1.GetResponseStream());
+            request1.Abort();
+            return res;
+        }
+
+        /// <summary>
         /// провекрка подключения к интернету
         /// </summary>
         /// <returns></returns>
-        public static bool CheckInternet()
+        public bool CheckInternet()
         {
+            if (DateTime.Now - this.lastCheckInet < TimeSpan.FromMinutes(1))
+                return InternetReachable;
             try
             {
                 InternetConnectionState flags = InternetConnectionState.INTERNET_CONNECTION_CONFIGURED | 0;
@@ -66,7 +85,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                     Ping ping = new Ping();
                     for (int i = 0; i < serverList.Length; i++)
                     {
-                        PingReply pingReply = ping.Send(serverList[i]);
+                        PingReply pingReply = ping.Send(serverList[i], 5000);
                         haveAnInternetConnection = (pingReply.Status == IPStatus.Success);
                         if (haveAnInternetConnection)
                             break;
@@ -92,7 +111,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         /// <summary>
         /// проверка подключения к интернет
         /// </summary>
-        public bool? InternetReachable { get; set; }
+        public bool InternetReachable { get; set; }
 
         /// <summary>
         /// отправка запроса с результатом в виде xml
@@ -117,8 +136,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         protected string SendStringGetRequest(string url)
         {
             //проверка подключения
-            if (InternetReachable == null)
-                InternetReachable = CheckInternet();
+            InternetReachable = CheckInternet();
             if (!(bool)InternetReachable)
                 throw new WebException("Подключение к интернет не установлено!");
 
@@ -186,30 +204,42 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         /// <returns></returns>
         protected string SendStringPostRequest(string url, string data)
         {
-            HttpWebRequest req = (HttpWebRequest)WebRequest.Create(url);
-            req.Method = "POST";
-            req.Timeout = 100000;
-            req.ContentType = "application/x-www-form-urlencoded";
-            req.UserAgent = "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36";
-            byte[] sentData = Encoding.GetEncoding(1251).GetBytes(data);
-            req.ContentLength = sentData.Length;
-            Stream sendStream = req.GetRequestStream();
-            sendStream.Write(sentData, 0, sentData.Length);
-            sendStream.Close();
-            WebResponse res = req.GetResponse();
-            Stream ReceiveStream = res.GetResponseStream();
-            StreamReader sr = new StreamReader(ReceiveStream, Encoding.UTF8);
-            //Кодировка указывается в зависимости от кодировки ответа сервера
-            Char[] read = new char[256];
-            int count = sr.Read(read, 0, 256);
-            string Out = string.Empty;
-            while (count > 0)
+            //проверка подключения
+            InternetReachable = CheckInternet();
+            if (!(bool)InternetReachable)
+                throw new WebException("Подключение к интернет не установлено!");
+
+            try
             {
-                string str = new string(read, 0, count);
-                Out += str;
-                count = sr.Read(read, 0, 256);
+                //ожидание времени интервала между запросами
+                while (DateTime.Now - lastQuery < MinQueryInterval)
+                    Thread.Sleep(50);
+                HttpWebRequest req = (HttpWebRequest)WebRequest.Create(url);
+                req.Method = "POST";
+                req.Timeout = 100000;
+                req.ContentType = "application/x-www-form-urlencoded";
+                req.UserAgent = "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36";
+                byte[] sentData = Encoding.GetEncoding(1251).GetBytes(data);
+                req.ContentLength = sentData.Length;
+                Stream sendStream = req.GetRequestStream();
+                sendStream.Write(sentData, 0, sentData.Length);
+                sendStream.Close();
+                WebResponse res = req.GetResponse();
+                Stream ReceiveStream = res.GetResponseStream();
+                StreamReader sr = new StreamReader(ReceiveStream, Encoding.UTF8);
+                //Кодировка указывается в зависимости от кодировки ответа сервера
+                Char[] read = new char[256];
+                int count = sr.Read(read, 0, 256);
+                string Out = string.Empty;
+                while (count > 0)
+                {
+                    string str = new string(read, 0, count);
+                    Out += str;
+                    count = sr.Read(read, 0, 256);
+                }
+                return Out;
             }
-            return Out;
+            catch (WebException we) { throw new WebException("Ошибка подключения.\r\n" + url, we); }
         }
     }
 }

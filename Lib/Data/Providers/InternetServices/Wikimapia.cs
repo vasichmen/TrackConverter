@@ -250,7 +250,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         /// </summary>
         /// <param name="area">область</param>
         /// <param name="perimeter">минимальный размер периметра объекта в метрах</param>
-        List<VectorMapLayerObject> GetVectorMapLayerObjects2(RectLatLng area, double perimeter)
+        List<VectorMapLayerObject> GetObjects2(RectLatLng area, double perimeter)
         {
             //http://api.wikimapia.org/?function=box&key=087ECBE0-AACD80A2-30627FE3-02F13F18-24AF43B7-E7C48BDE-202D8280-69841637&bbox=37.61605,55.73522,37.64279,55.74341&count=100&format=xml&language=ru&page=2&disable=location
 
@@ -362,6 +362,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
             }
             return new GMapPolygon(points, "noname");
         }
+
 
     }
 }

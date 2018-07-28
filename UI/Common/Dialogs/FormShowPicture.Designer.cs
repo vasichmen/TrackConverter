@@ -43,39 +43,42 @@
             this.pictureBoxImage.ContextMenuStrip = this.contextMenuStripPicture;
             this.pictureBoxImage.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pictureBoxImage.Location = new System.Drawing.Point(0, 0);
+            this.pictureBoxImage.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.pictureBoxImage.Name = "pictureBoxImage";
-            this.pictureBoxImage.Size = new System.Drawing.Size(606, 465);
+            this.pictureBoxImage.Size = new System.Drawing.Size(808, 572);
             this.pictureBoxImage.TabIndex = 0;
             this.pictureBoxImage.TabStop = false;
             // 
             // contextMenuStripPicture
             // 
+            this.contextMenuStripPicture.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.contextMenuStripPicture.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.saveImageAsToolStripMenuItem});
             this.contextMenuStripPicture.Name = "contextMenuStripPicture";
-            this.contextMenuStripPicture.Size = new System.Drawing.Size(216, 26);
+            this.contextMenuStripPicture.Size = new System.Drawing.Size(254, 28);
             // 
             // saveImageAsToolStripMenuItem
             // 
             this.saveImageAsToolStripMenuItem.Name = "saveImageAsToolStripMenuItem";
-            this.saveImageAsToolStripMenuItem.Size = new System.Drawing.Size(215, 22);
+            this.saveImageAsToolStripMenuItem.Size = new System.Drawing.Size(253, 24);
             this.saveImageAsToolStripMenuItem.Text = "Сохранить картинку как...";
             this.saveImageAsToolStripMenuItem.Click += new System.EventHandler(this.saveImageAsToolStripMenuItem_Click);
             // 
             // FormShowPicture
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(606, 465);
+            this.ClientSize = new System.Drawing.Size(808, 572);
             this.Controls.Add(this.pictureBoxImage);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "FormShowPicture";
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "FormShowPicture";
             this.TopMost = true;
-            this.Load += new System.EventHandler(this.FormShowPicture_Load);
+            this.Shown += new System.EventHandler(this.FormShowPicture_Shown);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxImage)).EndInit();
             this.contextMenuStripPicture.ResumeLayout(false);
             this.ResumeLayout(false);

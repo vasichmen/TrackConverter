@@ -7,7 +7,9 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
+using TrackConverter.Lib.Data.Providers.InternetServices;
 
 namespace TrackConverter.UI.Common.Dialogs
 {
@@ -29,22 +31,6 @@ namespace TrackConverter.UI.Common.Dialogs
         {
             InitializeComponent();
             this.url = url;
-            this.Text = url;
-        }
-
-        /// <summary>
-        /// загрузка изображения
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void FormShowPicture_Load(object sender, EventArgs e)
-        {
-            HttpWebRequest request1 = (HttpWebRequest)WebRequest.Create(url);
-            request1.Method = "GET";
-            request1.KeepAlive = true;
-            HttpWebResponse response1 = (HttpWebResponse)request1.GetResponse();
-            pictureBoxImage.BackgroundImage = Image.FromStream(response1.GetResponseStream());
-            pictureBoxImage.BackgroundImageLayout = ImageLayout.Zoom;
         }
 
         private void saveImageAsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -55,6 +41,31 @@ namespace TrackConverter.UI.Common.Dialogs
            
             if (sf.ShowDialog() == DialogResult.OK)
                 pictureBoxImage.BackgroundImage.Save(sf.FileName);
+        }
+
+        private void FormShowPicture_Shown(object sender, EventArgs e)
+        {
+            Task load = null;
+            try
+            {
+                Program.winMain.BeginOperation();
+                Program.winMain.setCurrentOperation("Загрузка ихображения...");
+                load = new Task(() => {
+                    pictureBoxImage.BackgroundImage = BaseConnection.GetImage(url); });
+                load.Start();
+                load.Wait();
+                pictureBoxImage.BackgroundImageLayout = ImageLayout.Zoom;
+                this.Text = url;
+            }
+            catch (Exception ex)
+            {
+                if (ex.InnerException != null)
+                    ex = ex.InnerException;
+                MessageBox.Show(this, "Произошла ошибка при загрузке фотографии.\r\nПричина: " + ex.Message, "Загрузка фотографии", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                Close();
+            }
+            finally { Program.winMain.EndOperation(); }
+
         }
     }
 }

@@ -346,7 +346,6 @@ namespace TrackConverter.UI.Shell
         /// <param name="e"></param>
         internal void OnPolygonClick(GMapPolygon item, MouseEventArgs e)
         {
-
             //если не идёт создание маршрута, линейка, перемещение маркера, перемещение карты, то обрабатываем нажатие
             if (!formMain.isCreatingRoute && !formMain.isRuling && !formMain.isMarkerMoving && !formMain.gmapControlMap.IsDragging)
             {
@@ -366,7 +365,7 @@ namespace TrackConverter.UI.Shell
                     else
                         return;
                 }
-               new FormShowObjectInfo(obj).Show();
+                new FormShowObjectInfo(obj).Show();
             }
         }
 
