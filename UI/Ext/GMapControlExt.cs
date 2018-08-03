@@ -2,6 +2,7 @@
 using GMap.NET.WindowsForms;
 using System;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.ComponentModel;
 using System.Drawing;
 using System.Threading;
@@ -18,11 +19,35 @@ namespace TrackConverter.UI.Ext
     /// </summary>
     public class GMapControlExt : GMapControl
     {
+        /// <summary>
+        /// слой на карте для доп. слоя
+        /// </summary>
         GMapOverlay layersOverlay;
+
+        /// <summary>
+        /// загруженные объекты
+        /// </summary>
         Dictionary<string, VectorMapLayerObject> LayerObjects = new Dictionary<string, VectorMapLayerObject>();
+
+        /// <summary>
+        /// загруженные области с объектами
+        /// </summary>
+        ConcurrentBag<RectLatLng> loadedAreas;
         string layersOverlayID = "layersOverlay";
-        Pen polygonStroke = Pens.Black;
+
+        /// <summary>
+        /// цвет границы объекта
+        /// </summary>
+        Pen polygonStroke = Pens.Gray;
+
+        /// <summary>
+        /// заливка объекта
+        /// </summary>
         Brush polygonBrush = Brushes.Transparent;
+
+        /// <summary>
+        /// всплывающие подсказки на объектах
+        /// </summary>
         ToolTip ToolTipPolygonTitles = new ToolTip();
 
         /// <summary>
@@ -31,7 +56,7 @@ namespace TrackConverter.UI.Ext
         public GMapControlExt() : base()
         {
             layersOverlay = new GMapOverlay(layersOverlayID);
-
+            loadedAreas = new ConcurrentBag<RectLatLng>();
             this.Overlays.Add(layersOverlay);
 
             //добавляем событие обновления слоёв карты
@@ -49,7 +74,7 @@ namespace TrackConverter.UI.Ext
             List<VectorMapLayerObject> objects = GetVectorObjectsUnderCursor();
             string text = "";
             foreach (VectorMapLayerObject obj in objects)
-                text += obj.Name+"\r\n";
+                text += obj.Name + "\r\n";
 
             ToolTipPolygonTitles.AutomaticDelay = 50;
             ToolTipPolygonTitles.AutoPopDelay = 10000;
@@ -119,8 +144,6 @@ namespace TrackConverter.UI.Ext
             if (Program.winMain == null || this.LayerProvider == VectorMapLayerProviders.None)
                 return;
 
-            RectLatLng area = GetViewArea(); //область координат на экране
-
             double resolution = this.MapProvider.Projection.GetGroundResolution((int)Zoom, Position.Lat); //сколько метров в 1 пикселе при таком масштабе (для выбора периметра объекта)
             double min_pixel_perimeter = 40; //минимальный периметр в пикселях для вывода на экран
             double minPerimeter = resolution * min_pixel_perimeter; //минимальный периметр в метрах
@@ -130,24 +153,30 @@ namespace TrackConverter.UI.Ext
                 //загрузка слоя в новом потоке
                 Task ts = new Task(() =>
                 {
+                    Program.winMain.BeginOperation();
                     VectorMapLayerProviders provider = this.LayerProvider;
                     int zoom = (int)Zoom;
                     List<RectLatLng> tiles = this.GetVisibleTiles();
+                    int i = 0;
                     foreach (RectLatLng tile in tiles)
                     {
+                        string prc = (((double)i / tiles.Count) * 100d).ToString("0");
+                        Program.winMain.setCurrentOperation("Загрузка слоёв " + LayerProvider.ToString() + ", завершено " + prc + "%");
                         List<VectorMapLayerObject> nobj = this.layerProviderEngine.GetObjects(tile, minPerimeter, (int)Zoom);
+                        loadedAreas.Add(tile);
                         this.Invoke(new Action(() =>
                         {
                             foreach (VectorMapLayerObject obj in nobj)
                             {
                                 if (zoom != (int)Zoom || this.LayerProvider != provider) //если во время выполнения операции изменились настройки, то выходим
-                                        return;
+                                    return;
                                 ShowLayerObject(obj);
                             }
                             this.Refresh();
                         }));
-
+                        i++;
                     }
+                    Program.winMain.EndOperation();
                 });
                 ts.Start();
             }
@@ -155,13 +184,14 @@ namespace TrackConverter.UI.Ext
             {
                 MessageBox.Show(Program.winMain, "Не удалось загрузить слои! Причина:\r\n" + e.Message, "Загрузка слоя " + this.LayerProvider.ToString(), MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 Program.winMain.layerProviderToolStripMenuItem.DropDownItems[0].PerformClick();
+                Program.winMain.EndOperation();
                 return;
             }
 
         }
 
         /// <summary>
-        /// возвращает тайлы, которые сейчас выдны на экране
+        /// возвращает тайлы, которые сейчас выдны на экране. При этом исключаются области, загруженные ранее.
         /// </summary>
         /// <returns></returns>
         private List<RectLatLng> GetVisibleTiles()
@@ -174,9 +204,22 @@ namespace TrackConverter.UI.Ext
                 for (double j = area.Right; j > area.Left; j -= step_hor)
                 {
                     RectLatLng nar = new RectLatLng(i, j - step_hor, step_hor, step_vert);
-                    res.Add(nar);
+                    if (!isAreaLoaded(nar))
+                        res.Add(nar);
                 }
             return res;
+        }
+
+        /// <summary>
+        /// возвращает истину, если заданная область nar полностью покрывается областями из списка this.loadedAreas
+        /// </summary>
+        /// <param name="nar">проверяемая область</param>
+        /// <returns></returns>
+        private bool isAreaLoaded(RectLatLng nar)
+        {
+            return false;
+            //TODO: сделть проверку поададния в загруженную область 
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -245,6 +288,7 @@ namespace TrackConverter.UI.Ext
         {
             layersOverlay.Polygons.Clear();
             LayerObjects.Clear();
+            loadedAreas = new ConcurrentBag<RectLatLng>(); //очистка коллекции загруженных областей
             this.Refresh();
         }
     }

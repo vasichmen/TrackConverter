@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -51,15 +52,14 @@ namespace TrackConverter.UI.Map
 
         private void FormShowObjectInfo_Shown(object sender, EventArgs e)
         {
-
             this.Text = Obj.Name;
             this.labelName.Text = Obj.Name;
 
             switch (Obj.LayerProvider)
             {
                 case VectorMapLayerProviders.Wikimapia:
-                    Task load=null;
-                    Task imgs=null;
+                    Task load = null;
+                    Task imgs = null;
                     try
                     {
                         Program.winMain.BeginOperation();
@@ -73,12 +73,24 @@ namespace TrackConverter.UI.Map
                         labelName.Text = info.Title;
                         new ToolTip().SetToolTip(labelName, info.Title);
                         textBoxDescription.Text = info.Description;
-
+                        linkLabelLink.Text = info.Link;
+                        if (string.IsNullOrWhiteSpace(info.Description))
+                        {
+                            this.Height -= textBoxDescription.Height;
+                            textBoxDescription.Height = 1;
+                        }
                         //комментарии
                         string comms = "";
                         foreach (Wikimapia.ExtInfo.CommentInfo com in info.Comments)
-                            comms += "===" + com.UserName + "===" + com.Date.ToString() + "\r\n" + com.Message + "\r\n\r\n";
+                            comms += "===" + com.UserName + "=== " +
+                                (com.Date == DateTime.MinValue ? com.StringDate : com.Date.ToString()) +
+                                "\r\n" + com.Message + "\r\n\r\n";
                         textBoxComments.Text = comms;
+                        if (string.IsNullOrWhiteSpace(comms))
+                        {
+                            this.Height -= textBoxComments.Height;
+                            textBoxComments.Height = 1;
+                        }
 
                         //картинки
                         imgs = new Task(() =>
@@ -102,7 +114,12 @@ namespace TrackConverter.UI.Map
                             }
                         });
                         imgs.Start();
-                        //imgs.Wait();
+                        if (info.Photos.Count == 0)
+                        {
+                            this.Height -= flowLayoutPanelImages.Height;
+                            flowLayoutPanelImages.Height = 1;
+                        }
+                        Program.winMain.mapHelper.SelectPolygon(this.Obj.Geometry);
                     }
                     catch (Exception ex)
                     {
@@ -110,13 +127,29 @@ namespace TrackConverter.UI.Map
                         MessageBox.Show(this, "Произошла ошибка при загрузке информации об объекте.\r\nПричина: " + ex.Message, "Загрузка информации об объекте " + Obj.ID, MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                         Close();
                     }
-                    finally {
+                    finally
+                    {
                         Program.winMain.EndOperation();
                     }
                     break;
                 case VectorMapLayerProviders.None:
                     throw new Exception("Заданный объект из неизвестного источника");
             }
+        }
+
+        private void FormShowObjectInfo_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            Program.winMain.mapHelper.DisSelectPolygon(this.Obj.Geometry);
+        }
+        
+        /// <summary>
+        /// переход по ссылке на объект викимапии
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void linkLabelLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            Process.Start(linkLabelLink.Text);
         }
     }
 }

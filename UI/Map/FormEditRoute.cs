@@ -85,7 +85,7 @@ namespace TrackConverter.UI.Map
                 
 
             this.route.CalculateAll();
-            Program.winMain.toolStripStatusLabelInfo.Text = "Расстояние: " + this.route.Distance + " км";
+            Program.winMain.toolStripLabelInfo.Text = "Расстояние: " + this.route.Distance + " км";
         }
 
         /// <summary>
@@ -130,7 +130,7 @@ namespace TrackConverter.UI.Map
             }
             if (Program.winMain.isRuling)
                 Program.winMain.isRuling = false;
-            Program.winMain.toolStripStatusLabelInfo.Text = "";
+            Program.winMain.toolStripLabelInfo.Text = "";
             this.overlay.Clear();
             Program.winMain.selectedPointIndex = 0;
             Program.winMain.gmapControlMap.DragButton = MouseButtons.Left;

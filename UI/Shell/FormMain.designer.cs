@@ -77,12 +77,6 @@ namespace TrackConverter.UI.Shell
             this.справкаToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
-            this.toolStripStatusLabelCurrentOperation = new System.Windows.Forms.ToolStripStatusLabel();
-            this.toolStripStatusLabelFromStart = new System.Windows.Forms.ToolStripStatusLabel();
-            this.toolStripStatusLabelLon = new System.Windows.Forms.ToolStripStatusLabel();
-            this.toolStripStatusLabelLat = new System.Windows.Forms.ToolStripStatusLabel();
-            this.toolStripStatusLabelInfo = new System.Windows.Forms.ToolStripStatusLabel();
             this.splitContainerVertical = new System.Windows.Forms.SplitContainer();
             this.splitContainerHorizontalLeft = new System.Windows.Forms.SplitContainer();
             this.dataGridViewConverter = new System.Windows.Forms.DataGridView();
@@ -135,6 +129,7 @@ namespace TrackConverter.UI.Shell
             this.toolStripComboBoxSearch = new System.Windows.Forms.ToolStripComboBox();
             this.toolStripButtonFind = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonClearSearchMarks = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonLocateDevice = new System.Windows.Forms.ToolStripButton();
             this.zedGraph = new ZedGraph.ZedGraphControl();
             this.button1 = new System.Windows.Forms.Button();
             this.contextMenuStripMap = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -152,9 +147,15 @@ namespace TrackConverter.UI.Shell
             this.contextMenuStripRoute = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.editRouteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.removeRouteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.toolStrip3 = new System.Windows.Forms.ToolStrip();
+            this.toolStripLabelInfo = new System.Windows.Forms.ToolStripLabel();
+            this.toolStripLabelFromStart = new System.Windows.Forms.ToolStripLabel();
+            this.toolStripLabelCurrentOperation = new System.Windows.Forms.ToolStripLabel();
+            this.toolStrip4 = new System.Windows.Forms.ToolStrip();
+            this.toolStripLabelPosition = new System.Windows.Forms.ToolStripLabel();
             this.gmapControlMap = new TrackConverter.UI.Ext.GMapControlExt();
             this.menuStrip1.SuspendLayout();
-            this.statusStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerVertical)).BeginInit();
             this.splitContainerVertical.Panel1.SuspendLayout();
             this.splitContainerVertical.Panel2.SuspendLayout();
@@ -176,10 +177,14 @@ namespace TrackConverter.UI.Shell
             this.contextMenuStripMap.SuspendLayout();
             this.contextMenuStripMarker.SuspendLayout();
             this.contextMenuStripRoute.SuspendLayout();
+            this.tableLayoutPanel1.SuspendLayout();
+            this.toolStrip3.SuspendLayout();
+            this.toolStrip4.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
             // 
+            this.menuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.FileToolStripMenuItem,
             this.картаToolStripMenuItem,
@@ -553,49 +558,6 @@ namespace TrackConverter.UI.Shell
             this.aboutToolStripMenuItem.Text = "О программе";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
-            // statusStrip1
-            // 
-            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripStatusLabelCurrentOperation,
-            this.toolStripStatusLabelFromStart,
-            this.toolStripStatusLabelLon,
-            this.toolStripStatusLabelLat,
-            this.toolStripStatusLabelInfo});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 697);
-            this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(1332, 22);
-            this.statusStrip1.TabIndex = 2;
-            this.statusStrip1.Text = "statusStrip1";
-            // 
-            // toolStripStatusLabelCurrentOperation
-            // 
-            this.toolStripStatusLabelCurrentOperation.Name = "toolStripStatusLabelCurrentOperation";
-            this.toolStripStatusLabelCurrentOperation.Size = new System.Drawing.Size(0, 17);
-            // 
-            // toolStripStatusLabelFromStart
-            // 
-            this.toolStripStatusLabelFromStart.Name = "toolStripStatusLabelFromStart";
-            this.toolStripStatusLabelFromStart.Size = new System.Drawing.Size(10, 17);
-            this.toolStripStatusLabelFromStart.Text = " ";
-            // 
-            // toolStripStatusLabelLon
-            // 
-            this.toolStripStatusLabelLon.Name = "toolStripStatusLabelLon";
-            this.toolStripStatusLabelLon.Size = new System.Drawing.Size(10, 17);
-            this.toolStripStatusLabelLon.Text = " ";
-            // 
-            // toolStripStatusLabelLat
-            // 
-            this.toolStripStatusLabelLat.Name = "toolStripStatusLabelLat";
-            this.toolStripStatusLabelLat.Size = new System.Drawing.Size(10, 17);
-            this.toolStripStatusLabelLat.Text = " ";
-            // 
-            // toolStripStatusLabelInfo
-            // 
-            this.toolStripStatusLabelInfo.Name = "toolStripStatusLabelInfo";
-            this.toolStripStatusLabelInfo.Size = new System.Drawing.Size(10, 17);
-            this.toolStripStatusLabelInfo.Text = " ";
-            // 
             // splitContainerVertical
             // 
             this.splitContainerVertical.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -609,8 +571,8 @@ namespace TrackConverter.UI.Shell
             // splitContainerVertical.Panel2
             // 
             this.splitContainerVertical.Panel2.Controls.Add(this.splitContainerHorizontalRight);
-            this.splitContainerVertical.Size = new System.Drawing.Size(1332, 673);
-            this.splitContainerVertical.SplitterDistance = 331;
+            this.splitContainerVertical.Size = new System.Drawing.Size(1332, 675);
+            this.splitContainerVertical.SplitterDistance = 330;
             this.splitContainerVertical.TabIndex = 3;
             // 
             // splitContainerHorizontalLeft
@@ -627,7 +589,7 @@ namespace TrackConverter.UI.Shell
             // splitContainerHorizontalLeft.Panel2
             // 
             this.splitContainerHorizontalLeft.Panel2.Controls.Add(this.dataGridViewPoints);
-            this.splitContainerHorizontalLeft.Size = new System.Drawing.Size(331, 673);
+            this.splitContainerHorizontalLeft.Size = new System.Drawing.Size(330, 675);
             this.splitContainerHorizontalLeft.SplitterDistance = 386;
             this.splitContainerHorizontalLeft.TabIndex = 0;
             // 
@@ -642,7 +604,7 @@ namespace TrackConverter.UI.Shell
             this.dataGridViewConverter.Location = new System.Drawing.Point(0, 0);
             this.dataGridViewConverter.Name = "dataGridViewConverter";
             this.dataGridViewConverter.ReadOnly = true;
-            this.dataGridViewConverter.Size = new System.Drawing.Size(331, 386);
+            this.dataGridViewConverter.Size = new System.Drawing.Size(330, 386);
             this.dataGridViewConverter.TabIndex = 0;
             this.dataGridViewConverter.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewConverter_CellClick);
             this.dataGridViewConverter.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.dataGridViewConverter_CellFormatting);
@@ -656,6 +618,7 @@ namespace TrackConverter.UI.Shell
             // 
             // contextMenuStripConverter
             // 
+            this.contextMenuStripConverter.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.contextMenuStripConverter.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.informationToolStripMenuItem,
             this.saveAsToolStripMenuItem,
@@ -667,7 +630,7 @@ namespace TrackConverter.UI.Shell
             this.addComparisonToolStripMenuItem,
             this.removeToolStripMenuItem});
             this.contextMenuStripConverter.Name = "contextMenuStripConverter";
-            this.contextMenuStripConverter.Size = new System.Drawing.Size(218, 202);
+            this.contextMenuStripConverter.Size = new System.Drawing.Size(222, 238);
             this.contextMenuStripConverter.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStripConverter_Opening);
             // 
             // informationToolStripMenuItem
@@ -675,7 +638,7 @@ namespace TrackConverter.UI.Shell
             this.informationToolStripMenuItem.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             this.informationToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("informationToolStripMenuItem.Image")));
             this.informationToolStripMenuItem.Name = "informationToolStripMenuItem";
-            this.informationToolStripMenuItem.Size = new System.Drawing.Size(217, 22);
+            this.informationToolStripMenuItem.Size = new System.Drawing.Size(221, 26);
             this.informationToolStripMenuItem.Tag = "single";
             this.informationToolStripMenuItem.Text = "Подробная информация";
             this.informationToolStripMenuItem.ToolTipText = "Показать окно с подробной информацией о маршруте";
@@ -689,7 +652,7 @@ namespace TrackConverter.UI.Shell
             this.saveWikimapiaContextToolStripMenuItem});
             this.saveAsToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("saveAsToolStripMenuItem.Image")));
             this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
-            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(217, 22);
+            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(221, 26);
             this.saveAsToolStripMenuItem.Text = "Сохранить как";
             // 
             // saveFileContextToolStripMenuItem1
@@ -724,7 +687,7 @@ namespace TrackConverter.UI.Shell
             // 
             this.saveToolStripMenuItem1.Image = ((System.Drawing.Image)(resources.GetObject("saveToolStripMenuItem1.Image")));
             this.saveToolStripMenuItem1.Name = "saveToolStripMenuItem1";
-            this.saveToolStripMenuItem1.Size = new System.Drawing.Size(217, 22);
+            this.saveToolStripMenuItem1.Size = new System.Drawing.Size(221, 26);
             this.saveToolStripMenuItem1.Tag = "single";
             this.saveToolStripMenuItem1.Text = "Сохранить";
             this.saveToolStripMenuItem1.Click += new System.EventHandler(this.saveToolStripMenuItem1_Click);
@@ -744,7 +707,7 @@ namespace TrackConverter.UI.Shell
             this.separateRouteToolStripMenuItem});
             this.изменитьToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("изменитьToolStripMenuItem.Image")));
             this.изменитьToolStripMenuItem.Name = "изменитьToolStripMenuItem";
-            this.изменитьToolStripMenuItem.Size = new System.Drawing.Size(217, 22);
+            this.изменитьToolStripMenuItem.Size = new System.Drawing.Size(221, 26);
             this.изменитьToolStripMenuItem.Text = "Изменить";
             // 
             // editRouteMapToolStripMenuItem
@@ -854,7 +817,7 @@ namespace TrackConverter.UI.Shell
             this.elevgraphToolStripMenuItem});
             this.показатьToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("показатьToolStripMenuItem.Image")));
             this.показатьToolStripMenuItem.Name = "показатьToolStripMenuItem";
-            this.показатьToolStripMenuItem.Size = new System.Drawing.Size(217, 22);
+            this.показатьToolStripMenuItem.Size = new System.Drawing.Size(221, 26);
             this.показатьToolStripMenuItem.Text = "Показать";
             // 
             // showWaypointsToolStripMenuItem
@@ -900,7 +863,7 @@ namespace TrackConverter.UI.Shell
             // 
             this.openRouteFolderToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("openRouteFolderToolStripMenuItem.Image")));
             this.openRouteFolderToolStripMenuItem.Name = "openRouteFolderToolStripMenuItem";
-            this.openRouteFolderToolStripMenuItem.Size = new System.Drawing.Size(217, 22);
+            this.openRouteFolderToolStripMenuItem.Size = new System.Drawing.Size(221, 26);
             this.openRouteFolderToolStripMenuItem.Tag = "single";
             this.openRouteFolderToolStripMenuItem.Text = "Открыть в проводнике";
             this.openRouteFolderToolStripMenuItem.Click += new System.EventHandler(this.openRouteFolderToolStripMenuItem_Click);
@@ -909,7 +872,7 @@ namespace TrackConverter.UI.Shell
             // 
             this.addToJoinToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("addToJoinToolStripMenuItem.Image")));
             this.addToJoinToolStripMenuItem.Name = "addToJoinToolStripMenuItem";
-            this.addToJoinToolStripMenuItem.Size = new System.Drawing.Size(217, 22);
+            this.addToJoinToolStripMenuItem.Size = new System.Drawing.Size(221, 26);
             this.addToJoinToolStripMenuItem.Tag = "multy";
             this.addToJoinToolStripMenuItem.Text = "Добавить в объединение";
             this.addToJoinToolStripMenuItem.ToolTipText = "Добавить маршрут для объединения с другими маршрутами";
@@ -919,7 +882,7 @@ namespace TrackConverter.UI.Shell
             // 
             this.addComparisonToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("addComparisonToolStripMenuItem.Image")));
             this.addComparisonToolStripMenuItem.Name = "addComparisonToolStripMenuItem";
-            this.addComparisonToolStripMenuItem.Size = new System.Drawing.Size(217, 22);
+            this.addComparisonToolStripMenuItem.Size = new System.Drawing.Size(221, 26);
             this.addComparisonToolStripMenuItem.Tag = "multy";
             this.addComparisonToolStripMenuItem.Text = "Добавить в сравнение";
             this.addComparisonToolStripMenuItem.Click += new System.EventHandler(this.addComparisonToolStripMenuItem_Click);
@@ -928,7 +891,7 @@ namespace TrackConverter.UI.Shell
             // 
             this.removeToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("removeToolStripMenuItem.Image")));
             this.removeToolStripMenuItem.Name = "removeToolStripMenuItem";
-            this.removeToolStripMenuItem.Size = new System.Drawing.Size(217, 22);
+            this.removeToolStripMenuItem.Size = new System.Drawing.Size(221, 26);
             this.removeToolStripMenuItem.Tag = "multy";
             this.removeToolStripMenuItem.Text = "Удалить";
             this.removeToolStripMenuItem.ToolTipText = "Удаление маршрута из списка загруженных";
@@ -944,7 +907,7 @@ namespace TrackConverter.UI.Shell
             this.dataGridViewPoints.Location = new System.Drawing.Point(0, 0);
             this.dataGridViewPoints.Name = "dataGridViewPoints";
             this.dataGridViewPoints.ReadOnly = true;
-            this.dataGridViewPoints.Size = new System.Drawing.Size(331, 283);
+            this.dataGridViewPoints.Size = new System.Drawing.Size(330, 285);
             this.dataGridViewPoints.TabIndex = 1;
             this.dataGridViewPoints.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewPoints_CellClick);
             this.dataGridViewPoints.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewPoints_CellDoubleClick);
@@ -956,6 +919,7 @@ namespace TrackConverter.UI.Shell
             // 
             // contextMenuStripPoints
             // 
+            this.contextMenuStripPoints.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.contextMenuStripPoints.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.addPointToolStripMenuItem,
             this.editPointToolStripMenuItem,
@@ -965,13 +929,13 @@ namespace TrackConverter.UI.Shell
             this.showGoogleToolStripMenuItem,
             this.RemovePointtoolStripMenuItem});
             this.contextMenuStripPoints.Name = "contextMenuStripPoints";
-            this.contextMenuStripPoints.Size = new System.Drawing.Size(258, 158);
+            this.contextMenuStripPoints.Size = new System.Drawing.Size(262, 186);
             // 
             // addPointToolStripMenuItem
             // 
             this.addPointToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("addPointToolStripMenuItem.Image")));
             this.addPointToolStripMenuItem.Name = "addPointToolStripMenuItem";
-            this.addPointToolStripMenuItem.Size = new System.Drawing.Size(257, 22);
+            this.addPointToolStripMenuItem.Size = new System.Drawing.Size(261, 26);
             this.addPointToolStripMenuItem.Text = "Добавить";
             this.addPointToolStripMenuItem.Click += new System.EventHandler(this.addPointToolStripMenuItem_Click);
             // 
@@ -979,7 +943,7 @@ namespace TrackConverter.UI.Shell
             // 
             this.editPointToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("editPointToolStripMenuItem.Image")));
             this.editPointToolStripMenuItem.Name = "editPointToolStripMenuItem";
-            this.editPointToolStripMenuItem.Size = new System.Drawing.Size(257, 22);
+            this.editPointToolStripMenuItem.Size = new System.Drawing.Size(261, 26);
             this.editPointToolStripMenuItem.Text = "Изменить";
             this.editPointToolStripMenuItem.Click += new System.EventHandler(this.editPointToolStripMenuItem_Click);
             // 
@@ -987,7 +951,7 @@ namespace TrackConverter.UI.Shell
             // 
             this.openWithConverterToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("openWithConverterToolStripMenuItem.Image")));
             this.openWithConverterToolStripMenuItem.Name = "openWithConverterToolStripMenuItem";
-            this.openWithConverterToolStripMenuItem.Size = new System.Drawing.Size(257, 22);
+            this.openWithConverterToolStripMenuItem.Size = new System.Drawing.Size(261, 26);
             this.openWithConverterToolStripMenuItem.Text = "Открыть в конвертере координат";
             this.openWithConverterToolStripMenuItem.Click += new System.EventHandler(this.openWithConverterToolStripMenuItem_Click);
             // 
@@ -995,7 +959,7 @@ namespace TrackConverter.UI.Shell
             // 
             this.showPointOnMapToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("showPointOnMapToolStripMenuItem.Image")));
             this.showPointOnMapToolStripMenuItem.Name = "showPointOnMapToolStripMenuItem";
-            this.showPointOnMapToolStripMenuItem.Size = new System.Drawing.Size(257, 22);
+            this.showPointOnMapToolStripMenuItem.Size = new System.Drawing.Size(261, 26);
             this.showPointOnMapToolStripMenuItem.Text = "Покзать на карте";
             this.showPointOnMapToolStripMenuItem.Click += new System.EventHandler(this.showPointOnMapToolStripMenuItem_Click);
             // 
@@ -1003,7 +967,7 @@ namespace TrackConverter.UI.Shell
             // 
             this.showYandexToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("showYandexToolStripMenuItem.Image")));
             this.showYandexToolStripMenuItem.Name = "showYandexToolStripMenuItem";
-            this.showYandexToolStripMenuItem.Size = new System.Drawing.Size(257, 22);
+            this.showYandexToolStripMenuItem.Size = new System.Drawing.Size(261, 26);
             this.showYandexToolStripMenuItem.Text = "Показать на карте Яндекс";
             this.showYandexToolStripMenuItem.Click += new System.EventHandler(this.showYandexToolStripMenuItem_Click);
             // 
@@ -1011,7 +975,7 @@ namespace TrackConverter.UI.Shell
             // 
             this.showGoogleToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("showGoogleToolStripMenuItem.Image")));
             this.showGoogleToolStripMenuItem.Name = "showGoogleToolStripMenuItem";
-            this.showGoogleToolStripMenuItem.Size = new System.Drawing.Size(257, 22);
+            this.showGoogleToolStripMenuItem.Size = new System.Drawing.Size(261, 26);
             this.showGoogleToolStripMenuItem.Text = "Показать на карте Google";
             this.showGoogleToolStripMenuItem.Click += new System.EventHandler(this.showGoogleToolStripMenuItem_Click);
             // 
@@ -1019,7 +983,7 @@ namespace TrackConverter.UI.Shell
             // 
             this.RemovePointtoolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("RemovePointtoolStripMenuItem.Image")));
             this.RemovePointtoolStripMenuItem.Name = "RemovePointtoolStripMenuItem";
-            this.RemovePointtoolStripMenuItem.Size = new System.Drawing.Size(257, 22);
+            this.RemovePointtoolStripMenuItem.Size = new System.Drawing.Size(261, 26);
             this.RemovePointtoolStripMenuItem.Text = "Удалить";
             this.RemovePointtoolStripMenuItem.Click += new System.EventHandler(this.RemovePointtoolStripMenuItem_Click);
             // 
@@ -1039,7 +1003,7 @@ namespace TrackConverter.UI.Shell
             // splitContainerHorizontalRight.Panel2
             // 
             this.splitContainerHorizontalRight.Panel2.Controls.Add(this.zedGraph);
-            this.splitContainerHorizontalRight.Size = new System.Drawing.Size(997, 673);
+            this.splitContainerHorizontalRight.Size = new System.Drawing.Size(998, 675);
             this.splitContainerHorizontalRight.SplitterDistance = 387;
             this.splitContainerHorizontalRight.TabIndex = 0;
             // 
@@ -1047,16 +1011,17 @@ namespace TrackConverter.UI.Shell
             // 
             this.toolStrip2.Dock = System.Windows.Forms.DockStyle.Left;
             this.toolStrip2.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
+            this.toolStrip2.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.toolStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripButtonZoomIn,
             this.toolStripButtonZoomOut,
             this.toolStripLabelZoom,
             this.toolStripSeparator3,
             this.toolStripButtonRuler});
-            this.toolStrip2.Location = new System.Drawing.Point(0, 25);
+            this.toolStrip2.Location = new System.Drawing.Point(0, 27);
             this.toolStrip2.Name = "toolStrip2";
             this.toolStrip2.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
-            this.toolStrip2.Size = new System.Drawing.Size(24, 362);
+            this.toolStrip2.Size = new System.Drawing.Size(25, 360);
             this.toolStrip2.TabIndex = 5;
             this.toolStrip2.Text = "toolStrip2";
             // 
@@ -1067,7 +1032,7 @@ namespace TrackConverter.UI.Shell
             this.toolStripButtonZoomIn.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonZoomIn.Margin = new System.Windows.Forms.Padding(0, 30, 0, 2);
             this.toolStripButtonZoomIn.Name = "toolStripButtonZoomIn";
-            this.toolStripButtonZoomIn.Size = new System.Drawing.Size(21, 20);
+            this.toolStripButtonZoomIn.Size = new System.Drawing.Size(22, 24);
             this.toolStripButtonZoomIn.ToolTipText = "Приблизить";
             this.toolStripButtonZoomIn.Click += new System.EventHandler(this.toolStripButtonZoomIn_Click);
             // 
@@ -1077,19 +1042,19 @@ namespace TrackConverter.UI.Shell
             this.toolStripButtonZoomOut.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonZoomOut.Image")));
             this.toolStripButtonZoomOut.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonZoomOut.Name = "toolStripButtonZoomOut";
-            this.toolStripButtonZoomOut.Size = new System.Drawing.Size(21, 20);
+            this.toolStripButtonZoomOut.Size = new System.Drawing.Size(22, 24);
             this.toolStripButtonZoomOut.ToolTipText = "Отдалить";
             this.toolStripButtonZoomOut.Click += new System.EventHandler(this.toolStripButtonZoomOut_Click);
             // 
             // toolStripLabelZoom
             // 
             this.toolStripLabelZoom.Name = "toolStripLabelZoom";
-            this.toolStripLabelZoom.Size = new System.Drawing.Size(21, 0);
+            this.toolStripLabelZoom.Size = new System.Drawing.Size(22, 0);
             // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(21, 6);
+            this.toolStripSeparator3.Size = new System.Drawing.Size(22, 6);
             // 
             // toolStripButtonRuler
             // 
@@ -1097,22 +1062,24 @@ namespace TrackConverter.UI.Shell
             this.toolStripButtonRuler.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonRuler.Image")));
             this.toolStripButtonRuler.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonRuler.Name = "toolStripButtonRuler";
-            this.toolStripButtonRuler.Size = new System.Drawing.Size(21, 20);
+            this.toolStripButtonRuler.Size = new System.Drawing.Size(22, 24);
             this.toolStripButtonRuler.ToolTipText = "Измерение расстояний";
             this.toolStripButtonRuler.Click += new System.EventHandler(this.toolStripButtonRuler_Click);
             // 
             // toolStrip1
             // 
             this.toolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
+            this.toolStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripButtonUndo,
             this.toolStripDropDownButtonMapProvider,
             this.toolStripComboBoxSearch,
             this.toolStripButtonFind,
-            this.toolStripButtonClearSearchMarks});
+            this.toolStripButtonClearSearchMarks,
+            this.toolStripButtonLocateDevice});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(997, 25);
+            this.toolStrip1.Size = new System.Drawing.Size(998, 27);
             this.toolStrip1.TabIndex = 0;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -1123,7 +1090,7 @@ namespace TrackConverter.UI.Shell
             this.toolStripButtonUndo.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonUndo.Image")));
             this.toolStripButtonUndo.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonUndo.Name = "toolStripButtonUndo";
-            this.toolStripButtonUndo.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonUndo.Size = new System.Drawing.Size(24, 24);
             this.toolStripButtonUndo.Text = "toolStripButton1";
             this.toolStripButtonUndo.ToolTipText = "Отменить последнее действие";
             this.toolStripButtonUndo.Click += new System.EventHandler(this.toolStripButtonUndo_Click);
@@ -1134,7 +1101,7 @@ namespace TrackConverter.UI.Shell
             this.toolStripDropDownButtonMapProvider.Image = ((System.Drawing.Image)(resources.GetObject("toolStripDropDownButtonMapProvider.Image")));
             this.toolStripDropDownButtonMapProvider.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripDropDownButtonMapProvider.Name = "toolStripDropDownButtonMapProvider";
-            this.toolStripDropDownButtonMapProvider.Size = new System.Drawing.Size(29, 22);
+            this.toolStripDropDownButtonMapProvider.Size = new System.Drawing.Size(33, 24);
             this.toolStripDropDownButtonMapProvider.Text = "Поставщик карты";
             this.toolStripDropDownButtonMapProvider.ToolTipText = "Выбор источника карты";
             // 
@@ -1158,7 +1125,7 @@ namespace TrackConverter.UI.Shell
             this.toolStripButtonFind.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonFind.Image")));
             this.toolStripButtonFind.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonFind.Name = "toolStripButtonFind";
-            this.toolStripButtonFind.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonFind.Size = new System.Drawing.Size(24, 24);
             this.toolStripButtonFind.ToolTipText = "Найти";
             this.toolStripButtonFind.Click += new System.EventHandler(this.toolStripButtonFind_Click);
             // 
@@ -1168,14 +1135,27 @@ namespace TrackConverter.UI.Shell
             this.toolStripButtonClearSearchMarks.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonClearSearchMarks.Image")));
             this.toolStripButtonClearSearchMarks.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonClearSearchMarks.Name = "toolStripButtonClearSearchMarks";
-            this.toolStripButtonClearSearchMarks.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonClearSearchMarks.Size = new System.Drawing.Size(24, 24);
             this.toolStripButtonClearSearchMarks.ToolTipText = "Удалить маркеры найденных объектов";
             this.toolStripButtonClearSearchMarks.Click += new System.EventHandler(this.toolStripButtonClearSearchMarks_Click);
+            // 
+            // toolStripButtonLocateDevice
+            // 
+            this.toolStripButtonLocateDevice.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonLocateDevice.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonLocateDevice.Image")));
+            this.toolStripButtonLocateDevice.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonLocateDevice.Name = "toolStripButtonLocateDevice";
+            this.toolStripButtonLocateDevice.Size = new System.Drawing.Size(24, 24);
+            this.toolStripButtonLocateDevice.Text = "toolStripButton1";
+            this.toolStripButtonLocateDevice.ToolTipText = "Показать местоположение устройства";
+            this.toolStripButtonLocateDevice.Visible = false;
+            this.toolStripButtonLocateDevice.Click += new System.EventHandler(this.toolStripButtonLocateDevice_Click);
             // 
             // zedGraph
             // 
             this.zedGraph.Dock = System.Windows.Forms.DockStyle.Fill;
             this.zedGraph.Location = new System.Drawing.Point(0, 0);
+            this.zedGraph.Margin = new System.Windows.Forms.Padding(4);
             this.zedGraph.Name = "zedGraph";
             this.zedGraph.ScrollGrace = 0D;
             this.zedGraph.ScrollMaxX = 0D;
@@ -1184,7 +1164,7 @@ namespace TrackConverter.UI.Shell
             this.zedGraph.ScrollMinX = 0D;
             this.zedGraph.ScrollMinY = 0D;
             this.zedGraph.ScrollMinY2 = 0D;
-            this.zedGraph.Size = new System.Drawing.Size(997, 282);
+            this.zedGraph.Size = new System.Drawing.Size(998, 284);
             this.zedGraph.TabIndex = 0;
             this.zedGraph.UseExtendedPrintDialog = true;
             this.zedGraph.PointValueEvent += new ZedGraph.ZedGraphControl.PointValueHandler(this.zedGraph_PointValueEvent);
@@ -1203,13 +1183,14 @@ namespace TrackConverter.UI.Shell
             // 
             // contextMenuStripMap
             // 
+            this.contextMenuStripMap.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.contextMenuStripMap.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripMenuItemAddWaypoint,
             this.созданиеМаршрутаToolStripMenuItem,
             this.toolStripMenuItemWhatsThere,
             this.copyCoordinatesToolStripMenuItem});
             this.contextMenuStripMap.Name = "contextMenuStripMap";
-            this.contextMenuStripMap.Size = new System.Drawing.Size(210, 92);
+            this.contextMenuStripMap.Size = new System.Drawing.Size(214, 108);
             this.contextMenuStripMap.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStripMap_Opening);
             // 
             // toolStripMenuItemAddWaypoint
@@ -1217,7 +1198,7 @@ namespace TrackConverter.UI.Shell
             this.toolStripMenuItemAddWaypoint.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             this.toolStripMenuItemAddWaypoint.Image = ((System.Drawing.Image)(resources.GetObject("toolStripMenuItemAddWaypoint.Image")));
             this.toolStripMenuItemAddWaypoint.Name = "toolStripMenuItemAddWaypoint";
-            this.toolStripMenuItemAddWaypoint.Size = new System.Drawing.Size(209, 22);
+            this.toolStripMenuItemAddWaypoint.Size = new System.Drawing.Size(213, 26);
             this.toolStripMenuItemAddWaypoint.Text = "Добавить точку";
             this.toolStripMenuItemAddWaypoint.Click += new System.EventHandler(this.toolStripMenuItemAddWaypoint_Click);
             // 
@@ -1230,7 +1211,7 @@ namespace TrackConverter.UI.Shell
             this.clearFromtoMarkersToolStripMenuItem});
             this.созданиеМаршрутаToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("созданиеМаршрутаToolStripMenuItem.Image")));
             this.созданиеМаршрутаToolStripMenuItem.Name = "созданиеМаршрутаToolStripMenuItem";
-            this.созданиеМаршрутаToolStripMenuItem.Size = new System.Drawing.Size(209, 22);
+            this.созданиеМаршрутаToolStripMenuItem.Size = new System.Drawing.Size(213, 26);
             this.созданиеМаршрутаToolStripMenuItem.Text = "Создание маршрута";
             // 
             // fromToolStripMenuItem
@@ -1272,7 +1253,7 @@ namespace TrackConverter.UI.Shell
             // 
             this.toolStripMenuItemWhatsThere.Image = ((System.Drawing.Image)(resources.GetObject("toolStripMenuItemWhatsThere.Image")));
             this.toolStripMenuItemWhatsThere.Name = "toolStripMenuItemWhatsThere";
-            this.toolStripMenuItemWhatsThere.Size = new System.Drawing.Size(209, 22);
+            this.toolStripMenuItemWhatsThere.Size = new System.Drawing.Size(213, 26);
             this.toolStripMenuItemWhatsThere.Text = "Что здесь?";
             this.toolStripMenuItemWhatsThere.Click += new System.EventHandler(this.toolStripMenuItemWhatsThere_Click);
             // 
@@ -1280,24 +1261,25 @@ namespace TrackConverter.UI.Shell
             // 
             this.copyCoordinatesToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("copyCoordinatesToolStripMenuItem.Image")));
             this.copyCoordinatesToolStripMenuItem.Name = "copyCoordinatesToolStripMenuItem";
-            this.copyCoordinatesToolStripMenuItem.Size = new System.Drawing.Size(209, 22);
+            this.copyCoordinatesToolStripMenuItem.Size = new System.Drawing.Size(213, 26);
             this.copyCoordinatesToolStripMenuItem.Text = "Копировать координаты";
             this.copyCoordinatesToolStripMenuItem.Click += new System.EventHandler(this.copyCoordinatesToolStripMenuItem_Click);
             // 
             // contextMenuStripMarker
             // 
+            this.contextMenuStripMarker.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.contextMenuStripMarker.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.editMarkerToolStripMenuItem,
             this.deleteMarkerToolStripMenuItem});
             this.contextMenuStripMarker.Name = "contextMenuStripMarker";
-            this.contextMenuStripMarker.Size = new System.Drawing.Size(129, 48);
+            this.contextMenuStripMarker.Size = new System.Drawing.Size(133, 56);
             this.contextMenuStripMarker.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStripMarker_Opening);
             // 
             // editMarkerToolStripMenuItem
             // 
             this.editMarkerToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("editMarkerToolStripMenuItem.Image")));
             this.editMarkerToolStripMenuItem.Name = "editMarkerToolStripMenuItem";
-            this.editMarkerToolStripMenuItem.Size = new System.Drawing.Size(128, 22);
+            this.editMarkerToolStripMenuItem.Size = new System.Drawing.Size(132, 26);
             this.editMarkerToolStripMenuItem.Text = "Изменить";
             this.editMarkerToolStripMenuItem.Click += new System.EventHandler(this.editMarkerToolStripMenuItem_Click);
             // 
@@ -1305,23 +1287,24 @@ namespace TrackConverter.UI.Shell
             // 
             this.deleteMarkerToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("deleteMarkerToolStripMenuItem.Image")));
             this.deleteMarkerToolStripMenuItem.Name = "deleteMarkerToolStripMenuItem";
-            this.deleteMarkerToolStripMenuItem.Size = new System.Drawing.Size(128, 22);
+            this.deleteMarkerToolStripMenuItem.Size = new System.Drawing.Size(132, 26);
             this.deleteMarkerToolStripMenuItem.Text = "Удалить";
             this.deleteMarkerToolStripMenuItem.Click += new System.EventHandler(this.deleteMarkerToolStripMenuItem_Click);
             // 
             // contextMenuStripRoute
             // 
+            this.contextMenuStripRoute.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.contextMenuStripRoute.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.editRouteToolStripMenuItem,
             this.removeRouteToolStripMenuItem});
             this.contextMenuStripRoute.Name = "contextMenuStripRoute";
-            this.contextMenuStripRoute.Size = new System.Drawing.Size(155, 48);
+            this.contextMenuStripRoute.Size = new System.Drawing.Size(159, 56);
             // 
             // editRouteToolStripMenuItem
             // 
             this.editRouteToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("editRouteToolStripMenuItem.Image")));
             this.editRouteToolStripMenuItem.Name = "editRouteToolStripMenuItem";
-            this.editRouteToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
+            this.editRouteToolStripMenuItem.Size = new System.Drawing.Size(158, 26);
             this.editRouteToolStripMenuItem.Text = "Редактировать";
             this.editRouteToolStripMenuItem.Click += new System.EventHandler(this.editRouteToolStripMenuItem_Click);
             // 
@@ -1329,9 +1312,73 @@ namespace TrackConverter.UI.Shell
             // 
             this.removeRouteToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("removeRouteToolStripMenuItem.Image")));
             this.removeRouteToolStripMenuItem.Name = "removeRouteToolStripMenuItem";
-            this.removeRouteToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
+            this.removeRouteToolStripMenuItem.Size = new System.Drawing.Size(158, 26);
             this.removeRouteToolStripMenuItem.Text = "Удалить";
             this.removeRouteToolStripMenuItem.Click += new System.EventHandler(this.removeRouteToolStripMenuItem_Click);
+            // 
+            // tableLayoutPanel1
+            // 
+            this.tableLayoutPanel1.ColumnCount = 2;
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 165F));
+            this.tableLayoutPanel1.Controls.Add(this.toolStrip3, 0, 0);
+            this.tableLayoutPanel1.Controls.Add(this.toolStrip4, 1, 0);
+            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 699);
+            this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(2);
+            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
+            this.tableLayoutPanel1.RowCount = 1;
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(1332, 20);
+            this.tableLayoutPanel1.TabIndex = 2;
+            // 
+            // toolStrip3
+            // 
+            this.toolStrip3.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.toolStrip3.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripLabelInfo,
+            this.toolStripLabelFromStart,
+            this.toolStripLabelCurrentOperation});
+            this.toolStrip3.Location = new System.Drawing.Point(0, 0);
+            this.toolStrip3.Name = "toolStrip3";
+            this.toolStrip3.Size = new System.Drawing.Size(1167, 20);
+            this.toolStrip3.TabIndex = 0;
+            this.toolStrip3.Text = "toolStrip3";
+            // 
+            // toolStripLabelInfo
+            // 
+            this.toolStripLabelInfo.Name = "toolStripLabelInfo";
+            this.toolStripLabelInfo.Size = new System.Drawing.Size(86, 17);
+            this.toolStripLabelInfo.Text = "toolStripLabel1";
+            // 
+            // toolStripLabelFromStart
+            // 
+            this.toolStripLabelFromStart.Name = "toolStripLabelFromStart";
+            this.toolStripLabelFromStart.Size = new System.Drawing.Size(86, 17);
+            this.toolStripLabelFromStart.Text = "toolStripLabel1";
+            // 
+            // toolStripLabelCurrentOperation
+            // 
+            this.toolStripLabelCurrentOperation.Name = "toolStripLabelCurrentOperation";
+            this.toolStripLabelCurrentOperation.Size = new System.Drawing.Size(86, 17);
+            this.toolStripLabelCurrentOperation.Text = "toolStripLabel1";
+            // 
+            // toolStrip4
+            // 
+            this.toolStrip4.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.toolStrip4.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripLabelPosition});
+            this.toolStrip4.Location = new System.Drawing.Point(1167, 0);
+            this.toolStrip4.Name = "toolStrip4";
+            this.toolStrip4.Size = new System.Drawing.Size(165, 20);
+            this.toolStrip4.TabIndex = 1;
+            this.toolStrip4.Text = "toolStrip4";
+            // 
+            // toolStripLabelPosition
+            // 
+            this.toolStripLabelPosition.Name = "toolStripLabelPosition";
+            this.toolStripLabelPosition.Size = new System.Drawing.Size(86, 17);
+            this.toolStripLabelPosition.Text = "toolStripLabel1";
             // 
             // gmapControlMap
             // 
@@ -1341,9 +1388,8 @@ namespace TrackConverter.UI.Shell
             this.gmapControlMap.EmptyTileColor = System.Drawing.Color.Navy;
             this.gmapControlMap.GrayScaleMode = false;
             this.gmapControlMap.HelperLineOption = GMap.NET.WindowsForms.HelperLineOptions.DontShow;
-            this.gmapControlMap.LayerProvider = TrackConverter.VectorMapLayerProviders.None;
             this.gmapControlMap.LevelsKeepInMemmory = 5;
-            this.gmapControlMap.Location = new System.Drawing.Point(24, 25);
+            this.gmapControlMap.Location = new System.Drawing.Point(25, 27);
             this.gmapControlMap.MarkersEnabled = true;
             this.gmapControlMap.MaxZoom = 2;
             this.gmapControlMap.MinZoom = 2;
@@ -1357,7 +1403,7 @@ namespace TrackConverter.UI.Shell
             this.gmapControlMap.ScaleMode = GMap.NET.WindowsForms.ScaleModes.Integer;
             this.gmapControlMap.SelectedAreaFillColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(65)))), ((int)(((byte)(105)))), ((int)(((byte)(225)))));
             this.gmapControlMap.ShowTileGridLines = false;
-            this.gmapControlMap.Size = new System.Drawing.Size(973, 362);
+            this.gmapControlMap.Size = new System.Drawing.Size(973, 360);
             this.gmapControlMap.TabIndex = 0;
             this.gmapControlMap.Zoom = 0D;
             this.gmapControlMap.OnMarkerClick += new GMap.NET.WindowsForms.MarkerClick(this.gmapControlMap_OnMarkerClick);
@@ -1381,8 +1427,8 @@ namespace TrackConverter.UI.Shell
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1332, 719);
             this.Controls.Add(this.splitContainerVertical);
-            this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.menuStrip1);
+            this.Controls.Add(this.tableLayoutPanel1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "FormMain";
@@ -1392,8 +1438,6 @@ namespace TrackConverter.UI.Shell
             this.Load += new System.EventHandler(this.FormMain_Load);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
-            this.statusStrip1.ResumeLayout(false);
-            this.statusStrip1.PerformLayout();
             this.splitContainerVertical.Panel1.ResumeLayout(false);
             this.splitContainerVertical.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerVertical)).EndInit();
@@ -1418,6 +1462,12 @@ namespace TrackConverter.UI.Shell
             this.contextMenuStripMap.ResumeLayout(false);
             this.contextMenuStripMarker.ResumeLayout(false);
             this.contextMenuStripRoute.ResumeLayout(false);
+            this.tableLayoutPanel1.ResumeLayout(false);
+            this.tableLayoutPanel1.PerformLayout();
+            this.toolStrip3.ResumeLayout(false);
+            this.toolStrip3.PerformLayout();
+            this.toolStrip4.ResumeLayout(false);
+            this.toolStrip4.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1426,7 +1476,6 @@ namespace TrackConverter.UI.Shell
         #endregion
 
         private System.Windows.Forms.MenuStrip menuStrip1;
-        private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStrip toolStrip1;
         private System.Windows.Forms.ToolStripMenuItem создатьToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem EditPointFileToolStripMenuItem;
@@ -1471,7 +1520,6 @@ namespace TrackConverter.UI.Shell
         private System.Windows.Forms.ToolStripMenuItem showNavigatorToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
-        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabelCurrentOperation;
         /// <summary>
         /// кнопка источника данных Интернет
         /// </summary>
@@ -1494,14 +1542,10 @@ namespace TrackConverter.UI.Shell
         private System.Windows.Forms.ToolStripMenuItem deleteMarkerToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem editRouteToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem removeRouteToolStripMenuItem;
-        internal System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabelFromStart;
         internal System.Windows.Forms.ContextMenuStrip contextMenuStripMap;
         internal System.Windows.Forms.ContextMenuStrip contextMenuStripMarker;
         internal System.Windows.Forms.ContextMenuStrip contextMenuStripRoute;
-        internal System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabelLon;
-        internal System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabelLat;
         internal System.Windows.Forms.ToolStripLabel toolStripLabelZoom;
-        internal System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabelInfo;
         internal System.Windows.Forms.ToolStripButton toolStripButtonUndo;
         private System.Windows.Forms.ContextMenuStrip contextMenuStripConverter;
         private System.Windows.Forms.ToolStripMenuItem informationToolStripMenuItem;
@@ -1576,6 +1620,14 @@ namespace TrackConverter.UI.Shell
         /// область показа карты
         /// </summary>
         public GMapControlExt gmapControlMap;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+        private System.Windows.Forms.ToolStrip toolStrip3;
+        private System.Windows.Forms.ToolStripLabel toolStripLabelCurrentOperation;
+        private System.Windows.Forms.ToolStrip toolStrip4;
+        public System.Windows.Forms.ToolStripLabel toolStripLabelPosition;
+        public System.Windows.Forms.ToolStripLabel toolStripLabelFromStart;
+        public System.Windows.Forms.ToolStripLabel toolStripLabelInfo;
+        private System.Windows.Forms.ToolStripButton toolStripButtonLocateDevice;
     }
 }
 

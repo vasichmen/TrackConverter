@@ -31,6 +31,7 @@ namespace TrackConverter.UI.Common.Dialogs
         {
             InitializeComponent();
             this.url = url;
+            this.Text = "Загрузка изображения...";
         }
 
         private void saveImageAsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -49,7 +50,7 @@ namespace TrackConverter.UI.Common.Dialogs
             try
             {
                 Program.winMain.BeginOperation();
-                Program.winMain.setCurrentOperation("Загрузка ихображения...");
+                Program.winMain.setCurrentOperation("Загрузка изображения...");
                 load = new Task(() => {
                     pictureBoxImage.BackgroundImage = BaseConnection.GetImage(url); });
                 load.Start();

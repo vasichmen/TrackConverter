@@ -15,6 +15,7 @@ using System.Windows.Forms;
 using TrackConverter.Lib.Classes;
 using TrackConverter.Lib.Classes.StackEdits;
 using TrackConverter.Lib.Data;
+using TrackConverter.Lib.Data.Providers.Local.System;
 using TrackConverter.Lib.Maping.GMap;
 using TrackConverter.Lib.Tracking;
 using TrackConverter.Res.Properties;
@@ -588,6 +589,10 @@ namespace TrackConverter.UI.Shell
             splitContainerHorizontalLeft.SplitterDistance = Vars.Options.Container.HorizontalLeftSplitter;
             splitContainerHorizontalRight.SplitterDistance = Vars.Options.Container.HorizontalRightSplitter;
             splitContainerVertical.SplitterDistance = Vars.Options.Container.VerticalSplitter;
+            toolStripLabelCurrentOperation.Text = "";
+            toolStripLabelFromStart.Text = "";
+            toolStripLabelInfo.Text = "";
+            toolStripLabelPosition.Text = "";
 
             #endregion
 
@@ -627,17 +632,19 @@ namespace TrackConverter.UI.Shell
                 this.Invoke(new Action(() =>
                 {
                     this.Cursor = Cursors.Arrow;
+                    toolStripLabelCurrentOperation.Text = "";
                     OperationCounter--;
                     if (OperationCounter == 0)
-                        toolStripStatusLabelCurrentOperation.Visible = false;
+                        toolStripLabelCurrentOperation.Visible = false;
                 }));
 
             else
             {
                 this.Cursor = Cursors.Arrow;
+                toolStripLabelCurrentOperation.Text = "";
                 OperationCounter--;
                 if (OperationCounter == 0)
-                    toolStripStatusLabelCurrentOperation.Visible = false;
+                    toolStripLabelCurrentOperation.Visible = false;
             }
         }
 
@@ -649,14 +656,14 @@ namespace TrackConverter.UI.Shell
             if (this.InvokeRequired)
                 this.Invoke(new Action(() =>
                 {
-                    toolStripStatusLabelCurrentOperation.Visible = true;
+                    toolStripLabelCurrentOperation.Visible = true;
                     this.Cursor = Cursors.AppStarting;
                     OperationCounter++;
                 }));
 
             else
             {
-                toolStripStatusLabelCurrentOperation.Visible = true;
+                toolStripLabelCurrentOperation.Visible = true;
                 this.Cursor = Cursors.AppStarting;
                 OperationCounter++;
             }
@@ -671,12 +678,12 @@ namespace TrackConverter.UI.Shell
             if (this.InvokeRequired)
                 this.Invoke(new Action(() =>
                 {
-                    toolStripStatusLabelCurrentOperation.Text = obj;
+                    toolStripLabelCurrentOperation.Text = obj;
                 }));
 
             else
             {
-                toolStripStatusLabelCurrentOperation.Text = obj;
+                toolStripLabelCurrentOperation.Text = obj;
             }
         }
 
@@ -806,6 +813,16 @@ namespace TrackConverter.UI.Shell
         private void toolStripComboBoxSearch_DropDown(object sender, EventArgs e)
         {
             mapHelper.toolStripComboBoxSearch_DropDown(sender, e);
+        }
+
+        /// <summary>
+        /// показать местоположение устройства
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void toolStripButtonLocateDevice_Click(object sender, EventArgs e)
+        {
+            mapHelper.toolstripButtonLocateDevice(sender, e);
         }
 
         /// <summary>
@@ -1340,7 +1357,6 @@ namespace TrackConverter.UI.Shell
            
 
         }
-
     }
 }
 

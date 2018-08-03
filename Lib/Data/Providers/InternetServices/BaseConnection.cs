@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading;
 using System.Xml;
 using Newtonsoft.Json.Linq;
+using HtmlAgilityPack;
 
 namespace TrackConverter.Lib.Data.Providers.InternetServices
 {
@@ -122,9 +123,30 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         protected XmlDocument SendXmlGetRequest(string url)
         {
             XmlDocument res = new XmlDocument();
-            string ans = SendStringGetRequest(url);
+            HttpStatusCode code;
+            string ans = SendStringGetRequest(url, out code);
             res.LoadXml(ans);
             return res;
+        }
+
+        /// <summary>
+        /// отправить запрос с результатом в виде HTML документа
+        /// </summary>
+        /// <param name="url">url запроса</param>
+        /// <param name="code">код ошибки</param>
+        /// <returns></returns>
+        protected HtmlDocument SendHtmlGetRequest(string url, out HttpStatusCode code)
+        {
+            string ans = SendStringGetRequest(url, out code);
+            
+            //StreamReader sr = new StreamReader("f.html");
+            //code = HttpStatusCode.OK;
+            //var ans = sr.BaseStream;
+
+            HtmlDocument doc = new HtmlDocument();
+            doc.LoadHtml(ans);
+
+            return doc;
         }
 
         /// <summary>
@@ -134,6 +156,19 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         /// <returns></returns>
         /// <exception cref="WebException">Если произошла ошибка при подключении</exception>
         protected string SendStringGetRequest(string url)
+        {
+            HttpStatusCode code;
+            string ans = SendStringGetRequest(url, out code);
+            return ans;
+        }
+
+        /// <summary>
+        /// отправка запроса с результатом в виде строки
+        /// </summary>
+        /// <param name="url">запрос</param>
+        /// <returns></returns>
+        /// <exception cref="WebException">Если произошла ошибка при подключении</exception>
+        protected string SendStringGetRequest(string url, out HttpStatusCode code)
         {
             //проверка подключения
             InternetReachable = CheckInternet();
@@ -154,7 +189,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                 request.Headers[HttpRequestHeader.AcceptLanguage] = "ru - RU,ru; q = 0.8,en - US; q = 0.6,en; q = 0.4";
 
                 //Получаем ответ от интернет-ресурса.
-                WebResponse response = request.GetResponse();
+                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
                 //string lng = response.Headers[HttpRequestHeader.var];
 
                 //Экземпляр класса System.IO.Stream 
@@ -164,6 +199,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                 //Инициализируем новый экземпляр класса 
                 //System.IO.StreamReader для указанного потока.
                 StreamReader sreader = new StreamReader(dataStream);
+                code = response.StatusCode;
 
                 //Считывает поток от текущего положения до конца.            
                 string responsereader = sreader.ReadToEnd();
@@ -188,7 +224,8 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         protected JObject SendJsonGetRequest(string url)
         {
             JObject jobj;
-            string json = SendStringGetRequest(url);
+            HttpStatusCode code;
+            string json = SendStringGetRequest(url, out code);
             json = json.Substring(json.IndexOf('{'));
             json = json.TrimEnd(new char[] { ';', ')' });
             try { jobj = JObject.Parse(json); }

@@ -414,7 +414,6 @@ namespace TrackConverter.Lib.Data
         ///// <param name="objects">коллекция объектов для добавления</param>
         //public void AddMapLayerObjects(IEnumerable<VectorMapLayerObject> objects, int zoom)
         //{
-        //    //TODO: сделать добавление объектов одной транзакцией
         //    foreach (VectorMapLayerObject obj in objects)
         //        AddMapLayerObject(obj, zoom);
         //}

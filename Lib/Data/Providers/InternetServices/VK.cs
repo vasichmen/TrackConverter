@@ -6,6 +6,7 @@ using System.Web;
 using Newtonsoft.Json.Linq;
 using TrackConverter.Lib.Data.Interfaces;
 using TrackConverter.Res.Properties;
+using System.Net;
 
 namespace TrackConverter.Lib.Data.Providers.InternetServices
 {
@@ -47,7 +48,8 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
             string enc = HttpUtility.UrlEncodeUnicode(Link); //кодирование ссылки. Без него точки не сохранятся
             //enc = enc.Replace("amp%3B", "");
             string url = string.Format(@"https://api.vk.com/method/utils.getShortLink?url={0}&v=5.62&access_token={1}", enc,token);
-            string ans = SendStringGetRequest(url);
+            HttpStatusCode code;
+            string ans = SendStringGetRequest(url,out code);
             JObject jo = JObject.Parse(ans);
             string res = jo["response"]["short_url"].ToString();
             return res;

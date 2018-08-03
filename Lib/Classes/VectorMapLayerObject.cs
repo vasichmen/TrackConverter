@@ -66,6 +66,7 @@ namespace TrackConverter.Lib.Classes
         /// создаёт новый объект слоя карты из точек 
         /// </summary>
         /// <param name="geometry">геометрия объекта, заданная списком точек</param>
+        /// <param name="name">имя объекта</param>
         public VectorMapLayerObject(TrackFile geometry, string name)
         : this(new GMapPolygon(geometry.GMapPoints, name)) { }
 
@@ -73,6 +74,7 @@ namespace TrackConverter.Lib.Classes
         /// преобразует строковое представление периметра объекта в полигон
         /// </summary>
         /// <param name="geometryString">строковое представленение координат вершин многоугольника</param>
+        /// <param name="name">название объекта</param>
         /// <returns></returns>
         private GMapPolygon GetGeometryFromString(string geometryString, string name)
         {

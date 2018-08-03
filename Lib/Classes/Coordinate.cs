@@ -133,7 +133,7 @@ namespace TrackConverter.Lib.Classes
             /// <summary>
             /// целое положительное число градусов в координате
             /// </summary>
-        [JsonIgnore]
+            [JsonIgnore]
             public int Degrees
             {
                 get
@@ -146,7 +146,7 @@ namespace TrackConverter.Lib.Classes
             /// <summary>
             /// целое положительное число минут в координате
             /// </summary>
-        [JsonIgnore]
+            [JsonIgnore]
             public int Minutes
             {
                 get
@@ -160,7 +160,7 @@ namespace TrackConverter.Lib.Classes
             /// <summary>
             /// положительное число секунд в координате
             /// </summary>
-        [JsonIgnore]
+            [JsonIgnore]
             public double Seconds
             {
                 get
@@ -176,19 +176,19 @@ namespace TrackConverter.Lib.Classes
             /// <summary>
             /// знак при координате
             /// </summary>
-        [JsonIgnore]
+            [JsonIgnore]
             public CoordinateChar Char { get; set; }
 
             /// <summary>
             /// тип координаты: Широта/Долгота
             /// </summary>
-        [JsonIgnore]
+            [JsonIgnore]
             public CoordinateKind Kind { get { return Char == CoordinateChar.E || Char == CoordinateChar.W ? CoordinateKind.Longitude : CoordinateKind.Latitude; } }
 
             /// <summary>
             /// если истина, то координата пуста
             /// </summary>
-        [JsonIgnore]
+            [JsonIgnore]
             public bool isEmpty { get { return double.IsNaN(TotalDegrees); } }
 
             /// <summary>
@@ -318,7 +318,7 @@ namespace TrackConverter.Lib.Classes
                         res = this.TotalDegrees.ToString("00.000").Replace(Vars.DecimalSeparator, '.');
                         break;
                     case "dd, mm.mmmm,H":
-                        res = this.Degrees.ToString() +", " + Math.Round((Math.Abs(TotalDegrees) - Degrees) * 60, 4).ToString("0.0000").Replace(Vars.DecimalSeparator, '.') +"," + this.Char.ToString();
+                        res = this.Degrees.ToString() + ", " + Math.Round((Math.Abs(TotalDegrees) - Degrees) * 60, 4).ToString("0.0000").Replace(Vars.DecimalSeparator, '.') + "," + this.Char.ToString();
                         break;
                     default:
                         throw new FormatException("Неподдерживаемый формат координат");

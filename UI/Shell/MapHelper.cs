@@ -20,6 +20,7 @@ using TrackConverter.UI.Common.Dialogs;
 using TrackConverter.UI.Map;
 using static TrackConverter.Lib.Classes.StackEdits.Actions;
 using System.ComponentModel;
+using TrackConverter.Lib.Data.Providers.Local.System;
 
 namespace TrackConverter.UI.Shell
 {
@@ -174,6 +175,7 @@ namespace TrackConverter.UI.Shell
 
             #endregion
         }
+
 
         #region События карты
 
@@ -358,11 +360,11 @@ namespace TrackConverter.UI.Shell
                     FormChooseVariant fcv = new FormChooseVariant(objs, "Выбор объекта", SelectionMode.One);
                     if (fcv.ShowDialog(Program.winMain) == DialogResult.OK)
                     {
-                        if (fcv.Result.Count != 1)
+                        if (fcv.Result.Count != 1) //выход, если выбрано более одного объекта
                             return;
                         obj = objs[fcv.Result[0]];
                     }
-                    else
+                    else //выход, если выбор объекта отменён
                         return;
                 }
                 new FormShowObjectInfo(obj).Show();
@@ -381,7 +383,7 @@ namespace TrackConverter.UI.Shell
                 TrackFile tf = new TrackFile(formMain.creatingRoute.Take(formMain.creatingRoute.IndexOf(item.Tag.Info) + 1));
                 tf.CalculateAll();
                 double lg = tf.Distance;
-                formMain.toolStripStatusLabelFromStart.Text = "От начала пути: " + lg;
+                formMain.toolStripLabelFromStart.Text = "От начала пути: " + lg;
             }
             //вывод подсказки (долгота широта имя)
             if (!formMain.isCreatingRoute && (item.Tag.Type != MarkerTypes.WhatThere))
@@ -408,7 +410,7 @@ namespace TrackConverter.UI.Shell
         {
             if (item.Tag != null)
                 if ((item.Tag as MapMarker).Tag.Type == MarkerTypes.CreatingRoute)
-                    formMain.toolStripStatusLabelFromStart.Text = "";
+                    formMain.toolStripLabelFromStart.Text = "";
         }
 
         internal void MapTypeChanged(GMapProvider type)
@@ -505,8 +507,7 @@ namespace TrackConverter.UI.Shell
 
             //вывод информации о координатах мыши
             Coordinate cr = new Coordinate(formMain.gmapControlMap.FromLocalToLatLng(e.X, e.Y));
-            formMain.toolStripStatusLabelLat.Text = cr.Latitude.ToString("ddºmm'ss.s\"H");
-            formMain.toolStripStatusLabelLon.Text = cr.Longitude.ToString("ddºmm'ss.s\"H");
+            formMain.toolStripLabelPosition.Text = cr.ToString("{lat} {lon}", "ddºmm'ss.s\"H");
 
             //передвижение маркера
             //Проверка, что нажата левая клавиша мыши и не происходит перемещение карты 
@@ -609,6 +610,26 @@ namespace TrackConverter.UI.Shell
                 }
             }
             formMain.gmapControlMap.ZoomAndCenterMarkers(formMain.searchOverlayID);
+        }
+
+        /// <summary>
+        /// Перемещение цетра карты на местоположение устройста
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        internal void toolstripButtonLocateDevice(object sender, EventArgs e)
+        {
+            try
+            {
+                Coordinate pos = new Geolocation().GetLocation();
+                formMain.gmapControlMap.Position = pos.GMap;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(formMain, "ПРи определении местоположения произошла ошибка.\r\nПричина: " + ex.Message, "Определение местоположения", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
         }
 
         internal void toolStripComboBoxSearch_DropDown(object sender, EventArgs e)
@@ -1013,7 +1034,7 @@ namespace TrackConverter.UI.Shell
             track.Color = Color.DarkBlue;
             ShowRoute(track, overlay, false);
             RefreshToolTipsCreatingRoute(overlay);
-            formMain.toolStripStatusLabelInfo.Text = "Расстояние: " + track.Distance + " км, количество точек: " + track.Count;
+            formMain.toolStripLabelInfo.Text = "Расстояние: " + track.Distance + " км, количество точек: " + track.Count;
         }
 
         /// <summary>
@@ -1301,6 +1322,27 @@ namespace TrackConverter.UI.Shell
 
             //центр на точку
             formMain.gmapControlMap.Position = cop.Coordinates.GMap;
+        }
+
+        /// <summary>
+        /// выделение заданного полигона на карте (при показе доп. информации об объекте)
+        /// </summary>
+        /// <param name="geometry"></param>
+        internal void SelectPolygon(GMapPolygon geometry)
+        {
+            SolidBrush br = new SolidBrush(Color.FromArgb(128,Color.Red));            
+            geometry.Fill = br;
+            formMain.gmapControlMap.Refresh();
+        }
+
+        /// <summary>
+        /// снятие выделение с объекта
+        /// </summary>
+        /// <param name="geometry"></param>
+        internal void DisSelectPolygon(GMapPolygon geometry)
+        {
+            geometry.Fill = Brushes.Transparent;
+            formMain.gmapControlMap.Refresh();
         }
 
         #endregion
