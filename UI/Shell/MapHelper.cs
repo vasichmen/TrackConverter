@@ -1323,28 +1323,6 @@ namespace TrackConverter.UI.Shell
             //центр на точку
             formMain.gmapControlMap.Position = cop.Coordinates.GMap;
         }
-
-        /// <summary>
-        /// выделение заданного полигона на карте (при показе доп. информации об объекте)
-        /// </summary>
-        /// <param name="geometry"></param>
-        internal void SelectPolygon(GMapPolygon geometry)
-        {
-            SolidBrush br = new SolidBrush(Color.FromArgb(128,Color.Red));            
-            geometry.Fill = br;
-            formMain.gmapControlMap.Refresh();
-        }
-
-        /// <summary>
-        /// снятие выделение с объекта
-        /// </summary>
-        /// <param name="geometry"></param>
-        internal void DisSelectPolygon(GMapPolygon geometry)
-        {
-            geometry.Fill = Brushes.Transparent;
-            formMain.gmapControlMap.Refresh();
-        }
-
         #endregion
     }
 }

@@ -79,6 +79,8 @@ namespace TrackConverter.UI.Map
                             this.Height -= textBoxDescription.Height;
                             textBoxDescription.Height = 1;
                         }
+
+
                         //комментарии
                         string comms = "";
                         foreach (Wikimapia.ExtInfo.CommentInfo com in info.Comments)
@@ -119,7 +121,7 @@ namespace TrackConverter.UI.Map
                             this.Height -= flowLayoutPanelImages.Height;
                             flowLayoutPanelImages.Height = 1;
                         }
-                        Program.winMain.mapHelper.SelectPolygon(this.Obj.Geometry);
+                        Program.winMain.gmapControlMap.SelectPolygon(this.Obj.Geometry);
                     }
                     catch (Exception ex)
                     {
@@ -137,9 +139,14 @@ namespace TrackConverter.UI.Map
             }
         }
 
+        /// <summary>
+        /// при закрытии формы снимаем выделение объекта
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void FormShowObjectInfo_FormClosed(object sender, FormClosedEventArgs e)
         {
-            Program.winMain.mapHelper.DisSelectPolygon(this.Obj.Geometry);
+            Program.winMain.gmapControlMap.DisSelectPolygon(this.Obj.Geometry);
         }
         
         /// <summary>

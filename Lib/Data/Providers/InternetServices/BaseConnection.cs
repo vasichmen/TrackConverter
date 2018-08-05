@@ -22,20 +22,14 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         /// </summary>
         public BaseConnection()
         {
-            InternetReachable = CheckInternet();
             lastQuery = DateTime.MinValue;
-            lastCheckInet = DateTime.MinValue;
         }
-
+        
         /// <summary>
         /// время последнего запроса к сервису
         /// </summary>
         DateTime lastQuery;
-
-        /// <summary>
-        /// время последней проверки подключения к сети
-        /// </summary>
-        DateTime lastCheckInet;
+        
 
         [DllImport("wininet.dll")]
         static extern bool InternetGetConnectedState(ref InternetConnectionState lpdwFlags, int dwReserved);
@@ -67,38 +61,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
             return res;
         }
 
-        /// <summary>
-        /// провекрка подключения к интернету
-        /// </summary>
-        /// <returns></returns>
-        public bool CheckInternet()
-        {
-            if (DateTime.Now - this.lastCheckInet < TimeSpan.FromMinutes(1))
-                return InternetReachable;
-            try
-            {
-                InternetConnectionState flags = InternetConnectionState.INTERNET_CONNECTION_CONFIGURED | 0;
-                bool checkStatus = InternetGetConnectedState(ref flags, 0);
-                if (checkStatus)
-                {
-                    string[] serverList = new string[] { @"google.com" };
-                    bool haveAnInternetConnection = false;
-                    Ping ping = new Ping();
-                    for (int i = 0; i < serverList.Length; i++)
-                    {
-                        PingReply pingReply = ping.Send(serverList[i], 5000);
-                        haveAnInternetConnection = (pingReply.Status == IPStatus.Success);
-                        if (haveAnInternetConnection)
-                            break;
-                    }
-                    return haveAnInternetConnection;
-                }
-                return checkStatus;
-            }
-            catch { return false; }
-        }
-
-        /// <summary>
+          /// <summary>
         /// Минимальное время между запросами к серверу. Значение по умолчанию 200 мс.
         /// Если время между запросами не прошло, SendStringRequest и SendXmlRequest будут ждать
         /// </summary>
@@ -110,11 +73,6 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         public abstract int MaxAttempts { get; }
 
         /// <summary>
-        /// проверка подключения к интернет
-        /// </summary>
-        public bool InternetReachable { get; set; }
-
-        /// <summary>
         /// отправка запроса с результатом в виде xml
         /// </summary>
         /// <param name="url">запрос</param>
@@ -123,8 +81,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         protected XmlDocument SendXmlGetRequest(string url)
         {
             XmlDocument res = new XmlDocument();
-            HttpStatusCode code;
-            string ans = SendStringGetRequest(url, out code);
+            string ans = SendStringGetRequest(url);
             res.LoadXml(ans);
             return res;
         }
@@ -138,7 +95,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         protected HtmlDocument SendHtmlGetRequest(string url, out HttpStatusCode code)
         {
             string ans = SendStringGetRequest(url, out code);
-            
+
             //StreamReader sr = new StreamReader("f.html");
             //code = HttpStatusCode.OK;
             //var ans = sr.BaseStream;
@@ -166,15 +123,11 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         /// отправка запроса с результатом в виде строки
         /// </summary>
         /// <param name="url">запрос</param>
+        /// <param name="code">код ответа сервера</param>
         /// <returns></returns>
         /// <exception cref="WebException">Если произошла ошибка при подключении</exception>
         protected string SendStringGetRequest(string url, out HttpStatusCode code)
         {
-            //проверка подключения
-            InternetReachable = CheckInternet();
-            if (!(bool)InternetReachable)
-                throw new WebException("Подключение к интернет не установлено!");
-
             try
             {
                 //ожидание времени интервала между запросами
@@ -212,7 +165,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
 
                 return responsereader;
             }
-            catch (WebException we) { throw new WebException("Ошибка подключения.\r\n" + url, we); }
+            catch (WebException we) { throw new WebException("Ошибка подключения.\r\n" + url, we,we.Status, null); }
         }
 
         /// <summary>
@@ -224,8 +177,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         protected JObject SendJsonGetRequest(string url)
         {
             JObject jobj;
-            HttpStatusCode code;
-            string json = SendStringGetRequest(url, out code);
+            string json = SendStringGetRequest(url);
             json = json.Substring(json.IndexOf('{'));
             json = json.TrimEnd(new char[] { ';', ')' });
             try { jobj = JObject.Parse(json); }
@@ -241,11 +193,6 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         /// <returns></returns>
         protected string SendStringPostRequest(string url, string data)
         {
-            //проверка подключения
-            InternetReachable = CheckInternet();
-            if (!(bool)InternetReachable)
-                throw new WebException("Подключение к интернет не установлено!");
-
             try
             {
                 //ожидание времени интервала между запросами

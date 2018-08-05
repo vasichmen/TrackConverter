@@ -31,12 +31,12 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormShowObjectInfo));
             this.flowLayoutPanelWrapper = new System.Windows.Forms.FlowLayoutPanel();
             this.labelName = new System.Windows.Forms.Label();
+            this.linkLabelLink = new System.Windows.Forms.LinkLabel();
             this.flowLayoutPanelImages = new System.Windows.Forms.FlowLayoutPanel();
             this.label2 = new System.Windows.Forms.Label();
             this.textBoxDescription = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.textBoxComments = new System.Windows.Forms.TextBox();
-            this.linkLabelLink = new System.Windows.Forms.LinkLabel();
             this.flowLayoutPanelWrapper.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -67,6 +67,19 @@
             this.labelName.TabIndex = 6;
             this.labelName.Text = "Название";
             // 
+            // linkLabelLink
+            // 
+            this.linkLabelLink.AutoSize = true;
+            this.linkLabelLink.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.linkLabelLink.Location = new System.Drawing.Point(8, 29);
+            this.linkLabelLink.Margin = new System.Windows.Forms.Padding(8, 0, 3, 0);
+            this.linkLabelLink.Name = "linkLabelLink";
+            this.linkLabelLink.Size = new System.Drawing.Size(63, 18);
+            this.linkLabelLink.TabIndex = 12;
+            this.linkLabelLink.TabStop = true;
+            this.linkLabelLink.Text = "Ссылка";
+            this.linkLabelLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelLink_LinkClicked);
+            // 
             // flowLayoutPanelImages
             // 
             this.flowLayoutPanelImages.Anchor = System.Windows.Forms.AnchorStyles.None;
@@ -95,12 +108,14 @@
             this.textBoxDescription.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.textBoxDescription.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.textBoxDescription.Location = new System.Drawing.Point(3, 198);
+            this.textBoxDescription.MaximumSize = new System.Drawing.Size(0, 204);
             this.textBoxDescription.Multiline = true;
             this.textBoxDescription.Name = "textBoxDescription";
             this.textBoxDescription.ReadOnly = true;
             this.textBoxDescription.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.textBoxDescription.Size = new System.Drawing.Size(566, 204);
             this.textBoxDescription.TabIndex = 7;
+            this.textBoxDescription.TabStop = false;
             // 
             // label1
             // 
@@ -121,25 +136,14 @@
             this.textBoxComments.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.textBoxComments.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.textBoxComments.Location = new System.Drawing.Point(3, 430);
+            this.textBoxComments.MaximumSize = new System.Drawing.Size(0, 212);
             this.textBoxComments.Multiline = true;
             this.textBoxComments.Name = "textBoxComments";
             this.textBoxComments.ReadOnly = true;
             this.textBoxComments.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.textBoxComments.Size = new System.Drawing.Size(566, 212);
             this.textBoxComments.TabIndex = 8;
-            // 
-            // linkLabelLink
-            // 
-            this.linkLabelLink.AutoSize = true;
-            this.linkLabelLink.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.linkLabelLink.Location = new System.Drawing.Point(8, 29);
-            this.linkLabelLink.Margin = new System.Windows.Forms.Padding(8, 0, 3, 0);
-            this.linkLabelLink.Name = "linkLabelLink";
-            this.linkLabelLink.Size = new System.Drawing.Size(63, 18);
-            this.linkLabelLink.TabIndex = 12;
-            this.linkLabelLink.TabStop = true;
-            this.linkLabelLink.Text = "Ссылка";
-            this.linkLabelLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelLink_LinkClicked);
+            this.textBoxComments.TabStop = false;
             // 
             // FormShowObjectInfo
             // 

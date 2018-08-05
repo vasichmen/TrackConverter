@@ -22,33 +22,53 @@ namespace TrackConverter.UI.Ext
         /// <summary>
         /// слой на карте для доп. слоя
         /// </summary>
-        GMapOverlay layersOverlay;
+        private GMapOverlay layersOverlay;
 
         /// <summary>
         /// загруженные объекты
         /// </summary>
-        Dictionary<string, VectorMapLayerObject> LayerObjects = new Dictionary<string, VectorMapLayerObject>();
+        private Dictionary<string, VectorMapLayerObject> LayerObjects = new Dictionary<string, VectorMapLayerObject>();
+
+        /// <summary>
+        /// список объектов, выделенных на карте
+        /// </summary>
+        private List<int> SelectedPolygons = new List<int>();
 
         /// <summary>
         /// загруженные области с объектами
         /// </summary>
-        ConcurrentBag<RectLatLng> loadedAreas;
-        string layersOverlayID = "layersOverlay";
+        private ConcurrentBag<RectLatLng> loadedAreas;
+
+        /// <summary>
+        /// ID слоя с объектами
+        /// </summary>
+        private string layersOverlayID = "layersOverlay";
 
         /// <summary>
         /// цвет границы объекта
         /// </summary>
-        Pen polygonStroke = Pens.Gray;
+        private Pen polygonStroke = Pens.Gray;
+
+        /// <summary>
+        /// цвет границы невидимого объекта
+        /// </summary>
+        private Pen invisPolygonStroke = Pens.Transparent;
 
         /// <summary>
         /// заливка объекта
         /// </summary>
-        Brush polygonBrush = Brushes.Transparent;
+        private Brush polygonBrush = Brushes.Transparent;
+
+        /// <summary>
+        /// цвет выделенного объекта
+        /// </summary>
+        private Brush selectedPolygonBrush = new SolidBrush(Color.FromArgb(128, Color.Red));
 
         /// <summary>
         /// всплывающие подсказки на объектах
         /// </summary>
-        ToolTip ToolTipPolygonTitles = new ToolTip();
+        private ToolTip ToolTipPolygonTitles = new ToolTip();
+
 
         /// <summary>
         /// создаёт новый объект GMapControlExt
@@ -125,18 +145,17 @@ namespace TrackConverter.UI.Ext
             set
             {
                 layerProvider = value;
+                ClearLayers();
                 if (value != VectorMapLayerProviders.None)
                 {
                     layerProviderEngine = new VectorMapLayer(value);
                     RefreshLayers();
                 }
-                else
-                    ClearLayers();
             }
         }
 
         /// <summary>
-        /// обновление слоёв на карте (полная перерисовка)
+        /// обновление слоёв на карте (добавление незагруженных областей)
         /// </summary>
         private void RefreshLayers()
         {
@@ -154,28 +173,41 @@ namespace TrackConverter.UI.Ext
                 Task ts = new Task(() =>
                 {
                     Program.winMain.BeginOperation();
+
+                    //начальные пеераметры отображения
                     VectorMapLayerProviders provider = this.LayerProvider;
                     int zoom = (int)Zoom;
+                    PointLatLng position = this.Position;
+
+                    //области, которые необходимо загрузить
                     List<RectLatLng> tiles = this.GetVisibleTiles();
+
                     int i = 0;
-                    foreach (RectLatLng tile in tiles)
-                    {
-                        string prc = (((double)i / tiles.Count) * 100d).ToString("0");
-                        Program.winMain.setCurrentOperation("Загрузка слоёв " + LayerProvider.ToString() + ", завершено " + prc + "%");
-                        List<VectorMapLayerObject> nobj = this.layerProviderEngine.GetObjects(tile, minPerimeter, (int)Zoom);
-                        loadedAreas.Add(tile);
-                        this.Invoke(new Action(() =>
-                        {
-                            foreach (VectorMapLayerObject obj in nobj)
-                            {
-                                if (zoom != (int)Zoom || this.LayerProvider != provider) //если во время выполнения операции изменились настройки, то выходим
-                                    return;
-                                ShowLayerObject(obj);
-                            }
-                            this.Refresh();
-                        }));
-                        i++;
-                    }
+                    Parallel.ForEach(tiles, new ParallelOptions() { MaxDegreeOfParallelism = 4 }, (tile) =>
+                       {
+                           try
+                           {
+                               string prc = (((double)i / tiles.Count) * 100d).ToString("0");
+                               Program.winMain.setCurrentOperation("Загрузка слоёв " + LayerProvider.ToString() + ", завершено " + prc + "%");
+                               List<VectorMapLayerObject> nobj = this.layerProviderEngine.GetObjects(tile, minPerimeter, (int)Zoom);
+                               loadedAreas.Add(tile);
+                               this.Invoke(new Action(() =>
+                               {
+                                   foreach (VectorMapLayerObject obj in nobj)
+                                   {
+                                       //если во время выполнения операции изменились параметры отображения, то выходим
+                                       if (zoom != (int)Zoom || this.LayerProvider != provider || position != this.Position)
+                                           return;
+                                       else
+                                           ShowLayerObject(obj);
+                                   }
+                                   this.Refresh();
+                               }));
+                               i++;
+                           }
+                           catch (Exception e) //ловим ошибки при отсутствии интернета
+                           { }
+                       });
                     Program.winMain.EndOperation();
                 });
                 ts.Start();
@@ -218,7 +250,7 @@ namespace TrackConverter.UI.Ext
         private bool isAreaLoaded(RectLatLng nar)
         {
             return false;
-            //TODO: сделть проверку поададния в загруженную область 
+            //TODO: сделть проверку попададния в загруженную область 
             throw new NotImplementedException();
         }
 
@@ -259,11 +291,12 @@ namespace TrackConverter.UI.Ext
             if (LayerObjects.ContainsKey(obj.hash))
                 return;
 
-            obj.Geometry.Fill = polygonBrush;
-            obj.Geometry.Stroke = polygonStroke;
+            bool selected = SelectedPolygons.Contains(obj.ID);
+
+            obj.Geometry.Fill = selected ? selectedPolygonBrush : polygonBrush;
+            obj.Geometry.Stroke = obj.Invisible ? invisPolygonStroke : polygonStroke;
             obj.Geometry.Tag = obj;
             obj.Geometry.IsHitTestVisible = true;
-            obj.Geometry.Tag = obj;
             layersOverlay.Polygons.Add(obj.Geometry);
             LayerObjects.Add(obj.hash, obj);
         }
@@ -279,6 +312,28 @@ namespace TrackConverter.UI.Ext
                 if (pol.IsMouseOver)
                     res.Add(pol.Tag as VectorMapLayerObject);
             return res;
+        }
+
+        /// <summary>
+        /// выделение заданного полигона на карте (при показе доп. информации об объекте)
+        /// </summary>
+        /// <param name="geometry"></param>
+        internal void SelectPolygon(GMapPolygon geometry)
+        {
+            geometry.Fill = this.selectedPolygonBrush;
+            this.Refresh();
+            this.SelectedPolygons.Add((geometry.Tag as VectorMapLayerObject).ID);
+        }
+
+        /// <summary>
+        /// снятие выделение с объекта
+        /// </summary>
+        /// <param name="geometry"></param>
+        internal void DisSelectPolygon(GMapPolygon geometry)
+        {
+            geometry.Fill = Brushes.Transparent;
+            this.SelectedPolygons.Remove((geometry.Tag as VectorMapLayerObject).ID);
+            this.Refresh();
         }
 
         /// <summary>

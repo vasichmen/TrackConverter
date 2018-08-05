@@ -58,7 +58,7 @@ namespace TrackConverter.Lib.Data
             //    }
             //}
             //else
-                return layer.GetObjects(area, perimeter);
+            return layer.GetObjects(area, perimeter);
         }
     }
 }

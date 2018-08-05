@@ -20,6 +20,8 @@ del "D:\Clouds\GDrive\Походы\Конвертер\GMap.NET.Core.dll"
 del "D:\Clouds\GDrive\Походы\Конвертер\TrackConverter.exe"
 del "D:\Clouds\GDrive\Походы\Конвертер\System.Data.SQLite.dll"
 del "D:\Clouds\GDrive\Походы\Конвертер\Newtonsoft.Json.dll"
+del "D:\Clouds\GDrive\Походы\Конвертер\System.Runtime.dll"
+del "D:\Clouds\GDrive\Походы\Конвертер\HtmlAgilityPack.dll"
 del "D:\Clouds\GDrive\Походы\Конвертер\license.txt"
 del "D:\Clouds\GDrive\Походы\Конвертер\readme.txt"
 
@@ -44,6 +46,8 @@ xcopy "D:\Clouds\Projects\CS\TrackConverter\UI\bin\Release\license.txt" "D:\Clou
 xcopy "D:\Clouds\Projects\CS\TrackConverter\UI\bin\Release\System.Data.SQLite.dll" "D:\Clouds\GDrive\Походы\Конвертер\" /Y
 xcopy "D:\Clouds\Projects\CS\TrackConverter\UI\bin\Release\Newtonsoft.Json.dll" "D:\Clouds\GDrive\Походы\Конвертер\" /Y
 xcopy "D:\Clouds\Projects\CS\TrackConverter\UI\bin\Release\readme.txt" "D:\Clouds\GDrive\Походы\Конвертер\" /Y
+xcopy "D:\Clouds\Projects\CS\TrackConverter\UI\bin\Release\System.Runtime.dll" "D:\Clouds\GDrive\Походы\Конвертер\" /Y
+xcopy "D:\Clouds\Projects\CS\TrackConverter\UI\bin\Release\HtmlAgilityPack.dll" "D:\Clouds\GDrive\Походы\Конвертер\" /Y
 
 
 rem pause

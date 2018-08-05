@@ -68,7 +68,7 @@ namespace TrackConverter.Lib.Classes
         /// <param name="geometry">геометрия объекта, заданная списком точек</param>
         /// <param name="name">имя объекта</param>
         public VectorMapLayerObject(TrackFile geometry, string name)
-        : this(new GMapPolygon(geometry.GMapPoints, name)) { }
+        : this(new GMapPolygon(geometry.GMapPoints, name)) {  }
 
         /// <summary>
         /// преобразует строковое представление периметра объекта в полигон
@@ -197,6 +197,10 @@ namespace TrackConverter.Lib.Classes
         /// </summary>
         public double Perimeter { get { return perimeter; } private set { perimeter = value; } }
 
+        /// <summary>
+        /// если истина, то объект невидим на карте
+        /// </summary>
+        public bool Invisible { get; set; }
 
         public static bool operator ==(VectorMapLayerObject o1, VectorMapLayerObject o2)
         {

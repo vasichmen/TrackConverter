@@ -296,14 +296,14 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                                "," + lon_max.ToString("0.00000").Replace(Vars.DecimalSeparator, '.') +
                                "," + lat_max.ToString("0.00000").Replace(Vars.DecimalSeparator, '.');
             string url = string.Format("http://wikimapia.org/d?lng=1{0}", bbox);
-            HttpStatusCode code;
-            string kml = SendStringGetRequest(url, out code);
+            
+            string kml = SendStringGetRequest(url);
             List<VectorMapLayerObject> res = KmlHelper.ParseWikimapiaObjectsAnswer(kml);
             return res;
         }
 
         /// <summary>
-        /// получить расширенныю информацию об объекте
+        /// получить расширенную информацию об объекте(через API)
         /// </summary>
         /// <param name="id">id объекта</param>
         /// <returns></returns>
@@ -367,9 +367,12 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
             //http://wikimapia.org/61941/ru
 
             string url = "http://wikimapia.org/";
-            string lang = "ru";
+            string lang = "ru"; //TODO: сделать выбор языка
             url = string.Format(url + "{0}/{1}", id, lang);
             HttpStatusCode code;
+
+            // url = "http://wikimapia.org/32984750/ru/"; //удаленный объект
+            //url = "http://wikimapia.org/11025563/ru/"; // невидимый объект
             HtmlDocument html = SendHtmlGetRequest(url, out code);
 
             //проверка на ошибку
@@ -384,10 +387,18 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                     res.ID = id;
                     res.Link = url;
 
-                    //заголовок объекта
-                    res.Title = html.DocumentNode.ChildNodes["html"].ChildNodes["head"].ChildNodes["title"].InnerText;
-
                     var body = html.DocumentNode.ChildNodes["html"].ChildNodes["body"];
+
+                    //заголовок объекта
+                    res.Title = html.DocumentNode.SelectSingleNode(@".//html/head/title").InnerText;
+                    if (string.IsNullOrEmpty(res.Title))
+                    {
+                        var del_bage = body.SelectSingleNode(".//div[@class = 'deletion-badge']");
+                        if (del_bage != null) //если это удалённый объект, то пишем
+                            res.Title = "Удалённый объект";
+                    }
+
+
 
                     //описание
                     var description = html.GetElementbyId("place-description");
@@ -489,7 +500,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         }
 
         /// <summary>
-        /// преобразование координат JSON в полиган карты
+        /// преобразование координат JSON в полигон карты
         /// </summary>
         /// <param name="polygon">координаты в JSON</param>
         /// <returns></returns>

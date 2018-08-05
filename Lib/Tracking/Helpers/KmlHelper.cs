@@ -154,7 +154,7 @@ namespace TrackConverter.Lib.Tracking.Helpers
                 int id = int.Parse(wid);
 
                 //LINK
-                string link = "http://wikimapia.org/" + id + "/#ge";
+                string link = "http://wikimapia.org/" + id;
 
                 //NAME
                 string raw_desc = placemark["description"].InnerText;
@@ -165,7 +165,7 @@ namespace TrackConverter.Lib.Tracking.Helpers
                 string linestring = placemark["MultiGeometry"]["LineString"]["coordinates"].InnerText;
                 linestring = linestring.Replace("\n", " ").Trim().Trim();
                 TrackFile geometry = ParseLineString(linestring);
-                res.Add(new VectorMapLayerObject(geometry,name) { ID = id, Link = link, LayerProvider = VectorMapLayerProviders.Wikimapia });
+                res.Add(new VectorMapLayerObject(geometry,name) { ID = id, Link = link, LayerProvider = VectorMapLayerProviders.Wikimapia, Invisible=false });
             }
             return res;
         }
