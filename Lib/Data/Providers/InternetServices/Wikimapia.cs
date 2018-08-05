@@ -369,11 +369,16 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
             string url = "http://wikimapia.org/";
             string lang = "ru"; //TODO: сделать выбор языка
             url = string.Format(url + "{0}/{1}", id, lang);
-            HttpStatusCode code;
+            HttpStatusCode code = HttpStatusCode.OK;
 
             // url = "http://wikimapia.org/32984750/ru/"; //удаленный объект
             //url = "http://wikimapia.org/11025563/ru/"; // невидимый объект
-            HtmlDocument html = SendHtmlGetRequest(url, out code);
+
+            //HtmlDocument html = SendHtmlGetRequest(url, out code);
+
+            HtmlDocument html = new HtmlDocument();
+
+            html.Load(new StreamReader("f.html"));
 
             //проверка на ошибку
             switch (code)

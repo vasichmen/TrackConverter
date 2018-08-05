@@ -27,7 +27,7 @@ namespace TrackConverter.UI.Ext
         /// <summary>
         /// загруженные объекты
         /// </summary>
-        private Dictionary<string, VectorMapLayerObject> LayerObjects = new Dictionary<string, VectorMapLayerObject>();
+        private Dictionary<int, VectorMapLayerObject> LayerObjects = new Dictionary<int, VectorMapLayerObject>();
 
         /// <summary>
         /// список объектов, выделенных на карте
@@ -250,7 +250,7 @@ namespace TrackConverter.UI.Ext
         private bool isAreaLoaded(RectLatLng nar)
         {
             return false;
-            //TODO: сделть проверку попададния в загруженную область 
+            //TODO: сделать проверку попададния в загруженную область 
             throw new NotImplementedException();
         }
 
@@ -288,7 +288,7 @@ namespace TrackConverter.UI.Ext
         /// <param name="obj"></param>
         private void ShowLayerObject(VectorMapLayerObject obj)
         {
-            if (LayerObjects.ContainsKey(obj.hash))
+            if (LayerObjects.ContainsKey(obj.ID))
                 return;
 
             bool selected = SelectedPolygons.Contains(obj.ID);
@@ -298,7 +298,7 @@ namespace TrackConverter.UI.Ext
             obj.Geometry.Tag = obj;
             obj.Geometry.IsHitTestVisible = true;
             layersOverlay.Polygons.Add(obj.Geometry);
-            LayerObjects.Add(obj.hash, obj);
+            LayerObjects.Add(obj.ID, obj);
         }
 
         /// <summary>

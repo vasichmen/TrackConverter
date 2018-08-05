@@ -10,11 +10,13 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using TrackConverter.Lib.Classes;
 using TrackConverter.Lib.Classes.StackEdits;
 using TrackConverter.Lib.Data;
+using TrackConverter.Lib.Data.Providers.InternetServices;
 using TrackConverter.Lib.Data.Providers.Local.System;
 using TrackConverter.Lib.Maping.GMap;
 using TrackConverter.Lib.Tracking;
@@ -1351,11 +1353,19 @@ namespace TrackConverter.UI.Shell
         }
 
         #endregion
+        
 
         private void button1_Click(object sender, EventArgs e)
         {
-           
-
+            try
+            {
+                for (int i = 0; i < 50; i++)
+                {
+                    var ff = new Wikimapia().GetExtInfo(1);
+                }
+            }
+            catch (Exception)
+            { }
         }
     }
 }

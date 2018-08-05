@@ -23,19 +23,9 @@ namespace TrackConverter.Lib.Classes
         private Coordinate geometryCenter;
 
         /// <summary>
-        /// строковое представление координат вершин сногоугольника
-        /// </summary>
-        private string geometryString;
-
-        /// <summary>
         /// периметр объекта в метрах
         /// </summary>
         private double perimeter;
-
-        /// <summary>
-        /// хэш-сумма строки координат
-        /// </summary>
-        public readonly string hash;
 
         /// <summary>
         /// ID 
@@ -56,9 +46,7 @@ namespace TrackConverter.Lib.Classes
             Geometry = geometry;
             this.Name = geometry.Name;
             geometryCenter = GetGeometryCenter(geometry);
-            geometryString = GetGeometryString(geometry);
-            Perimeter = Vars.CurrentGeosystem.CalculateDistance(geometry.Points);
-            this.hash = GetHashString(geometryString);
+            perimeter = double.NaN;
         }
 
 
@@ -68,7 +56,7 @@ namespace TrackConverter.Lib.Classes
         /// <param name="geometry">геометрия объекта, заданная списком точек</param>
         /// <param name="name">имя объекта</param>
         public VectorMapLayerObject(TrackFile geometry, string name)
-        : this(new GMapPolygon(geometry.GMapPoints, name)) {  }
+        : this(new GMapPolygon(geometry.GMapPoints, name)) { }
 
         /// <summary>
         /// преобразует строковое представление периметра объекта в полигон
@@ -169,7 +157,7 @@ namespace TrackConverter.Lib.Classes
         /// Название объекта
         /// </summary>
         public string Name { get; set; }
-        
+
         /// <summary>
         /// Сссылка на описание объекта
         /// </summary>
@@ -188,29 +176,23 @@ namespace TrackConverter.Lib.Classes
         }
 
         /// <summary>
-        /// строковое представление геометрии многоугольника
-        /// </summary>
-        public string GeometryString { get { return geometryString; } private set { geometryString = value; } }
-
-        /// <summary>
         /// длина периметра объекта в метрах
         /// </summary>
-        public double Perimeter { get { return perimeter; } private set { perimeter = value; } }
+        public double Perimeter
+        {
+            get
+            {
+                if (perimeter == double.NaN)
+                    perimeter = Vars.CurrentGeosystem.CalculateDistance(this.Geometry.Points);
+                return perimeter;
+            }
+            private set { perimeter = value; }
+        }
 
         /// <summary>
         /// если истина, то объект невидим на карте
         /// </summary>
         public bool Invisible { get; set; }
-
-        public static bool operator ==(VectorMapLayerObject o1, VectorMapLayerObject o2)
-        {
-            return o1.hash.Equals(o2);
-        }
-
-        public static bool operator !=(VectorMapLayerObject o1, VectorMapLayerObject o2)
-        {
-            return !o1.hash.Equals(o2);
-        }
 
         /// <summary>
         /// текстовое представление объекта слоя (имя)

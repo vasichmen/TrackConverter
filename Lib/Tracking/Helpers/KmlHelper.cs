@@ -181,7 +181,7 @@ namespace TrackConverter.Lib.Tracking.Helpers
             //переменная lineString содержит последовательность координат в формате:
             //долгота1,широта1,высота1 долгота2,широта2,высота2
             //разбиваем на отдельные точки
-            string[] pts = Regex.Split(lineString.Trim(), "w* w*");
+            string[] pts = lineString.Trim().Split(' ');
             foreach (string pt in pts)
                 res += ParsePoint(pt);
             return res;
@@ -194,11 +194,11 @@ namespace TrackConverter.Lib.Tracking.Helpers
         /// <returns></returns>
         private static TrackPoint ParsePoint(string pointString)
         {
-            MatchCollection arr = Regex.Matches(pointString, @"\d+\:\d+|\d+[.,]\d+");
+            string[] arr = pointString.Split(',');
             string al = "0";
             string lo = arr[0].ToString().Replace('.', Vars.DecimalSeparator).Trim();
             string la = arr[1].ToString().Replace('.', Vars.DecimalSeparator).Trim();
-            if (arr.Count == 3)
+            if (arr.Length == 3)
                 al = arr[2].ToString().Replace('.', Vars.DecimalSeparator).Trim();
             TrackPoint nv = new TrackPoint(la, lo)
             {

@@ -117,6 +117,7 @@ namespace TrackConverter.UI.Shell
             this.showGoogleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.RemovePointtoolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainerHorizontalRight = new System.Windows.Forms.SplitContainer();
+            this.gmapControlMap = new TrackConverter.UI.Ext.GMapControlExt();
             this.toolStrip2 = new System.Windows.Forms.ToolStrip();
             this.toolStripButtonZoomIn = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonZoomOut = new System.Windows.Forms.ToolStripButton();
@@ -131,7 +132,6 @@ namespace TrackConverter.UI.Shell
             this.toolStripButtonClearSearchMarks = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonLocateDevice = new System.Windows.Forms.ToolStripButton();
             this.zedGraph = new ZedGraph.ZedGraphControl();
-            this.button1 = new System.Windows.Forms.Button();
             this.contextMenuStripMap = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolStripMenuItemAddWaypoint = new System.Windows.Forms.ToolStripMenuItem();
             this.созданиеМаршрутаToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -154,7 +154,7 @@ namespace TrackConverter.UI.Shell
             this.toolStripLabelCurrentOperation = new System.Windows.Forms.ToolStripLabel();
             this.toolStrip4 = new System.Windows.Forms.ToolStrip();
             this.toolStripLabelPosition = new System.Windows.Forms.ToolStripLabel();
-            this.gmapControlMap = new TrackConverter.UI.Ext.GMapControlExt();
+            this.button1 = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerVertical)).BeginInit();
             this.splitContainerVertical.Panel1.SuspendLayout();
@@ -584,6 +584,9 @@ namespace TrackConverter.UI.Shell
             // 
             // splitContainerHorizontalLeft.Panel1
             // 
+#if DEBUG
+            this.splitContainerHorizontalLeft.Panel1.Controls.Add(this.button1);
+#endif
             this.splitContainerHorizontalLeft.Panel1.Controls.Add(this.dataGridViewConverter);
             // 
             // splitContainerHorizontalLeft.Panel2
@@ -1007,6 +1010,47 @@ namespace TrackConverter.UI.Shell
             this.splitContainerHorizontalRight.SplitterDistance = 387;
             this.splitContainerHorizontalRight.TabIndex = 0;
             // 
+            // gmapControlMap
+            // 
+            this.gmapControlMap.Bearing = 0F;
+            this.gmapControlMap.CanDragMap = true;
+            this.gmapControlMap.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.gmapControlMap.EmptyTileColor = System.Drawing.Color.Navy;
+            this.gmapControlMap.GrayScaleMode = false;
+            this.gmapControlMap.HelperLineOption = GMap.NET.WindowsForms.HelperLineOptions.DontShow;
+            this.gmapControlMap.LevelsKeepInMemmory = 5;
+            this.gmapControlMap.Location = new System.Drawing.Point(25, 27);
+            this.gmapControlMap.MarkersEnabled = true;
+            this.gmapControlMap.MaxZoom = 2;
+            this.gmapControlMap.MinZoom = 2;
+            this.gmapControlMap.MouseWheelZoomEnabled = true;
+            this.gmapControlMap.MouseWheelZoomType = GMap.NET.MouseWheelZoomType.MousePositionAndCenter;
+            this.gmapControlMap.Name = "gmapControlMap";
+            this.gmapControlMap.NegativeMode = false;
+            this.gmapControlMap.PolygonsEnabled = true;
+            this.gmapControlMap.RetryLoadTile = 0;
+            this.gmapControlMap.RoutesEnabled = true;
+            this.gmapControlMap.ScaleMode = GMap.NET.WindowsForms.ScaleModes.Integer;
+            this.gmapControlMap.SelectedAreaFillColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(65)))), ((int)(((byte)(105)))), ((int)(((byte)(225)))));
+            this.gmapControlMap.ShowTileGridLines = false;
+            this.gmapControlMap.Size = new System.Drawing.Size(973, 360);
+            this.gmapControlMap.TabIndex = 0;
+            this.gmapControlMap.Zoom = 0D;
+            this.gmapControlMap.OnMarkerClick += new GMap.NET.WindowsForms.MarkerClick(this.gmapControlMap_OnMarkerClick);
+            this.gmapControlMap.OnPolygonClick += new GMap.NET.WindowsForms.PolygonClick(this.gmapControlMap_OnPolygonClick);
+            this.gmapControlMap.OnRouteClick += new GMap.NET.WindowsForms.RouteClick(this.gmapControlMap_OnRouteClick);
+            this.gmapControlMap.OnMarkerEnter += new GMap.NET.WindowsForms.MarkerEnter(this.gmapControlMap_OnMarkerEnter);
+            this.gmapControlMap.OnMarkerLeave += new GMap.NET.WindowsForms.MarkerLeave(this.gmapControlMap_OnMarkerLeave);
+            this.gmapControlMap.OnPositionChanged += new GMap.NET.PositionChanged(this.gmapControlMap_OnPositionChanged);
+            this.gmapControlMap.OnMapDrag += new GMap.NET.MapDrag(this.gmapControlMap_OnMapDrag);
+            this.gmapControlMap.OnMapZoomChanged += new GMap.NET.MapZoomChanged(this.gmapControlMap_OnMapZoomChanged);
+            this.gmapControlMap.OnMapTypeChanged += new GMap.NET.MapTypeChanged(this.gmapControlMap_OnMapTypeChanged);
+            this.gmapControlMap.MouseClick += new System.Windows.Forms.MouseEventHandler(this.gmapControlMap_MouseClick);
+            this.gmapControlMap.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.gmapControlMap_MouseDoubleClick);
+            this.gmapControlMap.MouseDown += new System.Windows.Forms.MouseEventHandler(this.gmapControlMap_MouseDown);
+            this.gmapControlMap.MouseMove += new System.Windows.Forms.MouseEventHandler(this.gmapControlMap_MouseMove);
+            this.gmapControlMap.MouseUp += new System.Windows.Forms.MouseEventHandler(this.gmapControlMap_MouseUp);
+            // 
             // toolStrip2
             // 
             this.toolStrip2.Dock = System.Windows.Forms.DockStyle.Left;
@@ -1170,16 +1214,6 @@ namespace TrackConverter.UI.Shell
             this.zedGraph.PointValueEvent += new ZedGraph.ZedGraphControl.PointValueHandler(this.zedGraph_PointValueEvent);
             this.zedGraph.MouseMoveEvent += new ZedGraph.ZedGraphControl.ZedMouseEventHandler(this.zedGraph_MouseMoveEvent);
             this.zedGraph.MouseLeave += new System.EventHandler(this.zedGraph_MouseLeave);
-            // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(196, 224);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 1;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // contextMenuStripMap
             // 
@@ -1380,46 +1414,15 @@ namespace TrackConverter.UI.Shell
             this.toolStripLabelPosition.Size = new System.Drawing.Size(86, 17);
             this.toolStripLabelPosition.Text = "toolStripLabel1";
             // 
-            // gmapControlMap
+            // button1
             // 
-            this.gmapControlMap.Bearing = 0F;
-            this.gmapControlMap.CanDragMap = true;
-            this.gmapControlMap.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gmapControlMap.EmptyTileColor = System.Drawing.Color.Navy;
-            this.gmapControlMap.GrayScaleMode = false;
-            this.gmapControlMap.HelperLineOption = GMap.NET.WindowsForms.HelperLineOptions.DontShow;
-            this.gmapControlMap.LevelsKeepInMemmory = 5;
-            this.gmapControlMap.Location = new System.Drawing.Point(25, 27);
-            this.gmapControlMap.MarkersEnabled = true;
-            this.gmapControlMap.MaxZoom = 2;
-            this.gmapControlMap.MinZoom = 2;
-            this.gmapControlMap.MouseWheelZoomEnabled = true;
-            this.gmapControlMap.MouseWheelZoomType = GMap.NET.MouseWheelZoomType.MousePositionAndCenter;
-            this.gmapControlMap.Name = "gmapControlMap";
-            this.gmapControlMap.NegativeMode = false;
-            this.gmapControlMap.PolygonsEnabled = true;
-            this.gmapControlMap.RetryLoadTile = 0;
-            this.gmapControlMap.RoutesEnabled = true;
-            this.gmapControlMap.ScaleMode = GMap.NET.WindowsForms.ScaleModes.Integer;
-            this.gmapControlMap.SelectedAreaFillColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(65)))), ((int)(((byte)(105)))), ((int)(((byte)(225)))));
-            this.gmapControlMap.ShowTileGridLines = false;
-            this.gmapControlMap.Size = new System.Drawing.Size(973, 360);
-            this.gmapControlMap.TabIndex = 0;
-            this.gmapControlMap.Zoom = 0D;
-            this.gmapControlMap.OnMarkerClick += new GMap.NET.WindowsForms.MarkerClick(this.gmapControlMap_OnMarkerClick);
-            this.gmapControlMap.OnPolygonClick += new GMap.NET.WindowsForms.PolygonClick(this.gmapControlMap_OnPolygonClick);
-            this.gmapControlMap.OnRouteClick += new GMap.NET.WindowsForms.RouteClick(this.gmapControlMap_OnRouteClick);
-            this.gmapControlMap.OnMarkerEnter += new GMap.NET.WindowsForms.MarkerEnter(this.gmapControlMap_OnMarkerEnter);
-            this.gmapControlMap.OnMarkerLeave += new GMap.NET.WindowsForms.MarkerLeave(this.gmapControlMap_OnMarkerLeave);
-            this.gmapControlMap.OnPositionChanged += new GMap.NET.PositionChanged(this.gmapControlMap_OnPositionChanged);
-            this.gmapControlMap.OnMapDrag += new GMap.NET.MapDrag(this.gmapControlMap_OnMapDrag);
-            this.gmapControlMap.OnMapZoomChanged += new GMap.NET.MapZoomChanged(this.gmapControlMap_OnMapZoomChanged);
-            this.gmapControlMap.OnMapTypeChanged += new GMap.NET.MapTypeChanged(this.gmapControlMap_OnMapTypeChanged);
-            this.gmapControlMap.MouseClick += new System.Windows.Forms.MouseEventHandler(this.gmapControlMap_MouseClick);
-            this.gmapControlMap.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.gmapControlMap_MouseDoubleClick);
-            this.gmapControlMap.MouseDown += new System.Windows.Forms.MouseEventHandler(this.gmapControlMap_MouseDown);
-            this.gmapControlMap.MouseMove += new System.Windows.Forms.MouseEventHandler(this.gmapControlMap_MouseMove);
-            this.gmapControlMap.MouseUp += new System.Windows.Forms.MouseEventHandler(this.gmapControlMap_MouseUp);
+            this.button1.Location = new System.Drawing.Point(135, 184);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 1;
+            this.button1.Text = "button1";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // FormMain
             // 
@@ -1610,7 +1613,6 @@ namespace TrackConverter.UI.Shell
         /// кнопка создания оптимального маршрута на основе другого
         /// </summary>
         public System.Windows.Forms.ToolStripMenuItem createOptimalOnBaseToolStripMenuItem;
-        private System.Windows.Forms.Button button1;
         internal System.Windows.Forms.ToolStripMenuItem separateRouteToolStripMenuItem;
         /// <summary>
         /// источник данных слоя карты
@@ -1628,6 +1630,7 @@ namespace TrackConverter.UI.Shell
         public System.Windows.Forms.ToolStripLabel toolStripLabelFromStart;
         public System.Windows.Forms.ToolStripLabel toolStripLabelInfo;
         private System.Windows.Forms.ToolStripButton toolStripButtonLocateDevice;
+        private System.Windows.Forms.Button button1;
     }
 }
 
