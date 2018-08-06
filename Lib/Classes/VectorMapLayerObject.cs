@@ -49,7 +49,6 @@ namespace TrackConverter.Lib.Classes
             perimeter = double.NaN;
         }
 
-
         /// <summary>
         /// создаёт новый объект слоя карты из точек 
         /// </summary>

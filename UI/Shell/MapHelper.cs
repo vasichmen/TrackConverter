@@ -174,6 +174,9 @@ namespace TrackConverter.UI.Shell
             formMain.gmapControlMap.Overlays.Add(formMain.searchOverlay);
 
             #endregion
+
+            //выставляем флаг, что загрузка настроек завершена
+            formMain.gmapControlMap.isControlLoaded = true;
         }
 
 

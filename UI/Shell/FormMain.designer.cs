@@ -79,6 +79,7 @@ namespace TrackConverter.UI.Shell
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainerVertical = new System.Windows.Forms.SplitContainer();
             this.splitContainerHorizontalLeft = new System.Windows.Forms.SplitContainer();
+            this.button1 = new System.Windows.Forms.Button();
             this.dataGridViewConverter = new System.Windows.Forms.DataGridView();
             this.contextMenuStripConverter = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.informationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -154,7 +155,6 @@ namespace TrackConverter.UI.Shell
             this.toolStripLabelCurrentOperation = new System.Windows.Forms.ToolStripLabel();
             this.toolStrip4 = new System.Windows.Forms.ToolStrip();
             this.toolStripLabelPosition = new System.Windows.Forms.ToolStripLabel();
-            this.button1 = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerVertical)).BeginInit();
             this.splitContainerVertical.Panel1.SuspendLayout();
@@ -584,9 +584,7 @@ namespace TrackConverter.UI.Shell
             // 
             // splitContainerHorizontalLeft.Panel1
             // 
-#if DEBUG
             this.splitContainerHorizontalLeft.Panel1.Controls.Add(this.button1);
-#endif
             this.splitContainerHorizontalLeft.Panel1.Controls.Add(this.dataGridViewConverter);
             // 
             // splitContainerHorizontalLeft.Panel2
@@ -595,6 +593,16 @@ namespace TrackConverter.UI.Shell
             this.splitContainerHorizontalLeft.Size = new System.Drawing.Size(330, 675);
             this.splitContainerHorizontalLeft.SplitterDistance = 386;
             this.splitContainerHorizontalLeft.TabIndex = 0;
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(135, 184);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 1;
+            this.button1.Text = "button1";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // dataGridViewConverter
             // 
@@ -1414,16 +1422,6 @@ namespace TrackConverter.UI.Shell
             this.toolStripLabelPosition.Size = new System.Drawing.Size(86, 17);
             this.toolStripLabelPosition.Text = "toolStripLabel1";
             // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(135, 184);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 1;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
-            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1438,7 +1436,7 @@ namespace TrackConverter.UI.Shell
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "TrackConverter";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormMain_FormClosing);
-            this.Load += new System.EventHandler(this.FormMain_Load);
+            this.Shown += new System.EventHandler(this.FormMain_Shown);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.splitContainerVertical.Panel1.ResumeLayout(false);

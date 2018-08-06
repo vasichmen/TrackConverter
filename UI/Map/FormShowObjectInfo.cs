@@ -121,7 +121,7 @@ namespace TrackConverter.UI.Map
                             this.Height -= flowLayoutPanelImages.Height;
                             flowLayoutPanelImages.Height = 1;
                         }
-                        Program.winMain.gmapControlMap.SelectPolygon(this.Obj.Geometry);
+                        Program.winMain.gmapControlMap.SelectPolygon(this.Obj.ID);
                     }
                     catch (Exception ex)
                     {
@@ -146,7 +146,7 @@ namespace TrackConverter.UI.Map
         /// <param name="e"></param>
         private void FormShowObjectInfo_FormClosed(object sender, FormClosedEventArgs e)
         {
-            Program.winMain.gmapControlMap.DisSelectPolygon(this.Obj.Geometry);
+            Program.winMain.gmapControlMap.DisSelectPolygon(this.Obj.ID);
         }
         
         /// <summary>

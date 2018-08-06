@@ -369,16 +369,15 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
             string url = "http://wikimapia.org/";
             string lang = "ru"; //TODO: сделать выбор языка
             url = string.Format(url + "{0}/{1}", id, lang);
-            HttpStatusCode code = HttpStatusCode.OK;
+            HttpStatusCode code;
 
             // url = "http://wikimapia.org/32984750/ru/"; //удаленный объект
             //url = "http://wikimapia.org/11025563/ru/"; // невидимый объект
 
-            //HtmlDocument html = SendHtmlGetRequest(url, out code);
+            HtmlDocument html = SendHtmlGetRequest(url, out code);
 
-            HtmlDocument html = new HtmlDocument();
-
-            html.Load(new StreamReader("f.html"));
+            //HtmlDocument html = new HtmlDocument();
+            //html.Load(new StreamReader("f.html"));
 
             //проверка на ошибку
             switch (code)
@@ -407,7 +406,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
 
                     //описание
                     var description = html.GetElementbyId("place-description");
-                    res.Description = description == null ? "" : description.InnerText.Trim(new[] { '\r', '\n', ' ' });
+                    res.Description = (description == null ? "" : description.InnerText.Trim(new[] { '\r', '\n', ' ' })).Replace("&quot;","\"");
 
                     //wikipedia
                     var wikipedia = body.SelectSingleNode(@".//div[@class = 'placeinfo-row wikipedia-link']/a");
@@ -441,7 +440,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
 
                                 //текст комментария
                                 HtmlNode message = comment.SelectSingleNode(@".//div[@class = 'comment-content']");
-                                com.Message = message == null ? "" : message.InnerText.Trim(new[] { '\r', '\n', ' ' });
+                                com.Message = (message == null ? "" : message.InnerText.Trim(new[] { '\r', '\n', ' ' })).Replace("&quot;", "\"");
 
                                 //автор комментария
                                 HtmlNode username = comment.SelectSingleNode(@".//div[@class='comment-header']/a");

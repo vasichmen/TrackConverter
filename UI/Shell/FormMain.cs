@@ -485,19 +485,24 @@ namespace TrackConverter.UI.Shell
             }
         }
 
-        private void FormMain_Load(object sender, EventArgs e)
+        private void FormMain_Shown(object sender, EventArgs e)
         {
-            //если надо - запускаем загрузку ЕТОРО2
-            if (Vars.Options.Common.IsLoadETOPOOnStart)
-                if (GeoInfo.ETOPOProvider == null)
-                {
-                    BeginOperation();
-                    Vars.TaskLoadingETOPO.Start();
-                }
+            #region ВНЕШНИЙ ВИД ОКНА
+
+            splitContainerHorizontalLeft.SplitterDistance = Vars.Options.Container.HorizontalLeftSplitter;
+            splitContainerHorizontalRight.SplitterDistance = Vars.Options.Container.HorizontalRightSplitter;
+            splitContainerVertical.SplitterDistance = Vars.Options.Container.VerticalSplitter;
+            toolStripLabelCurrentOperation.Text = "";
+            toolStripLabelFromStart.Text = "";
+            toolStripLabelInfo.Text = "";
+            toolStripLabelPosition.Text = "";
+
+            #endregion
 
             #region КАРТА
 
             mapHelper.ConfigureGMapControl();
+
             TripRouteFile gf = null;
             try
             {
@@ -528,7 +533,8 @@ namespace TrackConverter.UI.Shell
 
             //последняя выделенная область карты
             gmapControlMap.SelectedArea = Vars.Options.Map.LastSelectedArea;
-            gmapControlMap.Refresh();
+
+            gmapControlMap.RefreshLayers();
 
             #endregion
 
@@ -586,19 +592,15 @@ namespace TrackConverter.UI.Shell
 
             #endregion
 
-            #region ВНЕШНИЙ ВИД ОКНА
-
-            splitContainerHorizontalLeft.SplitterDistance = Vars.Options.Container.HorizontalLeftSplitter;
-            splitContainerHorizontalRight.SplitterDistance = Vars.Options.Container.HorizontalRightSplitter;
-            splitContainerVertical.SplitterDistance = Vars.Options.Container.VerticalSplitter;
-            toolStripLabelCurrentOperation.Text = "";
-            toolStripLabelFromStart.Text = "";
-            toolStripLabelInfo.Text = "";
-            toolStripLabelPosition.Text = "";
-
-            #endregion
-
+            //если надо - запускаем загрузку ЕТОРО2
+            if (Vars.Options.Common.IsLoadETOPOOnStart)
+                if (GeoInfo.ETOPOProvider == null)
+                {
+                    BeginOperation();
+                    Vars.TaskLoadingETOPO.Start();
+                }
         }
+
 
         private void FormMain_FormClosing(object sender, FormClosingEventArgs e)
         {
@@ -1367,6 +1369,7 @@ namespace TrackConverter.UI.Shell
             catch (Exception)
             { }
         }
+
     }
 }
 
