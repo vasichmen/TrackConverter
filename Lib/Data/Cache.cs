@@ -119,7 +119,6 @@ namespace TrackConverter.Lib.Data
         public void Dispose()
         {
             sqlite.Dispose();
-            fs.Close();
         }
 
         #endregion

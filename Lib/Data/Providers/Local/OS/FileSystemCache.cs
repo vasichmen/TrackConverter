@@ -28,26 +28,16 @@ namespace TrackConverter.Lib.Data.Providers.Local.OS
             directory = dir;
             Directory.CreateDirectory(directory);
             images_data = new Dictionary<string, FileInfo>();
-            StreamReader sr;
-            if (!File.Exists(directory + "\\" + dataFileName))
-                sr = new StreamReader(File.Create(directory + "\\" + dataFileName));
-            else
-                sr = new StreamReader(directory + "\\" + dataFileName, Encoding.UTF8);
-            string t = sr.ReadToEnd();
-            sr.Close();
-            string[] files = t.Split('\n');
-            foreach (string file in files)
-            {
-                FileInfo fi = new FileInfo();
-                string[] fields = file.Split('*');
-                if (fields.Length != 3)
-                    continue;
-                fi.url = fields[0];
-                fi.path = fields[1];
-                fi.date = DateTime.Parse(fields[2]);
-                images_data.Add(fi.url, fi);
-            }
+
+            //заполнение информации о файлах
+            LoadDataFile(directory + "\\" + dataFileName);
+
+            //удаление устаревших объектов
+            DeleteObjectsBefore(DateTime.Now - Vars.Options.DataSources.MaxImageCacheAge);
         }
+
+
+        #region IImageCache
 
         public bool CheckImage(string url)
         {
@@ -71,7 +61,7 @@ namespace TrackConverter.Lib.Data.Providers.Local.OS
             if (!CheckImage(url))
             {
                 string fname = getFileName(url);
-                data.Save(directory+"\\"+ fname);
+                data.Save(directory + "\\" + fname);
                 FileInfo info = new FileInfo() { date = DateTime.Now, url = url, path = fname };
                 images_data.Add(url, info);
 
@@ -85,14 +75,18 @@ namespace TrackConverter.Lib.Data.Providers.Local.OS
             else return false;
         }
 
+        #endregion
+
+        #region вспомогательные методы
+
         private string getFileName(string url)
         {
             string ext = Path.GetExtension(url);
             string name = Path.GetFileNameWithoutExtension(url);
 
-            string res =  name + ext;
+            string res = name + ext;
             int i = 0;
-            while (File.Exists( directory + "\\" +res))
+            while (File.Exists(directory + "\\" + res))
             {
                 res = name + "_" + i + ext;
                 i++;
@@ -100,12 +94,64 @@ namespace TrackConverter.Lib.Data.Providers.Local.OS
             return res;
         }
 
-        public void Close()
+
+        private void DeleteObjectsBefore(DateTime dateTime)
         {
-            //StreamWriter sw = new StreamWriter(dataFileName, false, Encoding.UTF8);
-            //string js =data.ToString(Newtonsoft.Json.Formatting.Indented);
-            //sw.WriteLine(js);
-            //sw.Close();
+            List<string> urls = new List<string>();
+
+            //удаление файлов
+            foreach (var kv in images_data)
+            {
+                if (kv.Value.date < dateTime) //если файл старше, то удаляем
+                {
+                    File.Delete(directory + "\\" + kv.Value.path);
+                    urls.Add(kv.Value.url);
+                }
+            }
+
+            //удаление ключей
+            foreach (string url in urls)
+                images_data.Remove(url);
+
+            //перезапись файла информации
+            ExportDataFile(directory + "\\" + dataFileName);
         }
+
+        private void ExportDataFile(string fname)
+        {
+            StreamWriter sw = new StreamWriter(fname, false, Encoding.UTF8);
+            foreach (var kv in images_data)
+            {
+                string line = kv.Value.url + "*" + kv.Value.path + "*" + kv.Value.date.ToString();
+                sw.WriteLine(line);
+            }
+            sw.Close();
+        }
+
+        private void LoadDataFile(string fname)
+        {
+            StreamReader sr;
+            if (!File.Exists(fname))
+                sr = new StreamReader(File.Create(fname));
+            else
+                sr = new StreamReader(fname, Encoding.UTF8);
+
+            string t = sr.ReadToEnd();
+            sr.Close();
+            string[] files = t.Split('\n');
+            foreach (string file in files)
+            {
+                FileInfo fi = new FileInfo();
+                string[] fields = file.Split('*');
+                if (fields.Length != 3)
+                    continue;
+                fi.url = fields[0];
+                fi.path = fields[1];
+                fi.date = DateTime.Parse(fields[2]);
+                images_data.Add(fi.url, fi);
+            }
+        }
+
+        #endregion
     }
 }
