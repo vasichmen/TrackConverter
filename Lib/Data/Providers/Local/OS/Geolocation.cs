@@ -5,7 +5,7 @@ using System.Text;
 using System.Device.Location;
 using TrackConverter.Lib.Classes;
 
-namespace TrackConverter.Lib.Data.Providers.Local.System
+namespace TrackConverter.Lib.Data.Providers.Local.OS
 {
     /// <summary>
     /// предоставляет данные системы о местоположении

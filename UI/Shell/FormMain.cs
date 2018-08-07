@@ -17,7 +17,6 @@ using TrackConverter.Lib.Classes;
 using TrackConverter.Lib.Classes.StackEdits;
 using TrackConverter.Lib.Data;
 using TrackConverter.Lib.Data.Providers.InternetServices;
-using TrackConverter.Lib.Data.Providers.Local.System;
 using TrackConverter.Lib.Maping.GMap;
 using TrackConverter.Lib.Tracking;
 using TrackConverter.Res.Properties;

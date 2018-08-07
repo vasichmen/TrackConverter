@@ -70,7 +70,7 @@ namespace TrackConverter.Lib.Data
             if (adr == null)
             {
                 string adrI = coder.GetAddress(coordinate);
-                Vars.dataCache.Put(coordinate, adrI);
+                Vars.dataCache.PutGeocoder(coordinate, adrI);
                 return adrI;
             }
             else return adr;
@@ -109,7 +109,7 @@ namespace TrackConverter.Lib.Data
             if (res.isEmpty)
             {
                 Coordinate coord = coder.GetCoordinate(address);
-                Vars.dataCache.Put(coord, address);
+                Vars.dataCache.PutGeocoder(coord, address);
                 return coord;
             }
             else return res;
@@ -164,7 +164,7 @@ namespace TrackConverter.Lib.Data
             if (tz == null)
             {
                 TimeZoneInfo tzi = coder.GetTimeZone(coordinates);
-                Vars.dataCache.Put(coordinates, tzi);
+                Vars.dataCache.PutGeoInfo(coordinates, tzi);
                 return tzi;
             }
             else return tz;

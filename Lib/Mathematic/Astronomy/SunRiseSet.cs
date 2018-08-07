@@ -649,8 +649,7 @@ namespace TrackConverter.Lib.Mathematic.Astronomy
         {
             double T = t / C_T;
             double ret = 0,
-                vl = 0,
-                lgr = 0;
+                vl = 0;
             double l, l1, D, F,
                 g1, g3, g4, g5;
             // Средняя аномалия Луны
@@ -719,8 +718,7 @@ namespace TrackConverter.Lib.Mathematic.Astronomy
         {
             double T = t / C_T;
             double ret = 0,
-                vl = 0,
-                lgr = 0;
+                vl = 0;
             double l, l1, D, F,
                 g1, g3, g4, g5;
             // Средняя аномалия Луны

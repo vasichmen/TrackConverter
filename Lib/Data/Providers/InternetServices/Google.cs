@@ -456,7 +456,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
             for (int i = 0; i < track.Count; i++)
                 if (double.IsNaN(track[i].MetrAltitude))
                     track[i].MetrAltitude = els[i];
-            Vars.dataCache.Put(track, els, callback); //запись в кэш
+            Vars.dataCache.PutGeoInfo(track, els, callback); //запись в кэш
             return track;
         }
 

@@ -73,7 +73,7 @@ namespace TrackConverter.Lib.Data
             if (double.IsNaN(res))
             {
                 double elev = geoinfo.GetElevation(coordinate);
-                Vars.dataCache.Put(coordinate, elev);
+                Vars.dataCache.PutGeoInfo(coordinate, elev);
                 return elev;
             }
             else return res;

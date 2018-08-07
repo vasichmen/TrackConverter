@@ -63,7 +63,7 @@ namespace TrackConverter
         /// <summary>
         /// кэш данных из интернет-сервисов
         /// </summary>
-        public static SQLiteCache dataCache = null;
+        public static Cache dataCache = null;
 
         /// <summary>
         /// задача загрузки базы данных ETOPO

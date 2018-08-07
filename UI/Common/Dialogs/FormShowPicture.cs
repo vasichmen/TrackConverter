@@ -39,7 +39,7 @@ namespace TrackConverter.UI.Common.Dialogs
             SaveFileDialog sf = new SaveFileDialog();
             sf.InitialDirectory = Application.StartupPath;
             sf.FileName = Path.GetFileName(url);
-           
+
             if (sf.ShowDialog() == DialogResult.OK)
                 pictureBoxImage.BackgroundImage.Save(sf.FileName);
         }
@@ -51,8 +51,20 @@ namespace TrackConverter.UI.Common.Dialogs
             {
                 Program.winMain.BeginOperation();
                 Program.winMain.setCurrentOperation("Загрузка изображения...");
-                load = new Task(() => {
-                    pictureBoxImage.BackgroundImage = BaseConnection.GetImage(url); });
+                load = new Task(() =>
+                {
+                    Image img;
+                    if (Vars.dataCache.CheckImage(url))
+                        img = Vars.dataCache.GetImage(url);
+                    else
+                    {
+                        img = BaseConnection.GetImage(url);
+                        Vars.dataCache.PutImage(url, img);
+                    }
+
+                    pictureBoxImage.BackgroundImage = img;
+
+                });
                 load.Start();
                 load.Wait();
                 pictureBoxImage.BackgroundImageLayout = ImageLayout.Zoom;

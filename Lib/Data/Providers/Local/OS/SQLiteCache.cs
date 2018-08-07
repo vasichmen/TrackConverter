@@ -8,12 +8,12 @@ using TrackConverter.Lib.Data.Interfaces;
 using TrackConverter.Lib.Tracking;
 using System.Threading;
 
-namespace TrackConverter.Lib.Data
+namespace TrackConverter.Lib.Data.Providers.Local.OS
 {
     /// <summary>
     /// кэш данных геокодера, высот итд  в файловой системе. 
     /// </summary>
-    public class SQLiteCache : IGeoInfoProvider, IGeoсoderProvider, IDisposable
+    public class SQLiteCache : IGeoInfoProvider, IGeoсoderProvider, IDisposable, IGeocoderCache, IGeoInfoCache
     {
         /// <summary>
         /// строка в таблице кэша геокодера
@@ -35,28 +35,21 @@ namespace TrackConverter.Lib.Data
         string cache_file;
         string cache_connectionString;
         string geocoder_table = "tb_geocoder";
-        string maplayer_positions_table = "tb_maplayer_positions";
-        string maplayer_data_table = "tb_maplayer_data";
+        string wikimapia_objects_table = "tb_wikimapia_objects";
 
         /// <summary>
         /// округление в таблице геокодера
         /// </summary>
         int decimal_digits = 4;
-
-        /// <summary>
-        /// максимальный масштаб карты
-        /// </summary>
-        private int max_zoom;
-
+        
         /// <summary>
         /// открывает базу данных в указанной папке
         /// </summary>
         /// <param name="dbDirectory">папка с базой данных кэша</param>
         /// <param name="max_zoom">максимальный масштаб карты</param>
-        public SQLiteCache(string dbDirectory, int max_zoom)
+        public SQLiteCache(string dbDirectory)
         {
             directory = dbDirectory;
-            this.max_zoom = max_zoom;
 
             cache_file = dbDirectory + "\\cache.sqlite3";
             cache_connectionString = "Data Source = " + cache_file;
@@ -98,7 +91,7 @@ namespace TrackConverter.Lib.Data
 
             //таблица расположения векторных объектов
             commCreate = new SQLiteCommand(
-               @"CREATE TABLE " + maplayer_positions_table + @"
+               @"CREATE TABLE " + wikimapia_objects_table + @"
                 (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, 
                 object_id INTEGER NOT NULL,
                 center_lat double NOT NULL,
@@ -110,21 +103,6 @@ namespace TrackConverter.Lib.Data
                 ins_date DATE NOT NULL,
                 perimeter double NOT NULL,
                 layer_provider TEXT NOT NULL
-                );",
-               con);
-            commCreate.ExecuteNonQuery();
-
-            //таблица данных векторных объектов
-            commCreate = new SQLiteCommand(
-               @"CREATE TABLE " + maplayer_data_table + @"
-                (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, 
-                object_id INTEGER NOT NULL,
-                layer_provider TEXT NOT NULL,
-                geometry TEXT NOT NULL,
-                ins_date DATE NOT NULL,
-                name TEXT NOT NULL,
-                description TEXT,
-                link TEXT
                 );",
                con);
             commCreate.ExecuteNonQuery();
@@ -256,7 +234,7 @@ namespace TrackConverter.Lib.Data
         /// </summary>
         /// <param name="Coordinate"></param>
         /// <param name="Altitude"></param>
-        internal void Put(Coordinate Coordinate, double Altitude)
+        public void PutGeoInfo(Coordinate Coordinate, double Altitude)
         {
             this.AddGeocoder(
                 Coordinate.Latitude.TotalDegrees,
@@ -272,7 +250,7 @@ namespace TrackConverter.Lib.Data
         /// </summary>
         /// <param name="Coordinate"></param>
         /// <param name="Address"></param>
-        internal void Put(Coordinate Coordinate, string Address)
+        public void PutGeocoder(Coordinate Coordinate, string Address)
         {
             this.AddGeocoder(
                 Coordinate.Latitude.TotalDegrees,
@@ -289,7 +267,7 @@ namespace TrackConverter.Lib.Data
         /// <param name="track"></param>
         /// <param name="els"></param>
         /// <param name="callback">действие, выполняемое во время операции</param>
-        internal void Put(BaseTrack track, List<double> els, Action<string> callback = null)
+        public void PutGeoInfo(BaseTrack track, List<double> els, Action<string> callback = null)
         {
             //ЭКСПОРТ ДАННЫХ
             lock (this.cache_connection)
@@ -323,7 +301,7 @@ namespace TrackConverter.Lib.Data
         /// </summary>
         /// <param name="coordinates"></param>
         /// <param name="tzi"></param>
-        internal void Put(Coordinate coordinates, TimeZoneInfo tzi)
+        public void PutGeoInfo(Coordinate coordinates, TimeZoneInfo tzi)
         {
             this.AddGeocoder(
                 coordinates.Latitude.TotalDegrees,
@@ -359,7 +337,7 @@ namespace TrackConverter.Lib.Data
         /// </summary>
         /// <param name="track">маршрут, куда надо загрузить высоты</param>
         /// <returns></returns>
-        internal bool TryGetElevations(ref BaseTrack track)
+        public bool TryGetElevations(ref BaseTrack track)
         {
             foreach (TrackPoint point in track)
             {
@@ -620,7 +598,7 @@ namespace TrackConverter.Lib.Data
                 cache_connection.Dispose();
                 GC.SuppressFinalize(this);
             }
-
+            
 
         }
 

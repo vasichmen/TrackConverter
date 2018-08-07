@@ -416,10 +416,10 @@ namespace TrackConverter.UI.Ext
         /// <param name="geometry"></param>
         internal void DisSelectPolygon(int id)
         {
+                    this.SelectedPolygons.Remove(id);
             foreach (GMapPolygon pol in this.layersOverlay.Polygons)
                 if ((pol.Tag as VectorMapLayerObject).ID == id)
                 {
-                    this.SelectedPolygons.Remove(id);
                     pol.Fill = this.polygonBrush;
                     this.Refresh();
                     break;

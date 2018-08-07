@@ -4,9 +4,7 @@ using System.Collections.Generic;
 using TrackConverter.Lib.Classes;
 namespace TrackConverter.Lib.Data.Interfaces
 {
-    /// <summary>
-    /// поставщик геокодера
-    /// </summary>
+   //TODO: описания методов
     interface IGeoсoderProvider
     {
         string GetAddress(Coordinate coordinate);

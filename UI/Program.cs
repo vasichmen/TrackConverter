@@ -161,7 +161,7 @@ namespace TrackConverter.UI
             CheckFiles();
 
             //открытие БД кэша геокодера
-            new Task(new Action(() => { Vars.dataCache = new SQLiteCache(Application.StartupPath + Resources.cache_directory + "\\geocoder", Vars.Options.Map.MaximalZoom); })).Start();
+            new Task(new Action(() => { Vars.dataCache = new Cache(Application.StartupPath + Resources.cache_directory); })).Start();
 
 
             //метод загрузки базы данных ETOPO

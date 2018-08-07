@@ -99,7 +99,15 @@ namespace TrackConverter.UI.Map
                         {
                             foreach (Wikimapia.ExtInfo.PhotoInfo pho in info.Photos)
                             {
-                                Image img = BaseConnection.GetImage(pho.UrlThumbnail);
+                                Image img;
+                                if (Vars.dataCache.CheckImage(pho.UrlThumbnail))
+                                    img = Vars.dataCache.GetImage(pho.UrlThumbnail);
+                                else
+                                {
+                                    img = BaseConnection.GetImage(pho.UrlThumbnail);
+                                    Vars.dataCache.PutImage(pho.UrlThumbnail, img);
+                                }
+
                                 this.Invoke(new Action(() =>
                                 {
                                     PictureBox pb = new PictureBox();
