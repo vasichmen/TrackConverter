@@ -33,7 +33,7 @@ namespace TrackConverter.Lib.Data.Providers.Local.OS
             LoadDataFile(directory + "\\" + dataFileName);
 
             //удаление устаревших объектов
-            DeleteObjectsBefore(DateTime.Now - Vars.Options.DataSources.MaxImageCacheAge);
+            DeleteObjectsBefore(DateTime.Now - TimeSpan.FromDays( Vars.Options.DataSources.MaxImageCacheDays));
         }
 
 
@@ -48,9 +48,21 @@ namespace TrackConverter.Lib.Data.Providers.Local.OS
         {
             if (images_data.ContainsKey(url))
             {
-                string fname = directory + "\\" + images_data[url].path;
-                Image res = Image.FromFile(fname);
-                return res;
+                try
+                {
+                    string fname = directory + "\\" + images_data[url].path;
+                    if (File.Exists(fname))
+                    {
+                        Image res = Image.FromFile(fname);
+                        return res;
+                    }
+                    else
+                        return null;
+                }
+                catch (Exception e)
+                {
+                    return null;
+                }
             }
             else
                 return null;

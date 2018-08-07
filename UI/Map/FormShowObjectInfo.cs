@@ -65,7 +65,16 @@ namespace TrackConverter.UI.Map
                         Program.winMain.BeginOperation();
                         Program.winMain.setCurrentOperation("Загрузка информации об объекте...");
                         Wikimapia.ExtInfo info = null;
-                        load = new Task(() => { info = new Wikimapia().GetExtInfo(Obj.ID); });
+                        load = new Task(() =>
+                        {
+                            if (Vars.dataCache.ContainsVectorMapLayerObject(Obj.ID))
+                                info = Vars.dataCache.GetVectorMapLayerObject(Obj.ID);
+                            else
+                            {
+                                info = new Wikimapia().GetExtInfo(Obj.ID);
+                                Vars.dataCache.PutVectorMapLayerObject(info);
+                            }
+                        });
                         load.Start();
                         load.Wait();
 
@@ -156,7 +165,7 @@ namespace TrackConverter.UI.Map
         {
             Program.winMain.gmapControlMap.DisSelectPolygon(this.Obj.ID);
         }
-        
+
         /// <summary>
         /// переход по ссылке на объект викимапии
         /// </summary>

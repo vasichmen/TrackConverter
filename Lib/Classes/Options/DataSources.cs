@@ -23,7 +23,7 @@ namespace TrackConverter.Lib.Classes.Options
             UseGeocoderCache = true;
             UseSystemTimeZones = false;
             UseMapLayerCache = true;
-            MaxImageCacheAge = TimeSpan.FromDays(30);
+            MaxImageCacheDays = 30;
         }
 
         /// <summary>
@@ -57,8 +57,8 @@ namespace TrackConverter.Lib.Classes.Options
         public bool UseMapLayerCache { get;  set; }
 
         /// <summary>
-        /// максимальное время хранения кэша картинок
+        /// максимальное время хранения кэша картинок в днях
         /// </summary>
-        public TimeSpan MaxImageCacheAge { get;  set; }
+        public int MaxImageCacheDays { get;  set; }
     }
 }

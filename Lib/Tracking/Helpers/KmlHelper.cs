@@ -159,7 +159,7 @@ namespace TrackConverter.Lib.Tracking.Helpers
                 //NAME
                 string raw_desc = placemark["description"].InnerText;
                 raw_desc = raw_desc.Replace("![CDATA[", "").Replace("]]", "").Replace("View or update this place information at Wikimapia.", "").Replace("\n", "");
-                string name = Regex.Replace(raw_desc, "<[^>]+>", string.Empty).Trim().Replace("&quot;", "\"").Replace("&amp;quot;", "\"");
+                string name = Regex.Replace(raw_desc, "<[^>]+>", string.Empty).Trim().Replace("&quot;", "\"").Replace("&amp;quot;", "\"").Replace("&#039;","'");
 
                 //GEOMETRY
                 string linestring = placemark["MultiGeometry"]["LineString"]["coordinates"].InnerText;

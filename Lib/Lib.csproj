@@ -135,6 +135,7 @@
     <Compile Include="Data\Interfaces\IGeoсoderProvider.cs" />
     <Compile Include="Data\Interfaces\ILinkShorterProvider.cs" />
     <Compile Include="Data\Interfaces\IVectorMapLayerProvider.cs" />
+    <Compile Include="Data\Interfaces\IVectorMapLayerObjectCache.cs" />
     <Compile Include="Data\Providers\InternetServices\Bitly.cs" />
     <Compile Include="Data\Providers\InternetServices\Clck.cs" />
     <Compile Include="Data\Providers\InternetServices\Google.cs" />
@@ -164,6 +165,7 @@
     <Compile Include="Data\Interfaces\IGeocoderCache.cs" />
     <Compile Include="Data\Interfaces\IGeoInfoCache.cs" />
     <Compile Include="Data\Interfaces\IImagesCache.cs" />
+    <Compile Include="Data\Providers\Local\OS\MemoryCache.cs" />
     <Compile Include="Data\VectorMapLayer.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Mathematic\Assessment\Normalizer.cs" />

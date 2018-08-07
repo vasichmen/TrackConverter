@@ -406,7 +406,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
 
                     //описание
                     var description = html.GetElementbyId("place-description");
-                    res.Description = (description == null ? "" : description.InnerText.Trim(new[] { '\r', '\n', ' ' })).Replace("&quot;","\"");
+                    res.Description = (description == null ? "" : description.InnerText.Trim(new[] { '\r', '\n', ' ' })).Replace("&quot;","\"").Replace("&amp;quot;", "\"").Replace("&#039;", "'");
 
                     //wikipedia
                     var wikipedia = body.SelectSingleNode(@".//div[@class = 'placeinfo-row wikipedia-link']/a");
@@ -440,7 +440,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
 
                                 //текст комментария
                                 HtmlNode message = comment.SelectSingleNode(@".//div[@class = 'comment-content']");
-                                com.Message = (message == null ? "" : message.InnerText.Trim(new[] { '\r', '\n', ' ' })).Replace("&quot;", "\"");
+                                com.Message = (message == null ? "" : message.InnerText.Trim(new[] { '\r', '\n', ' ' })).Replace("&quot;", "\"").Replace("&amp;quot;", "\"").Replace("&#039;", "'");
 
                                 //автор комментария
                                 HtmlNode username = comment.SelectSingleNode(@".//div[@class='comment-header']/a");

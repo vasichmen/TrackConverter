@@ -6,19 +6,21 @@ using System.Text;
 using TrackConverter.Lib.Classes;
 using TrackConverter.Lib.Data;
 using TrackConverter.Lib.Data.Interfaces;
+using TrackConverter.Lib.Data.Providers.InternetServices;
 using TrackConverter.Lib.Data.Providers.Local.OS;
 using TrackConverter.Lib.Tracking;
 
 namespace TrackConverter.Lib.Data
 {
     //TODO: описания методов
-    public class Cache : IGeoсoderProvider, IGeoInfoProvider, IDisposable, IGeocoderCache, IGeoInfoCache, IImagesCache
+    public class Cache : IGeoсoderProvider, IGeoInfoProvider, IDisposable, IGeocoderCache, IGeoInfoCache, IImagesCache, IVectorMapLayerObjectCache
     {
         string sqliteDir;
         string imagesDir;
 
         SQLiteCache sqlite;
         FileSystemCache fs;
+        MemoryCache vectorMapLayerObjects;
 
         public Cache(string baseDir)
         {
@@ -27,6 +29,7 @@ namespace TrackConverter.Lib.Data
 
             sqlite = new SQLiteCache(sqliteDir);
             fs = new FileSystemCache(imagesDir);
+            vectorMapLayerObjects = new MemoryCache();
         }
 
 
@@ -40,6 +43,7 @@ namespace TrackConverter.Lib.Data
             }
         }
 
+        #region IGeocoderCache
 
         public string GetAddress(Coordinate coordinate)
         {
@@ -71,6 +75,10 @@ namespace TrackConverter.Lib.Data
             ((IGeocoderCache)sqlite).PutGeocoder(Coordinate, Address);
         }
 
+        #endregion
+
+        #region IGeoInfoCache
+
         public void ClearAltitudes()
         {
             ((IGeoInfoCache)sqlite).ClearAltitudes();
@@ -96,6 +104,10 @@ namespace TrackConverter.Lib.Data
             return ((IGeoInfoCache)sqlite).TryGetElevations(ref track);
         }
 
+        #endregion
+
+        #region IImagesCache
+
         public bool CheckImage(string url)
         {
             return ((IImagesCache)fs).CheckImage(url);
@@ -111,6 +123,27 @@ namespace TrackConverter.Lib.Data
             return ((IImagesCache)fs).PutImage(url, data);
         }
 
+        #endregion
+
+        #region IVectorMapLayerObjectCache
+
+        public bool ContainsVectorMapLayerObject(int id)
+        {
+           return vectorMapLayerObjects.ContainsObject(id.ToString());
+        }
+
+        public Wikimapia.ExtInfo GetVectorMapLayerObject(int id)
+        {
+            return (Wikimapia.ExtInfo)vectorMapLayerObjects.GetObject(id.ToString());
+        }
+
+        public bool PutVectorMapLayerObject(Wikimapia.ExtInfo obj)
+        {
+            return vectorMapLayerObjects.PutObject(obj.ID.ToString(), obj);
+        }
+
+        #endregion
+
 
         #endregion
 
@@ -120,6 +153,8 @@ namespace TrackConverter.Lib.Data
         {
             sqlite.Dispose();
         }
+
+      
 
         #endregion
 
