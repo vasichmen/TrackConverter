@@ -23,7 +23,7 @@ namespace TrackConverter.UI.Map
     public partial class FormShowObjectInfo : Form
     {
         private VectorMapLayerObject Obj;
-
+        Wikimapia.ExtInfo info = null;
         /// <summary>
         /// создает окно подробной информации об объекте
         /// </summary>
@@ -42,10 +42,7 @@ namespace TrackConverter.UI.Map
         private void PictureBox_MouseClick(object sender, MouseEventArgs e)
         {
             Wikimapia.ExtInfo.PhotoInfo pho = (sender as PictureBox).Tag as Wikimapia.ExtInfo.PhotoInfo;
-            FormShowPicture fsp = new FormShowPicture(
-                !string.IsNullOrWhiteSpace(pho.UrlFull) ? pho.UrlFull :
-                !string.IsNullOrWhiteSpace(pho.UrlBig) ? pho.UrlBig :
-                !string.IsNullOrWhiteSpace(pho.Url1280) ? pho.Url1280 : pho.Url960);
+            FormShowPicture fsp = new FormShowPicture(info.Photos,info.Photos.IndexOf(pho));
             fsp.Show();
         }
 
@@ -64,7 +61,6 @@ namespace TrackConverter.UI.Map
                     {
                         Program.winMain.BeginOperation();
                         Program.winMain.setCurrentOperation("Загрузка информации об объекте...");
-                        Wikimapia.ExtInfo info = null;
                         load = new Task(() =>
                         {
                             if (Vars.dataCache.ContainsLayerObjectExtInfo(Obj.ID))

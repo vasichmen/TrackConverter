@@ -30,24 +30,12 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormShowPicture));
-            this.pictureBoxImage = new System.Windows.Forms.PictureBox();
             this.contextMenuStripPicture = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.saveImageAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxImage)).BeginInit();
+            this.pictureBoxImage = new System.Windows.Forms.PictureBox();
             this.contextMenuStripPicture.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxImage)).BeginInit();
             this.SuspendLayout();
-            // 
-            // pictureBoxImage
-            // 
-            this.pictureBoxImage.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.pictureBoxImage.ContextMenuStrip = this.contextMenuStripPicture;
-            this.pictureBoxImage.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pictureBoxImage.Location = new System.Drawing.Point(0, 0);
-            this.pictureBoxImage.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.pictureBoxImage.Name = "pictureBoxImage";
-            this.pictureBoxImage.Size = new System.Drawing.Size(808, 572);
-            this.pictureBoxImage.TabIndex = 0;
-            this.pictureBoxImage.TabStop = false;
             // 
             // contextMenuStripPicture
             // 
@@ -55,40 +43,48 @@
             this.contextMenuStripPicture.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.saveImageAsToolStripMenuItem});
             this.contextMenuStripPicture.Name = "contextMenuStripPicture";
-            this.contextMenuStripPicture.Size = new System.Drawing.Size(254, 28);
+            this.contextMenuStripPicture.Size = new System.Drawing.Size(216, 26);
             // 
             // saveImageAsToolStripMenuItem
             // 
             this.saveImageAsToolStripMenuItem.Name = "saveImageAsToolStripMenuItem";
-            this.saveImageAsToolStripMenuItem.Size = new System.Drawing.Size(253, 24);
+            this.saveImageAsToolStripMenuItem.Size = new System.Drawing.Size(215, 22);
             this.saveImageAsToolStripMenuItem.Text = "Сохранить картинку как...";
             this.saveImageAsToolStripMenuItem.Click += new System.EventHandler(this.saveImageAsToolStripMenuItem_Click);
             // 
+            // pictureBoxImage
+            // 
+            this.pictureBoxImage.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pictureBoxImage.Location = new System.Drawing.Point(0, 0);
+            this.pictureBoxImage.Name = "pictureBoxImage";
+            this.pictureBoxImage.Size = new System.Drawing.Size(980, 529);
+            this.pictureBoxImage.TabIndex = 1;
+            this.pictureBoxImage.TabStop = false;
+            this.pictureBoxImage.MouseClick += new System.Windows.Forms.MouseEventHandler(this.pictureBoxImage_MouseClick);
+            // 
             // FormShowPicture
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(808, 572);
+            this.ClientSize = new System.Drawing.Size(980, 529);
             this.Controls.Add(this.pictureBoxImage);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "FormShowPicture";
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "FormShowPicture";
             this.TopMost = true;
             this.Shown += new System.EventHandler(this.FormShowPicture_Shown);
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxImage)).EndInit();
             this.contextMenuStripPicture.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxImage)).EndInit();
             this.ResumeLayout(false);
 
         }
 
         #endregion
-
-        private System.Windows.Forms.PictureBox pictureBoxImage;
         private System.Windows.Forms.ContextMenuStrip contextMenuStripPicture;
         private System.Windows.Forms.ToolStripMenuItem saveImageAsToolStripMenuItem;
+        private System.Windows.Forms.PictureBox pictureBoxImage;
     }
 }
