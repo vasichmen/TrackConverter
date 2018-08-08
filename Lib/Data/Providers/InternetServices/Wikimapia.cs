@@ -367,7 +367,18 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
             //http://wikimapia.org/61941/ru
 
             string url = "http://wikimapia.org/";
-            string lang = "ru"; //TODO: сделать выбор языка
+            string lang;
+            switch (Vars.Options.Map.MapLanguange)
+            {
+                case LanguageType.Russian: lang = "ru";
+                    break;
+                case LanguageType.English: lang = "en";
+                    break;
+                case LanguageType.German: lang = "de";
+                    break;
+                default: lang = "ru";
+                    break;
+            }
             url = string.Format(url + "{0}/{1}", id, lang);
             HttpStatusCode code;
 

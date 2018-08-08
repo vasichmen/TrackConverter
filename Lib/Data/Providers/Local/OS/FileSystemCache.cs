@@ -9,25 +9,56 @@ using TrackConverter.Lib.Data.Interfaces;
 
 namespace TrackConverter.Lib.Data.Providers.Local.OS
 {
-    //TODO: описания методов
+    /// <summary>
+    /// кэш в файловой системе
+    /// </summary>
     public class FileSystemCache : IImagesCache
     {
+        /// <summary>
+        /// информация о файле в кэше
+        /// </summary>
         class FileInfo
         {
+            /// <summary>
+            /// ключ, по которому был добавлен файл
+            /// </summary>
             public string url;
+
+            /// <summary>
+            /// имя в папке кэша
+            /// </summary>
             public string path;
+
+            /// <summary>
+            /// дата добавления
+            /// </summary>
             public DateTime date;
         }
 
+        /// <summary>
+        /// имя файла с данными о файлах в кэше
+        /// </summary>
         string dataFileName = "data.txt";
-        string directory;
-        Dictionary<string, FileInfo> images_data;
 
+        /// <summary>
+        /// базовая папка с кэшем
+        /// </summary>
+        string directory;
+
+        /// <summary>
+        /// информация о файлах в кэше
+        /// </summary>
+        Dictionary<string, FileInfo> files_data;
+
+        /// <summary>
+        /// создвёт новый объект кэша в указанной папке
+        /// </summary>
+        /// <param name="dir">базовая папка с файлами</param>
         public FileSystemCache(string dir)
         {
             directory = dir;
             Directory.CreateDirectory(directory);
-            images_data = new Dictionary<string, FileInfo>();
+            files_data = new Dictionary<string, FileInfo>();
 
             //заполнение информации о файлах
             LoadDataFile(directory + "\\" + dataFileName);
@@ -39,18 +70,28 @@ namespace TrackConverter.Lib.Data.Providers.Local.OS
 
         #region IImageCache
 
+        /// <summary>
+        /// провера существования изобржения в кэше
+        /// </summary>
+        /// <param name="url">url, по которому изображения было добавлено</param>
+        /// <returns></returns>
         public bool CheckImage(string url)
         {
-            return images_data.ContainsKey(url);
+            return files_data.ContainsKey(url);
         }
 
+        /// <summary>
+        /// получить изображение из кэша
+        /// </summary>
+        /// <param name="url">url, по которому изображения было добавлено</param>
+        /// <returns></returns>
         public Image GetImage(string url)
         {
-            if (images_data.ContainsKey(url))
+            if (files_data.ContainsKey(url))
             {
                 try
                 {
-                    string fname = directory + "\\" + images_data[url].path;
+                    string fname = directory + "\\" + files_data[url].path;
                     if (File.Exists(fname))
                     {
                         Image res = Image.FromFile(fname);
@@ -68,6 +109,12 @@ namespace TrackConverter.Lib.Data.Providers.Local.OS
                 return null;
         }
 
+        /// <summary>
+        /// добавить изображение в кэш
+        /// </summary>
+        /// <param name="url">url изображения (используется как ключ для поиска)</param>
+        /// <param name="data">изображение</param>
+        /// <returns></returns>
         public bool PutImage(string url, Image data)
         {
             if (!CheckImage(url))
@@ -75,7 +122,7 @@ namespace TrackConverter.Lib.Data.Providers.Local.OS
                 string fname = getFileName(url);
                 data.Save(directory + "\\" + fname);
                 FileInfo info = new FileInfo() { date = DateTime.Now, url = url, path = fname };
-                images_data.Add(url, info);
+                files_data.Add(url, info);
 
                 //дописываем файл
                 StreamWriter sw = new StreamWriter(directory + "\\" + dataFileName, true, Encoding.UTF8);
@@ -91,6 +138,11 @@ namespace TrackConverter.Lib.Data.Providers.Local.OS
 
         #region вспомогательные методы
 
+        /// <summary>
+        /// получить имя файла (на основе url), которое можно использовать в этой папке
+        /// </summary>
+        /// <param name="url">url файла, на основе которого будет выбрано имя файла в кэше</param>
+        /// <returns></returns>
         private string getFileName(string url)
         {
             string ext = Path.GetExtension(url);
@@ -106,13 +158,16 @@ namespace TrackConverter.Lib.Data.Providers.Local.OS
             return res;
         }
 
-
+        /// <summary>
+        /// удалить файлы в кэше, созданные раньше заданной даты
+        /// </summary>
+        /// <param name="dateTime">файлы, созданные ранее, будут удалены</param>
         private void DeleteObjectsBefore(DateTime dateTime)
         {
             List<string> urls = new List<string>();
 
             //удаление файлов
-            foreach (var kv in images_data)
+            foreach (var kv in files_data)
             {
                 if (kv.Value.date < dateTime) //если файл старше, то удаляем
                 {
@@ -123,16 +178,20 @@ namespace TrackConverter.Lib.Data.Providers.Local.OS
 
             //удаление ключей
             foreach (string url in urls)
-                images_data.Remove(url);
+                files_data.Remove(url);
 
             //перезапись файла информации
             ExportDataFile(directory + "\\" + dataFileName);
         }
 
+        /// <summary>
+        /// записать информацию из files_data в файл информации (перед выходом, например)
+        /// </summary>
+        /// <param name="fname"></param>
         private void ExportDataFile(string fname)
         {
             StreamWriter sw = new StreamWriter(fname, false, Encoding.UTF8);
-            foreach (var kv in images_data)
+            foreach (var kv in files_data)
             {
                 string line = kv.Value.url + "*" + kv.Value.path + "*" + kv.Value.date.ToString();
                 sw.WriteLine(line);
@@ -140,6 +199,10 @@ namespace TrackConverter.Lib.Data.Providers.Local.OS
             sw.Close();
         }
 
+        /// <summary>
+        /// загрузить информацию о файлах в кэше из заданного файла 
+        /// </summary>
+        /// <param name="fname">адрес файла информации о файлах в кэше</param>
         private void LoadDataFile(string fname)
         {
             StreamReader sr;
@@ -160,7 +223,7 @@ namespace TrackConverter.Lib.Data.Providers.Local.OS
                 fi.url = fields[0];
                 fi.path = fields[1];
                 fi.date = DateTime.Parse(fields[2]);
-                images_data.Add(fi.url, fi);
+                files_data.Add(fi.url, fi);
             }
         }
 

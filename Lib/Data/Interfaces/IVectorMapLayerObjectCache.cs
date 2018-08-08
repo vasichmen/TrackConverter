@@ -3,14 +3,30 @@ using TrackConverter.Lib.Data.Providers.InternetServices;
 
 namespace TrackConverter.Lib.Data.Interfaces
 {
-    //TODO: описание методов
-    internal interface IVectorMapLayerObjectCache
+    /// <summary>
+    /// кэш дополнительных данных об объектах слоя
+    /// </summary>
+    internal interface ILayerObjectExtInfoCache
     {
-        bool ContainsVectorMapLayerObject(int id);
+        /// <summary>
+        /// проверить, содержится ли объект в кэше
+        /// </summary>
+        /// <param name="id">ID объекта</param>
+        /// <returns></returns>
+        bool ContainsLayerObjectExtInfo(int id);
 
-        Wikimapia.ExtInfo GetVectorMapLayerObject(int id);
+        /// <summary>
+        /// получить информацию об объекте из кэша
+        /// </summary>
+        /// <param name="id">id объекта</param>
+        /// <returns></returns>
+        Wikimapia.ExtInfo GetLayerObjectExtInfo(int id);
 
-        bool PutVectorMapLayerObject(Wikimapia.ExtInfo obj);
-
+        /// <summary>
+        /// добавить объект в кэш
+        /// </summary>
+        /// <param name="obj">информация об объекте</param>
+        /// <returns></returns>
+        bool PutLayerObjectExtInfo(Wikimapia.ExtInfo obj);
     }
 }

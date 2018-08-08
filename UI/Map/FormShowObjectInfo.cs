@@ -67,12 +67,12 @@ namespace TrackConverter.UI.Map
                         Wikimapia.ExtInfo info = null;
                         load = new Task(() =>
                         {
-                            if (Vars.dataCache.ContainsVectorMapLayerObject(Obj.ID))
-                                info = Vars.dataCache.GetVectorMapLayerObject(Obj.ID);
+                            if (Vars.dataCache.ContainsLayerObjectExtInfo(Obj.ID))
+                                info = Vars.dataCache.GetLayerObjectExtInfo(Obj.ID);
                             else
                             {
                                 info = new Wikimapia().GetExtInfo(Obj.ID);
-                                Vars.dataCache.PutVectorMapLayerObject(info);
+                                Vars.dataCache.PutLayerObjectExtInfo(info);
                             }
                         });
                         load.Start();
