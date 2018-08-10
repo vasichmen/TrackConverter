@@ -56,7 +56,7 @@ namespace TrackConverter.Lib.Tracking
                     ExportGPX(FileName, track);
                     return null;
                 case FileFormats.DocFile:
-                    ExportDOC(FileName, track);
+                    ExportDOC(FileName, track, callback);
                     return null;
                 case FileFormats.KmlFile:
                     if (track is TrackFile)
@@ -1052,9 +1052,9 @@ namespace TrackConverter.Lib.Tracking
         /// </summary>
         /// <param name="fileName"></param>
         /// <param name="track"></param>
-        private static void ExportDOC(string fileName, BaseTrack track)
+        private static void ExportDOC(string fileName, BaseTrack track, Action<string> callback)
         {
-            OfficeHelper.WriteTrack(track, fileName);
+            OfficeHelper.WriteTrack(track, fileName, callback);
         }
 
         /// <summary>

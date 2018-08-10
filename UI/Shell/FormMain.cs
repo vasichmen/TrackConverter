@@ -983,6 +983,16 @@ namespace TrackConverter.UI.Shell
         }
 
         /// <summary>
+        /// загрузить адреса точек в описания
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void loadAddressesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            converterHelper.toolStripLoadAddresses(e);
+        }
+
+        /// <summary>
         /// на основе точек маршрута построить оптимальный маршрут
         /// </summary>
         /// <param name="sender"></param>
@@ -1369,6 +1379,7 @@ namespace TrackConverter.UI.Shell
             { }
         }
 
+       
     }
 }
 

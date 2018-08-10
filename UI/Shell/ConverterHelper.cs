@@ -826,6 +826,41 @@ namespace TrackConverter.UI.Shell
         }
 
         /// <summary>
+        /// загрузить адреса в описания точек
+        /// </summary>
+        /// <param name="e"></param>
+        internal void toolStripLoadAddresses(EventArgs e)
+        {
+            Program.winMain.BeginOperation();
+            Task ts = new Task(new Action(() =>
+            {
+                int er = 0;
+                try
+                {
+                    foreach (DataGridViewRow dgvr in formMain.dataGridViewConverter.SelectedRows)
+                    {
+                        int row = dgvr.Index;
+                        BaseTrack tf = formMain.Tracks[row];
+                        new GeoCoder(Vars.Options.DataSources.GeoCoderProvider).GetAddresses(tf, Program.winMain.setCurrentOperation);
+                        er = 0;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    er = -1;
+                    formMain.Invoke(new Action(() =>
+                        MessageBox.Show(formMain, "Не удалось получить адреса из-за проблем с соединением.\r\n" + ex.Message + "\r\nПроверьте соединение с Интернет", "Загрузка адресов", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    ));
+                }
+                finally
+                {
+                    formMain.Invoke(new Action(() => Program.winMain.EndOperation()));
+                }
+            }));
+            ts.Start();
+        }
+
+        /// <summary>
         /// разделение маршрута на 2 части
         /// </summary>
         /// <param name="sender"></param>
@@ -1027,8 +1062,12 @@ namespace TrackConverter.UI.Shell
                 {
                     er = -1;
                     formMain.Invoke(new Action(() =>
-                        MessageBox.Show(formMain, "Не удалось получить информацию из-за проблем с соединением.\r\n" + ex.Message + "\r\nПроверьте соединение с Интернет", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                        MessageBox.Show(formMain, "Не удалось получить высоты из-за проблем с соединением.\r\n" + ex.Message + "\r\nПроверьте соединение с Интернет", "Загрузка высот", MessageBoxButtons.OK, MessageBoxIcon.Error)
                     ));
+                }
+                finally
+                {
+                    formMain.Invoke(new Action(() => Program.winMain.EndOperation()));
                 }
                 formMain.Invoke(new Action(() =>
                 {
@@ -1044,7 +1083,6 @@ namespace TrackConverter.UI.Shell
                             formMain.pointsHelper.RefreshData();
                         }
                     }
-                    Program.winMain.EndOperation();
                 }));
             }));
             ts.Start();

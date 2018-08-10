@@ -433,28 +433,28 @@ namespace TrackConverter.UI.Map
                          TrackPoint nearest = route.GetNearestPoint(pt);
                          int indn = route.IndexOf(nearest);
                          if (indn == 0) //если ближайшая точка - первая в маршруте
-                            {
+                         {
                              first = new TrackFile() { nearest };
                              second = route.Subtrack(addCommon ? 0 : 1, route.Count - 1);
                          }
                          else
                          if (indn == route.Count - 1) //если ближайшая  - последняя в маршруте
-                            {
+                         {
                              second = new TrackFile() { nearest };
                              first = route.Subtrack(0, route.Count - (addCommon ? 1 : 2));
                          }
                          else //если ближайшая точка внутри маршрута
-                            {
+                         {
                              first = route.Subtrack(0, indn);
                              second = route.Subtrack(indn + (addCommon ? 0 : 1), route.Count - 1);
                          }
 
-                            //сброс курсоров и флажка выбора
-                            Program.winMain.isSelectingPoint = false;
+                         //сброс курсоров и флажка выбора
+                         Program.winMain.isSelectingPoint = false;
                          Program.winMain.gmapControlMap.Cursor = Cursors.Arrow;
 
-                            //добавление в список
-                            addList.Invoke();
+                         //добавление в список
+                         addList.Invoke();
                      });
                         Program.winMain.mapHelper.BeginSelectPoint(after);
                         #endregion
@@ -943,9 +943,11 @@ namespace TrackConverter.UI.Map
         {
             SaveFileDialog sf = new SaveFileDialog();
             sf.Filter = "Файл маршрута Androzic (*.rt2)|*.rt2";
+            sf.Filter += "|Список адресов(*.adrs)|*.adrs";
+            sf.Filter += "|Путевые точки Ozi(*.wpt)|*.wpt";
+            sf.Filter += "|Путевые точки Ozi с адресами(*.wpt)|*.wpt"; //не менять позицию этого пункта! (ниже от него зависит добавление адресов)
             sf.Filter += "|Документ Word (*.doc)|*.doc";
             sf.Filter += "|Треки Androzic (*.plt)|*.plt";
-            sf.Filter += "|Путевые точки Ozi(*.wpt)|*.wpt";
             sf.Filter += "|Файл координат(*.crd)|*.crd";
             sf.Filter += "|Файл координат(*.kml)|*.kml";
             sf.Filter += "|Файл GPS координат(*.gpx)|*.gpx";
@@ -954,7 +956,6 @@ namespace TrackConverter.UI.Map
             sf.Filter += "|Файл NMEA(*.nmea)|*.nmea";
             sf.Filter += "|Файл Excel(*.csv)|*.csv";
             sf.Filter += "|Текстовый файл(*.txt)|*.txt";
-            sf.Filter += "|Список адресов(*.adrs)|*.adrs";
 
             sf.AddExtension = true;
 
@@ -966,45 +967,60 @@ namespace TrackConverter.UI.Map
 
             if (sf.ShowDialog() == DialogResult.OK)
             {
+                BaseTrack bt;
+                if (sf.FilterIndex == 4)
+                {
+                    bt = trip.Waypoints.Clone();
+                    new GeoCoder(Vars.Options.DataSources.GeoCoderProvider).GetAddresses(bt, Program.winMain.setCurrentOperation);
+                }
+                else
+                    bt = trip.Waypoints;
+
                 switch (Path.GetExtension(sf.FileName).ToLower())
                 {
                     case ".rt2":
-                        Serializer.Serialize(sf.FileName, trip.Waypoints, FileFormats.Rt2File);
+                        Serializer.Serialize(sf.FileName, bt, FileFormats.Rt2File);
                         break;
                     case ".plt":
-                        Serializer.Serialize(sf.FileName, trip.Waypoints, FileFormats.PltFile);
+                        Serializer.Serialize(sf.FileName, bt, FileFormats.PltFile);
                         break;
                     case ".wpt":
-                        Serializer.Serialize(sf.FileName, trip.Waypoints, FileFormats.WptFile);
+                        Serializer.Serialize(sf.FileName, bt, FileFormats.WptFile);
                         break;
                     case ".crd":
-                        Serializer.Serialize(sf.FileName, trip.Waypoints, FileFormats.CrdFile);
+                        Serializer.Serialize(sf.FileName, bt, FileFormats.CrdFile);
                         break;
                     case ".kml":
-                        Serializer.Serialize(sf.FileName, trip.Waypoints, FileFormats.KmlFile);
+                        Serializer.Serialize(sf.FileName, bt, FileFormats.KmlFile);
                         break;
                     case ".gpx":
-                        Serializer.Serialize(sf.FileName, trip.Waypoints, FileFormats.GpxFile);
+                        Serializer.Serialize(sf.FileName, bt, FileFormats.GpxFile);
                         break;
                     case ".kmz":
-                        Serializer.Serialize(sf.FileName, trip.Waypoints, FileFormats.KmzFile);
+                        Serializer.Serialize(sf.FileName, bt, FileFormats.KmzFile);
                         break;
                     case ".osm":
-                        Serializer.Serialize(sf.FileName, trip.Waypoints, FileFormats.OsmFile);
+                        Serializer.Serialize(sf.FileName, bt, FileFormats.OsmFile);
                         break;
                     case ".nmea":
-                        Serializer.Serialize(sf.FileName, trip.Waypoints, FileFormats.NmeaFile);
+                        Serializer.Serialize(sf.FileName, bt, FileFormats.NmeaFile);
                         break;
                     case ".csv":
-                        Serializer.Serialize(sf.FileName, trip.Waypoints, FileFormats.CsvFile);
+                        Serializer.Serialize(sf.FileName, bt, FileFormats.CsvFile);
                         break;
                     case ".txt":
-                        Serializer.Serialize(sf.FileName, trip.Waypoints, FileFormats.TxtFile);
+                        Serializer.Serialize(sf.FileName, bt, FileFormats.TxtFile);
                         break;
                     case ".doc":
                         try
                         {
-                            Serializer.Serialize(sf.FileName, trip.Waypoints, FileFormats.DocFile);
+                            Program.winMain.BeginOperation();
+                            Action actn = new Action(() =>
+                            {
+                                Serializer.Serialize(sf.FileName, bt, FileFormats.DocFile, Program.winMain.setCurrentOperation);
+                                Program.winMain.EndOperation();
+                            });
+                            new Task(actn).Start();
                         }
                         catch (Exception exxx)
                         { MessageBox.Show(this, exxx.Message, "Сохранение файла", MessageBoxButtons.OK, MessageBoxIcon.Error); }
@@ -1013,7 +1029,7 @@ namespace TrackConverter.UI.Map
                         Program.winMain.BeginOperation();
                         Action act = new Action(() =>
                         {
-                            Serializer.Serialize(sf.FileName, trip.Waypoints, FileFormats.AddressList, Program.winMain.setCurrentOperation);
+                            Serializer.Serialize(sf.FileName, bt, FileFormats.AddressList, Program.winMain.setCurrentOperation);
                             Program.winMain.EndOperation();
                         });
                         new Task(act).Start();

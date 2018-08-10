@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
+using TrackConverter.Lib.Data;
 using Word = Microsoft.Office.Interop.Word;
 
 namespace TrackConverter.Lib.Tracking.Helpers
@@ -18,9 +19,9 @@ namespace TrackConverter.Lib.Tracking.Helpers
         /// </summary>
         /// <param name="track">маршрут</param>
         /// <param name="fileName">имя файла .doc</param>
-        internal static void WriteTrack(BaseTrack track, string fileName)
+        internal static void WriteTrack(BaseTrack track, string fileName, Action<string> callback)
         {
-
+            var coder = new GeoCoder(Vars.Options.DataSources.GeoCoderProvider);
             WordDocument wordDoc;
             wordDoc = new WordDocument(Application.StartupPath + Res.Properties.Resources.word_template);
 
@@ -38,12 +39,12 @@ namespace TrackConverter.Lib.Tracking.Helpers
             wordDoc.Selection.Bold = true;
 
             wordDoc.SetSelectionToCell(1, 3);
-            wordDoc.Selection.Text = "Название";
+            wordDoc.Selection.Text = "Название, адрес";
             wordDoc.Selection.FontSize = 10;
             wordDoc.Selection.Bold = true;
 
             wordDoc.SetSelectionToCell(1, 2);
-            wordDoc.Selection.Text = "Ш./Д."+ WordDocument.NewLineChar + "От старта";
+            wordDoc.Selection.Text = "Ш./Д." + WordDocument.NewLineChar + "От старта";
             wordDoc.Selection.FontSize = 10;
             wordDoc.Selection.Bold = true;
 
@@ -52,21 +53,27 @@ namespace TrackConverter.Lib.Tracking.Helpers
             wordDoc.Selection.FontSize = 10;
             wordDoc.Selection.Bold = true;
 
+            double all = track.Count;
             for (int i = 0; i < track.Count; i++)
             {
+                if (callback != null)
+                    callback.Invoke("Идет сохранение  файла. Завершено: "  +(i /all  * 100d).ToString("0.0") + "%");
+
+                string adr = coder.GetAddress(track[i].Coordinates);
+
                 wordDoc.SetSelectionToCell(i + 2, 1);
                 wordDoc.Selection.Text = i.ToString();
                 wordDoc.Selection.FontSize = 10;
 
                 wordDoc.SetSelectionToCell(i + 2, 3);
-                wordDoc.Selection.Text = track[i].Name;
+                wordDoc.Selection.Text = track[i].Name + "\r\n" + adr;
                 wordDoc.Selection.FontSize = 10;
 
                 wordDoc.SetSelectionToCell(i + 2, 2);
                 wordDoc.Selection.Text =
-                    track[i].Coordinates.Latitude.ToString("00.000")+ 'º' + WordDocument.NewLineChar +
-                    track[i].Coordinates.Longitude.ToString("00.000")+ 'º' + WordDocument.NewLineChar +
-                    track[i].StartDistance.ToString("0.0")+" км";
+                    track[i].Coordinates.Latitude.ToString("00.000") + 'º' + WordDocument.NewLineChar +
+                    track[i].Coordinates.Longitude.ToString("00.000") + 'º' + WordDocument.NewLineChar +
+                    track[i].StartDistance.ToString("0.0") + " км";
                 wordDoc.Selection.FontSize = 10;
 
                 wordDoc.SetSelectionToCell(i + 2, 4);

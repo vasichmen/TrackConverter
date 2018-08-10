@@ -169,5 +169,32 @@ namespace TrackConverter.Lib.Data
             }
             else return tz;
         }
+
+        /// <summary>
+        /// записать в трек адреса точек
+        /// </summary>
+        /// <param name="tf">точки</param>
+        /// <param name="callback">вывод результатов в строку</param>
+        /// <returns></returns>
+        public void GetAddresses(BaseTrack tf, Action<string> callback)
+        {
+            //если путешествие, то записываем в путевые точки
+            if (tf.GetType() == typeof(TripRouteFile))
+            {
+                GetAddresses((tf as TripRouteFile).Waypoints, callback);
+                return;
+            }
+
+            //если список точек , то записываем адреса
+            double all = tf.Count;
+            for (int i = 0; i < tf.Count; i++)
+            {
+                string adr = coder.GetAddress(tf[i].Coordinates);
+                tf[i].Description = adr + "\r\n" + tf[i].Description;
+                if (callback != null)
+                    callback.Invoke("Получение адресов точек маршрута " + tf.Name + ", завершено " + (i / all * 100d).ToString("0.0") + "%");
+                // Application.DoEvents();
+            }
+        }
     }
 }
