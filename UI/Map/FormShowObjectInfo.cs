@@ -13,6 +13,7 @@ using System.Windows.Forms;
 using TrackConverter.Lib.Classes;
 using TrackConverter.Lib.Data;
 using TrackConverter.Lib.Data.Providers.InternetServices;
+using TrackConverter.Res.Properties;
 using TrackConverter.UI.Common.Dialogs;
 
 namespace TrackConverter.UI.Map
@@ -67,7 +68,7 @@ namespace TrackConverter.UI.Map
                                 info = Vars.dataCache.GetLayerObjectExtInfo(Obj.ID);
                             else
                             {
-                                info = new Wikimapia().GetExtInfo(Obj.ID);
+                                info = new Wikimapia(Application.StartupPath + Resources.cache_directory + "\\http_cache\\wikimapia").GetExtInfo(Obj.ID);
                                 Vars.dataCache.PutLayerObjectExtInfo(info);
                             }
                         });

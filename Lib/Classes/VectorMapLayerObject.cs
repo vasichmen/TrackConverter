@@ -13,6 +13,7 @@ namespace TrackConverter.Lib.Classes
     /// <summary>
     /// информация об объекте на слое карты
     /// </summary>
+    [Serializable]
     public class VectorMapLayerObject
     {
         private const char sep = '#';

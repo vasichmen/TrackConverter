@@ -16,6 +16,8 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
     /// </summary>
     class GTOPO30 : BaseConnection, IGeoInfoProvider
     {
+        public GTOPO30() : base(null) { }
+
         /// <summary>
         /// если истина, то это локальный источник данных
         /// </summary>

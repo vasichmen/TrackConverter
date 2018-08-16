@@ -15,6 +15,8 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
     /// </summary>
     class VK : BaseConnection, ILinkShorterProvider
     {
+        public VK() : base(null) { }
+
         public override TimeSpan MinQueryInterval
         {
             get

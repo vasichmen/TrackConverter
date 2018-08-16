@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using GMap.NET;
 using TrackConverter.Lib.Classes;
 using TrackConverter.Lib.Data;
 using TrackConverter.Lib.Data.Interfaces;
@@ -15,7 +16,8 @@ namespace TrackConverter.Lib.Data
     /// <summary>
     /// Взаимодействие со всеми видами кэша. (БД, файловая система, память)
     /// </summary>
-    public class Cache : IGeoсoderProvider, IGeoInfoProvider, IDisposable, IGeocoderCache, IGeoInfoCache, IImagesCache, ILayerObjectExtInfoCache
+    public class Cache : IGeoсoderProvider, IGeoInfoProvider, IDisposable, IGeocoderCache, 
+        IGeoInfoCache, IImagesCache, ILayerObjectExtInfoCache, IVectorMapLayerCache
     {
         /// <summary>
         /// папка для хранения БД
@@ -28,19 +30,29 @@ namespace TrackConverter.Lib.Data
         string imagesDir;
 
         /// <summary>
-        /// взаимодействие с БД
+        /// адрес файла с кэшем объектов по слоям
+        /// </summary>
+        string layerObjectsFile;
+
+        /// <summary>
+        /// взаимодействие с БД геокодера
         /// </summary>
         SQLiteCache sqlite;
 
         /// <summary>
         /// взаимодействие с файловой системой
         /// </summary>
-        FileSystemCache fs;
+        FileSystemCache images;
 
         /// <summary>
-        /// кэш в оперативной памяти
+        /// кэш расширенной информации об объектах в оперативной памяти
         /// </summary>
-        MemoryCache vectorMapLayerObjects;
+        MemoryCache extObjectsInfo;
+
+        /// <summary>
+        /// кэш объектов по масштабам на карте
+        /// </summary>
+        ObjectsMemoryCache vectorMapLayer;
 
         /// <summary>
         /// создает кэш в заданной базовой папке
@@ -50,10 +62,12 @@ namespace TrackConverter.Lib.Data
         {
             sqliteDir = baseDir + "\\geocoder";
             imagesDir = baseDir + "\\images";
+            layerObjectsFile = baseDir + "\\layerObjects";
 
             sqlite = new SQLiteCache(sqliteDir);
-            fs = new FileSystemCache(imagesDir);
-            vectorMapLayerObjects = new MemoryCache();
+            images = new FileSystemCache(imagesDir, TimeSpan.FromDays(Vars.Options.DataSources.MaxImageCacheDays));
+            extObjectsInfo = new MemoryCache();
+            vectorMapLayer = new ObjectsMemoryCache(layerObjectsFile,TimeSpan.FromDays(7));
         }
 
 
@@ -66,7 +80,7 @@ namespace TrackConverter.Lib.Data
         {
             get
             {
-                return ((IGeoInfoProvider)sqlite).isLocal;
+                return true;
             }
         }
 
@@ -194,7 +208,7 @@ namespace TrackConverter.Lib.Data
         /// <returns></returns>
         public bool CheckImage(string url)
         {
-            return ((IImagesCache)fs).CheckImage(url);
+            return ((IImagesCache)images).CheckImage(url);
         }
 
         /// <summary>
@@ -204,7 +218,7 @@ namespace TrackConverter.Lib.Data
         /// <returns></returns>
         public Image GetImage(string url)
         {
-            return ((IImagesCache)fs).GetImage(url);
+            return ((IImagesCache)images).GetImage(url);
         }
 
         /// <summary>
@@ -215,12 +229,12 @@ namespace TrackConverter.Lib.Data
         /// <returns></returns>
         public bool PutImage(string url, Image data)
         {
-            return ((IImagesCache)fs).PutImage(url, data);
+            return ((IImagesCache)images).PutImage(url, data);
         }
 
         #endregion
 
-        #region IVectorMapLayerObjectCache
+        #region ILayerObjectExtInfoCache
 
         /// <summary>
         /// проверка существования информации об объекте в кэше
@@ -229,7 +243,7 @@ namespace TrackConverter.Lib.Data
         /// <returns></returns>
         public bool ContainsLayerObjectExtInfo(int id)
         {
-            return vectorMapLayerObjects.ContainsObject(id.ToString());
+            return extObjectsInfo.ContainsObject(id.ToString());
         }
 
         /// <summary>
@@ -239,7 +253,7 @@ namespace TrackConverter.Lib.Data
         /// <returns></returns>
         public Wikimapia.ExtInfo GetLayerObjectExtInfo(int id)
         {
-            return (Wikimapia.ExtInfo)vectorMapLayerObjects.GetObject(id.ToString());
+            return (Wikimapia.ExtInfo)extObjectsInfo.GetObject(id.ToString());
         }
 
         /// <summary>
@@ -249,25 +263,64 @@ namespace TrackConverter.Lib.Data
         /// <returns></returns>
         public bool PutLayerObjectExtInfo(Wikimapia.ExtInfo obj)
         {
-            return vectorMapLayerObjects.PutObject(obj.ID.ToString(), obj);
+            return extObjectsInfo.PutObject(obj.ID.ToString(), obj);
         }
 
         #endregion
 
+        #region IVectorMapLayerCache
+
+        /// <summary>
+        /// добавить объекты в заданной области при заданном масштабе
+        /// </summary>
+        /// <param name="locationMiddle">центр области</param>
+        /// <param name="zoom">масштаб</param>
+        /// <param name="objects">список объектов</param>
+        /// <returns></returns>
+        public bool PutVectorMapLayerObjects(PointLatLng locationMiddle, int zoom, List<VectorMapLayerObject> objects)
+        {
+            return ((IVectorMapLayerCache)vectorMapLayer).PutVectorMapLayerObjects(locationMiddle, zoom, objects);
+        }
+
+        /// <summary>
+        /// получить объекты в заданной области при заданном масштабе
+        /// </summary>
+        /// <param name="locationMiddle">уентр области</param>
+        /// <param name="zoom">масштаб</param>
+        /// <returns></returns>
+        public List<VectorMapLayerObject> GetVectorMapLayerObjects(PointLatLng locationMiddle, int zoom)
+        {
+            return ((IVectorMapLayerCache)vectorMapLayer).GetVectorMapLayerObjects(locationMiddle, zoom);
+        }
+
+        /// <summary>
+        /// проверить существование объектов в заданной области при заданном масштабе
+        /// </summary>
+        /// <param name="locationMiddle">центр области</param>
+        /// <param name="zoom">масштаб</param>
+        /// <returns></returns>
+        public bool ContainsVectorMapLayerObjects(PointLatLng locationMiddle, int zoom)
+        {
+            return ((IVectorMapLayerCache)vectorMapLayer).ContainsVectorMapLayerObjects(locationMiddle, zoom);
+        }
+
+
+
+        #endregion
 
         #endregion
 
         #region реализации интерфейсов .NET
-
         /// <summary>
         /// освобождение ресурсов
         /// </summary>
         public void Dispose()
         {
             sqlite.Dispose();
+            vectorMapLayer.Close();
         }
 
-
+      
 
         #endregion
 

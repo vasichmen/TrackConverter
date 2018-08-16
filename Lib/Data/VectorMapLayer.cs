@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using GMap.NET;
+using System.Windows.Forms;
 using TrackConverter.Lib.Classes;
 using TrackConverter.Lib.Data.Interfaces;
 using TrackConverter.Lib.Data.Providers.InternetServices;
+using TrackConverter.Res.Properties;
 
 namespace TrackConverter.Lib.Data
 {
@@ -29,7 +31,7 @@ namespace TrackConverter.Lib.Data
             switch (provider)
             {
                 case VectorMapLayerProviders.Wikimapia:
-                    layer = new Wikimapia();
+                    layer = new Wikimapia(Application.StartupPath + Resources.cache_directory + "\\http_cache\\wikimapia");
                     break;
                 case VectorMapLayerProviders.None:
                     throw new Exception("Нельзя создать поставщика слоя None");
@@ -45,20 +47,20 @@ namespace TrackConverter.Lib.Data
         /// <returns></returns>
         public List<VectorMapLayerObject> GetObjects(RectLatLng area, double perimeter, int zoom)
         {
-            //if (Vars.Options.DataSources.UseMapLayerCache)
-            //{
-            //    List<VectorMapLayerObject> objs = Vars.dataCache.GetVectorMapLayerObjects(area, perimeter);
-            //    if (objs != null)
-            //        return objs;
-            //    else
-            //    {
-            //        List<VectorMapLayerObject> objects = layer.GetVectorMapLayerObjects(area, perimeter);
-            //        Vars.dataCache.AddMapLayerObjects(objects, zoom);
-            //        return objects;
-            //    }
-            //}
-            //else
-            return layer.GetObjects(area, perimeter);
+            if (Vars.Options.DataSources.UseMapLayerCache)
+            {
+                List<VectorMapLayerObject> objs = Vars.dataCache.GetVectorMapLayerObjects(area.LocationMiddle, zoom);
+                if (objs != null)
+                    return objs;
+                else
+                {
+                    List<VectorMapLayerObject> objects = layer.GetObjects(area, perimeter);
+                    Vars.dataCache.PutVectorMapLayerObjects(area.LocationMiddle, zoom, objects);
+                    return objects;
+                }
+            }
+            else
+                return layer.GetObjects(area, perimeter);
         }
     }
 }

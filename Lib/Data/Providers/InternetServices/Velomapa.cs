@@ -18,6 +18,8 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
     /// </summary>
     public class Velomapa : BaseConnection
     {
+        public Velomapa() : base(null) { }
+
         /// <summary>
         /// минимальное время между запросами
         /// </summary>

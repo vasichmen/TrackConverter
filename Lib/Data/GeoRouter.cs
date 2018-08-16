@@ -34,10 +34,10 @@ namespace TrackConverter.Lib.Data
             switch (pathRouteProvider)
             {
                 case PathRouteProvider.Google:
-                    router = new Google();
+                    router = new Google(null);
                     break;
                 case PathRouteProvider.Yandex:
-                    router = new Yandex();
+                    router = new Yandex(null);
                     break;
                 default:
                     throw new ArgumentException("Неизвестный поставщик сервиса прокладки маршрутов");

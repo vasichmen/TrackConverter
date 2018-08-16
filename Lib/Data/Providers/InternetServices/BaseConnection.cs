@@ -9,6 +9,7 @@ using System.Threading;
 using System.Xml;
 using Newtonsoft.Json.Linq;
 using HtmlAgilityPack;
+using TrackConverter.Lib.Data.Providers.Local.OS;
 
 namespace TrackConverter.Lib.Data.Providers.InternetServices
 {
@@ -20,30 +21,40 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         /// <summary>
         /// создает новый экземпляр класса Base Connection
         /// </summary>
-        public BaseConnection()
+        private BaseConnection()
         {
             lastQuery = DateTime.MinValue;
         }
-        
+
+        /// <summary>
+        /// создаёт новый объект с кэшем в указанной папке и заданной длительностью хранения
+        /// </summary>
+        /// <param name="cacheDirectory">папка с кэшем или null, если не надо использоать кэш</param>
+        /// <param name="duration">длительность хранения в часах. По умолчанию - неделя</param>
+        public BaseConnection(string cacheDirectory, int duration = 7 * 24) : this()
+        {
+            useCache = cacheDirectory != null;
+            if (useCache)
+            {
+                this.cacheDirectory = cacheDirectory;
+                this.duration = duration;
+                this.cache = new FileSystemCache(cacheDirectory, TimeSpan.FromHours(duration));
+            }
+            else
+            {
+
+            }
+        }
+
         /// <summary>
         /// время последнего запроса к сервису
         /// </summary>
         DateTime lastQuery;
-        
 
-        [DllImport("wininet.dll")]
-        static extern bool InternetGetConnectedState(ref InternetConnectionState lpdwFlags, int dwReserved);
-
-        [Flags]
-        enum InternetConnectionState : int
-        {
-            INTERNET_CONNECTION_MODEM = 0x1,
-            INTERNET_CONNECTION_LAN = 0x2,
-            INTERNET_CONNECTION_PROXY = 0x4,
-            INTERNET_RAS_INSTALLED = 0x10,
-            INTERNET_CONNECTION_OFFLINE = 0x20,
-            INTERNET_CONNECTION_CONFIGURED = 0x40
-        }
+        bool useCache;
+        string cacheDirectory;
+        int duration;
+        FileSystemCache cache;
 
         /// <summary>
         /// загрузка изображения по заданной ссылке
@@ -61,7 +72,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
             return res;
         }
 
-          /// <summary>
+        /// <summary>
         /// Минимальное время между запросами к серверу. Значение по умолчанию 200 мс.
         /// Если время между запросами не прошло, SendStringRequest и SendXmlRequest будут ждать
         /// </summary>
@@ -96,10 +107,6 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         {
             string ans = SendStringGetRequest(url, out code);
 
-            //StreamReader sr = new StreamReader("f.html");
-            //code = HttpStatusCode.OK;
-            //var ans = sr.BaseStream;
-
             HtmlDocument doc = new HtmlDocument();
             doc.LoadHtml(ans);
 
@@ -128,6 +135,12 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         /// <exception cref="WebException">Если произошла ошибка при подключении</exception>
         protected string SendStringGetRequest(string url, out HttpStatusCode code)
         {
+            if (useCache)
+                if (cache.ContainsWebUrl(url))
+                {
+                    code = HttpStatusCode.OK;
+                    return cache.GetWebUrl(url);
+                }
             try
             {
                 //ожидание времени интервала между запросами
@@ -163,9 +176,13 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                 //запоминание времени запроса
                 lastQuery = DateTime.Now;
 
+                //запись в кэш, если надо
+                if (useCache)
+                    cache.PutWebUrl(url, responsereader);
+
                 return responsereader;
             }
-            catch (WebException we) { throw new WebException("Ошибка подключения.\r\n" + url, we,we.Status, null); }
+            catch (WebException we) { throw new WebException("Ошибка подключения.\r\n" + url, we, we.Status, null); }
         }
 
         /// <summary>

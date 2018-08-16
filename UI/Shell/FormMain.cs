@@ -1372,7 +1372,7 @@ namespace TrackConverter.UI.Shell
             {
                 for (int i = 0; i < 50; i++)
                 {
-                    var ff = new Wikimapia().GetExtInfo(1);
+                    var ff = new Wikimapia(Application.StartupPath + Resources.cache_directory + "\\http_cache\\wikimapia").GetExtInfo(1);
                 }
             }
             catch (Exception)

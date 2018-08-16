@@ -13,6 +13,8 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
     /// </summary>
     class Qps : BaseConnection, ILinkShorterProvider
     {
+        public Qps() : base(null) { }
+
         public override TimeSpan MinQueryInterval
         {
             get

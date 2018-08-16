@@ -12,7 +12,7 @@ namespace TrackConverter.Lib.Data.Providers.Local.OS
     /// <summary>
     /// кэш в файловой системе
     /// </summary>
-    public class FileSystemCache : IImagesCache
+    public class FileSystemCache : IImagesCache, IWebCache
     {
         /// <summary>
         /// информация о файле в кэше
@@ -45,6 +45,8 @@ namespace TrackConverter.Lib.Data.Providers.Local.OS
         /// </summary>
         string directory;
 
+        static object locker = new object();
+
         /// <summary>
         /// информация о файлах в кэше
         /// </summary>
@@ -54,7 +56,7 @@ namespace TrackConverter.Lib.Data.Providers.Local.OS
         /// создвёт новый объект кэша в указанной папке
         /// </summary>
         /// <param name="dir">базовая папка с файлами</param>
-        public FileSystemCache(string dir)
+        public FileSystemCache(string dir, TimeSpan duration)
         {
             directory = dir;
             Directory.CreateDirectory(directory);
@@ -64,11 +66,11 @@ namespace TrackConverter.Lib.Data.Providers.Local.OS
             LoadDataFile(directory + "\\" + dataFileName);
 
             //удаление устаревших объектов
-            DeleteObjectsBefore(DateTime.Now - TimeSpan.FromDays( Vars.Options.DataSources.MaxImageCacheDays));
+            DeleteObjectsBefore(DateTime.Now - duration);
         }
 
 
-        #region IImageCache
+        #region IImagesCache
 
         /// <summary>
         /// провера существования изобржения в кэше
@@ -136,6 +138,87 @@ namespace TrackConverter.Lib.Data.Providers.Local.OS
 
         #endregion
 
+        #region IWebCache
+
+        /// <summary>
+        /// добавить ответ сервера в кэш
+        /// </summary>
+        /// <param name="url">url  запроса</param>
+        /// <param name="data">ответ сервера</param>
+        /// <returns></returns>
+        public bool PutWebUrl(string url, string data)
+        {
+            if (!ContainsWebUrl(url))
+            {
+                //сохраняем файл с данными
+                string fname = getFileNameFromUrl(url);
+                StreamWriter sw = new StreamWriter(directory + "\\" + fname, false, Encoding.UTF8);
+                sw.Write(data);
+                sw.Close();
+
+                //сохраняем информацию для проверки
+                FileInfo info = new FileInfo() { date = DateTime.Now, url = url, path = fname };
+                files_data.Add(url, info);
+
+                //дописываем файл
+                lock (locker)
+                {
+                    sw = new StreamWriter(directory + "\\" + dataFileName, true, Encoding.UTF8);
+                    string line = info.url + "*" + info.path + "*" + info.date.ToString();
+                    sw.WriteLine(line);
+                    sw.Close();
+                }
+                return true;
+            }
+            else
+                return false;
+        }
+
+        /// <summary>
+        /// проверка существования ответа сервера в кэше
+        /// </summary>
+        /// <param name="url">запрос </param>
+        /// <returns></returns>
+        public bool ContainsWebUrl(string url)
+        {
+            return files_data.ContainsKey(url);
+        }
+
+        /// <summary>
+        /// получить ответ сервера из кэша
+        /// </summary>
+        /// <param name="url">запрос к серверу</param>
+        /// <returns></returns>
+        public string GetWebUrl(string url)
+        {
+            if (files_data.ContainsKey(url))
+            {
+                try
+                {
+                    string fname = directory + "\\" + files_data[url].path;
+                    if (File.Exists(fname))
+                    {
+                        string res = null;
+                        StreamReader sr = new StreamReader(fname, Encoding.UTF8, true);
+                        res = sr.ReadToEnd();
+                        sr.Close();
+                        return res;
+                    }
+                    else
+                        return null;
+                }
+                catch (Exception e)
+                {
+                    return null;
+                }
+            }
+            else
+                return null;
+        }
+
+
+        #endregion
+
         #region вспомогательные методы
 
         /// <summary>
@@ -153,6 +236,30 @@ namespace TrackConverter.Lib.Data.Providers.Local.OS
             while (File.Exists(directory + "\\" + res))
             {
                 res = name + "_" + i + ext;
+                i++;
+            }
+            return res;
+        }
+
+        /// <summary>
+        /// получить имя файла из строки запроса. (оставляет имя сервера и параметры запроса)
+        /// </summary>
+        /// <param name="url"></param>
+        /// <returns></returns>
+        private string getFileNameFromUrl(string url)
+        {
+            url = url.TrimStart(new char[] { 'h', 't', 'p', ':', '/' });
+            int ind = url.IndexOf('/');
+            string serv = url.Substring(0, ind);
+            int ind2 = url.LastIndexOf("?");
+            string pars = url.Substring(ind2 + 1);
+
+            string res = serv + "_" + pars + ".urldata";
+
+            int i = 0;
+            while (File.Exists(directory + "\\" + res))
+            {
+                res = serv + "_" + pars + "_" + i + ".urldata";
                 i++;
             }
             return res;

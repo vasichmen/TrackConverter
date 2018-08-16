@@ -48,7 +48,7 @@ namespace TrackConverter.Lib.Data
                         throw new ApplicationException("Ошибка при загрузке базы данных ETOPO из директории " + Vars.Options.DataSources.ETOPODBFolder);
                     break;
                 case GeoInfoProvider.Google:
-                    geoinfo = new Google();
+                    geoinfo = new Google(Application.StartupPath + Resources.cache_directory + "\\http_cache\\google");
                     break;
                 case GeoInfoProvider.GTOPO30:
                     geoinfo = new GTOPO30();

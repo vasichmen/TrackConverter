@@ -25,7 +25,7 @@ namespace TrackConverter.UI.Ext
         private GMapOverlay layersOverlay;
 
         /// <summary>
-        /// загруженные объекты
+        /// загруженные объекты (для проверки существования этого объекта на экране)
         /// </summary>
         private Dictionary<int, VectorMapLayerObject> LayerObjects = new Dictionary<int, VectorMapLayerObject>();
 
@@ -431,8 +431,8 @@ namespace TrackConverter.UI.Ext
         /// </summary>
         private void ClearLayers()
         {
-            layersOverlay.Polygons.Clear();
-            LayerObjects.Clear();
+            layersOverlay.Polygons.Clear(); //очистка карты
+            LayerObjects.Clear(); //удаляем объекты на экране
             loadedAreas = new ConcurrentBag<PointLatLng>(); //очистка коллекции загруженных областей
             this.Refresh();
         }

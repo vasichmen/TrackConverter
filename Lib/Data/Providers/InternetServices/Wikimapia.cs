@@ -14,6 +14,7 @@ using TrackConverter.Res.Properties;
 using System.Xml;
 using System.Net;
 using HtmlAgilityPack;
+using TrackConverter.Lib.Data.Providers.Local.OS;
 
 namespace TrackConverter.Lib.Data.Providers.InternetServices
 {
@@ -164,7 +165,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         /// <summary>
         /// создаение нового объекта взаимодействия с Wikimapia.org
         /// </summary>
-        public Wikimapia()
+        public Wikimapia(string cacheDirectory, int duration = 24 * 7) : base(cacheDirectory, duration)
         { }
 
         /// <summary>
@@ -296,7 +297,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                                "," + lon_max.ToString("0.00000").Replace(Vars.DecimalSeparator, '.') +
                                "," + lat_max.ToString("0.00000").Replace(Vars.DecimalSeparator, '.');
             string url = string.Format("http://wikimapia.org/d?lng=1{0}", bbox);
-            
+
             string kml = SendStringGetRequest(url);
             List<VectorMapLayerObject> res = KmlHelper.ParseWikimapiaObjectsAnswer(kml);
             return res;
@@ -370,13 +371,17 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
             string lang;
             switch (Vars.Options.Map.MapLanguange)
             {
-                case LanguageType.Russian: lang = "ru";
+                case LanguageType.Russian:
+                    lang = "ru";
                     break;
-                case LanguageType.English: lang = "en";
+                case LanguageType.English:
+                    lang = "en";
                     break;
-                case LanguageType.German: lang = "de";
+                case LanguageType.German:
+                    lang = "de";
                     break;
-                default: lang = "ru";
+                default:
+                    lang = "ru";
                     break;
             }
             url = string.Format(url + "{0}/{1}", id, lang);
@@ -417,7 +422,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
 
                     //описание
                     var description = html.GetElementbyId("place-description");
-                    res.Description = (description == null ? "" : description.InnerText.Trim(new[] { '\r', '\n', ' ' })).Replace("&quot;","\"").Replace("&amp;quot;", "\"").Replace("&#039;", "'");
+                    res.Description = (description == null ? "" : description.InnerText.Trim(new[] { '\r', '\n', ' ' })).Replace("&quot;", "\"").Replace("&amp;quot;", "\"").Replace("&#039;", "'");
 
                     //wikipedia
                     var wikipedia = body.SelectSingleNode(@".//div[@class = 'placeinfo-row wikipedia-link']/a");

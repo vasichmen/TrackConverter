@@ -14,6 +14,8 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
     /// </summary>
     class Clck :BaseConnection, ILinkShorterProvider
     {
+        public Clck() : base(null) { }
+
         /// <summary>
         /// максимальное число попыток подключения
         /// </summary>

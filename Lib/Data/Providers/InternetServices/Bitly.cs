@@ -8,6 +8,8 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
 {
     class Bitly : BaseConnection, ILinkShorterProvider
     {
+        public Bitly() : base(null) { }
+
         /// <summary>
         /// максимальное число попыток подключения
         /// </summary>

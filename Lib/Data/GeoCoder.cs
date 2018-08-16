@@ -37,10 +37,10 @@ namespace TrackConverter.Lib.Data
             switch (provider)
             {
                 case GeoCoderProvider.Yandex:
-                    coder = new Yandex();
+                    coder = new Yandex(Application.StartupPath+ Resources.cache_directory+"\\http_cache\\yandex");
                     break;
                 case GeoCoderProvider.Google:
-                    coder = new Google();
+                    coder = new Google(Application.StartupPath + Resources.cache_directory + "\\http_cache\\google");
                     break;
                 case GeoCoderProvider.Nominatim:
                     coder = new Nominatim();
@@ -126,7 +126,7 @@ namespace TrackConverter.Lib.Data
         {
             if (query == "" || query == null)
                 return null;
-            return new Yandex().GetAddresses(query);
+            return new Yandex(null).GetAddresses(query);
         }
 
         /// <summary>
@@ -178,7 +178,7 @@ namespace TrackConverter.Lib.Data
         /// <returns></returns>
         public void GetAddresses(BaseTrack tf, Action<string> callback)
         {
-            //если путешествие, то записываем в путевые точки
+            //если путешествие, то записываемтолько в путевые точки
             if (tf.GetType() == typeof(TripRouteFile))
             {
                 GetAddresses((tf as TripRouteFile).Waypoints, callback);
@@ -193,7 +193,6 @@ namespace TrackConverter.Lib.Data
                 tf[i].Description = adr + "\r\n" + tf[i].Description;
                 if (callback != null)
                     callback.Invoke("Получение адресов точек маршрута " + tf.Name + ", завершено " + (i / all * 100d).ToString("0.0") + "%");
-                // Application.DoEvents();
             }
         }
     }

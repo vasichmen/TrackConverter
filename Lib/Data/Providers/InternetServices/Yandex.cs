@@ -24,6 +24,8 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
     /// </summary>
     public class Yandex : BaseConnection, IRouterProvider, IGeoсoderProvider
     {
+        public Yandex(string cacheDirectory, int duration=24*7) : base(cacheDirectory, duration) { }
+
         /// <summary>
         /// временная папка для маршрутов
         /// </summary>

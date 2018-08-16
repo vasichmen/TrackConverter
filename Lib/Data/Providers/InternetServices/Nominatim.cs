@@ -14,6 +14,8 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
     /// </summary>
     class Nominatim : BaseConnection, IGeoсoderProvider
     {
+        public Nominatim() : base(null) { }
+
         /// <summary>
         /// минимальное время между запросами
         /// </summary>

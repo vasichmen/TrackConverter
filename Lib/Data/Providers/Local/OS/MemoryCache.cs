@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using TrackConverter.Lib.Classes;
 using TrackConverter.Lib.Data.Interfaces;
@@ -10,8 +11,9 @@ namespace TrackConverter.Lib.Data.Providers.Local.OS
     /// <summary>
     /// кэш объектов в оперативной памяти
     /// </summary>
-    public class MemoryCache
+    public class MemoryCache 
     {
+        Dictionary<string, DateTime> d;
         Dictionary<string, object> c;
 
         /// <summary>
@@ -20,6 +22,7 @@ namespace TrackConverter.Lib.Data.Providers.Local.OS
         public MemoryCache()
         {
             c = new Dictionary<string, object>();
+            d = new Dictionary<string, DateTime>();
         }
 
         /// <summary>
@@ -56,10 +59,27 @@ namespace TrackConverter.Lib.Data.Providers.Local.OS
             if (!c.ContainsKey(id))
             {
                 c.Add(id, obj);
+                d.Add(id, DateTime.Now);
                 return true;
             }
             else
                 return false;
+        }
+
+        /// <summary>
+        /// удалить все данные из кэша, созданные ранее указанной даты. Возвращает количество удалённых элементов
+        /// </summary>
+        /// <param name="date"></param>
+        /// <returns></returns>
+        public int RemoveOlderThan(DateTime date)
+        {
+            List<string> list = new List<string>();
+            foreach (var kv in d)
+                if (kv.Value < date)
+                    list.Add(kv.Key);
+            foreach (var v in list)
+                c.Remove(v);
+            return list.Count;
         }
     }
 }
