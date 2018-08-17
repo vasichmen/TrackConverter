@@ -64,7 +64,7 @@ namespace TrackConverter.Lib.Data.Providers.Local.OS
         {
             directory = dir;
             Directory.CreateDirectory(directory);
-            files_data = new  ConcurrentDictionary<string, FileInfo>();
+            files_data = new ConcurrentDictionary<string, FileInfo>();
 
             //заполнение информации о файлах
             LoadDataFile(directory + "\\" + dataFileName);
@@ -252,16 +252,17 @@ namespace TrackConverter.Lib.Data.Providers.Local.OS
         /// <returns></returns>
         private string getFileNameFromUrl(string url)
         {
-            url = url.TrimStart(new char[] { 'h', 't', 'p', ':', '/' });
+            url = url.TrimStart(new char[] { 'h', 't', 'p', 's', ':', '/' });
             int ind = url.IndexOf('/');
             string serv = url.Substring(0, ind);
             int ind2 = url.LastIndexOf("?");
             string pars = url.Substring(ind2 + 1);
 
             //удаление знаков, которые нельзя использовать в именах файлов
-            pars = pars.Replace(":", "").Replace("<","").Replace(">","").Replace("*","")
-                       .Replace("?","").Replace(@"/","").Replace(@"\","").Replace("|","");
-
+            pars = pars.Replace(":", "").Replace("<", "").Replace(">", "").Replace("*", "")
+                       .Replace("?", "").Replace(@"/", "").Replace(@"\", "").Replace("|", "");
+            if (pars.Length > 10)
+                pars = pars.Substring(0, 10);
             string res = serv + "_" + pars + ".urldata";
             int i = 0;
             while (File.Exists(directory + "\\" + res))
@@ -293,7 +294,7 @@ namespace TrackConverter.Lib.Data.Providers.Local.OS
             //удаление ключей
             FileInfo info;
             foreach (string url in urls)
-                files_data.TryRemove(url,out info);
+                files_data.TryRemove(url, out info);
 
             //перезапись файла информации
             ExportDataFile(directory + "\\" + dataFileName);

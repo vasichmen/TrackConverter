@@ -3,12 +3,14 @@ using System.Diagnostics;
 using System.Windows.Forms;
 using TrackConverter.Lib.Tracking;
 
-namespace TrackConverter.UI.Converter {
+namespace TrackConverter.UI.Converter
+{
 
     /// <summary>
     /// окно подробной информации о маршруте
     /// </summary>
-    public partial class FormTrackInformation: Form {
+    public partial class FormTrackInformation : Form
+    {
 
         /// <summary>
         /// маршрут для которого выводится информация
@@ -19,10 +21,24 @@ namespace TrackConverter.UI.Converter {
         /// создает окно подробной информации о маршруте
         /// </summary>
         /// <param name="trackFile">маршрут, о котором будет выведена информация</param>
-        public FormTrackInformation(BaseTrack trackFile ) {
+        public FormTrackInformation(BaseTrack trackFile)
+        {
             InitializeComponent();
             this.trackFile = trackFile;
 
+            //отклюаем элементы, если нет маршрутов
+            if (trackFile.GetType() == typeof(TripRouteFile))
+            {
+                var t = trackFile as TripRouteFile;
+                linkLabelFinishGoogle.Visible = t.DaysRoutes.Count > 0;
+                linkLabelFinishYandex.Visible = t.DaysRoutes.Count > 0;
+                linkLabelStartGoogle.Visible = t.DaysRoutes.Count > 0;
+                linkLabelStartYandex.Visible = t.DaysRoutes.Count > 0;
+                buttonOpenWikimapia.Enabled = t.DaysRoutes.Count > 0;
+                buttonOpenYandex.Enabled = t.DaysRoutes.Count > 0;
+            }
+
+            //заполненеие информации
             textBoxCount.Text = trackFile.Count.ToString();
             textBoxDescription.Text = trackFile.Description;
             textBoxDistance.Text = trackFile.Distance.ToString();
@@ -31,6 +47,12 @@ namespace TrackConverter.UI.Converter {
                 textBoxStart.Text = trackFile[0].Coordinates.ToString("{lat}\r\n{lon}", "ddºmm'ss.s\"H");
                 textBoxFinish.Text = trackFile[trackFile.Count - 1].Coordinates.ToString("{lat}\r\n{lon}", "ddºmm'ss.s\"H");
             }
+            else
+            {
+                textBoxStart.Text = "Нет маршрута";
+                textBoxFinish.Text = "Нет маршрута";
+            }
+
             textBoxName.Text = trackFile.Name;
             textBoxSpeed.Text = trackFile.KmphSpeed.ToString();
             textBoxTime.Text = trackFile.Time.ToString();
@@ -47,9 +69,10 @@ namespace TrackConverter.UI.Converter {
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void buttonOpenYandex_Click( object sender, EventArgs e ) {
-            string ss = Serializer.Serialize( 100.ToString(), trackFile, FileFormats.YandexLink );
-            Process.Start( ss );
+        private void buttonOpenYandex_Click(object sender, EventArgs e)
+        {
+            string ss = Serializer.Serialize(100.ToString(), trackFile, FileFormats.YandexLink);
+            Process.Start(ss);
         }
 
         /// <summary>
@@ -57,8 +80,9 @@ namespace TrackConverter.UI.Converter {
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void buttonOpenWikimapia_Click( object sender, EventArgs e ) {
-            Process.Start( Serializer.Serialize( 100.ToString(), trackFile, FileFormats.WikimapiaLink ) );
+        private void buttonOpenWikimapia_Click(object sender, EventArgs e)
+        {
+            Process.Start(Serializer.Serialize(100.ToString(), trackFile, FileFormats.WikimapiaLink));
         }
 
         /// <summary>
@@ -66,10 +90,11 @@ namespace TrackConverter.UI.Converter {
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void buttonSave_Click( object sender, EventArgs e ) {
+        private void buttonSave_Click(object sender, EventArgs e)
+        {
             trackFile.Name = textBoxName.Text;
             trackFile.Description = textBoxDescription.Text;
-            trackFile.Color=pictureBoxColor.BackColor;
+            trackFile.Color = pictureBoxColor.BackColor;
             Result = trackFile;
             DialogResult = DialogResult.OK;
             Close();
@@ -80,7 +105,8 @@ namespace TrackConverter.UI.Converter {
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void buttonClose_Click( object sender, EventArgs e ) {
+        private void buttonClose_Click(object sender, EventArgs e)
+        {
             Close();
         }
 
@@ -89,8 +115,9 @@ namespace TrackConverter.UI.Converter {
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void linkLabelStartYandex_LinkClicked( object sender, LinkLabelLinkClickedEventArgs e ) {
-            Process.Start( trackFile[0].Coordinates.ExportYandex() );
+        private void linkLabelStartYandex_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            Process.Start(trackFile[0].Coordinates.ExportYandex());
         }
 
         /// <summary>
@@ -98,8 +125,9 @@ namespace TrackConverter.UI.Converter {
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void linkLabelStartGoogle_LinkClicked( object sender, LinkLabelLinkClickedEventArgs e ) {
-            Process.Start( trackFile[0].Coordinates.ExportGoogle() );
+        private void linkLabelStartGoogle_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            Process.Start(trackFile[0].Coordinates.ExportGoogle());
 
         }
 
@@ -108,8 +136,9 @@ namespace TrackConverter.UI.Converter {
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void linkLabelFinishYandex_LinkClicked( object sender, LinkLabelLinkClickedEventArgs e ) {
-            Process.Start( trackFile[trackFile.Count - 1].Coordinates.ExportYandex() );
+        private void linkLabelFinishYandex_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            Process.Start(trackFile[trackFile.Count - 1].Coordinates.ExportYandex());
 
         }
 
@@ -118,8 +147,9 @@ namespace TrackConverter.UI.Converter {
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void linkLabelFinishGoogle_LinkClicked( object sender, LinkLabelLinkClickedEventArgs e ) {
-            Process.Start( trackFile[trackFile.Count - 1].Coordinates.ExportGoogle() );
+        private void linkLabelFinishGoogle_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            Process.Start(trackFile[trackFile.Count - 1].Coordinates.ExportGoogle());
         }
 
         /// <summary>

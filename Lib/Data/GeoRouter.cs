@@ -36,10 +36,10 @@ namespace TrackConverter.Lib.Data
             switch (pathRouteProvider)
             {
                 case PathRouteProvider.Google:
-                    router = new Google(Application.StartupPath + Resources.cache_directory + "\\http_cache\\google",24);
+                    router = new Google(null);
                     break;
                 case PathRouteProvider.Yandex:
-                    router = new Yandex(Application.StartupPath + Resources.cache_directory + "\\http_cache\\yandex",24);
+                    router = new Yandex(null);
                     break;
                 default:
                     throw new ArgumentException("Неизвестный поставщик сервиса прокладки маршрутов");
