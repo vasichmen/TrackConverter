@@ -25,7 +25,6 @@ namespace TrackConverter.Lib.Data
         /// </summary>
         private IGeoсoderProvider coder;
 
-
         /// <summary>
         /// создает новый экземпляр с заданным источником геоданных. 
         /// </summary>
@@ -126,7 +125,7 @@ namespace TrackConverter.Lib.Data
         {
             if (query == "" || query == null)
                 return null;
-            return new Yandex(null).GetAddresses(query);
+            return new Yandex(Application.StartupPath + Resources.cache_directory + "\\http_cache\\yandex").GetAddresses(query);
         }
 
         /// <summary>

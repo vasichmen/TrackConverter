@@ -24,12 +24,17 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
     /// </summary>
     public class Yandex : BaseConnection, IRouterProvider, IGeoсoderProvider
     {
+        /// <summary>
+        /// Создаёт новый объект связи с сервисом с заданной папкой кэша запросов и временем хранения кэша
+        /// </summary>
+        /// <param name="cacheDirectory">папка с кэшем или null, если не надо использовать кэш</param>
+        /// <param name="duration">время хранения кэша в часах. По умолчанию - неделя</param>
         public Yandex(string cacheDirectory, int duration=24*7) : base(cacheDirectory, duration) { }
 
         /// <summary>
         /// временная папка для маршрутов
         /// </summary>
-        private string fold = null;
+        private string temp_fold = null;
 
         /// <summary>
         /// минимальное время между запросами
@@ -612,11 +617,11 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
             //действие обработки очереди JSON ответов сервера
             Action polylinerAction = new Action(() =>
             {
-                fold = "";
+                temp_fold = "";
                 if (Vars.Options.Services.UseFSCacheForCreatingRoutes)
                 {
-                    fold = Application.StartupPath + Resources.temp_directory + @"\" + Guid.NewGuid().ToString();
-                    Directory.CreateDirectory(fold);
+                    temp_fold = Application.StartupPath + Resources.temp_directory + @"\" + Guid.NewGuid().ToString();
+                    Directory.CreateDirectory(temp_fold);
                 }
                 DateTime start1 = DateTime.Now;
                 double N = points.Count * points.Count;
@@ -664,7 +669,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
 
                                     //запись данных маршрута в файл
                                     string textJO = jobj.ToString(Newtonsoft.Json.Formatting.None);
-                                    StreamWriter sw = new StreamWriter(fold + @"\" + i.ToString() + "_" + j.ToString() + ".json");
+                                    StreamWriter sw = new StreamWriter(temp_fold + @"\" + i.ToString() + "_" + j.ToString() + ".json");
                                     sw.Write(textJO);
                                     sw.Close();
                                 }
@@ -738,10 +743,10 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         /// <returns></returns>
         public TrackFile GetRouteFromFSCache(int i, int j)
         {
-            if (string.IsNullOrEmpty(fold))
+            if (string.IsNullOrEmpty(temp_fold))
                 throw new ApplicationException("Отсутствует временная папка");
 
-            string fname = fold + @"\" + i.ToString() + "_" + j.ToString() + ".json";
+            string fname = temp_fold + @"\" + i.ToString() + "_" + j.ToString() + ".json";
             if (!File.Exists(fname))
                 throw new ApplicationException("Файл " + fname + " не найден во временной папке");
 

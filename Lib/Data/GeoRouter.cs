@@ -5,11 +5,13 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using System.Xml;
 using TrackConverter.Lib.Classes;
 using TrackConverter.Lib.Data.Interfaces;
 using TrackConverter.Lib.Data.Providers.InternetServices;
 using TrackConverter.Lib.Tracking;
+using TrackConverter.Res.Properties;
 
 namespace TrackConverter.Lib.Data
 {
@@ -34,10 +36,10 @@ namespace TrackConverter.Lib.Data
             switch (pathRouteProvider)
             {
                 case PathRouteProvider.Google:
-                    router = new Google(null);
+                    router = new Google(Application.StartupPath + Resources.cache_directory + "\\http_cache\\google",24);
                     break;
                 case PathRouteProvider.Yandex:
-                    router = new Yandex(null);
+                    router = new Yandex(Application.StartupPath + Resources.cache_directory + "\\http_cache\\yandex",24);
                     break;
                 default:
                     throw new ArgumentException("Неизвестный поставщик сервиса прокладки маршрутов");

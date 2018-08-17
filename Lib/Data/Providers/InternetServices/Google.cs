@@ -27,7 +27,12 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
     /// </summary>
     class Google : BaseConnection, IRouterProvider, IGeoсoderProvider, IGeoInfoProvider
     {
-        public Google(string cacheDirectory, int duration=24*7) : base(cacheDirectory,duration) { }
+        /// <summary>
+        /// Создаёт новый объект связи с сервисом с заданной папкой кэша запросов и временем хранения кэша
+        /// </summary>
+        /// <param name="cacheDirectory">папка с кэшем или null, если не надо использовать кэш</param>
+        /// <param name="duration">время хранения кэша в часах. По умолчанию - неделя</param>
+        public Google(string cacheDirectory, int duration = 24 * 7) : base(cacheDirectory, duration) { }
 
         /// <summary>
         /// временная папка для маршрутов
@@ -570,8 +575,8 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                                     case "OVER_QUERY_LIMIT":
                                         //попытка увеличить задержку и попробвать ещё раз
                                         int sleep = (int)this.MinQueryInterval.TotalMilliseconds * 15;
-                                        if (callback!=null)
-                                        callback.Invoke("Ошибка OVER_QUERY_LIMIT, попытка " + attempt + ", ожидание " + sleep / 1000 + " cекунд...");
+                                        if (callback != null)
+                                            callback.Invoke("Ошибка OVER_QUERY_LIMIT, попытка " + attempt + ", ожидание " + sleep / 1000 + " cекунд...");
                                         Thread.Sleep(sleep);
                                         if (attempt == MaxAttempts) //если достигли максимального числа попыток, то выход с ошибкой
                                             throw new ApplicationException("Ошибка сервиса Google: " + status.InnerText);

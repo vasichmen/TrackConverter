@@ -193,6 +193,7 @@ namespace TrackConverter.UI.Ext
                 Task ts = new Task(() =>
                 {
                     Program.winMain.BeginOperation();
+                    Program.winMain.setCurrentOperation("Загрузка слоёв " + LayerProvider.ToString() + ", завершено 0%");
 
                     //начальные пеераметры отображения
                     VectorMapLayerProviders provider = this.LayerProvider;

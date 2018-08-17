@@ -163,8 +163,10 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         }
 
         /// <summary>
-        /// создаение нового объекта взаимодействия с Wikimapia.org
+        /// Создаёт новый объект связи с сервисом с заданной папкой кэша запросов и временем хранения кэша
         /// </summary>
+        /// <param name="cacheDirectory">папка с кэшем или null, если не надо использовать кэш</param>
+        /// <param name="duration">время хранения кэша в часах. По умолчанию - неделя</param>
         public Wikimapia(string cacheDirectory, int duration = 24 * 7) : base(cacheDirectory, duration)
         { }
 

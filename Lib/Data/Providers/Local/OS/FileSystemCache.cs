@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json.Linq;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -45,12 +46,15 @@ namespace TrackConverter.Lib.Data.Providers.Local.OS
         /// </summary>
         string directory;
 
+        /// <summary>
+        /// блокировка многопоточного доступа к файлу информации о кэше
+        /// </summary>
         static object locker = new object();
 
         /// <summary>
         /// информация о файлах в кэше
         /// </summary>
-        Dictionary<string, FileInfo> files_data;
+        ConcurrentDictionary<string, FileInfo> files_data;
 
         /// <summary>
         /// создвёт новый объект кэша в указанной папке
@@ -60,7 +64,7 @@ namespace TrackConverter.Lib.Data.Providers.Local.OS
         {
             directory = dir;
             Directory.CreateDirectory(directory);
-            files_data = new Dictionary<string, FileInfo>();
+            files_data = new  ConcurrentDictionary<string, FileInfo>();
 
             //заполнение информации о файлах
             LoadDataFile(directory + "\\" + dataFileName);
@@ -124,7 +128,7 @@ namespace TrackConverter.Lib.Data.Providers.Local.OS
                 string fname = getFileName(url);
                 data.Save(directory + "\\" + fname);
                 FileInfo info = new FileInfo() { date = DateTime.Now, url = url, path = fname };
-                files_data.Add(url, info);
+                files_data.TryAdd(url, info);
 
                 //дописываем файл
                 StreamWriter sw = new StreamWriter(directory + "\\" + dataFileName, true, Encoding.UTF8);
@@ -158,7 +162,7 @@ namespace TrackConverter.Lib.Data.Providers.Local.OS
 
                 //сохраняем информацию для проверки
                 FileInfo info = new FileInfo() { date = DateTime.Now, url = url, path = fname };
-                files_data.Add(url, info);
+                files_data.TryAdd(url, info);
 
                 //дописываем файл
                 lock (locker)
@@ -254,8 +258,11 @@ namespace TrackConverter.Lib.Data.Providers.Local.OS
             int ind2 = url.LastIndexOf("?");
             string pars = url.Substring(ind2 + 1);
 
-            string res = serv + "_" + pars + ".urldata";
+            //удаление знаков, которые нельзя использовать в именах файлов
+            pars = pars.Replace(":", "").Replace("<","").Replace(">","").Replace("*","")
+                       .Replace("?","").Replace(@"/","").Replace(@"\","").Replace("|","");
 
+            string res = serv + "_" + pars + ".urldata";
             int i = 0;
             while (File.Exists(directory + "\\" + res))
             {
@@ -284,8 +291,9 @@ namespace TrackConverter.Lib.Data.Providers.Local.OS
             }
 
             //удаление ключей
+            FileInfo info;
             foreach (string url in urls)
-                files_data.Remove(url);
+                files_data.TryRemove(url,out info);
 
             //перезапись файла информации
             ExportDataFile(directory + "\\" + dataFileName);
@@ -330,7 +338,7 @@ namespace TrackConverter.Lib.Data.Providers.Local.OS
                 fi.url = fields[0];
                 fi.path = fields[1];
                 fi.date = DateTime.Parse(fields[2]);
-                files_data.Add(fi.url, fi);
+                files_data.TryAdd(fi.url, fi);
             }
         }
 
