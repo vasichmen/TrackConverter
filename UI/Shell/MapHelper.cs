@@ -351,8 +351,8 @@ namespace TrackConverter.UI.Shell
         /// <param name="e"></param>
         internal void OnPolygonClick(GMapPolygon item, MouseEventArgs e)
         {
-            //если не идёт создание маршрута, линейка, перемещение маркера, перемещение карты, то обрабатываем нажатие
-            if (!formMain.isCreatingRoute && !formMain.isRuling && !formMain.isMarkerMoving && !formMain.gmapControlMap.IsDragging)
+            //если не идёт создание маршрута, не выбор точки, не линейка, не перемещение маркера, не перемещение карты, то обрабатываем нажатие
+            if (!formMain.isCreatingRoute && !formMain.isSelectingPoint && !formMain.isRuling && !formMain.isMarkerMoving && !formMain.gmapControlMap.IsDragging)
             {
                 List<VectorMapLayerObject> objs = formMain.gmapControlMap.GetVectorObjectsUnderCursor();
                 VectorMapLayerObject obj;

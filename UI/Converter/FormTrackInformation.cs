@@ -26,18 +26,14 @@ namespace TrackConverter.UI.Converter
             InitializeComponent();
             this.trackFile = trackFile;
 
-            //отклюаем элементы, если нет маршрутов
-            if (trackFile.GetType() == typeof(TripRouteFile))
-            {
-                var t = trackFile as TripRouteFile;
-                linkLabelFinishGoogle.Visible = t.DaysRoutes.Count > 0;
-                linkLabelFinishYandex.Visible = t.DaysRoutes.Count > 0;
-                linkLabelStartGoogle.Visible = t.DaysRoutes.Count > 0;
-                linkLabelStartYandex.Visible = t.DaysRoutes.Count > 0;
-                buttonOpenWikimapia.Enabled = t.DaysRoutes.Count > 0;
-                buttonOpenYandex.Enabled = t.DaysRoutes.Count > 0;
-            }
-
+            //отклюаем элементы, если нет точек
+            linkLabelFinishGoogle.Visible = trackFile.Count > 0;
+            linkLabelFinishYandex.Visible = trackFile.Count > 0;
+            linkLabelStartGoogle.Visible = trackFile.Count > 0;
+            linkLabelStartYandex.Visible = trackFile.Count > 0;
+            buttonOpenWikimapia.Enabled = trackFile.Count > 0;
+            buttonOpenYandex.Enabled = trackFile.Count > 0;
+            
             //заполненеие информации
             textBoxCount.Text = trackFile.Count.ToString();
             textBoxDescription.Text = trackFile.Description;
