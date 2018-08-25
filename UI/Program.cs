@@ -279,9 +279,14 @@ namespace TrackConverter.UI
             trayIcon.UnShow(); //иконка трея
             Debug.Print("Tray icon off");
 
-            if (Directory.Exists(Application.StartupPath + Resources.temp_directory))
-                Directory.Delete(Application.StartupPath + Resources.temp_directory, true); //очистка временных файлов
-            Debug.Print("Temp directory removed");
+            //очистка временных файлов
+            try
+            {
+                if (Directory.Exists(Application.StartupPath + Resources.temp_directory))
+                    Directory.Delete(Application.StartupPath + Resources.temp_directory, true);
+            }
+            catch (Exception exxx) { Debug.Print(exxx.Message); }
+            finally { Debug.Print("Temp directory removed"); }
 
             //если требуется - очистка кэша карт
             if (Vars.clearMapCacheAfterExit)

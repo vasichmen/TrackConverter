@@ -33,6 +33,8 @@
             this.contextMenuStripPicture = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.saveImageAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pictureBoxImage = new System.Windows.Forms.PictureBox();
+            this.copyLinkToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.copyImageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStripPicture.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxImage)).BeginInit();
             this.SuspendLayout();
@@ -41,42 +43,58 @@
             // 
             this.contextMenuStripPicture.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.contextMenuStripPicture.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.saveImageAsToolStripMenuItem});
+            this.saveImageAsToolStripMenuItem,
+            this.copyLinkToolStripMenuItem,
+            this.copyImageToolStripMenuItem});
             this.contextMenuStripPicture.Name = "contextMenuStripPicture";
-            this.contextMenuStripPicture.Size = new System.Drawing.Size(254, 28);
+            this.contextMenuStripPicture.Size = new System.Drawing.Size(217, 70);
             // 
             // saveImageAsToolStripMenuItem
             // 
             this.saveImageAsToolStripMenuItem.Name = "saveImageAsToolStripMenuItem";
-            this.saveImageAsToolStripMenuItem.Size = new System.Drawing.Size(253, 24);
+            this.saveImageAsToolStripMenuItem.Size = new System.Drawing.Size(216, 22);
             this.saveImageAsToolStripMenuItem.Text = "Сохранить картинку как...";
             this.saveImageAsToolStripMenuItem.Click += new System.EventHandler(this.saveImageAsToolStripMenuItem_Click);
             // 
             // pictureBoxImage
             // 
+            this.pictureBoxImage.ContextMenuStrip = this.contextMenuStripPicture;
             this.pictureBoxImage.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pictureBoxImage.Location = new System.Drawing.Point(0, 0);
-            this.pictureBoxImage.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.pictureBoxImage.Name = "pictureBoxImage";
-            this.pictureBoxImage.Size = new System.Drawing.Size(893, 538);
+            this.pictureBoxImage.Size = new System.Drawing.Size(670, 437);
             this.pictureBoxImage.TabIndex = 1;
             this.pictureBoxImage.TabStop = false;
             this.pictureBoxImage.MouseClick += new System.Windows.Forms.MouseEventHandler(this.pictureBoxImage_MouseClick);
             // 
+            // copyLinkToolStripMenuItem
+            // 
+            this.copyLinkToolStripMenuItem.Name = "copyLinkToolStripMenuItem";
+            this.copyLinkToolStripMenuItem.Size = new System.Drawing.Size(216, 22);
+            this.copyLinkToolStripMenuItem.Text = "Копировать ссылку";
+            this.copyLinkToolStripMenuItem.Click += new System.EventHandler(this.copyLinkToolStripMenuItem_Click);
+            // 
+            // copyImageToolStripMenuItem
+            // 
+            this.copyImageToolStripMenuItem.Name = "copyImageToolStripMenuItem";
+            this.copyImageToolStripMenuItem.Size = new System.Drawing.Size(216, 22);
+            this.copyImageToolStripMenuItem.Text = "Копировать изображение";
+            this.copyImageToolStripMenuItem.Click += new System.EventHandler(this.copyImageToolStripMenuItem_Click);
+            // 
             // FormShowPicture
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(893, 538);
+            this.ClientSize = new System.Drawing.Size(670, 437);
             this.Controls.Add(this.pictureBoxImage);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "FormShowPicture";
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "FormShowPicture";
             this.TopMost = true;
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.FormShowPicture_FormClosed);
             this.Shown += new System.EventHandler(this.FormShowPicture_Shown);
             this.contextMenuStripPicture.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxImage)).EndInit();
@@ -88,5 +106,7 @@
         private System.Windows.Forms.ContextMenuStrip contextMenuStripPicture;
         private System.Windows.Forms.ToolStripMenuItem saveImageAsToolStripMenuItem;
         private System.Windows.Forms.PictureBox pictureBoxImage;
+        private System.Windows.Forms.ToolStripMenuItem copyLinkToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem copyImageToolStripMenuItem;
     }
 }

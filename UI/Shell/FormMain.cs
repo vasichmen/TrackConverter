@@ -9,6 +9,7 @@ using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -1368,15 +1369,6 @@ namespace TrackConverter.UI.Shell
 
         private void button1_Click(object sender, EventArgs e)
         {
-            try
-            {
-                for (int i = 0; i < 50; i++)
-                {
-                    var ff = new Wikimapia(Application.StartupPath + Resources.cache_directory + "\\http_cache\\wikimapia").GetExtInfo(1);
-                }
-            }
-            catch (Exception)
-            { }
         }
 
        

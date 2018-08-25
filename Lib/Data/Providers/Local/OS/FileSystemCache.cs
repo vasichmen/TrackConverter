@@ -125,17 +125,22 @@ namespace TrackConverter.Lib.Data.Providers.Local.OS
         {
             if (!CheckImage(url))
             {
+                Image copy = (Image)data.Clone();
+
                 string fname = getFileName(url);
-                data.Save(directory + "\\" + fname);
+                copy.Save(directory + "\\" + fname);
                 FileInfo info = new FileInfo() { date = DateTime.Now, url = url, path = fname };
                 files_data.TryAdd(url, info);
 
                 //дописываем файл
-                StreamWriter sw = new StreamWriter(directory + "\\" + dataFileName, true, Encoding.UTF8);
-                string line = info.url + "*" + info.path + "*" + info.date.ToString();
-                sw.WriteLine(line);
-                sw.Close();
-                return true;
+                lock (locker)
+                {
+                    StreamWriter sw = new StreamWriter(directory + "\\" + dataFileName, true, Encoding.UTF8);
+                    string line = info.url + "*" + info.path + "*" + info.date.ToString();
+                    sw.WriteLine(line);
+                    sw.Close();
+                    return true;
+                }
             }
             else return false;
         }

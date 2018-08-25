@@ -43,7 +43,7 @@ namespace TrackConverter.UI.Map
         private void PictureBox_MouseClick(object sender, MouseEventArgs e)
         {
             Wikimapia.ExtInfo.PhotoInfo pho = (sender as PictureBox).Tag as Wikimapia.ExtInfo.PhotoInfo;
-            FormShowPicture fsp = new FormShowPicture(info.Photos,info.Photos.IndexOf(pho));
+            FormShowPicture fsp = new FormShowPicture(info.Photos, info.Photos.IndexOf(pho));
             fsp.Show();
         }
 
@@ -75,7 +75,7 @@ namespace TrackConverter.UI.Map
                         load.Start();
                         load.Wait();
 
-                        //основные данные
+                        //ОСНОВНЫЕ ДАННЫЕ
                         labelName.Text = info.Title;
                         new ToolTip().SetToolTip(labelName, info.Title);
                         textBoxDescription.Text = info.Description;
@@ -87,7 +87,7 @@ namespace TrackConverter.UI.Map
                         }
 
 
-                        //комментарии
+                        //КОММЕНТАРИИ
                         string comms = "";
                         foreach (Wikimapia.ExtInfo.CommentInfo com in info.Comments)
                             comms += "===" + com.UserName + "=== " +
@@ -100,33 +100,45 @@ namespace TrackConverter.UI.Map
                             textBoxComments.Height = 1;
                         }
 
-                        //картинки
+                        //КАРТИНКИ
+
+ //метод добавления катинки на панель
+                                Action<Image,Wikimapia.ExtInfo.PhotoInfo> addImg = new Action<Image,Wikimapia.ExtInfo.PhotoInfo>((img,pho) =>
+                                {
+                                    this.Invoke(new Action(() =>
+                                    {
+                                        PictureBox pb = new PictureBox();
+                                        pb.BackgroundImage = img;
+                                        pb.Width = 100;
+                                        pb.Height = (int)((pb.BackgroundImage.Width / pb.BackgroundImage.Height) * 100);
+                                        pb.BorderStyle = BorderStyle.FixedSingle;
+                                        pb.Parent = flowLayoutPanelImages;
+                                        pb.MouseClick += PictureBox_MouseClick;
+                                        pb.Tag = pho;
+                                        pb.Cursor = Cursors.Hand;
+                                        pb.BackgroundImageLayout = ImageLayout.Stretch;
+                                    }));
+                                });
+
                         imgs = new Task(() =>
                         {
                             foreach (Wikimapia.ExtInfo.PhotoInfo pho in info.Photos)
                             {
-                                Image img;
                                 if (Vars.dataCache.CheckImage(pho.UrlThumbnail))
-                                    img = Vars.dataCache.GetImage(pho.UrlThumbnail);
+                                {
+                                    Image img = Vars.dataCache.GetImage(pho.UrlThumbnail);
+                                    addImg.Invoke(img,pho);
+                                }
                                 else
                                 {
-                                    img = BaseConnection.GetImage(pho.UrlThumbnail);
-                                    Vars.dataCache.PutImage(pho.UrlThumbnail, img);
+                                    Image imag = BaseConnection.GetImage(pho.UrlThumbnail);
+
+                                    //добавлять в кэш можно только ДО использования объекта, иначе - InvalidOperationException
+                                    Vars.dataCache.PutImage(pho.UrlThumbnail, imag);
+                                    addImg.Invoke(imag,pho);
                                 }
 
-                                this.Invoke(new Action(() =>
-                                {
-                                    PictureBox pb = new PictureBox();
-                                    pb.BackgroundImage = img;
-                                    pb.Width = 100;
-                                    pb.Height = (int)((pb.BackgroundImage.Width / pb.BackgroundImage.Height) * 100);
-                                    pb.BorderStyle = BorderStyle.FixedSingle;
-                                    pb.Parent = flowLayoutPanelImages;
-                                    pb.MouseClick += PictureBox_MouseClick;
-                                    pb.Tag = pho;
-                                    pb.Cursor = Cursors.Hand;
-                                    pb.BackgroundImageLayout = ImageLayout.Stretch;
-                                }));
+
                             }
                         });
                         imgs.Start();
@@ -161,6 +173,12 @@ namespace TrackConverter.UI.Map
         private void FormShowObjectInfo_FormClosed(object sender, FormClosedEventArgs e)
         {
             Program.winMain.gmapControlMap.DisSelectPolygon(this.Obj.ID);
+
+            //освобождаем ресурсы картинок
+            foreach (PictureBox pb in flowLayoutPanelImages.Controls)
+            {
+                pb.BackgroundImage = null;
+            }
         }
 
         /// <summary>

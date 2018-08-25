@@ -213,7 +213,7 @@ namespace TrackConverter.UI.Ext
                                List<VectorMapLayerObject> nobj = this.layerProviderEngine.GetObjects(tile, minPerimeter, (int)Zoom);
                                loadedAreas.Add(tile.LocationMiddle);
                                if (!this.IsDisposed)
-                               {   
+                               {
                                    //если во время выполнения операции изменились параметры отображения, то выходим
                                    if (zoom != (int)Zoom || //масштаб карты
                                             this.LayerProvider != provider || //источник данных
@@ -363,11 +363,14 @@ namespace TrackConverter.UI.Ext
                     obj.Geometry.IsHitTestVisible = true;
                     layersOverlay.Polygons.Add(obj.Geometry);
                 });
-
-            if (this.InvokeRequired)
-                this.Invoke(act);
-            else
-                act.Invoke();
+            
+                if (!this.IsDisposed)
+                {
+                    if (this.InvokeRequired)
+                        this.Invoke(act);
+                    else
+                        act.Invoke();
+                }
         }
 
         /// <summary>
@@ -417,7 +420,7 @@ namespace TrackConverter.UI.Ext
         /// <param name="geometry"></param>
         internal void DisSelectPolygon(int id)
         {
-                    this.SelectedPolygons.Remove(id);
+            this.SelectedPolygons.Remove(id);
             foreach (GMapPolygon pol in this.layersOverlay.Polygons)
                 if ((pol.Tag as VectorMapLayerObject).ID == id)
                 {

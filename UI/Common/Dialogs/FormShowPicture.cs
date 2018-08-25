@@ -39,6 +39,16 @@ namespace TrackConverter.UI.Common.Dialogs
         string cur_url;
 
         /// <summary>
+        /// тултип на изображении (ссылка)
+        /// </summary>
+        ToolTip tooltip = new ToolTip();
+
+        /// <summary>
+        /// метод установки заголовка окна
+        /// </summary>
+        Action<string> setOperation;
+
+        /// <summary>
         /// создаёт окно вывода изображения
         /// </summary>
         /// <param name="url"></param>
@@ -47,7 +57,28 @@ namespace TrackConverter.UI.Common.Dialogs
             InitializeComponent();
             this.photos = photos;
             this.start = start;
-            this.Text = "Загрузка изображения...";
+
+            setOperation = new Action<string>((obj) =>
+            {
+
+                if (this.InvokeRequired)
+                    this.Invoke(new Action(() =>
+                    {
+                        if (this.IsDisposed)
+                            return;
+                        else
+                            this.Text = obj;
+                    }));
+
+                else
+                {
+                    if (this.IsDisposed)
+                        return;
+                    else
+                        this.Text = obj;
+                }
+            });
+
         }
 
         private void saveImageAsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -64,7 +95,7 @@ namespace TrackConverter.UI.Common.Dialogs
         {
             ShowPict(start);
             cur_ind = start;
-            Text = "Изображение " +( cur_ind + 1) + "/" + photos.Count;
+            Text = "Изображение " + (cur_ind + 1) + "/" + photos.Count;
         }
 
         /// <summary>
@@ -74,29 +105,32 @@ namespace TrackConverter.UI.Common.Dialogs
         /// <param name="e"></param>
         private void pictureBoxImage_MouseClick(object sender, MouseEventArgs e)
         {
-            int x = e.X;
-            int c = pictureBoxImage.Width / 2;
-
-
-            if (x < c) //предыдущее изображение
-                if (cur_ind == 0)
-                    return;
-                else
-                {
-                    cur_ind--;
-                    ShowPict(cur_ind);
-                }
-            else //следующее изображение
+            if (e.Button == MouseButtons.Left)
             {
-                if (cur_ind == photos.Count - 1)
-                    return;
-                else
+                int x = e.X;
+                int c = pictureBoxImage.Width / 2;
+
+
+                if (x < c) //предыдущее изображение
+                    if (cur_ind == 0)
+                        return;
+                    else
+                    {
+                        cur_ind--;
+                        ShowPict(cur_ind);
+                    }
+                else //следующее изображение
                 {
-                    cur_ind++;
-                    ShowPict(cur_ind);
+                    if (cur_ind == photos.Count - 1)
+                        return;
+                    else
+                    {
+                        cur_ind++;
+                        ShowPict(cur_ind);
+                    }
                 }
+                Text = "Изображение " + (cur_ind + 1) + "/" + photos.Count;
             }
-            Text = "Изображение " + (cur_ind + 1) + "/" + photos.Count;
         }
         /// <summary>
         /// загрузить и показать указанное изображени по ссылке
@@ -111,25 +145,31 @@ namespace TrackConverter.UI.Common.Dialogs
             Task load = null;
             try
             {
-                Program.winMain.BeginOperation();
-                Program.winMain.setCurrentOperation("Загрузка изображения...");
                 load = new Task(() =>
                 {
-                    Image img;
+
                     if (Vars.dataCache.CheckImage(cur_url))
-                        img = Vars.dataCache.GetImage(cur_url);
+                    {
+                        Image img = Vars.dataCache.GetImage(cur_url);
+                        pictureBoxImage.BackgroundImage = img;
+                    }
                     else
                     {
-                        img = BaseConnection.GetImage(cur_url);
-                        Vars.dataCache.PutImage(cur_url, img);
+                        BaseConnection.GetFileAsync(cur_url, setOperation, new Action<string>((file) =>
+                        {
+                            Image imag = Image.FromFile(file);
+                            Vars.dataCache.PutImage(cur_url, imag); //добавлять в кэш можно только ДО использования объекта, иначе - InvalidOperationException
+                            pictureBoxImage.BackgroundImage = imag;
+                            setOperation.Invoke("Изображение " + (ind + 1) + "/" + photos.Count);
+                        }));
                     }
 
-                    pictureBoxImage.BackgroundImage = img;
 
                 });
                 load.Start();
                 load.Wait();
                 pictureBoxImage.BackgroundImageLayout = ImageLayout.Zoom;
+                tooltip.SetToolTip(pictureBoxImage, cur_url);
             }
             catch (Exception ex)
             {
@@ -138,9 +178,30 @@ namespace TrackConverter.UI.Common.Dialogs
                 MessageBox.Show(this, "Произошла ошибка при загрузке фотографии.\r\nПричина: " + ex.Message, "Загрузка фотографии", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 Close();
             }
-            finally { Program.winMain.EndOperation(); }
-
         }
 
+        private void FormShowPicture_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            pictureBoxImage.BackgroundImage = null;
+        }
+
+        private void copyLinkToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Wikimapia.ExtInfo.PhotoInfo pho = photos[cur_ind];
+            string link = !string.IsNullOrWhiteSpace(pho.UrlFull) ? pho.UrlFull :
+                      !string.IsNullOrWhiteSpace(pho.UrlBig) ? pho.UrlBig :
+                      !string.IsNullOrWhiteSpace(pho.Url1280) ? pho.Url1280 : pho.Url960;
+            Clipboard.SetText(link);
+                    }
+
+        private void copyImageToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if(pictureBoxImage.BackgroundImage == null)
+            {
+                MessageBox.Show(this, "Дождитесь загрузки изображения!", "Копирование изображения", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+            Clipboard.SetImage(pictureBoxImage.BackgroundImage);
+        }
     }
 }

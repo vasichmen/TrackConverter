@@ -35,27 +35,12 @@ namespace TrackConverter.Lib.Data.Providers.Local.OS
         /// <summary>
         /// создвёт новый объект кэша в памяти
         /// <param name="dname">адрес папки кэша</param>
-        /// <param name="duration">продолжительность хранения кэша</param>
         /// </summary>
-        public ObjectsMemoryCache(string dname, TimeSpan duration)
+        public ObjectsMemoryCache(string dname)
         {
             this.dname = dname;
-                c = new MemoryCache[zooms];
-
-            removeOlderThan(DateTime.Now - duration);
+            c = new MemoryCache[zooms];
         }
-
-        /// <summary>
-        /// удалить все записи, созданные ранее, чем указанная дата
-        /// </summary>
-        /// <param name="dateTime">дата, записи, созданные ранее которой, удаляются из кэша</param>
-        private void removeOlderThan(DateTime dateTime)
-        {
-            for (int i = 0; i < zooms; i++)
-                if (c[i] != null)
-                    c[i].RemoveOlderThan(dateTime);
-        }
-
         /// <summary>
         /// добавить объекты в заданной области при заданном масштабе
         /// </summary>
@@ -127,14 +112,5 @@ namespace TrackConverter.Lib.Data.Providers.Local.OS
 
             return hash;
         }
-
-        /// <summary>
-        /// сохранить объекты на диск
-        /// </summary>
-        internal void Close()
-        {
-            //saveDirectory(dname);
-        }
-
     }
 }

@@ -67,7 +67,7 @@ namespace TrackConverter.Lib.Data
             sqlite = new SQLiteCache(sqliteDir);
             images = new FileSystemCache(imagesDir, TimeSpan.FromDays(Vars.Options.DataSources.MaxImageCacheDays));
             extObjectsInfo = new MemoryCache();
-            vectorMapLayer = new ObjectsMemoryCache(layerObjectsFile,TimeSpan.FromDays(7));
+            vectorMapLayer = new ObjectsMemoryCache(layerObjectsFile);
         }
 
 
@@ -317,7 +317,7 @@ namespace TrackConverter.Lib.Data
         public void Dispose()
         {
             sqlite.Dispose();
-            vectorMapLayer.Close();
+           // vectorMapLayer.Close();
         }
 
       

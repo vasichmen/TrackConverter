@@ -10,6 +10,8 @@ using System.Xml;
 using Newtonsoft.Json.Linq;
 using HtmlAgilityPack;
 using TrackConverter.Lib.Data.Providers.Local.OS;
+using System.Threading.Tasks;
+using System.ComponentModel;
 
 namespace TrackConverter.Lib.Data.Providers.InternetServices
 {
@@ -60,17 +62,51 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         /// загрузка изображения по заданной ссылке
         /// </summary>
         /// <param name="url"></param>
+        /// <param name="operation">метод установки прогресса загрузки файла</param>
+        /// <param name="afterLoadComplete">действие, выполняемое по окончании загрузки файла</param>
+        /// <returns></returns>
+        public static void GetFileAsync(string url, Action<string> operation = null, Action<string> afterLoadComplete=null)
+        {
+            int i = 0;
+            string tmp_file = System.Windows.Forms.Application.StartupPath + Res.Properties.Resources.temp_directory + "\\" + i + ".tmp";
+            Directory.CreateDirectory(Path.GetDirectoryName(tmp_file));
+            while (File.Exists(tmp_file))
+                tmp_file = System.Windows.Forms.Application.StartupPath + Res.Properties.Resources.temp_directory + "\\" + ++i + ".tmp";
+
+            WebClient client = new WebClient();
+            client.DownloadProgressChanged +=
+                new DownloadProgressChangedEventHandler((sender, e) =>
+                {
+                    if (operation != null)
+                    {
+                        operation.Invoke("Загрузка изображения, завершено " + (e as DownloadProgressChangedEventArgs).ProgressPercentage + "%");
+                    }
+                }
+                );
+            client.DownloadFileCompleted += new AsyncCompletedEventHandler((sender,e)=> {
+                if (afterLoadComplete != null)
+                    afterLoadComplete.Invoke(tmp_file);
+                client.Dispose();
+            });
+            client.DownloadFileAsync(new Uri(url), tmp_file);
+        }
+
+        /// <summary>
+        /// получить изображение по ссылке
+        /// </summary>
+        /// <param name="url">ссылка на изображение</param>
         /// <returns></returns>
         public static Image GetImage(string url)
         {
-            HttpWebRequest request1 = (HttpWebRequest)WebRequest.Create(url);
-            request1.Method = "GET";
-            request1.KeepAlive = true;
-            HttpWebResponse response1 = (HttpWebResponse)request1.GetResponse();
-            Image res = Image.FromStream(response1.GetResponseStream());
-            request1.Abort();
+            WebClient wc = new WebClient();
+            Stream str= wc.OpenRead(url);
+            Image res = Image.FromStream(str);
+            str.Close();
+            wc.Dispose();
             return res;
         }
+
+      
 
         /// <summary>
         /// Минимальное время между запросами к серверу. Значение по умолчанию 200 мс.
