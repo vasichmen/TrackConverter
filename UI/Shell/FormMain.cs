@@ -1369,6 +1369,9 @@ namespace TrackConverter.UI.Shell
 
         private void button1_Click(object sender, EventArgs e)
         {
+            Graphics g= gmapControlMap.CreateGraphics();
+            Image im = Image.FromFile(@"D:\Clouds\Projects\CS\TrackConverter\tile.png");
+            g.DrawImage(im, new Point(0, 0));
         }
 
        

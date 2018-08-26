@@ -57,6 +57,8 @@ namespace TrackConverter.UI.Common.Dialogs
             InitializeComponent();
             this.photos = photos;
             this.start = start;
+            
+            pictureBoxImage.SizeMode = PictureBoxSizeMode.Zoom;
 
             setOperation = new Action<string>((obj) =>
             {
@@ -79,16 +81,6 @@ namespace TrackConverter.UI.Common.Dialogs
                 }
             });
 
-        }
-
-        private void saveImageAsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            SaveFileDialog sf = new SaveFileDialog();
-            sf.InitialDirectory = Application.StartupPath;
-            sf.FileName = Path.GetFileName(cur_url);
-
-            if (sf.ShowDialog() == DialogResult.OK)
-                pictureBoxImage.BackgroundImage.Save(sf.FileName);
         }
 
         private void FormShowPicture_Shown(object sender, EventArgs e)
@@ -151,7 +143,7 @@ namespace TrackConverter.UI.Common.Dialogs
                     if (Vars.dataCache.CheckImage(cur_url))
                     {
                         Image img = Vars.dataCache.GetImage(cur_url);
-                        pictureBoxImage.BackgroundImage = img;
+                        pictureBoxImage.Image = img;
                     }
                     else
                     {
@@ -159,7 +151,7 @@ namespace TrackConverter.UI.Common.Dialogs
                         {
                             Image imag = Image.FromFile(file);
                             Vars.dataCache.PutImage(cur_url, imag); //добавлять в кэш можно только ДО использования объекта, иначе - InvalidOperationException
-                            pictureBoxImage.BackgroundImage = imag;
+                            pictureBoxImage.Image = imag;
                             setOperation.Invoke("Изображение " + (ind + 1) + "/" + photos.Count);
                         }));
                     }
@@ -168,7 +160,6 @@ namespace TrackConverter.UI.Common.Dialogs
                 });
                 load.Start();
                 load.Wait();
-                pictureBoxImage.BackgroundImageLayout = ImageLayout.Zoom;
                 tooltip.SetToolTip(pictureBoxImage, cur_url);
             }
             catch (Exception ex)
@@ -182,8 +173,10 @@ namespace TrackConverter.UI.Common.Dialogs
 
         private void FormShowPicture_FormClosed(object sender, FormClosedEventArgs e)
         {
-            pictureBoxImage.BackgroundImage = null;
+            pictureBoxImage.Image = null;
         }
+
+        #region контекстное меню картинки
 
         private void copyLinkToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -192,16 +185,29 @@ namespace TrackConverter.UI.Common.Dialogs
                       !string.IsNullOrWhiteSpace(pho.UrlBig) ? pho.UrlBig :
                       !string.IsNullOrWhiteSpace(pho.Url1280) ? pho.Url1280 : pho.Url960;
             Clipboard.SetText(link);
-                    }
+        }
 
         private void copyImageToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if(pictureBoxImage.BackgroundImage == null)
+            if (pictureBoxImage.Image == null)
             {
                 MessageBox.Show(this, "Дождитесь загрузки изображения!", "Копирование изображения", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
-            Clipboard.SetImage(pictureBoxImage.BackgroundImage);
+            Clipboard.SetImage(pictureBoxImage.Image);
         }
+
+        private void saveImageAsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog sf = new SaveFileDialog();
+            sf.InitialDirectory = Application.StartupPath;
+            sf.FileName = Path.GetFileName(cur_url);
+
+            if (sf.ShowDialog() == DialogResult.OK)
+                pictureBoxImage.Image.Save(sf.FileName);
+        }
+
+        #endregion
+
     }
 }

@@ -81,7 +81,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
             public class CommentInfo
             {
                 /// <summary>
-                /// дата написания
+                /// дата написания или DateTime.MinValue, если точной даты нет
                 /// </summary>
                 public DateTime Date { get; internal set; }
 

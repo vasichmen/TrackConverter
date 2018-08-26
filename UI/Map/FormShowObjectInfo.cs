@@ -102,23 +102,23 @@ namespace TrackConverter.UI.Map
 
                         //КАРТИНКИ
 
- //метод добавления катинки на панель
-                                Action<Image,Wikimapia.ExtInfo.PhotoInfo> addImg = new Action<Image,Wikimapia.ExtInfo.PhotoInfo>((img,pho) =>
-                                {
-                                    this.Invoke(new Action(() =>
-                                    {
-                                        PictureBox pb = new PictureBox();
-                                        pb.BackgroundImage = img;
-                                        pb.Width = 100;
-                                        pb.Height = (int)((pb.BackgroundImage.Width / pb.BackgroundImage.Height) * 100);
-                                        pb.BorderStyle = BorderStyle.FixedSingle;
-                                        pb.Parent = flowLayoutPanelImages;
-                                        pb.MouseClick += PictureBox_MouseClick;
-                                        pb.Tag = pho;
-                                        pb.Cursor = Cursors.Hand;
-                                        pb.BackgroundImageLayout = ImageLayout.Stretch;
-                                    }));
-                                });
+                        //метод добавления катинки на панель
+                        Action<Image, Wikimapia.ExtInfo.PhotoInfo> addImg = new Action<Image, Wikimapia.ExtInfo.PhotoInfo>((img, pho) =>
+                          {
+                              this.Invoke(new Action(() =>
+                              {
+                                  PictureBox pb = new PictureBox();
+                                  pb.BackgroundImage = img;
+                                  pb.Width = 120 - 3;
+                                  pb.Height = (int)((pb.BackgroundImage.Width / pb.BackgroundImage.Height) * pb.Width);
+                                  pb.BorderStyle = BorderStyle.FixedSingle;
+                                  pb.Parent = flowLayoutPanelImages;
+                                  pb.MouseClick += PictureBox_MouseClick;
+                                  pb.Tag = pho;
+                                  pb.Cursor = Cursors.Hand;
+                                  pb.BackgroundImageLayout = ImageLayout.Stretch;
+                              }));
+                          });
 
                         imgs = new Task(() =>
                         {
@@ -127,7 +127,7 @@ namespace TrackConverter.UI.Map
                                 if (Vars.dataCache.CheckImage(pho.UrlThumbnail))
                                 {
                                     Image img = Vars.dataCache.GetImage(pho.UrlThumbnail);
-                                    addImg.Invoke(img,pho);
+                                    addImg.Invoke(img, pho);
                                 }
                                 else
                                 {
@@ -135,10 +135,8 @@ namespace TrackConverter.UI.Map
 
                                     //добавлять в кэш можно только ДО использования объекта, иначе - InvalidOperationException
                                     Vars.dataCache.PutImage(pho.UrlThumbnail, imag);
-                                    addImg.Invoke(imag,pho);
+                                    addImg.Invoke(imag, pho);
                                 }
-
-
                             }
                         });
                         imgs.Start();
@@ -146,6 +144,11 @@ namespace TrackConverter.UI.Map
                         {
                             this.Height -= flowLayoutPanelImages.Height;
                             flowLayoutPanelImages.Height = 1;
+                        }
+                        if (info.Photos.Count > 4)
+                        {
+                            this.Height += flowLayoutPanelImages.Height;
+                            flowLayoutPanelImages.Height *= 2;
                         }
                         Program.winMain.gmapControlMap.SelectPolygon(this.Obj.ID);
                     }
