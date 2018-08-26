@@ -13,7 +13,7 @@ namespace TrackConverter.Lib.Classes
         /// <summary>
         /// значение перечисления
         /// </summary>
-        public VectorMapLayerProviders Enum { get; set; }
+        public MapLayerProviders Enum { get; set; }
 
         /// <summary>
         /// заголовок

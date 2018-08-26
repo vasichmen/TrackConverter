@@ -477,12 +477,17 @@ namespace TrackConverter
     /// <summary>
     /// поставщики слоёв на карте
     /// </summary>
-    public enum VectorMapLayerProviders
+    public enum MapLayerProviders
     {
         /// <summary>
         /// Wikimapia
         /// </summary>
         Wikimapia,
+
+        /// <summary>
+        /// пробки яндекса
+        /// </summary>
+        YandexTraffic,
 
         /// <summary>
         /// отсутствует слой

@@ -36,7 +36,7 @@ namespace TrackConverter.Lib.Classes
         /// <summary>
         /// Поставщик информации об объекте
         /// </summary>
-        public VectorMapLayerProviders LayerProvider { get; set; }
+        public MapLayerProviders LayerProvider { get; set; }
 
         /// <summary>
         /// создаёт новый объект слоя карты

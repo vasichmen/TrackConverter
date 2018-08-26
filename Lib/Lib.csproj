@@ -134,6 +134,7 @@
     <Compile Include="Data\Interfaces\IGeoInfoProvider.cs" />
     <Compile Include="Data\Interfaces\IGeoсoderProvider.cs" />
     <Compile Include="Data\Interfaces\ILinkShorterProvider.cs" />
+    <Compile Include="Data\Interfaces\IRastrMapLayerProvider.cs" />
     <Compile Include="Data\Interfaces\IVectorMapLayerCache.cs" />
     <Compile Include="Data\Interfaces\IVectorMapLayerProvider.cs" />
     <Compile Include="Data\Interfaces\ILayerObjectExtInfoCache.cs" />
@@ -169,6 +170,7 @@
     <Compile Include="Data\Interfaces\IImagesCache.cs" />
     <Compile Include="Data\Providers\Local\OS\MemoryCache.cs" />
     <Compile Include="Data\Providers\Local\OS\ObjectsMemoryCache.cs" />
+    <Compile Include="Data\RastrMapLayer.cs" />
     <Compile Include="Data\VectorMapLayer.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Mathematic\Assessment\Normalizer.cs" />
@@ -179,6 +181,7 @@
     <Compile Include="Mathematic\Base\SphereCalculations.cs" />
     <Compile Include="Mathematic\Geodesy\MapCalibrations\MapCalibrationOzi.cs" />
     <Compile Include="Mathematic\Geodesy\MapCalibrations\MapCalibrationWorld.cs" />
+    <Compile Include="Mathematic\Geodesy\Projections\GMapImported\MercatorProjectionYandex.cs" />
     <Compile Include="Mathematic\Geodesy\Projections\IProjection.cs" />
     <Compile Include="Mathematic\Geodesy\Projections\Mercator.cs" />
     <Compile Include="Mathematic\Geodesy\Models\IEarthModel.cs" />

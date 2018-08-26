@@ -165,7 +165,7 @@ namespace TrackConverter.Lib.Tracking.Helpers
                 string linestring = placemark["MultiGeometry"]["LineString"]["coordinates"].InnerText;
                 linestring = linestring.Replace("\n", " ").Trim().Trim();
                 TrackFile geometry = ParseLineString(linestring);
-                res.Add(new VectorMapLayerObject(geometry,name) { ID = id, Link = link, LayerProvider = VectorMapLayerProviders.Wikimapia, Invisible=false });
+                res.Add(new VectorMapLayerObject(geometry,name) { ID = id, Link = link, LayerProvider = MapLayerProviders.Wikimapia, Invisible=false });
             }
             return res;
         }

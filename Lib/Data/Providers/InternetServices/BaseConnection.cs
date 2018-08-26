@@ -100,6 +100,8 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         {
             WebClient wc = new WebClient();
             Stream str= wc.OpenRead(url);
+            if (wc.ResponseHeaders[HttpResponseHeader.ContentLength] == "0")
+                return new Bitmap(256,256);
             Image res = Image.FromStream(str);
             str.Close();
             wc.Dispose();

@@ -790,8 +790,9 @@ namespace TrackConverter.UI.Shell
             VectorMapLayerProviderRecord lpr = (VectorMapLayerProviderRecord)((ToolStripMenuItem)sender).Tag;
             switch (lpr.Enum)
             {
-                case VectorMapLayerProviders.None:
-                case VectorMapLayerProviders.Wikimapia:
+                case MapLayerProviders.None:
+                case MapLayerProviders.Wikimapia:
+                case MapLayerProviders.YandexTraffic:
                     formMain.gmapControlMap.LayerProvider = lpr.Enum;
                     break;
                 default:

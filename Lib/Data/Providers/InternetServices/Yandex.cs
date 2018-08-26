@@ -13,6 +13,7 @@ using TrackConverter.Lib.Data.Interfaces;
 using TrackConverter.Lib.Tracking;
 using TrackConverter.Res.Properties;
 using Newtonsoft.Json;
+using System.Drawing;
 
 namespace TrackConverter.Lib.Data.Providers.InternetServices
 {
@@ -22,14 +23,14 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
     /// 
     /// Работа с маршрутихатором организована опытным путем
     /// </summary>
-    public class Yandex : BaseConnection, IRouterProvider, IGeoсoderProvider
+    public class Yandex : BaseConnection, IRouterProvider, IGeoсoderProvider, IRastrMapLayerProvider
     {
         /// <summary>
         /// Создаёт новый объект связи с сервисом с заданной папкой кэша запросов и временем хранения кэша
         /// </summary>
         /// <param name="cacheDirectory">папка с кэшем или null, если не надо использовать кэш</param>
         /// <param name="duration">время хранения кэша в часах. По умолчанию - неделя</param>
-        public Yandex(string cacheDirectory, int duration=24*7) : base(cacheDirectory, duration) { }
+        public Yandex(string cacheDirectory, int duration = 24 * 7) : base(cacheDirectory, duration) { }
 
         /// <summary>
         /// временная папка для маршрутов
@@ -57,6 +58,8 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                 return 5;
             }
         }
+
+        #region IRouteProvider
 
         /// <summary>
         /// проложить маршрут
@@ -313,7 +316,6 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
             return (int)b;
         }
 
-
         /// <summary>
         /// Старый алгоритм декодиорвания0 ломаной(через строки "в лоб")
         /// Алгоритм кодирования: 
@@ -503,106 +505,6 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         }
 
         /// <summary>
-        /// узнать адрес по координате. Если адрес не найден, то null
-        /// </summary>
-        /// <param name="coordinate"></param>
-        /// <returns></returns>
-        public string GetAddress(Coordinate coordinate)
-        {
-            string url = string.Format(
-               "https://geocode-maps.yandex.ru/1.x/?geocode={0}&results=1",
-               coordinate.Longitude.TotalDegrees.ToString().Replace(Vars.DecimalSeparator, '.') + "," + coordinate.Latitude.TotalDegrees.ToString().Replace(Vars.DecimalSeparator, '.'));
-            XmlDocument dc = SendXmlGetRequest(url);
-
-            XmlNode found = dc.GetElementsByTagName("found")[0];
-            if (found.InnerText == "0")
-                throw new ApplicationException("Яндекс не нашел ни одного объекта");
-
-            XmlNode n001 = dc["ymaps"];
-            XmlNode n01 = n001["GeoObjectCollection"];
-            XmlNode n1 = n01["featureMember"];
-            XmlNode n2 = n1["GeoObject"];
-            XmlNode n3 = n2["metaDataProperty"];
-            XmlNode n4 = n3["GeocoderMetaData"];
-            XmlNode n5 = n4["text"];
-            return n5.InnerText;
-
-        }
-
-        /// <summary>
-        /// получить координаты, подходящие под запрос. Адреса будут добавлены в словарь 
-        /// </summary>
-        /// <param name="query">часть адреса</param>
-        /// <returns></returns>
-        public Dictionary<string, Coordinate> GetAddresses(string query)
-        {
-            string url = string.Format("https://geocode-maps.yandex.ru/1.x/?geocode={0}", query);
-            XmlDocument dc = SendXmlGetRequest(url);
-
-            XmlNode root = dc["ymaps"];
-            XmlNode collection = root["GeoObjectCollection"];
-
-            XmlNodeList features = collection.ChildNodes;
-            Dictionary<string, Coordinate> res = new Dictionary<string, Coordinate>();
-            foreach (XmlNode feature in features)
-            {
-                if (feature.LocalName == "metaDataProperty") continue;
-                if (feature.LocalName == "featureMember")
-                {
-                    XmlNode geoobj = feature["GeoObject"];
-                    string description;
-                    if (geoobj["description"] != null)
-                        description = geoobj["description"].InnerText;
-                    else
-                        description = "";
-                    string name = geoobj["name"].InnerText;
-                    string title = name + ", " + description;
-                    string coords = geoobj["Point"]["pos"].InnerText;
-                    string lon = coords.Split(' ')[0];
-                    string lat = coords.Split(' ')[1];
-                    Coordinate crd = new Coordinate(lat, lon);
-                    if (!res.ContainsKey(title))
-                        res.Add(title, crd);
-                }
-            }
-            return res;
-        }
-
-        /// <summary>
-        /// получить координаты адреса
-        /// </summary>
-        /// <param name="address">адрес</param>
-        /// <returns></returns>
-        public Coordinate GetCoordinate(string address)
-        {
-
-            string url = string.Format("https://geocode-maps.yandex.ru/1.x/?geocode={0}", address);
-            XmlDocument xml = SendXmlGetRequest(url);
-
-            XmlNode cord = xml.GetElementsByTagName("featureMember")[0];
-            if (cord == null)
-                throw new ApplicationException("Не найден адрес: " + address);
-            XmlNode nd = cord.ChildNodes[0]["Point"];
-
-            string cd = nd["pos"].InnerText;
-
-            string[] ar = cd.Split(' ');
-
-            Coordinate res = new Coordinate(ar[1], ar[0]);
-            return res;
-        }
-
-        /// <summary>
-        /// получить информацию о временной зоне
-        /// </summary>
-        /// <param name="coordinate"></param>
-        /// <returns></returns>
-        public TimeZoneInfo GetTimeZone(Coordinate coordinate)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
         /// построить все маршруты между точками. Используются разные потоки для получения данных о обработки ответов
         /// </summary>
         /// <param name="points">точки</param>
@@ -758,5 +660,150 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
             return res;
         }
 
+        #endregion
+
+        #region IGeocoderProvider
+
+        /// <summary>
+        /// узнать адрес по координате. Если адрес не найден, то null
+        /// </summary>
+        /// <param name="coordinate"></param>
+        /// <returns></returns>
+        public string GetAddress(Coordinate coordinate)
+        {
+            string url = string.Format(
+               "https://geocode-maps.yandex.ru/1.x/?geocode={0}&results=1",
+               coordinate.Longitude.TotalDegrees.ToString().Replace(Vars.DecimalSeparator, '.') + "," + coordinate.Latitude.TotalDegrees.ToString().Replace(Vars.DecimalSeparator, '.'));
+            XmlDocument dc = SendXmlGetRequest(url);
+
+            XmlNode found = dc.GetElementsByTagName("found")[0];
+            if (found.InnerText == "0")
+                throw new ApplicationException("Яндекс не нашел ни одного объекта");
+
+            XmlNode n001 = dc["ymaps"];
+            XmlNode n01 = n001["GeoObjectCollection"];
+            XmlNode n1 = n01["featureMember"];
+            XmlNode n2 = n1["GeoObject"];
+            XmlNode n3 = n2["metaDataProperty"];
+            XmlNode n4 = n3["GeocoderMetaData"];
+            XmlNode n5 = n4["text"];
+            return n5.InnerText;
+
+        }
+
+        /// <summary>
+        /// получить координаты, подходящие под запрос. Адреса будут добавлены в словарь 
+        /// </summary>
+        /// <param name="query">часть адреса</param>
+        /// <returns></returns>
+        public Dictionary<string, Coordinate> GetAddresses(string query)
+        {
+            string url = string.Format("https://geocode-maps.yandex.ru/1.x/?geocode={0}", query);
+            XmlDocument dc = SendXmlGetRequest(url);
+
+            XmlNode root = dc["ymaps"];
+            XmlNode collection = root["GeoObjectCollection"];
+
+            XmlNodeList features = collection.ChildNodes;
+            Dictionary<string, Coordinate> res = new Dictionary<string, Coordinate>();
+            foreach (XmlNode feature in features)
+            {
+                if (feature.LocalName == "metaDataProperty") continue;
+                if (feature.LocalName == "featureMember")
+                {
+                    XmlNode geoobj = feature["GeoObject"];
+                    string description;
+                    if (geoobj["description"] != null)
+                        description = geoobj["description"].InnerText;
+                    else
+                        description = "";
+                    string name = geoobj["name"].InnerText;
+                    string title = name + ", " + description;
+                    string coords = geoobj["Point"]["pos"].InnerText;
+                    string lon = coords.Split(' ')[0];
+                    string lat = coords.Split(' ')[1];
+                    Coordinate crd = new Coordinate(lat, lon);
+                    if (!res.ContainsKey(title))
+                        res.Add(title, crd);
+                }
+            }
+            return res;
+        }
+
+        /// <summary>
+        /// получить координаты адреса
+        /// </summary>
+        /// <param name="address">адрес</param>
+        /// <returns></returns>
+        public Coordinate GetCoordinate(string address)
+        {
+
+            string url = string.Format("https://geocode-maps.yandex.ru/1.x/?geocode={0}", address);
+            XmlDocument xml = SendXmlGetRequest(url);
+
+            XmlNode cord = xml.GetElementsByTagName("featureMember")[0];
+            if (cord == null)
+                throw new ApplicationException("Не найден адрес: " + address);
+            XmlNode nd = cord.ChildNodes[0]["Point"];
+
+            string cd = nd["pos"].InnerText;
+
+            string[] ar = cd.Split(' ');
+
+            Coordinate res = new Coordinate(ar[1], ar[0]);
+            return res;
+        }
+
+        /// <summary>
+        /// получить информацию о временной зоне
+        /// </summary>
+        /// <param name="coordinate"></param>
+        /// <returns></returns>
+        public TimeZoneInfo GetTimeZone(Coordinate coordinate)
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
+
+        #region IRastrMapLayerProvider
+
+        /// <summary>
+        /// получить тайл пробок Yandex
+        /// </summary>
+        /// <param name="x">тайловая координата х</param>
+        /// <param name="y">тайловая координата у</param>
+        /// <param name="z">масштаб</param>
+        /// <returns></returns>
+        public Image GetRastrTile(long x, long y, int z)
+        {
+            //последовательность запросов:
+            //сначала надо получить "версию". callback и _ можно поставить любые
+            //https://api-maps.yandex.ru/services/coverage/v2/layers_stamps?lang=ru_RU&l=trf&callback=id_153566920585677507&_=89244444
+            //из ответа берется версия (version) и кладется сюда в параметр tm:
+            //https://jgo.maps.yandex.net/1.1/tiles?trf&l=trf&lang=ru_RU&x=39660&y=20544&z=16&scale=1&tm=1535267771
+
+            Random rn = new Random(298347923);
+            string cb_id = "153" + rn.Next(999999).ToString() + rn.Next(999999).ToString() + "507";
+            long _ = rn.Next(23497611, 99999999);
+            string url_tm = string.Format("https://api-maps.yandex.ru/services/coverage/v2/layers_stamps?lang=ru_RU&l=trf&callback=id_{0}&_={1}", cb_id, _);
+            string tm_jo = SendStringGetRequest(url_tm);
+
+            //получение параметра tm для следующего запроса
+            int ind = tm_jo.IndexOf("version\":\"");
+            int l = tm_jo.IndexOf("\",\"zoomRan") - ind- "\",\"zoomRan".Length;
+            int start = ind + "version\":\"".Length;
+            string tm = tm_jo.Substring(start, l);
+
+            
+            string url = @"https://jgo.maps.yandex.net/1.1/tiles?trf&l=trf&lang=ru_RU&x={0}&y={1}&z={2}&scale=1&tm={3}";
+            url = string.Format(url, x, y, z,tm);
+
+            //загрузка изображения
+            Image res = GetImage(url);
+            return res;
+        }
+
+        #endregion
     }
 }

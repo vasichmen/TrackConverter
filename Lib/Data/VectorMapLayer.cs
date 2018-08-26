@@ -26,15 +26,16 @@ namespace TrackConverter.Lib.Data
         /// создаёт новый экземпляр поставщика слоя
         /// </summary>
         /// <param name="provider">сервис - источник слоя карты</param>
-        public VectorMapLayer(VectorMapLayerProviders provider)
+        public VectorMapLayer(MapLayerProviders provider)
         {
             switch (provider)
             {
-                case VectorMapLayerProviders.Wikimapia:
+                case MapLayerProviders.Wikimapia:
                     layer = new Wikimapia(Application.StartupPath + Resources.cache_directory + "\\http_cache\\wikimapia");
                     break;
-                case VectorMapLayerProviders.None:
+                case MapLayerProviders.None:
                     throw new Exception("Нельзя создать поставщика слоя None");
+                default: throw new Exception("Данный поставщик слоя нельзя использовать в этом классе");
             }
         }
 

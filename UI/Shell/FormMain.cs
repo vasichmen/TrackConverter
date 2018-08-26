@@ -1370,8 +1370,10 @@ namespace TrackConverter.UI.Shell
         private void button1_Click(object sender, EventArgs e)
         {
             Graphics g= gmapControlMap.CreateGraphics();
-            Image im = Image.FromFile(@"D:\Clouds\Projects\CS\TrackConverter\tile.png");
-            g.DrawImage(im, new Point(0, 0));
+            var p = gmapControlMap.Position;
+            GPoint pt = gmapControlMap.MapProvider.Projection.FromPixelToTileXY(gmapControlMap.MapProvider.Projection.FromLatLngToPixel(p, (int)gmapControlMap.Zoom));
+            Image im = new Yandex(null).GetRastrTile(pt.X, pt.Y, (int)gmapControlMap.Zoom);
+            g.DrawImage(im, new Point(-100, -100));
         }
 
        

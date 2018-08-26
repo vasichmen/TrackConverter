@@ -55,7 +55,7 @@ namespace TrackConverter.UI.Map
 
             switch (Obj.LayerProvider)
             {
-                case VectorMapLayerProviders.Wikimapia:
+                case MapLayerProviders.Wikimapia:
                     Task load = null;
                     Task imgs = null;
                     try
@@ -163,7 +163,7 @@ namespace TrackConverter.UI.Map
                         Program.winMain.EndOperation();
                     }
                     break;
-                case VectorMapLayerProviders.None:
+                case MapLayerProviders.None:
                     throw new Exception("Заданный объект из неизвестного источника");
             }
         }

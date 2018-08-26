@@ -99,8 +99,9 @@ namespace TrackConverter.Lib.Classes.Options
             get
             {
                 return new List<VectorMapLayerProviderRecord>() {
-                        new VectorMapLayerProviderRecord(){ Enum = VectorMapLayerProviders.None, ID=0, Title = "Нет Слоя",IconName="\\Images\\layers\\none.png", MaxParallelPool = 1},
-                        new VectorMapLayerProviderRecord(){ Enum = VectorMapLayerProviders.Wikimapia, ID=1, Title = "Слой карты Wikimapia",IconName="\\Images\\layers\\wikimapia.png", MaxParallelPool = 1}
+                        new VectorMapLayerProviderRecord(){ Enum = MapLayerProviders.None, ID=0, Title = "Нет Слоя",IconName="\\Images\\layers\\none.png", MaxParallelPool = 1},
+                        new VectorMapLayerProviderRecord(){ Enum = MapLayerProviders.Wikimapia, ID=1, Title = "Слой карты Wikimapia",IconName="\\Images\\layers\\wikimapia.png", MaxParallelPool = 1},
+                        new VectorMapLayerProviderRecord(){ Enum = MapLayerProviders.YandexTraffic, ID=2, Title = "Яндекс.Пробки",IconName="\\Images\\layers\\yandex_traffic.png", MaxParallelPool = 1}
                     };
             }
             set { }

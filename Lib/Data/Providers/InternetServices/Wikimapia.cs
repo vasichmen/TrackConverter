@@ -258,7 +258,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                         string link = jt["url"].ToString();
                         string id = jt["id"].ToString();
                         pol.Name = name;
-                        VectorMapLayerObject lo = new VectorMapLayerObject(pol) { ID = int.Parse(id), Link = link, Name = name, LayerProvider = VectorMapLayerProviders.Wikimapia };
+                        VectorMapLayerObject lo = new VectorMapLayerObject(pol) { ID = int.Parse(id), Link = link, Name = name, LayerProvider = MapLayerProviders.Wikimapia };
                         res.Add(lo);
                     }
 
