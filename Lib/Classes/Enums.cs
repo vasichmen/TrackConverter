@@ -487,7 +487,17 @@ namespace TrackConverter
         /// <summary>
         /// карта треков OSM
         /// </summary>
-        OSMGpsTracks,
+        OSMGPSTracks,
+
+        /// <summary>
+        /// карта железных дорог
+        /// </summary>
+        OSMRailways,
+
+        /// <summary>
+        /// карта дорожного покрытия
+        /// </summary>
+        OSMRoadSurface,
 
         /// <summary>
         /// пробки яндекса

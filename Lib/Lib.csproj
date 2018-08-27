@@ -117,7 +117,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Classes\VectorMapLayerObject.cs" />
-    <Compile Include="Classes\VectorMapLayerProviderRecord.cs" />
+    <Compile Include="Classes\MapLayerProviderRecord.cs" />
     <Compile Include="Classes\MapProviderRecord.cs" />
     <Compile Include="Classes\MarkerTag.cs" />
     <Compile Include="Classes\Options\Common.cs" />

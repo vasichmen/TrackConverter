@@ -787,13 +787,15 @@ namespace TrackConverter.UI.Shell
         /// <param name="e"></param>
         internal void lrProvider_Click(object sender, EventArgs e)
         {
-            VectorMapLayerProviderRecord lpr = (VectorMapLayerProviderRecord)((ToolStripMenuItem)sender).Tag;
+            MapLayerProviderRecord lpr = (MapLayerProviderRecord)((ToolStripMenuItem)sender).Tag;
             switch (lpr.Enum)
             {
                 case MapLayerProviders.None:
                 case MapLayerProviders.Wikimapia:
                 case MapLayerProviders.YandexTraffic:
-                case MapLayerProviders.OSMGpsTracks:
+                case MapLayerProviders.OSMGPSTracks:
+                case MapLayerProviders.OSMRailways:
+                case MapLayerProviders.OSMRoadSurface:
                     formMain.gmapControlMap.LayerProvider = lpr.Enum;
                     break;
                 default:
@@ -801,7 +803,7 @@ namespace TrackConverter.UI.Shell
             }
             Vars.Options.Map.LayerProvider = lpr;
             foreach (ToolStripMenuItem ti in formMain.layerProviderToolStripMenuItem.DropDownItems)
-                if (((VectorMapLayerProviderRecord)(ti.Tag)).ID == lpr.ID)
+                if (((MapLayerProviderRecord)(ti.Tag)).ID == lpr.ID)
                     ti.Checked = true;
                 else
                     ti.Checked = false;

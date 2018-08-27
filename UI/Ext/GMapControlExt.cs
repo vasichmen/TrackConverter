@@ -132,7 +132,9 @@ namespace TrackConverter.UI.Ext
                             vectorLayerProviderEngine = new VectorMapLayer(value);
                             break;
                         case MapLayerProviders.YandexTraffic:
-                        case MapLayerProviders.OSMGpsTracks:
+                        case MapLayerProviders.OSMGPSTracks:
+                        case MapLayerProviders.OSMRailways:
+                        case MapLayerProviders.OSMRoadSurface:
                             rastrLayerProviderEngine = new RastrMapLayer(value);
                             break;
                     }
@@ -153,7 +155,9 @@ namespace TrackConverter.UI.Ext
                     case MapLayerProviders.YandexTraffic:
                         proj = new MercatorProjectionYandex();
                         break;
-                    case MapLayerProviders.OSMGpsTracks:
+                    case MapLayerProviders.OSMGPSTracks:
+                    case MapLayerProviders.OSMRailways:
+                    case MapLayerProviders.OSMRoadSurface:
                         proj = new MercatorProjection();
                         break;
                     case MapLayerProviders.Wikimapia:
@@ -180,6 +184,7 @@ namespace TrackConverter.UI.Ext
             this.MouseUp += GMapControlExt_MouseUp;
             this.OnMapZoomChanged += GMapControlExt_OnMapZoomChanged;
             this.OnPolygonEnter += GMapControlExt_OnPolygonEnter;
+            this.OnPolygonLeave += GMapControlExt_OnPolygonLeave;
             this.SizeChanged += GMapControlExt_SizeChanged;
             this.OnTileLoadComplete += GMapControlExt_OnTileLoadComplete;
             this.OnTileLoadStart += GMapControlExt_OnTileLoadStart;
@@ -200,7 +205,9 @@ namespace TrackConverter.UI.Ext
                 switch (LayerProvider)
                 {
                     case MapLayerProviders.YandexTraffic:
-                    case MapLayerProviders.OSMGpsTracks:
+                    case MapLayerProviders.OSMGPSTracks:
+                    case MapLayerProviders.OSMRailways:
+                    case MapLayerProviders.OSMRoadSurface:
                         foreach (var kv in this.loadedRastrAreas)
                         {
                             ShowRastrLayerTile(kv.Value, kv.Key, e.Graphics);
@@ -252,6 +259,15 @@ namespace TrackConverter.UI.Ext
             ToolTipPolygonTitles.AutoPopDelay = 10000;
             ToolTipPolygonTitles.InitialDelay = 50;
             ToolTipPolygonTitles.SetToolTip(this, text);
+        }
+
+        /// <summary>
+        /// при уходе курсора с объекта обновить подсказку
+        /// </summary>
+        /// <param name="item"></param>
+        private void GMapControlExt_OnPolygonLeave(GMapPolygon item)
+        {
+            this.GMapControlExt_OnPolygonEnter(item);
         }
 
         /// <summary>
@@ -585,12 +601,14 @@ namespace TrackConverter.UI.Ext
                         #endregion
 
                         case MapLayerProviders.YandexTraffic:
-                        case MapLayerProviders.OSMGpsTracks:
+                        case MapLayerProviders.OSMGPSTracks:
+                        case MapLayerProviders.OSMRailways:
+                        case MapLayerProviders.OSMRoadSurface:
 
                             #region ДЛЯ РАСТРОВЫХ СЛОЁВ
 
                             //области, которые необходимо загрузить
-                            
+
                             List<GPoint> tilesR = this.GetVisiblePixelTiles(LayerProjection);
 
                             int iR = 0; //количество загруженных тайлов

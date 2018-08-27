@@ -8,7 +8,7 @@ namespace TrackConverter.Lib.Classes
     /// <summary>
     /// информация о поставщике слоя на карте 
     /// </summary>
-    public class VectorMapLayerProviderRecord
+    public class MapLayerProviderRecord
     {
         /// <summary>
         /// значение перечисления
@@ -40,9 +40,9 @@ namespace TrackConverter.Lib.Classes
         /// </summary>
         /// <param name="id">ID поставщика</param>
         /// <returns></returns>
-        public static VectorMapLayerProviderRecord FromID(int id)
+        public static MapLayerProviderRecord FromID(int id)
         {
-            foreach (VectorMapLayerProviderRecord m in Vars.Options.Map.AllLayerProviders)
+            foreach (MapLayerProviderRecord m in Vars.Options.Map.AllLayerProviders)
                 if (m.ID == id)
                     return m;
             throw new ArgumentOutOfRangeException("Поставщика слоя с id " + id + " не обнаружено!");

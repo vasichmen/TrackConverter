@@ -8,64 +8,194 @@ using TrackConverter.Lib.Data.Interfaces;
 namespace TrackConverter.Lib.Data.Providers.InternetServices
 {
     /// <summary>
-    /// Работа с сервисом карт OSM
-    /// 
+    /// общий класс для работы с сервисами OSM 
     /// https://wiki.openstreetmap.org/wiki/RU:API_v0.6
     /// </summary>
-     class OSM :BaseConnection, IRastrMapLayerProvider
+    static class OSM
     {
         /// <summary>
-        /// Создаёт новый объект связи с сервисом с заданной папкой кэша запросов и временем хранения кэша
+        /// Работа с GPS треками OSM
         /// </summary>
-        /// <param name="cacheDirectory">папка с кэшем или null, если не надо использовать кэш</param>
-        /// <param name="duration">время хранения кэша в часах. По умолчанию - неделя</param>
-        public OSM(string cacheDirectory, int duration = 24 * 7) : base(cacheDirectory, duration) { }
-
-        /// <summary>
-        /// максимальное число попыток подключения
-        /// </summary>
-        public override int MaxAttempts
+        public class GpsTracks : BaseConnection, IRastrMapLayerProvider
         {
-            get
+            /// <summary>
+            /// Создаёт новый объект связи с сервисом с заданной папкой кэша запросов и временем хранения кэша
+            /// </summary>
+            /// <param name="cacheDirectory">папка с кэшем или null, если не надо использовать кэш</param>
+            /// <param name="duration">время хранения кэша в часах. По умолчанию - неделя</param>
+            public GpsTracks(string cacheDirectory, int duration = 24 * 7) : base(cacheDirectory, duration) { }
+
+            /// <summary>
+            /// максимальное число попыток подключения
+            /// </summary>
+            public override int MaxAttempts
             {
-                return 3;
+                get
+                {
+                    return 3;
+                }
             }
-        }
 
-        /// <summary>
-        /// минимальное время между запросами
-        /// </summary>
-        public override TimeSpan MinQueryInterval
-        {
-            get
+            /// <summary>
+            /// минимальное время между запросами
+            /// </summary>
+            public override TimeSpan MinQueryInterval
             {
-                return TimeSpan.FromMilliseconds(100);
+                get
+                {
+                    return TimeSpan.FromMilliseconds(100);
+                }
             }
-        }
 
-        #region IRastrMapLayerProvider
+            #region IRastrMapLayerProvider
+
+            /// <summary>
+            /// получить тайл GPS треков по тайловым координатам
+            /// </summary>
+            /// <param name="x"></param>
+            /// <param name="y"></param>
+            /// <param name="z">масштаб</param>
+            /// <returns></returns>
+            public Image GetRastrTile(long x, long y, int z)
+            {
+                //любой из этих серверов:
+                //https://a.gps-tile.openstreetmap.org/lines/13/4954/2570.png
+                //https://b.gps-tile.openstreetmap.org/lines/13/4954/2570.png
+                //https://c.gps-tile.openstreetmap.org/lines/13/4954/2570.png
+
+                //TODO: сделать случайный выбор сервера
+                string url = @"https://a.gps-tile.openstreetmap.org/lines/{0}/{1}/{2}.png";
+                url = string.Format(url, z, x, y);
+                Image res = GetImage(url);
+                return res;
+            }
+
+            #endregion
+
+        }
 
         /// <summary>
-        /// получить тайл GPS треков по тайловым координатам
+        /// Работа с GPS треками OSM
         /// </summary>
-        /// <param name="x"></param>
-        /// <param name="y"></param>
-        /// <param name="z">масштаб</param>
-        /// <returns></returns>
-        public Image GetRastrTile(long x, long y, int z)
+        public class RoadSurface : BaseConnection, IRastrMapLayerProvider
         {
-            //любой из этих серверов:
-            //https://a.gps-tile.openstreetmap.org/lines/13/4954/2570.png
-            //https://b.gps-tile.openstreetmap.org/lines/13/4954/2570.png
-            //https://c.gps-tile.openstreetmap.org/lines/13/4954/2570.png
+            /// <summary>
+            /// Создаёт новый объект связи с сервисом с заданной папкой кэша запросов и временем хранения кэша
+            /// </summary>
+            /// <param name="cacheDirectory">папка с кэшем или null, если не надо использовать кэш</param>
+            /// <param name="duration">время хранения кэша в часах. По умолчанию - неделя</param>
+            public RoadSurface(string cacheDirectory, int duration = 24 * 7) : base(cacheDirectory, duration) { }
 
-            string url = @"https://a.gps-tile.openstreetmap.org/lines/{0}/{1}/{2}.png";
-            url = string.Format(url, z, x, y);
-            Image res = GetImage(url);
-            return res;
+            /// <summary>
+            /// максимальное число попыток подключения
+            /// </summary>
+            public override int MaxAttempts
+            {
+                get
+                {
+                    return 3;
+                }
+            }
+
+            /// <summary>
+            /// минимальное время между запросами
+            /// </summary>
+            public override TimeSpan MinQueryInterval
+            {
+                get
+                {
+                    return TimeSpan.FromMilliseconds(100);
+                }
+            }
+
+            #region IRastrMapLayerProvider
+
+            /// <summary>
+            /// получить тайл дооржного покрытия по тайловым координатам
+            /// </summary>
+            /// <param name="x"></param>
+            /// <param name="y"></param>
+            /// <param name="z">масштаб</param>
+            /// <returns></returns>
+            public Image GetRastrTile(long x, long y, int z)
+            {
+                //любой из этих серверов:
+                //http://t0.beta.itoworld.com/25/136bdef4afc8d6e92586bc38e7b843c1/13/4954/2570.png
+                //http://t1.beta.itoworld.com/25/136bdef4afc8d6e92586bc38e7b843c1/13/4954/2570.png
+                //http://t2.beta.itoworld.com/25/136bdef4afc8d6e92586bc38e7b843c1/13/4954/2570.png
+                //http://t3.beta.itoworld.com/25/136bdef4afc8d6e92586bc38e7b843c1/13/4954/2570.png
+
+                //TODO: сделать случайный выбор сервера
+                string url = @"http://t0.beta.itoworld.com/25/136bdef4afc8d6e92586bc38e7b843c1/{0}/{1}/{2}.png";
+                url = string.Format(url, z, x, y);
+                Image res = GetImage(url);
+                return res;
+            }
+
+            #endregion
+
         }
 
-        #endregion
+        /// <summary>
+        /// Работа с GPS треками OSM
+        /// </summary>
+        public class Railways : BaseConnection, IRastrMapLayerProvider
+        {
+            /// <summary>
+            /// Создаёт новый объект связи с сервисом с заданной папкой кэша запросов и временем хранения кэша
+            /// </summary>
+            /// <param name="cacheDirectory">папка с кэшем или null, если не надо использовать кэш</param>
+            /// <param name="duration">время хранения кэша в часах. По умолчанию - неделя</param>
+            public Railways (string cacheDirectory, int duration = 24 * 7) : base(cacheDirectory, duration) { }
 
+            /// <summary>
+            /// максимальное число попыток подключения
+            /// </summary>
+            public override int MaxAttempts
+            {
+                get
+                {
+                    return 3;
+                }
+            }
+
+            /// <summary>
+            /// минимальное время между запросами
+            /// </summary>
+            public override TimeSpan MinQueryInterval
+            {
+                get
+                {
+                    return TimeSpan.FromMilliseconds(100);
+                }
+            }
+
+            #region IRastrMapLayerProvider
+
+            /// <summary>
+            /// получить тайл железных дорог по тайловым координатам
+            /// </summary>
+            /// <param name="x"></param>
+            /// <param name="y"></param>
+            /// <param name="z">масштаб</param>
+            /// <returns></returns>
+            public Image GetRastrTile(long x, long y, int z)
+            {
+                //любой из этих серверов:
+                //http://t0.beta.itoworld.com/15/136bdef4afc8d6e92586bc38e7b843c1/13/4954/2570.png
+                //http://t1.beta.itoworld.com/15/136bdef4afc8d6e92586bc38e7b843c1/13/4954/2570.png
+                //http://t2.beta.itoworld.com/15/136bdef4afc8d6e92586bc38e7b843c1/13/4954/2570.png
+                //http://t3.beta.itoworld.com/15/136bdef4afc8d6e92586bc38e7b843c1/13/4954/2570.png
+
+                //TODO: сделать случайный выбор сервера
+                string url = @"http://t0.beta.itoworld.com/15/136bdef4afc8d6e92586bc38e7b843c1/{0}/{1}/{2}.png";
+                url = string.Format(url, z, x, y);
+                Image res = GetImage(url);
+                return res;
+            }
+
+            #endregion
+
+        }
     }
 }

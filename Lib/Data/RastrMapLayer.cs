@@ -9,23 +9,33 @@ using TrackConverter.Lib.Data.Providers.InternetServices;
 namespace TrackConverter.Lib.Data
 {
     /// <summary>
-    /// TODO: комментарии методов
+    /// работа с растровыми слоями карты
     /// </summary>
     public class RastrMapLayer : IRastrMapLayerProvider
     {
-        private MapLayerProviders value;
+        private MapLayerProviders provider;
         private IRastrMapLayerProvider engine;
 
+        /// <summary>
+        /// создаёт новый обхект связи с указанным источником данных
+        /// </summary>
+        /// <param name="provider">провайдер слоя</param>
         public RastrMapLayer(MapLayerProviders provider)
         {
-            this.value = provider;
+            this.provider = provider;
             switch (provider)
             {
                 case MapLayerProviders.YandexTraffic:
                     engine = new Yandex(null);
                     break;
-                case MapLayerProviders.OSMGpsTracks:
-                    engine = new OSM(null);
+                case MapLayerProviders.OSMGPSTracks:
+                    engine = new OSM.GpsTracks(null);
+                    break;
+                case MapLayerProviders.OSMRailways:
+                    engine = new OSM.Railways(null);
+                    break;
+                case MapLayerProviders.OSMRoadSurface:
+                    engine = new OSM.RoadSurface(null);
                     break;
                 case MapLayerProviders.None:
                     throw new Exception("Нельзя создать поставщика слоя None");

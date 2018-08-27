@@ -63,7 +63,7 @@ namespace TrackConverter.Lib.Classes.Options
         /// <summary>
         /// поставщик слоя на карте
         /// </summary>
-        public VectorMapLayerProviderRecord LayerProvider { get; set; }
+        public MapLayerProviderRecord LayerProvider { get; set; }
 
         /// <summary>
         /// Если истина, то при открытии карты будут восстанавливаться последние маршруты и точки
@@ -94,15 +94,17 @@ namespace TrackConverter.Lib.Classes.Options
         /// <summary>
         /// список всех поддерживаемых поставщиков слоёв
         /// </summary>
-        public List<VectorMapLayerProviderRecord> AllLayerProviders
+        public List<MapLayerProviderRecord> AllLayerProviders
         {
             get
             {
-                return new List<VectorMapLayerProviderRecord>() {
-                        new VectorMapLayerProviderRecord(){ Enum = MapLayerProviders.None, ID=0, Title = "Нет Слоя",IconName="\\Images\\layers\\none.png", MaxParallelPool = 1},
-                        new VectorMapLayerProviderRecord(){ Enum = MapLayerProviders.Wikimapia, ID=1, Title = "Слой карты Wikimapia",IconName="\\Images\\layers\\wikimapia.png", MaxParallelPool = 1},
-                        new VectorMapLayerProviderRecord(){ Enum = MapLayerProviders.YandexTraffic, ID=2, Title = "Яндекс.Пробки",IconName="\\Images\\layers\\yandex_traffic.png", MaxParallelPool = 1},
-                        new VectorMapLayerProviderRecord(){ Enum = MapLayerProviders.OSMGpsTracks, ID=3, Title = "GPS треки OSM",IconName="\\Images\\layers\\osm_gps_tracks.png", MaxParallelPool = 1}
+                return new List<MapLayerProviderRecord>() {
+                        new MapLayerProviderRecord(){ Enum = MapLayerProviders.None, ID=0, Title = "Нет Слоя",IconName="\\Images\\layers\\none.png", MaxParallelPool = 1},
+                        new MapLayerProviderRecord(){ Enum = MapLayerProviders.Wikimapia, ID=1, Title = "Слой карты Wikimapia",IconName="\\Images\\layers\\wikimapia.png", MaxParallelPool = 1},
+                        new MapLayerProviderRecord(){ Enum = MapLayerProviders.YandexTraffic, ID=2, Title = "Яндекс.Пробки",IconName="\\Images\\layers\\yandex_traffic.png", MaxParallelPool = 1},
+                        new MapLayerProviderRecord(){ Enum = MapLayerProviders.OSMGPSTracks, ID=3, Title = "GPS треки OSM",IconName="\\Images\\layers\\osm_gps_tracks.png", MaxParallelPool = 1 },
+                        new MapLayerProviderRecord(){ Enum = MapLayerProviders.OSMRailways, ID=4, Title = "Железные дороги OSM",IconName="\\Images\\layers\\osm_railways.png", MaxParallelPool = 1},
+                        new MapLayerProviderRecord(){ Enum = MapLayerProviders.OSMRoadSurface, ID=5, Title = "Дорожное покрытие OSM",IconName="\\Images\\layers\\osm_roadsurface.png", MaxParallelPool = 1}
                     };
             }
             set { }
@@ -153,5 +155,5 @@ namespace TrackConverter.Lib.Classes.Options
         /// Если истина, то при редактировании не будут показываться маркеры азимутов
         /// </summary>
         public bool ShowAziMarkers { get; set; }
-            }
+    }
 }

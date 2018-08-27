@@ -315,7 +315,7 @@
     </Content>
     <Content Include="Docs\добавление действия для отмены.txt" />
     <Content Include="Docs\добавление иконки маркера.txt" />
-    <Content Include="Docs\добавление провайдера векторного слоя.txt" />
+    <Content Include="Docs\добавление провайдера растровогослоя.txt" />
     <Content Include="Docs\добавление провайдера карты.txt" />
     <Content Include="Docs\добавление типа путевой точки.txt" />
     <Content Include="Docs\добавление формата файла.txt" />
@@ -391,6 +391,12 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Images\layers\none.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\layers\osm_railways.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\layers\osm_roadsurface.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Images\layers\osm_gps_tracks.png">

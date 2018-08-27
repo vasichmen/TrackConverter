@@ -380,6 +380,12 @@ namespace TrackConverter.UI.Shell
             pointsHelper = new PointsHelper(this);
             mapHelper = new MapHelper(this);
             mainHelper = new MainHelper(this);
+
+#if DEBUG
+            this.button1.Visible = true;
+#else
+            this.button1.Visible = false;
+#endif
         }
 
         /// <summary>
@@ -438,7 +444,7 @@ namespace TrackConverter.UI.Shell
 
             //добавление поставщиков слоёв в основное меню
             layerProviderToolStripMenuItem.DropDownItems.Clear();
-            foreach (VectorMapLayerProviderRecord lpr in Vars.Options.Map.AllLayerProviders)
+            foreach (MapLayerProviderRecord lpr in Vars.Options.Map.AllLayerProviders)
             {
                 ToolStripMenuItem it1 = new ToolStripMenuItem();
                 it1.Text = lpr.Title;
