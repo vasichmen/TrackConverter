@@ -63,9 +63,10 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                 //https://b.gps-tile.openstreetmap.org/lines/13/4954/2570.png
                 //https://c.gps-tile.openstreetmap.org/lines/13/4954/2570.png
 
-                //TODO: сделать случайный выбор сервера
-                string url = @"https://a.gps-tile.openstreetmap.org/lines/{0}/{1}/{2}.png";
-                url = string.Format(url, z, x, y);
+                char server = new char[] { 'a', 'b', 'c' }[new Random().Next(2)];
+
+                string url = @"https://{3}.gps-tile.openstreetmap.org/lines/{0}/{1}/{2}.png";
+                url = string.Format(url, z, x, y, server);
                 Image res = GetImage(url);
                 return res;
             }
@@ -125,9 +126,10 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                 //http://t2.beta.itoworld.com/25/136bdef4afc8d6e92586bc38e7b843c1/13/4954/2570.png
                 //http://t3.beta.itoworld.com/25/136bdef4afc8d6e92586bc38e7b843c1/13/4954/2570.png
 
-                //TODO: сделать случайный выбор сервера
-                string url = @"http://t0.beta.itoworld.com/25/136bdef4afc8d6e92586bc38e7b843c1/{0}/{1}/{2}.png";
-                url = string.Format(url, z, x, y);
+                // int server = new Random(234).Next(3);
+                int server = 0;
+                string url = @"http://t{3}.beta.itoworld.com/25/136bdef4afc8d6e92586bc38e7b843c1/{0}/{1}/{2}.png";
+                url = string.Format(url, z, x, y, server);
                 Image res = GetImage(url);
                 return res;
             }
@@ -146,7 +148,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
             /// </summary>
             /// <param name="cacheDirectory">папка с кэшем или null, если не надо использовать кэш</param>
             /// <param name="duration">время хранения кэша в часах. По умолчанию - неделя</param>
-            public Railways (string cacheDirectory, int duration = 24 * 7) : base(cacheDirectory, duration) { }
+            public Railways(string cacheDirectory, int duration = 24 * 7) : base(cacheDirectory, duration) { }
 
             /// <summary>
             /// максимальное число попыток подключения
@@ -187,9 +189,10 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                 //http://t2.beta.itoworld.com/15/136bdef4afc8d6e92586bc38e7b843c1/13/4954/2570.png
                 //http://t3.beta.itoworld.com/15/136bdef4afc8d6e92586bc38e7b843c1/13/4954/2570.png
 
-                //TODO: сделать случайный выбор сервера
-                string url = @"http://t0.beta.itoworld.com/15/136bdef4afc8d6e92586bc38e7b843c1/{0}/{1}/{2}.png";
-                url = string.Format(url, z, x, y);
+                //int server = new Random(234).Next(3);
+                int server = 0;
+                string url = @"http://t{3}.beta.itoworld.com/15/136bdef4afc8d6e92586bc38e7b843c1/{0}/{1}/{2}.png";
+                url = string.Format(url, z, x, y, server);
                 Image res = GetImage(url);
                 return res;
             }

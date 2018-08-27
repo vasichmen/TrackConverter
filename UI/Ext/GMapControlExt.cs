@@ -163,6 +163,8 @@ namespace TrackConverter.UI.Ext
                     case MapLayerProviders.Wikimapia:
                         proj = new MercatorProjection();
                         break;
+                    case MapLayerProviders.None:
+                        return MapProvider.Projection;
                     default: throw new Exception("Для этого слоя не определена проекция карты!");
                 }
                 return proj;
@@ -695,6 +697,7 @@ namespace TrackConverter.UI.Ext
         /// </summary>
         private void ClearLayers()
         {
+            ToolTipPolygonTitles.RemoveAll(); //удаление подсказок на объектах
             vectorLayersOverlay.Polygons.Clear(); //очистка карты
             VectorLayerObjects.Clear(); //удаляем векторные объекты на экране
             loadedVectorAreas = new ConcurrentBag<PointLatLng>(); //очистка коллекции загруженных векторных областей
