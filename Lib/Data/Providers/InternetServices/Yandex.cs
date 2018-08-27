@@ -14,6 +14,7 @@ using TrackConverter.Lib.Tracking;
 using TrackConverter.Res.Properties;
 using Newtonsoft.Json;
 using System.Drawing;
+using System.Net;
 
 namespace TrackConverter.Lib.Data.Providers.InternetServices
 {
@@ -36,6 +37,9 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         /// временная папка для маршрутов
         /// </summary>
         private string temp_fold = null;
+
+        private string traffic_map = null;
+        private DateTime lastUpdate_tm = DateTime.MinValue;
 
         /// <summary>
         /// минимальное время между запросами
@@ -783,25 +787,78 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
             //из ответа берется версия (version) и кладется сюда в параметр tm:
             //https://jgo.maps.yandex.net/1.1/tiles?trf&l=trf&lang=ru_RU&x=39660&y=20544&z=16&scale=1&tm=1535267771
 
-            Random rn = new Random(298347923);
-            string cb_id = "153" + rn.Next(999999).ToString() + rn.Next(999999).ToString() + "507";
-            long _ = rn.Next(23497611, 99999999);
-            string url_tm = string.Format("https://api-maps.yandex.ru/services/coverage/v2/layers_stamps?lang=ru_RU&l=trf&callback=id_{0}&_={1}", cb_id, _);
-            string tm_jo = SendStringGetRequest(url_tm);
+            if (traffic_map == null)
+                traffic_map = getTrafficMapId();
 
-            //получение параметра tm для следующего запроса
-            int ind = tm_jo.IndexOf("version\":\"");
-            int l = tm_jo.IndexOf("\",\"zoomRan") - ind- "\",\"zoomRan".Length;
-            int start = ind + "version\":\"".Length;
-            string tm = tm_jo.Substring(start, l);
+            int att = 0;
+            while (att < MaxAttempts)
+            {
+                try
+                {
+                    string url = @"https://jgo.maps.yandex.net/1.1/tiles?trf&l=trf&lang=ru_RU&x={0}&y={1}&z={2}&scale=1&tm={3}";
+                    url = string.Format(url, x, y, z, traffic_map);
+                    //загрузка изображения
+                    try
+                    {
+                        Image res = GetImage(url);
+                        return res;
+                    }
+                    catch (ApplicationException ae)
+                    {
+                        traffic_map = getTrafficMapId();
+                        continue;
+                    }
+                }
+                catch (WebException we) //если ошибка подключения, то ожидаем немного и пробуем снова
+                {
+                    att++;
+                    if (att == MaxAttempts)
+                        throw we;
+                    Thread.Sleep(50);
+                    continue;
+                }
+            }
+            throw new Exception("Превышено количество попыток подключения");
+        }
 
-            
-            string url = @"https://jgo.maps.yandex.net/1.1/tiles?trf&l=trf&lang=ru_RU&x={0}&y={1}&z={2}&scale=1&tm={3}";
-            url = string.Format(url, x, y, z,tm);
+        /// <summary>
+        /// получить параметр tm для запроса пробок
+        /// </summary>
+        /// <returns></returns>
+        private string getTrafficMapId()
+        {
+            //последовательность запросов:
+            //сначала надо получить "версию". callback и _ можно поставить любые
+            //https://api-maps.yandex.ru/services/coverage/v2/layers_stamps?lang=ru_RU&l=trf&callback=id_153566920585677507&_=89244444
+            //из ответа берется версия (version) и кладется сюда в параметр tm:
+            //https://jgo.maps.yandex.net/1.1/tiles?trf&l=trf&lang=ru_RU&x=39660&y=20544&z=16&scale=1&tm=1535267771
 
-            //загрузка изображения
-            Image res = GetImage(url);
-            return res;
+            int att = 0;
+            while (att < MaxAttempts)
+            {
+                try
+                {
+                    Random rn = new Random(298347923);
+                    string cb_id = "153" + rn.Next(999999).ToString() + rn.Next(999999).ToString() + "507";
+                    long _ = rn.Next(23497611, 99999999);
+                    string url_tm = string.Format("https://api-maps.yandex.ru/services/coverage/v2/layers_stamps?lang=ru_RU&l=trf&callback=id_{0}&_={1}", cb_id, _);
+                    string tm_jo = SendStringGetRequest(url_tm);
+
+                    //получение параметра tm для следующего запроса
+                    int ind = tm_jo.IndexOf("version\":\"");
+                    int l = tm_jo.IndexOf("\",\"zoomRan") - ind - "\",\"zoomRan".Length;
+                    int start = ind + "version\":\"".Length;
+                    return tm_jo.Substring(start, l);
+                }
+                catch (WebException we) //если ошибка подключения, то ожидаем немного и пробуем снова
+                {
+                    if (att == MaxAttempts)
+                        throw we;
+                    Thread.Sleep(50);
+                    continue;
+                }
+            }
+            throw new Exception("Превышено количество попыток подключения");
         }
 
         #endregion

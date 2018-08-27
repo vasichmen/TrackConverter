@@ -28,7 +28,7 @@ namespace TrackConverter.Lib.Data
         }
 
         /// <summary>
-        /// получить картинку слоя по заданным координатам
+        /// получить картинку слоя по заданным тайловым координатам
         /// </summary>
         /// <param name="x"></param>
         /// <param name="y"></param>

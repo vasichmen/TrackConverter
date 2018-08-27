@@ -548,7 +548,7 @@ namespace TrackConverter.UI.Shell
         {
             //Выполняем проверку, какая клавиша мыши была нажата,
             //если левая, то устанавливаем переменной значение true.
-            if (e.Button == System.Windows.Forms.MouseButtons.Left)
+            if (e.Button == MouseButtons.Left)
             {
                 formMain.isLeftButtonDown = true;
             }
@@ -562,7 +562,7 @@ namespace TrackConverter.UI.Shell
         internal void ButtonClearSearchMarks(object sender, EventArgs e)
         {
             formMain.searchOverlay.Clear();
-            formMain.gmapControlMap.Refresh();
+            //formMain.gmapControlMap.Refresh();
         }
 
         internal void ButtonFindClick(object sender, EventArgs e)

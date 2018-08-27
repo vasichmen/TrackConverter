@@ -65,7 +65,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         /// <param name="operation">метод установки прогресса загрузки файла</param>
         /// <param name="afterLoadComplete">действие, выполняемое по окончании загрузки файла</param>
         /// <returns></returns>
-        public static void GetFileAsync(string url, Action<string> operation = null, Action<string> afterLoadComplete=null)
+        public static void GetFileAsync(string url, Action<string> operation = null, Action<string> afterLoadComplete = null)
         {
             int i = 0;
             string tmp_file = System.Windows.Forms.Application.StartupPath + Res.Properties.Resources.temp_directory + "\\" + i + ".tmp";
@@ -83,7 +83,8 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                     }
                 }
                 );
-            client.DownloadFileCompleted += new AsyncCompletedEventHandler((sender,e)=> {
+            client.DownloadFileCompleted += new AsyncCompletedEventHandler((sender, e) =>
+            {
                 if (afterLoadComplete != null)
                     afterLoadComplete.Invoke(tmp_file);
                 client.Dispose();
@@ -99,16 +100,30 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         public static Image GetImage(string url)
         {
             WebClient wc = new WebClient();
-            Stream str= wc.OpenRead(url);
-            if (wc.ResponseHeaders[HttpResponseHeader.ContentLength] == "0")
-                return new Bitmap(256,256);
-            Image res = Image.FromStream(str);
-            str.Close();
-            wc.Dispose();
-            return res;
+            try
+            {
+                Stream str = wc.OpenRead(url);
+                if (wc.ResponseHeaders[HttpResponseHeader.ContentLength] == "0")
+                    return new Bitmap(256, 256);
+                Image res = Image.FromStream(str);
+                str.Close();
+                wc.Dispose();
+                return res;
+            }
+            catch (WebException ex)
+            {
+                Stream resp = ex.Response.GetResponseStream();
+                StreamReader sr = new StreamReader(resp);
+                string ans = sr.ReadToEnd();
+                sr.Close();
+                if (ex.Status == WebExceptionStatus.ProtocolError)
+                    throw new ApplicationException(ans,ex);
+                else
+                    return new Bitmap(256, 256);
+            }
         }
 
-      
+
 
         /// <summary>
         /// Минимальное время между запросами к серверу. Значение по умолчанию 200 мс.

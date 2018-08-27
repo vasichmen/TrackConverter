@@ -16,19 +16,26 @@ using TrackConverter.Lib.Mathematic.Geodesy.Projections.GMapImported;
 namespace TrackConverter.UI.Ext
 {
     /// <summary>
-    /// расширенный класс области карты  
+    /// область карты с возможностью отображения слоёв
     /// </summary>
     public class GMapControlExt : GMapControl
     {
+        #region поля
+
+        /// <summary>
+        /// если истина, то вся первичная настройка завершена
+        /// </summary>
+        public bool isControlLoaded = false;
+
         /// <summary>
         /// слой на карте для доп. слоя
         /// </summary>
-        private GMapOverlay layersOverlay;
+        private GMapOverlay vectorLayersOverlay;
 
         /// <summary>
         /// загруженные объекты (для проверки существования этого объекта на экране)
         /// </summary>
-        private Dictionary<int, VectorMapLayerObject> LayerObjects = new Dictionary<int, VectorMapLayerObject>();
+        private Dictionary<int, VectorMapLayerObject> VectorLayerObjects = new Dictionary<int, VectorMapLayerObject>();
 
         /// <summary>
         /// список объектов, выделенных на карте
@@ -41,9 +48,14 @@ namespace TrackConverter.UI.Ext
         private ConcurrentBag<PointLatLng> loadedVectorAreas;
 
         /// <summary>
+        /// загруженные области с растровыми тайлами
+        /// </summary>
+        private ConcurrentDictionary<GPoint, Image> loadedRastrAreas;
+
+        /// <summary>
         /// ID слоя с объектами
         /// </summary>
-        private string layersOverlayID = "layersOverlay";
+        private string vectorLayersOverlayID = "vectorLayersOverlay";
 
         /// <summary>
         /// цвет границы объекта
@@ -85,10 +97,6 @@ namespace TrackConverter.UI.Ext
         /// </summary>
         private RastrMapLayer rastrLayerProviderEngine;
 
-        /// <summary>
-        /// если истина, то вся первичная настройка завершена
-        /// </summary>
-        public bool isControlLoaded = false;
 
         /// <summary>
         /// если истина, то все тайлы карты загружены
@@ -96,13 +104,52 @@ namespace TrackConverter.UI.Ext
         private bool isTilesLoaded = false;
 
         /// <summary>
+        /// текущий поставщик слоёв для карты
+        /// </summary>
+        private MapLayerProviders layerProvider;
+
+        #endregion
+
+        #region cвойства
+
+        /// <summary>
+        /// Поставщик слоя для карты
+        /// </summary>
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public MapLayerProviders LayerProvider
+        {
+            get { return layerProvider; }
+            set
+            {
+                layerProvider = value;
+                ClearLayers();
+                if (value != MapLayerProviders.None)
+                {
+                    switch (value)
+                    {
+                        case MapLayerProviders.Wikimapia:
+                            vectorLayerProviderEngine = new VectorMapLayer(value);
+                            break;
+                        case MapLayerProviders.YandexTraffic:
+                            rastrLayerProviderEngine = new RastrMapLayer(value);
+                            break;
+                    }
+                }
+                RefreshLayers();
+            }
+        }
+
+        #endregion
+
+        /// <summary>
         /// создаёт новый объект GMapControlExt
         /// </summary>
         public GMapControlExt() : base()
         {
-            layersOverlay = new GMapOverlay(layersOverlayID);
+            vectorLayersOverlay = new GMapOverlay(vectorLayersOverlayID);
             loadedVectorAreas = new ConcurrentBag<PointLatLng>();
-            this.Overlays.Add(layersOverlay);
+            loadedRastrAreas = new ConcurrentDictionary<GPoint, Image>();
+            this.Overlays.Add(vectorLayersOverlay);
 
             //добавляем событие обновления слоёв карты
             this.MouseUp += GMapControlExt_MouseUp;
@@ -111,13 +158,47 @@ namespace TrackConverter.UI.Ext
             this.SizeChanged += GMapControlExt_SizeChanged;
             this.OnTileLoadComplete += GMapControlExt_OnTileLoadComplete;
             this.OnTileLoadStart += GMapControlExt_OnTileLoadStart;
+            this.Paint += GMapControlExt_Paint;
         }
 
+        #region события карты 
+
+        /// <summary>
+        /// при перерисовке контрола надо перерисовывать астровые слои
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void GMapControlExt_Paint(object sender, PaintEventArgs e)
+        {
+            //if (this.IsDragging)
+            //return;
+
+            lock (loadedRastrAreas)
+            {
+                switch (LayerProvider)
+                {
+                    case MapLayerProviders.YandexTraffic:
+                        foreach (var kv in this.loadedRastrAreas)
+                        {
+                            ShowRastrLayerTile(kv.Value, kv.Key, e.Graphics);
+                        }
+                        break;
+                }
+            }
+        }
+
+        /// <summary>
+        /// устанавливает флаг начала загрузки карты
+        /// </summary>
         private void GMapControlExt_OnTileLoadStart()
         {
             isTilesLoaded = false;
         }
 
+        /// <summary>
+        /// устанавливает флаг окончания загрузки карты
+        /// </summary>
+        /// <param name="ElapsedMilliseconds"></param>
         private void GMapControlExt_OnTileLoadComplete(long ElapsedMilliseconds)
         {
             isTilesLoaded = true;
@@ -173,37 +254,249 @@ namespace TrackConverter.UI.Ext
                 RefreshLayers();
         }
 
-        /// <summary>
-        /// текущий поставщик слоёв для карты
-        /// </summary>
-        private MapLayerProviders layerProvider;
+        #endregion
+
+        #region растровые слои
 
         /// <summary>
-        /// Поставщик слоя для карты
+        /// возвращает координаты верхних левых углов тайлов, которые сейчас виды на экране, исключая уже загруженные
         /// </summary>
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public MapLayerProviders LayerProvider
+        /// <returns></returns>
+        private List<GPoint> GetVisiblePixelTiles()
         {
-            get { return layerProvider; }
-            set
-            {
-                layerProvider = value;
-                ClearLayers();
-                if (value != MapLayerProviders.None)
+            int zoom = (int)Zoom;
+            RectLatLng viewArea = GetViewArea();
+            PureProjection proj = this.MapProvider.Projection;
+
+            GPoint lt_pix = proj.FromLatLngToPixel(viewArea.LocationTopLeft, zoom);
+            GPoint rb_pix = proj.FromLatLngToPixel(viewArea.LocationRightBottom, zoom);
+
+            long x_from = ((int)(lt_pix.X / 256)); //верхние границы с округлнием в меньшую сторону
+            long y_from = ((int)(lt_pix.Y / 256));
+            long x_step = 1;
+            long y_step = 1;
+            long y_to = (long)Math.Ceiling(rb_pix.Y / 256d); //нижние границы с округлением в большую сторону
+            long x_to = (long)Math.Ceiling(rb_pix.X / 256d);
+
+            List<GPoint> result = new List<GPoint>();
+            for (long y = y_from + y_step; y <= y_to; y += y_step)
+                for (long x = x_from; x < x_to; x += x_step)
                 {
-                    switch (value)
-                    {
-                        case MapLayerProviders.Wikimapia:
-                            vectorLayerProviderEngine = new VectorMapLayer(value);
-                            break;
-                        case MapLayerProviders.YandexTraffic:
-                            rastrLayerProviderEngine = new RastrMapLayer(value);
-                            break;
-                    }
+                    GPoint rll = new GPoint(x, y);
+                    if (!isRastrAreaLoaded(rll))
+                        result.Add(rll);
                 }
-                RefreshLayers();
+
+            return result;
+        }
+
+        /// <summary>
+        /// возвращает истину, если заданная область nar полностью покрывается областями из списка this.loadedRastrAreas
+        /// </summary>
+        /// <param name="nar">проверяемая область</param>
+        /// <returns></returns>
+        private bool isRastrAreaLoaded(GPoint nar)
+        {
+            return loadedRastrAreas.ContainsKey(nar);
+        }
+
+        /// <summary>
+        /// добавление на карту тайла растрового слоя 
+        /// </summary>
+        /// <param name="tile"></param>
+        /// <param name="position"></param>
+        /// <param name="gr">если null, то используется площадь для рисования по умолчанию rastrLayersGraphics</param>
+        private void ShowRastrLayerTile(Image tile, GPoint position, Graphics gr = null)
+        {
+            //ожидание завершения загрузки карты
+            while (!isTilesLoaded)
+                Thread.Sleep(30);
+
+
+            //выбор проекции слоя зависит от поставщика
+            PureProjection proj;
+            switch (layerProvider)
+            {
+                case MapLayerProviders.YandexTraffic:
+                    proj = new MercatorProjectionYandex();
+                    break;
+                case MapLayerProviders.Wikimapia:
+                    return;
+                default: throw new Exception("Для этого слоя не определена проекция карты!");
+            }
+            RectLatLng viewArea = GetViewArea(proj);
+            GPoint va_lt_pix = proj.FromLatLngToPixel(viewArea.LocationTopLeft, (int)Zoom);
+
+
+            long x = 0, y = 0;
+            x = position.X * 256 - va_lt_pix.X;
+            y = position.Y * 256 - va_lt_pix.Y;
+            if (gr == null)
+                gr = rastrLayersGraphics;
+            lock (gr)
+            {
+                try
+                {
+                    gr.DrawImage(tile, (int)x, (int)y);
+                }
+                catch (Exception) { }
+            }
+
+        }
+
+
+        #endregion
+
+        #region векторные слои
+
+        /// <summary>
+        /// возвращает области-тайлы, которые сейчас выдны на экране. При этом исключаются области, загруженные ранее.
+        /// </summary>
+        /// <returns></returns>
+        private List<RectLatLng> GetVisibleLatLngTiles()
+        {
+            //тайловый способ
+            //https://tech.yandex.ru/maps/doc/jsapi/2.1/theory/index-docpage/#tile_coordinates
+            int zoom = (int)Zoom;
+            RectLatLng viewArea = GetViewArea();
+            PureProjection proj = this.MapProvider.Projection;
+
+            GPoint lt_pix = proj.FromLatLngToPixel(viewArea.LocationTopLeft, zoom);
+            GPoint rb_pix = proj.FromLatLngToPixel(viewArea.LocationRightBottom, zoom);
+
+            GSize tile_size = proj.TileSize;
+
+            long x_from = ((int)(lt_pix.X / 256)) * 256; //верхние границы с округлнием в меньшую сторону
+            long y_from = ((int)(lt_pix.Y / 256)) * 256;
+            long x_step = tile_size.Width;
+            long y_step = tile_size.Height;
+            long y_to = (long)Math.Ceiling(rb_pix.Y / 256d) * 256; //нижние границы с округлением в большую сторону
+            long x_to = (long)Math.Ceiling(rb_pix.X / 256d) * 256;
+
+
+            List<RectLatLng> result = new List<RectLatLng>();
+            for (long y = y_from + y_step; y <= y_to; y += y_step)
+                for (long x = x_from; x < x_to; x += x_step)
+                {
+                    PointLatLng lt = proj.FromPixelToLatLng(x, y, zoom);
+                    PointLatLng rb = proj.FromPixelToLatLng(x + x_step, y + y_step, zoom);
+
+                    SizeLatLng sz = new SizeLatLng(rb.Lat - lt.Lat, rb.Lng - lt.Lng);
+
+                    RectLatLng rll = new RectLatLng(lt, sz);
+                    if (!isVectorAreaLoaded(rll))
+                        result.Add(rll);
+                }
+
+            return result;
+        }
+
+        /// <summary>
+        /// возвращает истину, если заданная область nar есть в списке this.loadedVectorAreas
+        /// </summary>
+        /// <param name="nar">проверяемая область</param>
+        /// <returns></returns>
+        private bool isVectorAreaLoaded(RectLatLng nar)
+        {
+            foreach (var area in loadedVectorAreas)
+            {
+                if (area == nar.LocationMiddle)
+                    return true;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// прорисовка объекта слоя на карте (потокобезопасный)
+        /// </summary>
+        /// <param name="obj"></param>
+        private void ShowVectorLayerObject(VectorMapLayerObject obj)
+        {
+            if (VectorLayerObjects.ContainsKey(obj.ID))
+                return;
+            else
+                VectorLayerObjects.Add(obj.ID, obj);
+
+            bool selected = SelectedPolygons.Contains(obj.ID);
+
+            Action act = new Action(() =>
+                {
+                    if (LayerProvider == MapLayerProviders.None)
+                        return;
+                    obj.Geometry.Fill = selected ? selectedPolygonBrush : polygonBrush;
+                    obj.Geometry.Stroke = obj.Invisible ? invisPolygonStroke : polygonStroke;
+                    obj.Geometry.Tag = obj;
+                    obj.Geometry.IsHitTestVisible = true;
+                    vectorLayersOverlay.Polygons.Add(obj.Geometry);
+                });
+
+            if (!this.IsDisposed)
+            {
+                if (this.InvokeRequired)
+                    this.Invoke(act);
+                else
+                    act.Invoke();
             }
         }
+
+        /// <summary>
+        /// быстрое добавление нескольких объектов
+        /// </summary>
+        /// <param name="list">коллекция объектов</param>
+        private void ShowVectorLayerObjects(List<VectorMapLayerObject> list)
+        {
+            this.SuspendLayout();
+            foreach (VectorMapLayerObject obj in list)
+                ShowVectorLayerObject(obj);
+            this.ResumeLayout(false);
+        }
+
+        /// <summary>
+        /// возвращает список объектов слоя , на которых находится курсор
+        /// </summary>
+        /// <returns></returns>
+        public List<VectorMapLayerObject> GetVectorObjectsUnderCursor()
+        {
+            List<VectorMapLayerObject> res = new List<VectorMapLayerObject>();
+            foreach (GMapPolygon pol in this.vectorLayersOverlay.Polygons)
+                if (pol.IsMouseOver)
+                    res.Add(pol.Tag as VectorMapLayerObject);
+            return res;
+        }
+
+        /// <summary>
+        /// выделение заданного полигона на карте (при показе доп. информации об объекте)
+        /// </summary>
+        /// <param name="geometry"></param>
+        internal void SelectPolygon(int id)
+        {
+            foreach (GMapPolygon pol in this.vectorLayersOverlay.Polygons)
+                if ((pol.Tag as VectorMapLayerObject).ID == id)
+                {
+                    this.SelectedPolygons.Add(id);
+                    pol.Fill = this.selectedPolygonBrush;
+                    break;
+                }
+        }
+
+        /// <summary>
+        /// снятие выделение с объекта
+        /// </summary>
+        /// <param name="geometry"></param>
+        internal void DisSelectPolygon(int id)
+        {
+            this.SelectedPolygons.Remove(id);
+            foreach (GMapPolygon pol in this.vectorLayersOverlay.Polygons)
+                if ((pol.Tag as VectorMapLayerObject).ID == id)
+                {
+                    pol.Fill = this.polygonBrush;
+                    break;
+                }
+        }
+
+        #endregion
+
+        #region вспомогательные методы
 
         /// <summary>
         /// обновление слоёв на карте (добавление незагруженных областей)
@@ -256,23 +549,22 @@ namespace TrackConverter.UI.Ext
                                {
                                    try
                                    {
+                                       //если во время выполнения операции изменились параметры отображения, то выходим
+                                       if (zoom != (int)Zoom || //масштаб карты
+                                                this.LayerProvider != provider || //источник данных
+                                                position != this.Position || //центр карты
+                                                height != this.Height || //высота элемента
+                                                width != this.Width) //ширина элемента
+                                           return;
+
                                        List<VectorMapLayerObject> nobj = this.vectorLayerProviderEngine.GetObjects(tile, minPerimeter, (int)Zoom);
-                                       loadedVectorAreas.Add(tile.LocationMiddle);
                                        if (!this.IsDisposed)
                                        {
-                                           //если во время выполнения операции изменились параметры отображения, то выходим
-                                           if (zoom != (int)Zoom || //масштаб карты
-                                                    this.LayerProvider != provider || //источник данных
-                                                    position != this.Position || //центр карты
-                                                    height != this.Height || //высота элемента
-                                                    width != this.Width) //ширина элемента
-                                               return;
+                                           loadedVectorAreas.Add(tile.LocationMiddle);
                                            ShowVectorLayerObjects(nobj);
+                                           string prc = (((double)i++ / tiles.Count) * 100d).ToString("0");
+                                           Program.winMain.setCurrentOperation("Загрузка слоёв " + provider.ToString() + ", завершено " + prc + "%");
                                        }
-                                       string prc = (((double)i++ / tiles.Count) * 100d).ToString("0");
-                                       Program.winMain.setCurrentOperation("Загрузка слоёв " + LayerProvider.ToString() + ", завершено " + prc + "%");
-
-
                                    }
                                    catch (Exception e) //ловим ошибки при отсутствии интернета
                                    { }
@@ -292,16 +584,31 @@ namespace TrackConverter.UI.Ext
                             {
                                 try
                                 {
+                                    //если во время выполнения операции изменились параметры отображения, то выходим
+                                    if (zoom != (int)Zoom || //масштаб карты
+                                             this.LayerProvider != provider || //источник данных
+                                             position != this.Position || //центр карты
+                                             height != this.Height || //высота элемента
+                                             width != this.Width) //ширина элемента
+                                        return;
+
                                     Image tl = rastrLayerProviderEngine.GetRastrTile(tile.X, tile.Y, (int)Zoom);
-                                    ShowRastrLayerTile(tl, tile);
-                                    string prc = (((double)iR++ / tilesR.Count) * 100d).ToString("0");
-                                    Program.winMain.setCurrentOperation("Загрузка слоёв " + LayerProvider.ToString() + ", завершено " + prc + "%");
+                                    if (!this.IsDisposed)
+                                    {
+                                        loadedRastrAreas.TryAdd(tile, tl);
+                                        ShowRastrLayerTile(tl, tile);
+                                        string prc = (((double)iR++ / tilesR.Count) * 100d).ToString("0");
+                                        Program.winMain.setCurrentOperation("Загрузка слоёв " + LayerProvider.ToString() + ", завершено " + prc + "%");
+                                    }
                                 }
                                 catch (Exception e) //ловим ошибки при отсутствии интернета
                                 { }
                             });
                             break;
                         #endregion
+
+                        case MapLayerProviders.None:
+                            return;
 
                         default: throw new Exception("Нет обработчика этого поставщика слоя");
 
@@ -320,109 +627,6 @@ namespace TrackConverter.UI.Ext
                 return;
             }
 
-        }
-
-        /// <summary>
-        /// возвращает координаты верхних левых углов тайлов, которые сейчас виды на экране
-        /// </summary>
-        /// <returns></returns>
-        private List<GPoint> GetVisiblePixelTiles()
-        {
-            int zoom = (int)Zoom;
-            RectLatLng viewArea = GetViewArea();
-            PureProjection proj = this.MapProvider.Projection;
-
-            GPoint lt_pix = proj.FromLatLngToPixel(viewArea.LocationTopLeft, zoom);
-            GPoint rb_pix = proj.FromLatLngToPixel(viewArea.LocationRightBottom, zoom);
-
-            long x_from = ((int)(lt_pix.X / 256)); //верхние границы с округлнием в меньшую сторону
-            long y_from = ((int)(lt_pix.Y / 256));
-            long x_step = 1;
-            long y_step = 1;
-            long y_to = (long)Math.Ceiling(rb_pix.Y / 256d); //нижние границы с округлением в большую сторону
-            long x_to = (long)Math.Ceiling(rb_pix.X / 256d);
-
-            List<GPoint> result = new List<GPoint>();
-            for (long y = y_from + y_step; y <= y_to; y += y_step)
-                for (long x = x_from; x < x_to; x += x_step)
-                {
-                    GPoint rll = new GPoint(x, y);
-                    //if (!isAreaLoaded(rll))
-                    result.Add(rll);
-                }
-
-            return result;
-        }
-
-        /// <summary>
-        /// возвращает области-тайлы, которые сейчас выдны на экране. При этом исключаются области, загруженные ранее.
-        /// </summary>
-        /// <returns></returns>
-        private List<RectLatLng> GetVisibleLatLngTiles()
-        {
-            //тайловый способ
-            //https://tech.yandex.ru/maps/doc/jsapi/2.1/theory/index-docpage/#tile_coordinates
-            int zoom = (int)Zoom;
-            RectLatLng viewArea = GetViewArea();
-            PureProjection proj = this.MapProvider.Projection;
-
-            GPoint lt_pix = proj.FromLatLngToPixel(viewArea.LocationTopLeft, zoom);
-            GPoint rb_pix = proj.FromLatLngToPixel(viewArea.LocationRightBottom, zoom);
-
-            GSize tile_size = proj.TileSize;
-
-            long x_from = ((int)(lt_pix.X / 256)) * 256; //верхние границы с округлнием в меньшую сторону
-            long y_from = ((int)(lt_pix.Y / 256)) * 256;
-            long x_step = tile_size.Width;
-            long y_step = tile_size.Height;
-            long y_to = (long)Math.Ceiling(rb_pix.Y / 256d) * 256; //нижние границы с округлением в большую сторону
-            long x_to = (long)Math.Ceiling(rb_pix.X / 256d) * 256;
-
-
-            List<RectLatLng> result = new List<RectLatLng>();
-            for (long y = y_from + y_step; y <= y_to; y += y_step)
-                for (long x = x_from; x < x_to; x += x_step)
-                {
-                    PointLatLng lt = proj.FromPixelToLatLng(x, y, zoom);
-                    PointLatLng rb = proj.FromPixelToLatLng(x + x_step, y + y_step, zoom);
-
-                    SizeLatLng sz = new SizeLatLng(rb.Lat - lt.Lat, rb.Lng - lt.Lng);
-
-                    RectLatLng rll = new RectLatLng(lt, sz);
-                    if (!isVectorAreaLoaded(rll))
-                        result.Add(rll);
-                }
-
-            return result;
-
-            ////деление экрана на части
-            //List<RectLatLng> res = new List<RectLatLng>();
-            //RectLatLng area = GetViewArea();
-            //double step_vert = (area.Top - area.Bottom) / 5d;
-            //double step_hor = (area.Right - area.Left) / 5d;
-            //for (double i = area.Top; i > area.Bottom; i -= step_vert)
-            //    for (double j = area.Right; j > area.Left; j -= step_hor)
-            //    {
-            //        RectLatLng nar = new RectLatLng(i, j - step_hor, step_hor, step_vert);
-            //        if (!isAreaLoaded(nar))
-            //            res.Add(nar);
-            //    }
-            //return res;
-        }
-
-        /// <summary>
-        /// возвращает истину, если заданная область nar полностью покрывается областями из списка this.loadedAreas
-        /// </summary>
-        /// <param name="nar">проверяемая область</param>
-        /// <returns></returns>
-        private bool isVectorAreaLoaded(RectLatLng nar)
-        {
-            foreach (var area in loadedVectorAreas)
-            {
-                if (area == nar.LocationMiddle)
-                    return true;
-            }
-            return false;
         }
 
         /// <summary>
@@ -455,144 +659,20 @@ namespace TrackConverter.UI.Ext
         }
 
         /// <summary>
-        /// прорисовка объекта слоя на карте (потокобезопасный)
-        /// </summary>
-        /// <param name="obj"></param>
-        private void ShowVectorLayerObject(VectorMapLayerObject obj)
-        {
-            if (LayerObjects.ContainsKey(obj.ID))
-                return;
-            else
-                LayerObjects.Add(obj.ID, obj);
-
-            bool selected = SelectedPolygons.Contains(obj.ID);
-
-            Action act = new Action(() =>
-                {
-                    if (LayerProvider == MapLayerProviders.None)
-                        return;
-                    obj.Geometry.Fill = selected ? selectedPolygonBrush : polygonBrush;
-                    obj.Geometry.Stroke = obj.Invisible ? invisPolygonStroke : polygonStroke;
-                    obj.Geometry.Tag = obj;
-                    obj.Geometry.IsHitTestVisible = true;
-                    layersOverlay.Polygons.Add(obj.Geometry);
-                });
-
-            if (!this.IsDisposed)
-            {
-                if (this.InvokeRequired)
-                    this.Invoke(act);
-                else
-                    act.Invoke();
-            }
-        }
-
-        /// <summary>
-        /// быстрое добавление нескольких объектов
-        /// </summary>
-        /// <param name="list">коллекция объектов</param>
-        private void ShowVectorLayerObjects(List<VectorMapLayerObject> list)
-        {
-            this.SuspendLayout();
-            foreach (VectorMapLayerObject obj in list)
-                ShowVectorLayerObject(obj);
-            this.ResumeLayout(false);
-        }
-
-        /// <summary>
-        /// добавление на карту тайла растрового слоя 
-        /// </summary>
-        /// <param name="tile"></param>
-        /// <param name="position"></param>
-        private void ShowRastrLayerTile(Image tile, GPoint position)
-        {
-            //ожидание завершения загрузки карты
-            while (!isTilesLoaded)
-                Thread.Sleep(30);
-
-
-            //выбор проекции слоя зависит от поставщика
-            PureProjection proj;
-            switch (layerProvider)
-            {
-                case MapLayerProviders.YandexTraffic:
-                    proj = new MercatorProjectionYandex();
-                    break;
-                case MapLayerProviders.Wikimapia:
-                    return;
-                default: throw new Exception("Для этого слоя не определена проекция карты!");
-            }
-            RectLatLng viewArea = GetViewArea(proj);
-            GPoint va_lt_pix =proj.FromLatLngToPixel(viewArea.LocationTopLeft, (int)Zoom);
-
-
-            long x = 0, y = 0;
-            x = position.X * 256 - va_lt_pix.X;
-            y = position.Y * 256 - va_lt_pix.Y;
-
-            lock (rastrLayersGraphics)
-            {
-                rastrLayersGraphics.DrawImage(tile, (int)x, (int)y);
-            }
-
-        }
-
-        /// <summary>
-        /// возвращает список объектов слоя , на которых находится курсор
-        /// </summary>
-        /// <returns></returns>
-        public List<VectorMapLayerObject> GetVectorObjectsUnderCursor()
-        {
-            List<VectorMapLayerObject> res = new List<VectorMapLayerObject>();
-            foreach (GMapPolygon pol in this.layersOverlay.Polygons)
-                if (pol.IsMouseOver)
-                    res.Add(pol.Tag as VectorMapLayerObject);
-            return res;
-        }
-
-        /// <summary>
-        /// выделение заданного полигона на карте (при показе доп. информации об объекте)
-        /// </summary>
-        /// <param name="geometry"></param>
-        internal void SelectPolygon(int id)
-        {
-            foreach (GMapPolygon pol in this.layersOverlay.Polygons)
-                if ((pol.Tag as VectorMapLayerObject).ID == id)
-                {
-                    this.SelectedPolygons.Add(id);
-                    pol.Fill = this.selectedPolygonBrush;
-                    this.Refresh();
-                    break;
-                }
-        }
-
-        /// <summary>
-        /// снятие выделение с объекта
-        /// </summary>
-        /// <param name="geometry"></param>
-        internal void DisSelectPolygon(int id)
-        {
-            this.SelectedPolygons.Remove(id);
-            foreach (GMapPolygon pol in this.layersOverlay.Polygons)
-                if ((pol.Tag as VectorMapLayerObject).ID == id)
-                {
-                    pol.Fill = this.polygonBrush;
-                    this.Refresh();
-                    break;
-                }
-        }
-
-        /// <summary>
         /// очичтить слои карты
         /// </summary>
         private void ClearLayers()
         {
-            layersOverlay.Polygons.Clear(); //очистка карты
-            LayerObjects.Clear(); //удаляем объекты на экране
-            loadedVectorAreas = new ConcurrentBag<PointLatLng>(); //очистка коллекции загруженных областей
+            vectorLayersOverlay.Polygons.Clear(); //очистка карты
+            VectorLayerObjects.Clear(); //удаляем векторные объекты на экране
+            loadedVectorAreas = new ConcurrentBag<PointLatLng>(); //очистка коллекции загруженных векторных областей
+            loadedRastrAreas.Clear(); //очистка растрового слоя
             if (rastrLayersGraphics != null)
                 rastrLayersGraphics.Clear(Color.Transparent); //очистка слоя рисования растровых слоёв
-            this.Refresh();
+            //this.Refresh();
         }
+
+        #endregion
+
     }
 }
