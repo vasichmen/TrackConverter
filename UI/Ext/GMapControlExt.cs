@@ -12,6 +12,7 @@ using TrackConverter.Lib.Classes;
 using TrackConverter.Lib.Data;
 using TrackConverter.Lib.Tracking;
 using TrackConverter.Lib.Mathematic.Geodesy.Projections.GMapImported;
+using GMap.NET.Projections;
 
 namespace TrackConverter.UI.Ext
 {
@@ -131,6 +132,7 @@ namespace TrackConverter.UI.Ext
                             vectorLayerProviderEngine = new VectorMapLayer(value);
                             break;
                         case MapLayerProviders.YandexTraffic:
+                        case MapLayerProviders.OSMGpsTracks:
                             rastrLayerProviderEngine = new RastrMapLayer(value);
                             break;
                     }
@@ -138,6 +140,29 @@ namespace TrackConverter.UI.Ext
                 RefreshLayers();
             }
         }
+
+        /// <summary>
+        /// проекция поставщика текущего слоя 
+        /// </summary>
+        public PureProjection LayerProjection { get {
+                
+                //выбор проекции слоя зависит от поставщика
+                PureProjection proj;
+                switch (layerProvider)
+                {
+                    case MapLayerProviders.YandexTraffic:
+                        proj = new MercatorProjectionYandex();
+                        break;
+                    case MapLayerProviders.OSMGpsTracks:
+                        proj = new MercatorProjection();
+                        break;
+                    case MapLayerProviders.Wikimapia:
+                        proj = new MercatorProjection();
+                        break;
+                    default: throw new Exception("Для этого слоя не определена проекция карты!");
+                }
+                return proj;
+            } }
 
         #endregion
 
@@ -170,14 +195,12 @@ namespace TrackConverter.UI.Ext
         /// <param name="e"></param>
         private void GMapControlExt_Paint(object sender, PaintEventArgs e)
         {
-            //if (this.IsDragging)
-            //return;
-
             lock (loadedRastrAreas)
             {
                 switch (LayerProvider)
                 {
                     case MapLayerProviders.YandexTraffic:
+                    case MapLayerProviders.OSMGpsTracks:
                         foreach (var kv in this.loadedRastrAreas)
                         {
                             ShowRastrLayerTile(kv.Value, kv.Key, e.Graphics);
@@ -262,11 +285,12 @@ namespace TrackConverter.UI.Ext
         /// возвращает координаты верхних левых углов тайлов, которые сейчас виды на экране, исключая уже загруженные
         /// </summary>
         /// <returns></returns>
-        private List<GPoint> GetVisiblePixelTiles()
+        public List<GPoint> GetVisiblePixelTiles(PureProjection proj = null)
         {
             int zoom = (int)Zoom;
             RectLatLng viewArea = GetViewArea();
-            PureProjection proj = this.MapProvider.Projection;
+            if (proj == null)
+                proj = this.MapProvider.Projection;
 
             GPoint lt_pix = proj.FromLatLngToPixel(viewArea.LocationTopLeft, zoom);
             GPoint rb_pix = proj.FromLatLngToPixel(viewArea.LocationRightBottom, zoom);
@@ -279,8 +303,8 @@ namespace TrackConverter.UI.Ext
             long x_to = (long)Math.Ceiling(rb_pix.X / 256d);
 
             List<GPoint> result = new List<GPoint>();
-            for (long y = y_from + y_step; y <= y_to; y += y_step)
-                for (long x = x_from; x < x_to; x += x_step)
+            for (long y = y_from; y <= y_to; y += y_step)
+                for (long x = x_from; x <= x_to; x += x_step)
                 {
                     GPoint rll = new GPoint(x, y);
                     if (!isRastrAreaLoaded(rll))
@@ -303,8 +327,8 @@ namespace TrackConverter.UI.Ext
         /// <summary>
         /// добавление на карту тайла растрового слоя 
         /// </summary>
-        /// <param name="tile"></param>
-        /// <param name="position"></param>
+        /// <param name="tile">картинка - тайл</param>
+        /// <param name="position">тайловые координаты</param>
         /// <param name="gr">если null, то используется площадь для рисования по умолчанию rastrLayersGraphics</param>
         private void ShowRastrLayerTile(Image tile, GPoint position, Graphics gr = null)
         {
@@ -312,20 +336,8 @@ namespace TrackConverter.UI.Ext
             while (!isTilesLoaded)
                 Thread.Sleep(30);
 
-
-            //выбор проекции слоя зависит от поставщика
-            PureProjection proj;
-            switch (layerProvider)
-            {
-                case MapLayerProviders.YandexTraffic:
-                    proj = new MercatorProjectionYandex();
-                    break;
-                case MapLayerProviders.Wikimapia:
-                    return;
-                default: throw new Exception("Для этого слоя не определена проекция карты!");
-            }
-            RectLatLng viewArea = GetViewArea(proj);
-            GPoint va_lt_pix = proj.FromLatLngToPixel(viewArea.LocationTopLeft, (int)Zoom);
+            RectLatLng viewArea = GetViewArea();
+            GPoint va_lt_pix = LayerProjection.FromLatLngToPixel(viewArea.LocationTopLeft, (int)Zoom);
 
 
             long x = 0, y = 0;
@@ -573,11 +585,13 @@ namespace TrackConverter.UI.Ext
                         #endregion
 
                         case MapLayerProviders.YandexTraffic:
+                        case MapLayerProviders.OSMGpsTracks:
 
                             #region ДЛЯ РАСТРОВЫХ СЛОЁВ
 
                             //области, которые необходимо загрузить
-                            List<GPoint> tilesR = this.GetVisiblePixelTiles();
+                            
+                            List<GPoint> tilesR = this.GetVisiblePixelTiles(LayerProjection);
 
                             int iR = 0; //количество загруженных тайлов
                             Parallel.ForEach(tilesR, new ParallelOptions() { MaxDegreeOfParallelism = 4 }, (tile) =>
@@ -633,7 +647,7 @@ namespace TrackConverter.UI.Ext
         /// Получить область координат, видимых на экране
         /// </summary>
         /// <returns></returns>
-        private RectLatLng GetViewArea(PureProjection proj = null)
+        public RectLatLng GetViewArea(PureProjection proj = null)
         {
             //вычисление координат выдимой части карты
             if (proj == null)
@@ -669,7 +683,6 @@ namespace TrackConverter.UI.Ext
             loadedRastrAreas.Clear(); //очистка растрового слоя
             if (rastrLayersGraphics != null)
                 rastrLayersGraphics.Clear(Color.Transparent); //очистка слоя рисования растровых слоёв
-            //this.Refresh();
         }
 
         #endregion

@@ -793,6 +793,7 @@ namespace TrackConverter.UI.Shell
                 case MapLayerProviders.None:
                 case MapLayerProviders.Wikimapia:
                 case MapLayerProviders.YandexTraffic:
+                case MapLayerProviders.OSMGpsTracks:
                     formMain.gmapControlMap.LayerProvider = lpr.Enum;
                     break;
                 default:

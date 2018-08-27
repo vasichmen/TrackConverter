@@ -8,6 +8,9 @@ using TrackConverter.Lib.Data.Providers.InternetServices;
 
 namespace TrackConverter.Lib.Data
 {
+    /// <summary>
+    /// TODO: комментарии методов
+    /// </summary>
     public class RastrMapLayer : IRastrMapLayerProvider
     {
         private MapLayerProviders value;
@@ -20,6 +23,9 @@ namespace TrackConverter.Lib.Data
             {
                 case MapLayerProviders.YandexTraffic:
                     engine = new Yandex(null);
+                    break;
+                case MapLayerProviders.OSMGpsTracks:
+                    engine = new OSM(null);
                     break;
                 case MapLayerProviders.None:
                     throw new Exception("Нельзя создать поставщика слоя None");

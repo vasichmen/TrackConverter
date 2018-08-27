@@ -485,6 +485,11 @@ namespace TrackConverter
         Wikimapia,
 
         /// <summary>
+        /// карта треков OSM
+        /// </summary>
+        OSMGpsTracks,
+
+        /// <summary>
         /// пробки яндекса
         /// </summary>
         YandexTraffic,

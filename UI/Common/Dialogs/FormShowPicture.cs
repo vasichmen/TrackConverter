@@ -62,23 +62,26 @@ namespace TrackConverter.UI.Common.Dialogs
 
             setOperation = new Action<string>((obj) =>
             {
+                try
+                {
+                    if (this.InvokeRequired)
+                        this.Invoke(new Action(() =>
+                        {
+                            if (this.IsDisposed)
+                                return;
+                            else
+                                this.Text = obj;
+                        }));
 
-                if (this.InvokeRequired)
-                    this.Invoke(new Action(() =>
+                    else
                     {
                         if (this.IsDisposed)
                             return;
                         else
                             this.Text = obj;
-                    }));
-
-                else
-                {
-                    if (this.IsDisposed)
-                        return;
-                    else
-                        this.Text = obj;
+                    }
                 }
+                catch (Exception) { }
             });
 
         }

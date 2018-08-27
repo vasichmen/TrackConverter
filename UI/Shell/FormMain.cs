@@ -1,5 +1,6 @@
 ﻿using GMap.NET;
 using GMap.NET.MapProviders;
+using GMap.NET.Projections;
 using GMap.NET.WindowsForms;
 using Microsoft.VisualBasic.Devices;
 using System;
@@ -19,6 +20,7 @@ using TrackConverter.Lib.Classes.StackEdits;
 using TrackConverter.Lib.Data;
 using TrackConverter.Lib.Data.Providers.InternetServices;
 using TrackConverter.Lib.Maping.GMap;
+using TrackConverter.Lib.Mathematic.Geodesy.Projections.GMapImported;
 using TrackConverter.Lib.Tracking;
 using TrackConverter.Res.Properties;
 using TrackConverter.UI.Map;
@@ -445,7 +447,7 @@ namespace TrackConverter.UI.Shell
                 it1.Image = new Bitmap(Application.StartupPath + lpr.IconName);
                 if (lpr.Enum == Vars.Options.Map.LayerProvider.Enum)
                     it1.Checked = true;
-                
+
                 layerProviderToolStripMenuItem.DropDownItems.Add(it1);
             }
 
@@ -1365,14 +1367,24 @@ namespace TrackConverter.UI.Shell
         }
 
         #endregion
-        
+
 
         private void button1_Click(object sender, EventArgs e)
         {
-            gmapControlMap.Refresh();
+            PureProjection proj = new MercatorProjection();
+            List<GPoint> r = gmapControlMap.GetVisiblePixelTiles(proj);
+            if (r.Count == 0)
+                MessageBox.Show("");
+            else
+                mapHelper.ShowRoute(new TrackFile(new MapRoute(new List<PointLatLng>() {
+               proj.FromPixelToLatLng(proj.FromTileXYToPixel( r[0]),(int)gmapControlMap.Zoom),
+               proj.FromPixelToLatLng(proj.FromTileXYToPixel( r[r.Count-1]),(int)gmapControlMap.Zoom),
+
+            }, "")), gmapControlMap.Overlays[0], false);
+
         }
 
-       
+
     }
 }
 
