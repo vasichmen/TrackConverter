@@ -1377,17 +1377,7 @@ namespace TrackConverter.UI.Shell
 
         private void button1_Click(object sender, EventArgs e)
         {
-            PureProjection proj = new MercatorProjection();
-            List<GPoint> r = gmapControlMap.GetVisiblePixelTiles(proj);
-            if (r.Count == 0)
-                MessageBox.Show("");
-            else
-                mapHelper.ShowRoute(new TrackFile(new MapRoute(new List<PointLatLng>() {
-               proj.FromPixelToLatLng(proj.FromTileXYToPixel( r[0]),(int)gmapControlMap.Zoom),
-               proj.FromPixelToLatLng(proj.FromTileXYToPixel( r[r.Count-1]),(int)gmapControlMap.Zoom),
-
-            }, "")), gmapControlMap.Overlays[0], false);
-
+            //gmapControlMap.MapProvider = GMap.NET.MapProviders.
         }
 
 
