@@ -33,13 +33,14 @@
             this.flowLayoutPanelWrapper = new System.Windows.Forms.FlowLayoutPanel();
             this.labelName = new System.Windows.Forms.Label();
             this.linkLabelLink = new System.Windows.Forms.LinkLabel();
+            this.contextMenuStripLinkLabel = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.copyLinkToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.flowLayoutPanelImages = new System.Windows.Forms.FlowLayoutPanel();
             this.label2 = new System.Windows.Forms.Label();
             this.textBoxDescription = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.textBoxComments = new System.Windows.Forms.TextBox();
-            this.contextMenuStripLinkLabel = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.copyLinkToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.copyLinkMapToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.flowLayoutPanelWrapper.SuspendLayout();
             this.contextMenuStripLinkLabel.SuspendLayout();
             this.SuspendLayout();
@@ -84,6 +85,21 @@
             this.linkLabelLink.TabStop = true;
             this.linkLabelLink.Text = "Ссылка";
             this.linkLabelLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelLink_LinkClicked);
+            // 
+            // contextMenuStripLinkLabel
+            // 
+            this.contextMenuStripLinkLabel.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.copyLinkToolStripMenuItem,
+            this.copyLinkMapToolStripMenuItem});
+            this.contextMenuStripLinkLabel.Name = "contextMenuStripLinkLabel";
+            this.contextMenuStripLinkLabel.Size = new System.Drawing.Size(232, 70);
+            // 
+            // copyLinkToolStripMenuItem
+            // 
+            this.copyLinkToolStripMenuItem.Name = "copyLinkToolStripMenuItem";
+            this.copyLinkToolStripMenuItem.Size = new System.Drawing.Size(231, 22);
+            this.copyLinkToolStripMenuItem.Text = "Копировать ссылку";
+            this.copyLinkToolStripMenuItem.Click += new System.EventHandler(this.copyLinkToolStripMenuItem_Click);
             // 
             // flowLayoutPanelImages
             // 
@@ -150,19 +166,12 @@
             this.textBoxComments.TabIndex = 8;
             this.textBoxComments.TabStop = false;
             // 
-            // contextMenuStripLinkLabel
+            // copyLinkMapToolStripMenuItem
             // 
-            this.contextMenuStripLinkLabel.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.copyLinkToolStripMenuItem});
-            this.contextMenuStripLinkLabel.Name = "contextMenuStripLinkLabel";
-            this.contextMenuStripLinkLabel.Size = new System.Drawing.Size(183, 48);
-            // 
-            // copyLinkToolStripMenuItem
-            // 
-            this.copyLinkToolStripMenuItem.Name = "copyLinkToolStripMenuItem";
-            this.copyLinkToolStripMenuItem.Size = new System.Drawing.Size(182, 22);
-            this.copyLinkToolStripMenuItem.Text = "Копировать ссылку";
-            this.copyLinkToolStripMenuItem.Click += new System.EventHandler(this.copyLinkToolStripMenuItem_Click);
+            this.copyLinkMapToolStripMenuItem.Name = "copyLinkMapToolStripMenuItem";
+            this.copyLinkMapToolStripMenuItem.Size = new System.Drawing.Size(231, 22);
+            this.copyLinkMapToolStripMenuItem.Text = "Копировать ссылку на карту";
+            this.copyLinkMapToolStripMenuItem.Click += new System.EventHandler(this.copyLinkMapToolStripMenuItem_Click);
             // 
             // FormShowObjectInfo
             // 
@@ -197,5 +206,6 @@
         private System.Windows.Forms.LinkLabel linkLabelLink;
         private System.Windows.Forms.ContextMenuStrip contextMenuStripLinkLabel;
         private System.Windows.Forms.ToolStripMenuItem copyLinkToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem copyLinkMapToolStripMenuItem;
     }
 }

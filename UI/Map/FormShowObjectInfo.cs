@@ -117,7 +117,7 @@ namespace TrackConverter.UI.Map
                                   pb.Tag = pho;
                                   pb.Cursor = Cursors.Hand;
                                   pb.BackgroundImageLayout = ImageLayout.Stretch;
-                                  new ToolTip().SetToolTip(pb,"Загружено "+ pho.TimeString);
+                                  new ToolTip().SetToolTip(pb, "Загружено " + pho.TimeString);
                               }));
                           });
 
@@ -192,8 +192,8 @@ namespace TrackConverter.UI.Map
         /// <param name="e"></param>
         private void linkLabelLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            if(e.Button == MouseButtons.Left)
-            Process.Start(linkLabelLink.Text);
+            if (e.Button == MouseButtons.Left)
+                Process.Start(linkLabelLink.Text);
         }
 
         /// <summary>
@@ -204,6 +204,25 @@ namespace TrackConverter.UI.Map
         private void copyLinkToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Clipboard.SetText(Obj.Link);
+        }
+
+        /// <summary>
+        /// скопировать ссылку на объект с привязкой к карте
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void copyLinkMapToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // http://wikimapia.org/#lang=ru&lat=55.864909&lon=38.164444&z=12&m=b&show=/29795352/ru
+            string base_url = "http://wikimapia.org/#lang=ru&lat={0}&lon={1}&z={2}&m=b&show=/{3}/ru";
+
+            double lat = Obj.GeometryCenter.Latitude.TotalDegrees;
+            double lon = Obj.GeometryCenter.Longitude.TotalDegrees;
+            int z = (int)Program.winMain.gmapControlMap.Zoom;
+            int id = Obj.ID;
+
+            string url = string.Format(base_url, lat.ToString().Replace(Vars.DecimalSeparator, '.'), lon.ToString().Replace(Vars.DecimalSeparator, '.'), z, id);
+            Clipboard.SetText(url);
         }
     }
 }

@@ -146,8 +146,11 @@ namespace TrackConverter.UI.Ext
         /// <summary>
         /// проекция поставщика текущего слоя 
         /// </summary>
-        public PureProjection LayerProjection { get {
-                
+        public PureProjection LayerProjection
+        {
+            get
+            {
+
                 //выбор проекции слоя зависит от поставщика
                 PureProjection proj;
                 switch (layerProvider)
@@ -168,7 +171,8 @@ namespace TrackConverter.UI.Ext
                     default: throw new Exception("Для этого слоя не определена проекция карты!");
                 }
                 return proj;
-            } }
+            }
+        }
 
         #endregion
 
@@ -252,16 +256,13 @@ namespace TrackConverter.UI.Ext
         /// <param name="item"></param>
         private void GMapControlExt_OnPolygonEnter(GMapPolygon item)
         {
-            //this.Cursor = Cursors.Hand;
             List<VectorMapLayerObject> objects = GetVectorObjectsUnderCursor();
-            string text = "";
-            foreach (VectorMapLayerObject obj in objects)
-                text += obj.Name + "\r\n";
+            refreshToolTipObjects(objects);
 
-            ToolTipPolygonTitles.AutomaticDelay = 50;
-            ToolTipPolygonTitles.AutoPopDelay = 10000;
-            ToolTipPolygonTitles.InitialDelay = 50;
-            ToolTipPolygonTitles.SetToolTip(this, text);
+            //при попадании в объект все остальные под курсором прозрачные, а сам объект потом желтым
+            //foreach (var obj in objects)
+            //    obj.Geometry.Fill = Brushes.Transparent;
+            //item.Fill = Brushes.Yellow;
         }
 
         /// <summary>
@@ -270,8 +271,39 @@ namespace TrackConverter.UI.Ext
         /// <param name="item"></param>
         private void GMapControlExt_OnPolygonLeave(GMapPolygon item)
         {
-            this.GMapControlExt_OnPolygonEnter(item);
-            //this.Cursor = Cursors.Arrow;
+            List<VectorMapLayerObject> objects = GetVectorObjectsUnderCursor();
+            refreshToolTipObjects(objects);
+
+            //при уходе с объекта сделать его прозрачным, а самый маленький под курсором( по периметру) - желтым
+            //VectorMapLayerObject minOb = null;
+            //double minPer = double.MaxValue;
+            //foreach (var obj in objects)
+            //{
+            //    if (obj.Perimeter < minPer)
+            //    {
+            //        minPer = obj.Perimeter;
+            //        minOb = obj;
+            //    }
+            //}
+            //    item.Fill = Brushes.Transparent;
+            //if (minOb != null)
+            //    minOb.Geometry.Fill = Brushes.Yellow;
+        }
+
+        /// <summary>
+        /// обновитьь всплывающую подсказку для объекта
+        /// </summary>
+        void refreshToolTipObjects(List<VectorMapLayerObject> objects)
+        {
+
+            string text = "";
+            foreach (VectorMapLayerObject obj in objects)
+                text += obj.Name + "\r\n";
+
+            ToolTipPolygonTitles.AutomaticDelay = 50;
+            ToolTipPolygonTitles.AutoPopDelay = 10000;
+            ToolTipPolygonTitles.InitialDelay = 50;
+            ToolTipPolygonTitles.SetToolTip(this, text);
         }
 
         /// <summary>

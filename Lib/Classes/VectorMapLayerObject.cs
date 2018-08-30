@@ -45,8 +45,8 @@ namespace TrackConverter.Lib.Classes
         public VectorMapLayerObject(GMapPolygon geometry)
         {
             Geometry = geometry;
+            geometryCenter = Coordinate.Empty;
             this.Name = geometry.Name;
-            geometryCenter = GetGeometryCenter(geometry);
             perimeter = double.NaN;
         }
 
@@ -170,6 +170,8 @@ namespace TrackConverter.Lib.Classes
         {
             get
             {
+                if (geometryCenter.isEmpty)
+                    geometryCenter = GetGeometryCenter(this.Geometry);
                 return geometryCenter;
             }
             private set { geometryCenter = value; }
