@@ -124,7 +124,7 @@ namespace TrackConverter.UI.Common.Dialogs
                         ShowPict(cur_ind);
                     }
                 }
-                Text = "Изображение " + (cur_ind + 1) + "/" + photos.Count;
+                Text = "Изображение " + (cur_ind + 1) + "/" + photos.Count+", загружено "+photos[cur_ind].TimeString;
             }
         }
         /// <summary>
@@ -155,7 +155,7 @@ namespace TrackConverter.UI.Common.Dialogs
                             Image imag = Image.FromFile(file);
                             Vars.dataCache.PutImage(cur_url, imag); //добавлять в кэш можно только ДО использования объекта, иначе - InvalidOperationException
                             pictureBoxImage.Image = imag;
-                            setOperation.Invoke("Изображение " + (ind + 1) + "/" + photos.Count);
+                            setOperation.Invoke("Изображение " + (cur_ind + 1) + "/" + photos.Count + ", загружено " + photos[cur_ind].TimeString);
                         }));
                     }
 

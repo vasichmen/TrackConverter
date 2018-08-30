@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormShowObjectInfo));
             this.flowLayoutPanelWrapper = new System.Windows.Forms.FlowLayoutPanel();
             this.labelName = new System.Windows.Forms.Label();
@@ -37,7 +38,10 @@
             this.textBoxDescription = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.textBoxComments = new System.Windows.Forms.TextBox();
+            this.contextMenuStripLinkLabel = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.copyLinkToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.flowLayoutPanelWrapper.SuspendLayout();
+            this.contextMenuStripLinkLabel.SuspendLayout();
             this.SuspendLayout();
             // 
             // flowLayoutPanelWrapper
@@ -70,6 +74,7 @@
             // linkLabelLink
             // 
             this.linkLabelLink.AutoSize = true;
+            this.linkLabelLink.ContextMenuStrip = this.contextMenuStripLinkLabel;
             this.linkLabelLink.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.linkLabelLink.Location = new System.Drawing.Point(8, 29);
             this.linkLabelLink.Margin = new System.Windows.Forms.Padding(8, 0, 3, 0);
@@ -145,6 +150,20 @@
             this.textBoxComments.TabIndex = 8;
             this.textBoxComments.TabStop = false;
             // 
+            // contextMenuStripLinkLabel
+            // 
+            this.contextMenuStripLinkLabel.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.copyLinkToolStripMenuItem});
+            this.contextMenuStripLinkLabel.Name = "contextMenuStripLinkLabel";
+            this.contextMenuStripLinkLabel.Size = new System.Drawing.Size(183, 48);
+            // 
+            // copyLinkToolStripMenuItem
+            // 
+            this.copyLinkToolStripMenuItem.Name = "copyLinkToolStripMenuItem";
+            this.copyLinkToolStripMenuItem.Size = new System.Drawing.Size(182, 22);
+            this.copyLinkToolStripMenuItem.Text = "Копировать ссылку";
+            this.copyLinkToolStripMenuItem.Click += new System.EventHandler(this.copyLinkToolStripMenuItem_Click);
+            // 
             // FormShowObjectInfo
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -161,6 +180,7 @@
             this.Shown += new System.EventHandler(this.FormShowObjectInfo_Shown);
             this.flowLayoutPanelWrapper.ResumeLayout(false);
             this.flowLayoutPanelWrapper.PerformLayout();
+            this.contextMenuStripLinkLabel.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -175,5 +195,7 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox textBoxComments;
         private System.Windows.Forms.LinkLabel linkLabelLink;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStripLinkLabel;
+        private System.Windows.Forms.ToolStripMenuItem copyLinkToolStripMenuItem;
     }
 }

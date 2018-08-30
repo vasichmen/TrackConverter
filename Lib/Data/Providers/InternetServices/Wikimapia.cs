@@ -301,7 +301,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
             string url = string.Format("http://wikimapia.org/d?lng=1{0}", bbox);
 
             string kml = SendStringGetRequest(url);
-            List<VectorMapLayerObject> res = KmlHelper.ParseWikimapiaObjectsAnswer(kml);
+            List<VectorMapLayerObject> res = KmlHelper.ParseWikimapiaObjectsAnswer(kml,perimeter);
             return res;
         }
 

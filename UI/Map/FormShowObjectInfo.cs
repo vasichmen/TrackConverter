@@ -117,6 +117,7 @@ namespace TrackConverter.UI.Map
                                   pb.Tag = pho;
                                   pb.Cursor = Cursors.Hand;
                                   pb.BackgroundImageLayout = ImageLayout.Stretch;
+                                  new ToolTip().SetToolTip(pb,"Загружено "+ pho.TimeString);
                               }));
                           });
 
@@ -191,7 +192,18 @@ namespace TrackConverter.UI.Map
         /// <param name="e"></param>
         private void linkLabelLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
+            if(e.Button == MouseButtons.Left)
             Process.Start(linkLabelLink.Text);
+        }
+
+        /// <summary>
+        /// копировать ссылку на объект
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void copyLinkToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Clipboard.SetText(Obj.Link);
         }
     }
 }

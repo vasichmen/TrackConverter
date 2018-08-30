@@ -407,6 +407,8 @@ namespace TrackConverter.UI.Shell
 
             #region КАРТА
 
+            mapHelper.ConfigureGMapControl();
+
             //стек перехода по поиску мест
             this.PositionsStack = new Stack<KeyValuePair<string, Coordinate>>();
 
@@ -509,7 +511,7 @@ namespace TrackConverter.UI.Shell
 
             #region КАРТА
 
-            mapHelper.ConfigureGMapControl();
+            
 
             TripRouteFile gf = null;
             try

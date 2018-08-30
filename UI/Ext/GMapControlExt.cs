@@ -252,6 +252,7 @@ namespace TrackConverter.UI.Ext
         /// <param name="item"></param>
         private void GMapControlExt_OnPolygonEnter(GMapPolygon item)
         {
+            //this.Cursor = Cursors.Hand;
             List<VectorMapLayerObject> objects = GetVectorObjectsUnderCursor();
             string text = "";
             foreach (VectorMapLayerObject obj in objects)
@@ -270,6 +271,7 @@ namespace TrackConverter.UI.Ext
         private void GMapControlExt_OnPolygonLeave(GMapPolygon item)
         {
             this.GMapControlExt_OnPolygonEnter(item);
+            //this.Cursor = Cursors.Arrow;
         }
 
         /// <summary>
@@ -548,7 +550,7 @@ namespace TrackConverter.UI.Ext
             }
 
             double resolution = this.MapProvider.Projection.GetGroundResolution((int)Zoom, Position.Lat); //сколько метров в 1 пикселе при таком масштабе (для выбора периметра объекта)
-            double min_pixel_perimeter = 40; //минимальный периметр в пикселях для вывода на экран
+            double min_pixel_perimeter = 25; //минимальный периметр в пикселях для вывода на экран
             double minPerimeter = resolution * min_pixel_perimeter; //минимальный периметр в метрах
             List<VectorMapLayerObject> objects = new List<VectorMapLayerObject>();
             try

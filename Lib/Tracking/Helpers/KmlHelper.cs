@@ -139,8 +139,9 @@ namespace TrackConverter.Lib.Tracking.Helpers
         /// разбор ответа сайта Wikimapia с объектами в хаданной области
         /// </summary>
         /// <param name="kml">текстовый ответ в формате KML</param>
+        /// <param name="perimeter">минимальный периметр объекта в метрах</param>
         /// <returns></returns>
-        internal static List<VectorMapLayerObject> ParseWikimapiaObjectsAnswer(string kml)
+        internal static List<VectorMapLayerObject> ParseWikimapiaObjectsAnswer(string kml, double perimeter)
         {
             XmlDocument doc = new XmlDocument();
             doc.LoadXml(kml);
@@ -159,16 +160,40 @@ namespace TrackConverter.Lib.Tracking.Helpers
                 //NAME
                 string raw_desc = placemark["description"].InnerText;
                 raw_desc = raw_desc.Replace("![CDATA[", "").Replace("]]", "").Replace("View or update this place information at Wikimapia.", "").Replace("\n", "");
-                string name = Regex.Replace(raw_desc, "<[^>]+>", string.Empty).Trim().Replace("&quot;", "\"").Replace("&amp;quot;", "\"").Replace("&#039;","'");
+                string name = Regex.Replace(raw_desc, "<[^>]+>", string.Empty).Trim().Replace("&quot;", "\"").Replace("&amp;quot;", "\"").Replace("&#039;", "'");
+
+                //Pixels
+                //string maxLodPixels = placemark["Region"]["Lod"]["maxLodPixels"].InnerText;
+                // string minLodPixels = placemark["Region"]["Lod"]["minLodPixels"].InnerText;
 
                 //GEOMETRY
                 string linestring = placemark["MultiGeometry"]["LineString"]["coordinates"].InnerText;
                 linestring = linestring.Replace("\n", " ").Trim().Trim();
+
                 TrackFile geometry = ParseLineString(linestring);
-                res.Add(new VectorMapLayerObject(geometry,name) { ID = id, Link = link, LayerProvider = MapLayerProviders.Wikimapia, Invisible=false });
+                double perim = getPerimeter(geometry);
+
+                //если периметр объекта меньше заданного, то не добавляем в карту
+                if (perim > perimeter)
+                    res.Add(new VectorMapLayerObject(geometry, name) { ID = id, Link = link, LayerProvider = MapLayerProviders.Wikimapia, Invisible = false });
             }
             return res;
         }
+
+
+        /// <summary>
+        /// расчёт периметра полигона в метрах
+        /// </summary>
+        /// <param name="geometry">полигон</param>
+        /// <returns></returns>
+        private static double getPerimeter(TrackFile geometry)
+        {
+            double res = 0;
+            for (int i = 1; i < geometry.Count; i++)
+                res += Vars.CurrentGeosystem.CalculateDistance(geometry[i - 1], geometry[i]);
+            return res;
+        }
+
 
         /// <summary>
         /// распознает точки из строки координат с высотами
