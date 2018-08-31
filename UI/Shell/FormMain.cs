@@ -423,6 +423,9 @@ namespace TrackConverter.UI.Shell
             //добавление поставщиков карты в меню инструментов
             toolStripDropDownButtonMapProvider.DropDownItems.Clear();
             mapProviderToolStripMenuItem.DropDownItems.Clear();
+            Dictionary<MapProviderClasses, ToolStripMenuItem> classes1 = new Dictionary<MapProviderClasses, ToolStripMenuItem>();
+            Dictionary<MapProviderClasses, ToolStripMenuItem> classes2 = new Dictionary<MapProviderClasses, ToolStripMenuItem>();
+            ToolStripMenuItem c1 = null, c2 = null;
             foreach (MapProviderRecord mpr in Vars.Options.Map.AllMapProviders)
             {
                 ToolStripMenuItem it1 = new ToolStripMenuItem();
@@ -431,7 +434,11 @@ namespace TrackConverter.UI.Shell
                 it1.Tag = mpr;
                 it1.Image = new Bitmap(Application.StartupPath + mpr.IconName);
                 if (mpr.Enum == Vars.Options.Map.MapProvider.Enum)
+                {
                     it1.Checked = true;
+                    if (mpr.MapProviderClass != MapProviderClasses.None)
+                        c1 = it1;
+                }
 
                 ToolStripMenuItem it2 = new ToolStripMenuItem();
                 it2.Text = mpr.Title;
@@ -439,10 +446,45 @@ namespace TrackConverter.UI.Shell
                 it2.Tag = mpr;
                 it2.Image = new Bitmap(Application.StartupPath + mpr.IconName);
                 if (mpr.Enum == Vars.Options.Map.MapProvider.Enum)
+                {
                     it2.Checked = true;
+                    if (mpr.MapProviderClass != MapProviderClasses.None)
+                        c2 = it2;
+                }
 
-                toolStripDropDownButtonMapProvider.DropDownItems.Add(it1);
-                mapProviderToolStripMenuItem.DropDownItems.Add(it2);
+                if (classes1.ContainsKey(mpr.MapProviderClass))
+                {
+                    var button1 = classes1[mpr.MapProviderClass];
+                    var button2 = classes2[mpr.MapProviderClass];
+                    button1.DropDownItems.Add(it1);
+                    button2.DropDownItems.Add(it2);
+                }
+                else
+                {
+                    if (mpr.MapProviderClass == MapProviderClasses.None)
+                    {
+                        toolStripDropDownButtonMapProvider.DropDownItems.Add(it1);
+                        mapProviderToolStripMenuItem.DropDownItems.Add(it2);
+                    }
+                    else
+                    {
+                        ToolStripMenuItem button1 = new ToolStripMenuItem(MapProviderRecord.GetMapProviderClassName(mpr.MapProviderClass));
+                        ToolStripMenuItem button2 = new ToolStripMenuItem(MapProviderRecord.GetMapProviderClassName(mpr.MapProviderClass));
+                        button1.DropDownItems.Add(it1);
+                        button2.DropDownItems.Add(it2);
+                        classes1.Add(mpr.MapProviderClass, button1);
+                        classes2.Add(mpr.MapProviderClass, button2);
+                        toolStripDropDownButtonMapProvider.DropDownItems.Add(button1);
+                        mapProviderToolStripMenuItem.DropDownItems.Add(button2);
+                    }
+                }
+
+            }
+            //выделяем родительские кнопки выбранных карт
+            if (c1 != null && c2 != null)
+            {
+                (c1.OwnerItem as ToolStripMenuItem).Checked = true;
+                (c2.OwnerItem as ToolStripMenuItem).Checked = true;
             }
 
             //добавление поставщиков слоёв в основное меню

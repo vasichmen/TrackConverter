@@ -474,9 +474,60 @@ namespace TrackConverter
         WikimapiaMap,
 
         /// <summary>
-        /// карты ГГЦ
+        /// карты Генштаба 1км
         /// </summary>
-        GGC
+        Genshtab_1km,
+
+        /// <summary>
+        /// карты Генштаба 250м
+        /// </summary>
+        Genshtab_250m,
+
+        /// <summary>
+        /// карты Генштаба 5 км
+        /// </summary>
+        Genshtab_5km,
+
+        /// <summary>
+        /// карты Генштаба 10 км
+        /// </summary>
+        Genshtab_10km,
+
+        /// <summary>
+        /// карты Генштаба 500 м
+        /// </summary>
+        Genshtab_500m
+    }
+
+    /// <summary>
+    /// группа карт
+    /// </summary>
+    public enum MapProviderClasses
+    {
+        /// <summary>
+        /// гугл
+        /// </summary>
+        Google,
+
+        /// <summary>
+        /// яндекс
+        /// </summary>
+        Yandex,
+
+        /// <summary>
+        /// карты генштаба
+        /// </summary>
+        Genshtab,
+
+        /// <summary>
+        /// все типы карт OpenStreetMaps
+        /// </summary>
+        OSM,
+
+        /// <summary>
+        /// одиночные карты 
+        /// </summary>
+        None
     }
 
     /// <summary>

@@ -13,12 +13,12 @@ using System.IO;
 namespace TrackConverter.Lib.Data.Providers.InternetServices
 {
     //TODO: комментарии, доделать связь с сервисом
-    public static class GGC
+    public static class Genshtab
     {
         /// <summary>
         /// основные методы для получения карт ГГЦ
         /// </summary>
-        public abstract class BaseGGC : BaseMapProvider
+        public abstract class BaseGenshtab : BaseMapProvider
         {
             public abstract string[] Mirrors { get; }
 
@@ -93,7 +93,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         /// <summary>
         /// километровка 
         /// </summary>
-        public class KM1 : BaseGGC
+        public class KM1 : BaseGenshtab
         {
             public static KM1 Instance;
 
@@ -125,7 +125,71 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
             {
                 get
                 {
-                    return "ГГЦ 1км";
+                    return "Генштаб 1км";
+                }
+            }
+
+            public override GMapProvider[] Overlays
+            {
+                get
+                {
+                    return new GMapProvider[1] { Instance };
+                }
+            }
+
+            public override PureProjection Projection
+            {
+                get
+                {
+                    return new MercatorProjection();
+                }
+            }
+
+            public override PureImage GetTileImage(GPoint pos, int zoom)
+            {
+                string url = CombineURL(pos, zoom);
+                if (string.IsNullOrEmpty(url))
+                    return null;
+                return GetGMapImage(url);
+            }
+        }
+
+        /// <summary>
+        /// 250 метров 
+        /// </summary>
+        public class M250 : BaseGenshtab
+        {
+            public static M250 Instance;
+
+            static M250()
+            {
+                Instance = new M250();
+            }
+
+            public override string[] Mirrors
+            {
+                get
+                {
+                    return new string[] {
+                        "http://91.237.82.95:8088/pub/genshtab/250m/",
+                        "http://maps.melda.ru/pub/genshtab/250m/"
+                    };
+                }
+            }
+
+            public override Guid Id
+            {
+                get
+                {
+                    return new Guid("BF6C9C79-AD78-4F1F-96CE-6EF1F5B52EF7");
+                }
+            }
+
+            public override string Name
+            {
+                get
+                {
+                    return "Генштаб 250м";
                 }
             }
 

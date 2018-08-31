@@ -118,8 +118,8 @@ namespace TrackConverter.UI.Shell
                 case MapProviders.WikimapiaMap:
                     formMain.gmapControlMap.MapProvider = GMapProviders.WikiMapiaMap;
                     break;
-                case MapProviders.GGC:
-                    formMain.gmapControlMap.MapProvider = GGC.KM1.Instance;
+                case MapProviders.Genshtab_1km:
+                    formMain.gmapControlMap.MapProvider = Genshtab.KM1.Instance;
                     break;
                 default:
                     throw new NotSupportedException("Этот поставщик карты не поддерживается " + Vars.Options.Map.MapProvider.Enum);
@@ -764,8 +764,8 @@ namespace TrackConverter.UI.Shell
                 case MapProviders.WikimapiaMap:
                     formMain.gmapControlMap.MapProvider = GMapProviders.WikiMapiaMap;
                     break;
-                case MapProviders.GGC:
-                    formMain.gmapControlMap.MapProvider = GGC.KM1.Instance;
+                case MapProviders.Genshtab_1km:
+                    formMain.gmapControlMap.MapProvider = Genshtab.KM1.Instance;
                     break;
                 default:
                     throw new NotSupportedException("Этот поставщик карты не поддерживается " + mpr.Enum);
@@ -774,17 +774,37 @@ namespace TrackConverter.UI.Shell
 
             Vars.Options.Map.MapProvider = mpr;
 
-            foreach (ToolStripMenuItem ti in formMain.toolStripDropDownButtonMapProvider.DropDownItems)
-                if (((MapProviderRecord)(ti.Tag)).ID == mpr.ID)
-                    ti.Checked = true;
-                else
-                    ti.Checked = false;
+            selectDropDownMapItems(formMain.toolStripDropDownButtonMapProvider, mpr.ID);
+            selectDropDownMapItems(formMain.mapProviderToolStripMenuItem, mpr.ID);
+        }
 
-            foreach (ToolStripMenuItem ti in formMain.mapProviderToolStripMenuItem.DropDownItems)
-                if (((MapProviderRecord)(ti.Tag)).ID == mpr.ID)
-                    ti.Checked = true;
-                else
+        /// <summary>
+        /// выделяет пункты меню, карта которого выбрана
+        /// </summary>
+        /// <param name="menu">пункт мен с кнопками карт</param>
+        /// <param name="id">id карты, которая сейчас открыта</param>
+        void selectDropDownMapItems(ToolStripDropDownItem menu, int id)
+        {
+            ToolStripMenuItem item = null;
+            foreach (ToolStripMenuItem ti in menu.DropDownItems)
+                if (ti.HasDropDownItems)
+                {
                     ti.Checked = false;
+                    foreach (ToolStripMenuItem ti2 in ti.DropDownItems)
+                    {
+                        bool check = (((MapProviderRecord)(ti2.Tag)).ID == id);
+                        if (check)
+                            item = ti2;
+                        ti2.Checked = false; //сама кнопка карты                        
+                    }
+                }
+                else
+                    ti.Checked = (((MapProviderRecord)(ti.Tag)).ID == id);
+            if (item != null)
+            {
+                item.Checked = true;
+                (item.OwnerItem as ToolStripMenuItem).Checked = true;
+            }
         }
 
         /// <summary>
