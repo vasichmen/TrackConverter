@@ -86,11 +86,11 @@ namespace TrackConverter.Lib.Classes.Options
                         new MapProviderRecord(){ Enum = MapProviders.YandexMap, ID=5, Title = "Яндекс.Схема" ,IconName="\\Images\\maps\\yandex_map.png", MapProviderClass = MapProviderClasses.Yandex},
                         new MapProviderRecord(){ Enum = MapProviders.YandexSatelliteMap, ID=6, Title = "Яндекс.Спутник" ,IconName="\\Images\\maps\\yandex_satellite.png", MapProviderClass = MapProviderClasses.Yandex},
                         new MapProviderRecord(){ Enum = MapProviders.WikimapiaMap, ID=7, Title = "Карта Викимапии" ,IconName="\\Images\\maps\\wikimapia_map.png", MapProviderClass = MapProviderClasses.None},
-                        new MapProviderRecord(){ Enum = MapProviders.Genshtab_1km, ID=8, Title = "ГГЦ 1км" ,IconName="\\Images\\maps\\ggc_1km.png", MapProviderClass = MapProviderClasses.Genshtab},
-                        new MapProviderRecord(){ Enum = MapProviders.Genshtab_10km, ID=9, Title = "ГГЦ 10км" ,IconName="\\Images\\maps\\ggc_1km.png", MapProviderClass = MapProviderClasses.Genshtab},
-                        new MapProviderRecord(){ Enum = MapProviders.Genshtab_250m, ID=10, Title = "ГГЦ 250м" ,IconName="\\Images\\maps\\ggc_1km.png", MapProviderClass = MapProviderClasses.Genshtab},
-                        new MapProviderRecord(){ Enum = MapProviders.Genshtab_500m, ID=11, Title = "ГГЦ 500м" ,IconName="\\Images\\maps\\ggc_1km.png", MapProviderClass = MapProviderClasses.Genshtab},
-                        new MapProviderRecord(){ Enum = MapProviders.Genshtab_5km, ID=12, Title = "ГГЦ 5км" ,IconName="\\Images\\maps\\ggc_1km.png", MapProviderClass = MapProviderClasses.Genshtab}
+                        new MapProviderRecord(){ Enum = MapProviders.Genshtab_1km, ID=8, Title = "Генштаб 1км" ,IconName="\\Images\\maps\\ggc_1km.png", MapProviderClass = MapProviderClasses.Genshtab},
+                        new MapProviderRecord(){ Enum = MapProviders.Genshtab_10km, ID=9, Title = "Генштаб 10км" ,IconName="\\Images\\maps\\ggc_1km.png", MapProviderClass = MapProviderClasses.Genshtab},
+                        new MapProviderRecord(){ Enum = MapProviders.Genshtab_250m, ID=10, Title = "Генштаб 250м" ,IconName="\\Images\\maps\\ggc_1km.png", MapProviderClass = MapProviderClasses.Genshtab},
+                        new MapProviderRecord(){ Enum = MapProviders.Genshtab_500m, ID=11, Title = "Генштаб 500м" ,IconName="\\Images\\maps\\ggc_1km.png", MapProviderClass = MapProviderClasses.Genshtab},
+                        new MapProviderRecord(){ Enum = MapProviders.Genshtab_5km, ID=12, Title = "Генштаб 5км" ,IconName="\\Images\\maps\\ggc_1km.png", MapProviderClass = MapProviderClasses.Genshtab}
                         };
             }
             set { }

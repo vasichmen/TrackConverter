@@ -119,7 +119,19 @@ namespace TrackConverter.UI.Shell
                     formMain.gmapControlMap.MapProvider = GMapProviders.WikiMapiaMap;
                     break;
                 case MapProviders.Genshtab_1km:
-                    formMain.gmapControlMap.MapProvider = Genshtab.KM1.Instance;
+                    formMain.gmapControlMap.MapProvider = GenshtabGGC.KM1.Instance;
+                    break;
+                case MapProviders.Genshtab_10km:
+                    formMain.gmapControlMap.MapProvider = GenshtabGGC.KM10.Instance;
+                    break;
+                case MapProviders.Genshtab_250m:
+                    formMain.gmapControlMap.MapProvider = GenshtabGGC.M250.Instance;
+                    break;
+                case MapProviders.Genshtab_500m:
+                    formMain.gmapControlMap.MapProvider = GenshtabGGC.M500.Instance;
+                    break;
+                case MapProviders.Genshtab_5km:
+                    formMain.gmapControlMap.MapProvider = GenshtabGGC.KM5.Instance;
                     break;
                 default:
                     throw new NotSupportedException("Этот поставщик карты не поддерживается " + Vars.Options.Map.MapProvider.Enum);
@@ -765,7 +777,19 @@ namespace TrackConverter.UI.Shell
                     formMain.gmapControlMap.MapProvider = GMapProviders.WikiMapiaMap;
                     break;
                 case MapProviders.Genshtab_1km:
-                    formMain.gmapControlMap.MapProvider = Genshtab.KM1.Instance;
+                    formMain.gmapControlMap.MapProvider = GenshtabGGC.KM1.Instance;
+                    break;
+                case MapProviders.Genshtab_10km:
+                    formMain.gmapControlMap.MapProvider = GenshtabGGC.KM10.Instance;
+                    break;
+                case MapProviders.Genshtab_250m:
+                    formMain.gmapControlMap.MapProvider = GenshtabGGC.M250.Instance;
+                    break;
+                case MapProviders.Genshtab_500m:
+                    formMain.gmapControlMap.MapProvider = GenshtabGGC.M500.Instance;
+                    break;
+                case MapProviders.Genshtab_5km:
+                    formMain.gmapControlMap.MapProvider = GenshtabGGC.KM5.Instance;
                     break;
                 default:
                     throw new NotSupportedException("Этот поставщик карты не поддерживается " + mpr.Enum);

@@ -109,7 +109,19 @@ namespace TrackConverter.UI.Tools
                     provider = GMapProviders.WikiMapiaMap;
                     break;
                 case MapProviders.Genshtab_1km:
-                    provider = Genshtab.KM1.Instance;
+                    provider = GenshtabGGC.KM1.Instance;
+                    break;
+                case MapProviders.Genshtab_10km:
+                    provider = GenshtabGGC.KM10.Instance;
+                    break;
+                case MapProviders.Genshtab_250m:
+                    provider = GenshtabGGC.M250.Instance;
+                    break;
+                case MapProviders.Genshtab_500m:
+                    provider = GenshtabGGC.M500.Instance;
+                    break;
+                case MapProviders.Genshtab_5km:
+                    provider = GenshtabGGC.KM5.Instance;
                     break;
                 default:
                     throw new NotSupportedException("Этот поставщик карты не поддерживается " + Vars.Options.Map.MapProvider.Enum);

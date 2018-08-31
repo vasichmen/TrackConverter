@@ -13,14 +13,23 @@ using System.IO;
 namespace TrackConverter.Lib.Data.Providers.InternetServices
 {
     //TODO: комментарии, доделать связь с сервисом
-    public static class Genshtab
+    public static class GenshtabGGC
     {
         /// <summary>
         /// основные методы для получения карт ГГЦ
         /// </summary>
         public abstract class BaseGenshtab : BaseMapProvider
         {
+            public override PureProjection Projection
+            {
+                get
+                {
+                    return new MercatorProjection();
+                }
+            }
+
             public abstract string[] Mirrors { get; }
+            public abstract string Extension { get; }
 
             int buf_ok = int.MinValue;
             int buf_no = int.MinValue;
@@ -59,10 +68,10 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                 if (zoom > z_no)
                     return "";
 
-                int r = new Random().Next(2);
+                int r = new Random().Next(Mirrors.Length);
                 string url = Mirrors[r];
 
-             
+
                 if (zoom > z_ok)
                 {
                     int code = GetCode(url + "z" + (zoom + 1) + "/");
@@ -78,14 +87,14 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                     buf_no = z_no;
                     buf_ok = z_ok;
 
-                    if (zoom  >= z_no)
-                            return "";
+                    if (zoom >= z_no)
+                        return "";
                 }
 
                 int divx = (int)(pos.X / 1024);
                 int divy = (int)(pos.Y / 1024);
 
-                string res = url + string.Format("z{0}/{1}/x{2}/{3}/y{4}.jpg", zoom + 1, divx, pos.X, divy, pos.Y);
+                string res = url + string.Format("z{0}/{1}/x{2}/{3}/y{4}{5}", zoom + 1, divx, pos.X, divy, pos.Y, Extension);
                 return res;
             }
         }
@@ -137,11 +146,11 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                 }
             }
 
-            public override PureProjection Projection
+            public override string Extension
             {
                 get
                 {
-                    return new MercatorProjection();
+                    return ".jpg";
                 }
             }
 
@@ -171,8 +180,8 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                 get
                 {
                     return new string[] {
-                        "http://91.237.82.95:8088/pub/genshtab/250m/",
-                        "http://maps.melda.ru/pub/genshtab/250m/"
+                        "http://91.237.82.95:8088/pub/ggc/250m.png/",
+                        "http://maps.melda.ru/pub/ggc/250m.png/"
                     };
                 }
             }
@@ -201,11 +210,206 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                 }
             }
 
-            public override PureProjection Projection
+            public override string Extension
             {
                 get
                 {
-                    return new MercatorProjection();
+                    return ".png";
+                }
+            }
+
+            public override PureImage GetTileImage(GPoint pos, int zoom)
+            {
+                string url = CombineURL(pos, zoom);
+                if (string.IsNullOrEmpty(url))
+                    return null;
+                return GetGMapImage(url);
+            }
+        }
+
+
+        /// <summary>
+        /// 250 метров 
+        /// </summary>
+        public class M500 : BaseGenshtab
+        {
+            public static M500 Instance;
+
+            static M500()
+            {
+                Instance = new M500();
+            }
+
+            public override string[] Mirrors
+            {
+                get
+                {
+                    return new string[] {
+                        "http://91.237.82.95:8088/pub/genshtab/500m/",
+                        "http://maps.melda.ru/pub/genshtab/500m/"
+                    };
+                }
+            }
+
+            public override Guid Id
+            {
+                get
+                {
+                    return new Guid("BF6C9C79-AB78-4F1F-96CE-6E11F5B52EF7");
+                }
+            }
+
+            public override string Name
+            {
+                get
+                {
+                    return "Генштаб 500м";
+                }
+            }
+
+            public override GMapProvider[] Overlays
+            {
+                get
+                {
+                    return new GMapProvider[1] { Instance };
+                }
+            }
+
+            public override string Extension
+            {
+                get
+                {
+                    return ".jpg";
+                }
+            }
+
+            public override PureImage GetTileImage(GPoint pos, int zoom)
+            {
+                string url = CombineURL(pos, zoom);
+                if (string.IsNullOrEmpty(url))
+                    return null;
+                return GetGMapImage(url);
+            }
+        }
+
+
+        /// <summary>
+        /// 250 метров 
+        /// </summary>
+        public class KM5 : BaseGenshtab
+        {
+            public static KM5 Instance;
+
+            static KM5()
+            {
+                Instance = new KM5();
+            }
+
+            public override string[] Mirrors
+            {
+                get
+                {
+                    return new string[] {
+                        "http://91.237.82.95:8088/pub/genshtab/5km/",
+                        "http://maps.melda.ru/pub/genshtab/5km/"
+                    };
+                }
+            }
+
+            public override Guid Id
+            {
+                get
+                {
+                    return new Guid("BF6C9C79-AD78-4F1F-97CE-6EF1F5B53EF7");
+                }
+            }
+
+            public override string Name
+            {
+                get
+                {
+                    return "Генштаб 5км";
+                }
+            }
+
+            public override GMapProvider[] Overlays
+            {
+                get
+                {
+                    return new GMapProvider[1] { Instance };
+                }
+            }
+
+            public override string Extension
+            {
+                get
+                {
+                    return ".jpg";
+                }
+            }
+
+            public override PureImage GetTileImage(GPoint pos, int zoom)
+            {
+                string url = CombineURL(pos, zoom);
+                if (string.IsNullOrEmpty(url))
+                    return null;
+                return GetGMapImage(url);
+            }
+        }
+
+
+        /// <summary>
+        /// 250 метров 
+        /// </summary>
+        public class KM10 : BaseGenshtab
+        {
+            public static KM10 Instance;
+
+            static KM10()
+            {
+                Instance = new KM10();
+            }
+
+            public override string[] Mirrors
+            {
+                get
+                {
+                    return new string[] {
+                        "http://91.237.82.95:8088/pub/genshtab/10km/",
+                        "http://maps.melda.ru/pub/genshtab/10km/"
+                    };
+                }
+            }
+
+            public override Guid Id
+            {
+                get
+                {
+                    return new Guid("BF6C9C79-CD78-4F1F-96CE-6EF1E5B52EF7");
+                }
+            }
+
+            public override string Name
+            {
+                get
+                {
+                    return "Генштаб 10 км";
+                }
+            }
+
+            public override GMapProvider[] Overlays
+            {
+                get
+                {
+                    return new GMapProvider[1] { Instance };
+                }
+            }
+
+            public override string Extension
+            {
+                get
+                {
+                    return ".jpg";
                 }
             }
 
