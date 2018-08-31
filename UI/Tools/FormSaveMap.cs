@@ -16,6 +16,7 @@ using GMap.NET.MapProviders;
 using GMap.NET.WindowsForms;
 using TrackConverter.Lib.Classes;
 using TrackConverter.Lib.Mathematic.Geodesy.MapCalibrations;
+using TrackConverter.Lib.Data.Providers.InternetServices;
 
 namespace TrackConverter.UI.Tools
 {
@@ -96,13 +97,13 @@ namespace TrackConverter.UI.Tools
                     provider = GMapProviders.OpenCycleMap;
                     break;
                 case MapProviders.YandexHybridMap:
-                    provider = GMapProviders.YandexHybridMap;
+                    provider = Yandex.HybridMap.Instance;
                     break;
                 case MapProviders.YandexMap:
                     provider = GMapProviders.YandexMap;
                     break;
                 case MapProviders.YandexSatelliteMap:
-                    provider = GMapProviders.YandexSatelliteMap;
+                    provider = Yandex.SatelliteMap.Instance;
                     break;
                 case MapProviders.WikimapiaMap:
                     provider = GMapProviders.WikiMapiaMap;

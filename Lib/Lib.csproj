@@ -142,8 +142,10 @@
     <Compile Include="Data\Interfaces\IWebCache.cs" />
     <Compile Include="Data\Providers\InternetServices\Bitly.cs" />
     <Compile Include="Data\Providers\InternetServices\Clck.cs" />
+    <Compile Include="Data\Providers\InternetServices\GGC.cs" />
     <Compile Include="Data\Providers\InternetServices\Google.cs" />
     <Compile Include="Data\Providers\InternetServices\GTOPO30.cs" />
+    <Compile Include="Data\Providers\InternetServices\BaseMapProvider.cs" />
     <Compile Include="Data\Providers\InternetServices\Nominatim.cs" />
     <Compile Include="Data\Providers\InternetServices\OSM.cs" />
     <Compile Include="Data\Providers\InternetServices\Qps.cs" />
@@ -213,6 +215,7 @@
     <Compile Include="Mathematic\Routing\GreedyElements\Graph.cs" />
     <Compile Include="Data\Providers\Local\OS\SQLiteCache.cs" />
     <Compile Include="Mathematic\Routing\PolarSearch.cs" />
+    <Compile Include="test.cs" />
     <Compile Include="Tracking\BaseTrack.cs" />
     <Compile Include="Tracking\Helpers\KmlHelper.cs" />
     <Compile Include="Tracking\Helpers\OfficeHelper.cs" />

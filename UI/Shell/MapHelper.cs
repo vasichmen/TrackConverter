@@ -21,6 +21,7 @@ using TrackConverter.UI.Map;
 using static TrackConverter.Lib.Classes.StackEdits.Actions;
 using System.ComponentModel;
 using TrackConverter.Lib.Data.Providers.Local.OS;
+using TrackConverter.Lib.Data.Providers.InternetServices;
 
 namespace TrackConverter.UI.Shell
 {
@@ -106,13 +107,13 @@ namespace TrackConverter.UI.Shell
                     formMain.gmapControlMap.MapProvider = GMapProviders.OpenCycleMap;
                     break;
                 case MapProviders.YandexHybridMap:
-                    formMain.gmapControlMap.MapProvider = GMapProviders.YandexHybridMap;
+                    formMain.gmapControlMap.MapProvider = Yandex.HybridMap.Instance;
                     break;
                 case MapProviders.YandexMap:
                     formMain.gmapControlMap.MapProvider = GMapProviders.YandexMap;
                     break;
                 case MapProviders.YandexSatelliteMap:
-                    formMain.gmapControlMap.MapProvider = GMapProviders.YandexSatelliteMap;
+                    formMain.gmapControlMap.MapProvider = Yandex.SatelliteMap.Instance;
                     break;
                 case MapProviders.WikimapiaMap:
                     formMain.gmapControlMap.MapProvider = GMapProviders.WikiMapiaMap;
@@ -749,13 +750,13 @@ namespace TrackConverter.UI.Shell
                     formMain.gmapControlMap.MapProvider = GMapProviders.OpenCycleMap;
                     break;
                 case MapProviders.YandexHybridMap:
-                    formMain.gmapControlMap.MapProvider = GMapProviders.YandexHybridMap;
+                    formMain.gmapControlMap.MapProvider = Yandex.HybridMap.Instance;
                     break;
                 case MapProviders.YandexMap:
                     formMain.gmapControlMap.MapProvider = GMapProviders.YandexMap;
                     break;
                 case MapProviders.YandexSatelliteMap:
-                    formMain.gmapControlMap.MapProvider = GMapProviders.YandexSatelliteMap;
+                    formMain.gmapControlMap.MapProvider = Yandex.SatelliteMap.Instance;
                     break;
                 case MapProviders.WikimapiaMap:
                     formMain.gmapControlMap.MapProvider = GMapProviders.WikiMapiaMap;

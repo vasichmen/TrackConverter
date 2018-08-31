@@ -15,6 +15,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using TrackConverter.Lib;
 using TrackConverter.Lib.Classes;
 using TrackConverter.Lib.Classes.StackEdits;
 using TrackConverter.Lib.Data;
@@ -511,7 +512,7 @@ namespace TrackConverter.UI.Shell
 
             #region КАРТА
 
-            
+
 
             TripRouteFile gf = null;
             try
@@ -1379,7 +1380,8 @@ namespace TrackConverter.UI.Shell
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //gmapControlMap.MapProvider = GMap.NET.MapProviders.
+            gmapControlMap.MapProvider = test.Instance;
+           // gmapControlMap.MapProvider = YandexMapProvider.Instance;
         }
 
 

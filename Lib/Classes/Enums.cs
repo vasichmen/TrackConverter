@@ -471,7 +471,12 @@ namespace TrackConverter
         /// <summary>
         /// карта викимапии
         /// </summary>
-        WikimapiaMap
+        WikimapiaMap,
+
+        /// <summary>
+        /// карты ГГЦ
+        /// </summary>
+        GGC
     }
 
     /// <summary>

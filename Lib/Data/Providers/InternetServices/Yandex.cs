@@ -15,6 +15,10 @@ using TrackConverter.Res.Properties;
 using Newtonsoft.Json;
 using System.Drawing;
 using System.Net;
+using GMap.NET;
+using GMap.NET.WindowsForms;
+using TrackConverter.Lib.Mathematic.Geodesy.Projections.GMapImported;
+using GMap.NET.MapProviders;
 
 namespace TrackConverter.Lib.Data.Providers.InternetServices
 {
@@ -26,6 +30,122 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
     /// </summary>
     public class Yandex : BaseConnection, IRouterProvider, IGeoсoderProvider, IRastrMapLayerProvider
     {
+        #region вложенные классы
+
+        //TODO: комментарии
+        public class SatelliteMap : BaseMapProvider
+        {
+            public static readonly SatelliteMap Instance;
+
+            static SatelliteMap()
+            {
+                Instance = new SatelliteMap();
+            }
+
+            public override Guid Id
+            {
+                get
+                {
+                    return new Guid("82DC969D-0491-40F3-8C21-4D90C23F47EB");
+                }
+            }
+
+
+            public override string Name
+            {
+                get
+                {
+                    return "YandexSatelliteMap";
+                }
+            }
+
+            public override GMapProvider[] Overlays
+            {
+                get
+                {
+                  return  new GMapProvider[1] { Instance };
+                }
+            }
+
+            public override PureProjection Projection
+            {
+                get
+                {
+                    return MercatorProjectionYandex.Instance;
+                }
+            }
+
+            public override PureImage GetTileImage(GPoint pos, int zoom)
+            {
+                //https://sat04.maps.yandex.net/tiles?l=sat&v=3.426.0&x=9912&y=5132&z=14&lang=ru_RU
+                string url = "https://sat0{0}.maps.yandex.net/tiles?l=sat&v=3.426.0&x={1}&y={2}&z={3}&lang={4}";
+                int server = new Random().Next(1, 5);
+                string lang;
+                switch (Vars.Options.Map.MapLanguange)
+                {
+                    case LanguageType.Russian:
+                        lang = "ru_RU";
+                        break;
+                    default: throw new Exception("Этот язык не реализован");
+                }
+
+                url = string.Format(url, server, pos.X, pos.Y, zoom, lang);
+                return GetGMapImage(url);
+            }
+
+        }
+
+        public class HybridMap : BaseMapProvider
+        {
+            public static readonly HybridMap Instance;
+
+            static HybridMap()
+            {
+                Instance = new HybridMap();
+            }
+
+
+            public override Guid Id
+            {
+                get
+                {
+                    return new Guid("82D3869D-0491-40F3-8C21-4D90C23F47EB");
+                }
+            }
+
+            public override string Name
+            {
+                get
+                {
+                    return "YandexHybridMap";
+                }
+            }
+
+            public override GMapProvider[] Overlays
+            {
+                get
+                {
+                    return new GMapProvider[2] { SatelliteMap.Instance, YandexHybridMapProvider.Instance };
+                }
+            }
+
+            public override PureProjection Projection
+            {
+                get
+                {
+                  return  MercatorProjectionYandex.Instance;
+                }
+            }
+
+            public override PureImage GetTileImage(GPoint pos, int zoom)
+            {
+                return YandexHybridMapProvider.Instance.GetTileImage(pos, zoom);
+            }
+        }
+
+
+        #endregion
+
         /// <summary>
         /// Создаёт новый объект связи с сервисом с заданной папкой кэша запросов и временем хранения кэша
         /// </summary>
@@ -862,5 +982,8 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         }
 
         #endregion
+
+
+
     }
 }
