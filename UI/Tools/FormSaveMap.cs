@@ -108,6 +108,9 @@ namespace TrackConverter.UI.Tools
                 case MapProviders.WikimapiaMap:
                     provider = GMapProviders.WikiMapiaMap;
                     break;
+                case MapProviders.GGC:
+                    provider = GGC.KM1.Instance;
+                    break;
                 default:
                     throw new NotSupportedException("Этот поставщик карты не поддерживается " + Vars.Options.Map.MapProvider.Enum);
             }

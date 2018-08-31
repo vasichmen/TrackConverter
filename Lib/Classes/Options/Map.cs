@@ -85,7 +85,8 @@ namespace TrackConverter.Lib.Classes.Options
                         new MapProviderRecord(){ Enum = MapProviders.YandexHybridMap, ID=4, Title = "Яндекс.Гибрид" ,IconName="\\Images\\maps\\yandex_hibride.png", MaxParallelPool = 4},
                         new MapProviderRecord(){ Enum = MapProviders.YandexMap, ID=5, Title = "Яндекс.Схема" ,IconName="\\Images\\maps\\yandex_map.png", MaxParallelPool = 4},
                         new MapProviderRecord(){ Enum = MapProviders.YandexSatelliteMap, ID=6, Title = "Яндекс.Спутник" ,IconName="\\Images\\maps\\yandex_satellite.png", MaxParallelPool = 4},
-                        new MapProviderRecord(){ Enum = MapProviders.WikimapiaMap, ID=7, Title = "Карта Викимапии" ,IconName="\\Images\\maps\\wikimapia_map.png", MaxParallelPool = 4}
+                        new MapProviderRecord(){ Enum = MapProviders.WikimapiaMap, ID=7, Title = "Карта Викимапии" ,IconName="\\Images\\maps\\wikimapia_map.png", MaxParallelPool = 4},
+                        new MapProviderRecord(){ Enum = MapProviders.GGC, ID=8, Title = "ГГЦ 1км" ,IconName="\\Images\\maps\\ggc_1km.png", MaxParallelPool = 4}
                         };
             }
             set { }

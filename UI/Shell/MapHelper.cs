@@ -118,6 +118,9 @@ namespace TrackConverter.UI.Shell
                 case MapProviders.WikimapiaMap:
                     formMain.gmapControlMap.MapProvider = GMapProviders.WikiMapiaMap;
                     break;
+                case MapProviders.GGC:
+                    formMain.gmapControlMap.MapProvider = GGC.KM1.Instance;
+                    break;
                 default:
                     throw new NotSupportedException("Этот поставщик карты не поддерживается " + Vars.Options.Map.MapProvider.Enum);
             }
@@ -760,6 +763,9 @@ namespace TrackConverter.UI.Shell
                     break;
                 case MapProviders.WikimapiaMap:
                     formMain.gmapControlMap.MapProvider = GMapProviders.WikiMapiaMap;
+                    break;
+                case MapProviders.GGC:
+                    formMain.gmapControlMap.MapProvider = GGC.KM1.Instance;
                     break;
                 default:
                     throw new NotSupportedException("Этот поставщик карты не поддерживается " + mpr.Enum);

@@ -32,9 +32,14 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
     {
         #region вложенные классы
 
-        //TODO: комментарии
+        /// <summary>
+        /// карта спутника Яндекса
+        /// </summary>
         public class SatelliteMap : BaseMapProvider
         {
+            /// <summary>
+            /// экземпляр провайдера
+            /// </summary>
             public static readonly SatelliteMap Instance;
 
             static SatelliteMap()
@@ -42,6 +47,9 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                 Instance = new SatelliteMap();
             }
 
+            /// <summary>
+            /// id
+            /// </summary>
             public override Guid Id
             {
                 get
@@ -50,7 +58,9 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                 }
             }
 
-
+            /// <summary>
+            /// имя карты
+            /// </summary>
             public override string Name
             {
                 get
@@ -59,14 +69,20 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                 }
             }
 
+            /// <summary>
+            /// слои для отображения
+            /// </summary>
             public override GMapProvider[] Overlays
             {
                 get
                 {
-                  return  new GMapProvider[1] { Instance };
+                    return new GMapProvider[1] { Instance };
                 }
             }
 
+            /// <summary>
+            /// проекция карты
+            /// </summary>
             public override PureProjection Projection
             {
                 get
@@ -75,6 +91,12 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                 }
             }
 
+            /// <summary>
+            /// возвращает картинку по заданным координатам
+            /// </summary>
+            /// <param name="pos">тайловые координаты</param>
+            /// <param name="zoom">масштаб</param>
+            /// <returns></returns>
             public override PureImage GetTileImage(GPoint pos, int zoom)
             {
                 //https://sat04.maps.yandex.net/tiles?l=sat&v=3.426.0&x=9912&y=5132&z=14&lang=ru_RU
@@ -95,8 +117,14 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
 
         }
 
+        /// <summary>
+        /// карта яндекс.гибрид
+        /// </summary>
         public class HybridMap : BaseMapProvider
         {
+            /// <summary>
+            /// экземпляр поставщика
+            /// </summary>
             public static readonly HybridMap Instance;
 
             static HybridMap()
@@ -104,7 +132,9 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                 Instance = new HybridMap();
             }
 
-
+            /// <summary>
+            /// id
+            /// </summary>
             public override Guid Id
             {
                 get
@@ -113,6 +143,9 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                 }
             }
 
+            /// <summary>
+            /// название карты
+            /// </summary>
             public override string Name
             {
                 get
@@ -121,6 +154,9 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                 }
             }
 
+            /// <summary>
+            /// слои карты (спутник + слой карты гибрида)
+            /// </summary>
             public override GMapProvider[] Overlays
             {
                 get
@@ -129,14 +165,23 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                 }
             }
 
+            /// <summary>
+            /// проекция 
+            /// </summary>
             public override PureProjection Projection
             {
                 get
                 {
-                  return  MercatorProjectionYandex.Instance;
+                    return MercatorProjectionYandex.Instance;
                 }
             }
 
+            /// <summary>
+            /// возвращает картинку гибрида (без спутника!) по заданным координатам
+            /// </summary>
+            /// <param name="pos">тайловые координаты</param>
+            /// <param name="zoom">масштаб</param>
+            /// <returns></returns>
             public override PureImage GetTileImage(GPoint pos, int zoom)
             {
                 return YandexHybridMapProvider.Instance.GetTileImage(pos, zoom);
@@ -982,8 +1027,5 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         }
 
         #endregion
-
-
-
     }
 }

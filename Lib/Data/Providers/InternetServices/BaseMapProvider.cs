@@ -11,9 +11,17 @@ using System.Drawing;
 
 namespace TrackConverter.Lib.Data.Providers.InternetServices
 {
+    /// <summary>
+    /// базовый класс для поставщика карты
+    /// </summary>
     public abstract class BaseMapProvider : GMapProvider
     {
 
+        /// <summary>
+        /// возвращает картинку тайла по запросу
+        /// </summary>
+        /// <param name="url">запрос к серверу</param>
+        /// <returns></returns>
         protected static GMapImage GetGMapImage(string url)
         {
             WebClient wc = new WebClient();
@@ -22,13 +30,17 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
             if (wc.ResponseHeaders[HttpResponseHeader.ContentLength] == "0")
                 return new GMapImage();
             GMapImage res = new GMapImage();
-            res.Data = CopyStream(str, false);
+            res.Data = CopyStream(str);
             res.Img = Image.FromStream(res.Data);
             return res;
         }
 
-
-        private static MemoryStream CopyStream(Stream inputStream, bool SeekOriginBegin)
+        /// <summary>
+        /// копирует поток в MemoryStream
+        /// </summary>
+        /// <param name="inputStream"></param>
+        /// <returns></returns>
+        private static MemoryStream CopyStream(Stream inputStream)
         {
             const int readSize = 32 * 1024;
             byte[] buffer = new byte[readSize];
@@ -41,10 +53,6 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                 }
             }
             buffer = null;
-            if (SeekOriginBegin)
-            {
-                inputStream.Seek(0, SeekOrigin.Begin);
-            }
             ms.Seek(0, SeekOrigin.Begin);
             return ms;
         }

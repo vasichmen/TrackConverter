@@ -1380,8 +1380,6 @@ namespace TrackConverter.UI.Shell
 
         private void button1_Click(object sender, EventArgs e)
         {
-            gmapControlMap.MapProvider = test.Instance;
-           // gmapControlMap.MapProvider = YandexMapProvider.Instance;
         }
 
 
