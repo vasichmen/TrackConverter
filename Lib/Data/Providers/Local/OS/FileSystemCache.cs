@@ -6,6 +6,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using TrackConverter.Lib.Data.Interfaces;
 
 namespace TrackConverter.Lib.Data.Providers.Local.OS
@@ -170,13 +171,8 @@ namespace TrackConverter.Lib.Data.Providers.Local.OS
                 files_data.TryAdd(url, info);
 
                 //дописываем файл
-                lock (locker)
-                {
-                    sw = new StreamWriter(directory + "\\" + dataFileName, true, Encoding.UTF8);
-                    string line = info.url + "*" + info.path + "*" + info.date.ToString();
-                    sw.WriteLine(line);
-                    sw.Close();
-                }
+                string line = info.url + "*" + info.path + "*" + info.date.ToString();
+                append(line);
                 return true;
             }
             else
@@ -225,6 +221,16 @@ namespace TrackConverter.Lib.Data.Providers.Local.OS
                 return null;
         }
 
+        void append(string line)
+        {
+            lock (locker)
+            {
+                StreamWriter sw;
+                sw = new StreamWriter(directory + "\\" + dataFileName, true, Encoding.UTF8);
+                sw.WriteLine(line);
+                sw.Close();
+            }
+        }
 
         #endregion
 

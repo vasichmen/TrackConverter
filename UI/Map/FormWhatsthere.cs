@@ -100,12 +100,20 @@ namespace TrackConverter.UI.Map
                     }
             }));
 
-            addr.Start();
-            alt.Start();
-            tz.Start();
+            //TODO: этот вариант лучше, но из-за параллельного доступа к файлу data.txt в FileSystemCache бывают проблемы
+            //addr.Start();
+            //alt.Start();
+            //tz.Start();
+            //addr.Wait(5000);
+            //alt.Wait(5000);
+            //tz.Wait(5000);
 
+
+            addr.Start();
             addr.Wait(5000);
+            alt.Start();
             alt.Wait(5000);
+            tz.Start();
             tz.Wait(5000);
 
             point.CalculateParametres();
