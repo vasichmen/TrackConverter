@@ -1019,7 +1019,7 @@ namespace TrackConverter.Lib.Tracking
                 string adr = coder.GetAddress(pt.Coordinates);
                 ads.Add(adr);
                 if (callback != null)
-                    callback.Invoke("Идет сохранение  файла. Обрабатывается адрес: " + ads);
+                    callback.Invoke("Идет сохранение  файла. Обрабатывается адрес: " + adr);
             }
 
             StreamWriter sw = new StreamWriter(fileName, false, new UTF8Encoding(false));

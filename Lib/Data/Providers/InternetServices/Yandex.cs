@@ -250,7 +250,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         /// <param name="to"></param>
         /// <param name="waypoints"></param>
         /// <returns></returns>
-        private JObject GetRouteJSON(Coordinate from, Coordinate to, TrackFile waypoints = null)
+        private JObject GetRouteJSON(Coordinate from, Coordinate to, TrackFile waypoints = null, string auth_token = null)
         {
             //последовательность запросов
             //https://api-maps.yandex.ru/2.0/?load=package.standard,package.geoObjects,package.route&lang=ru-RU
@@ -270,23 +270,19 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
             //на транспорте
             //&rtm=atm&&rtt=mt
 
-            //запрос токена. Возвращается текст javascript , со структурой , в которой есть токен. 
-            string urlGetToken = "https://api-maps.yandex.ru/2.0/?load=package.standard,package.geoObjects,package.route&lang=ru-RU";
-            string js = SendStringGetRequest(urlGetToken);
-
-            //находим токен из javascript
-            int start = js.IndexOf("project_data[\"token\"]=\"") + "project_data[\"token\"]=\"".Length;
-            int end = js.IndexOf("\";", start);
-            int length = end - start;
-
-            //параметр token для запроса
-            string token = js.Substring(start, length);
 
             //случайный id для запроса (возможно, это увеличит число доступных запросов)
             int id = new Random().Next(0, int.MaxValue);
 
             //параметр sign запроса
             int sign = new Random().Next(0, 999999999);
+
+            //токен авторизации
+            string token;
+            if (string.IsNullOrWhiteSpace(auth_token))
+                token = getRouterToken();
+            else
+                token = auth_token;
 
             //параметры запроса ( на автомобиле, пешком)
             string param = null;
@@ -324,6 +320,26 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         }
 
         /// <summary>
+        /// возвращает токен для получения маршшрутов
+        /// </summary>
+        /// <returns></returns>
+        string getRouterToken() {
+
+            //запрос токена. Возвращается текст javascript , со структурой , в которой есть токен. 
+            string urlGetToken = "https://api-maps.yandex.ru/2.0/?load=package.standard,package.geoObjects,package.route&lang=ru-RU";
+            string js = SendStringGetRequest(urlGetToken);
+
+            //находим токен из javascript
+            int start = js.IndexOf("project_data[\"token\"]=\"") + "project_data[\"token\"]=\"".Length;
+            int end = js.IndexOf("\";", start);
+            int length = end - start;
+
+            //параметр token для запроса
+            string token = js.Substring(start, length);
+            return token;
+        }
+
+        /// <summary>
         /// разбор ответа сервера и выбор маршрута
         /// </summary>
         /// <param name="jobj">объект JSON всей информации о маршруте (все, что прислал сервер)</param>
@@ -337,8 +353,19 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                 foreach (JToken jt in route)
                 {
                     string coords = jt["properties"]["encodedCoordinates"].ToString();
-                    TrackFile part = Yandex.DecodePolyline2(coords);
-                    res.Add(part);
+                    TrackFile part=null;
+                    try
+                    {
+                        part = Yandex.DecodePolyline2(coords);
+                    }
+                    catch (OverflowException)
+                    {
+                        part = Yandex.DecodePolyline(coords);
+                    }
+                    finally
+                    {
+                        res.Add(part);
+                    }
                 }
                 return res;
             }
@@ -685,6 +712,9 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
             ConcurrentBag<List<TrackFile>> tracks = new ConcurrentBag<List<TrackFile>>(); //результирующая матрица маршрутов
             bool isRequestComplete = false; //истина, если завершены все запросы к серверу
 
+            //токен авторизации
+            string auth_token =getRouterToken();
+
             //действие обработки очереди JSON ответов сервера
             Action polylinerAction = new Action(() =>
             {
@@ -775,7 +805,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                         queue.Enqueue(null);
                     else
                     {
-                        JObject jo = GetRouteJSON(points[i].Coordinates, points[j].Coordinates);
+                        JObject jo = GetRouteJSON(points[i].Coordinates, points[j].Coordinates,null, auth_token);
                         try
                         {
                             jo.SelectToken("data.features[0].features[0].properties.encodedCoordinates", true);
