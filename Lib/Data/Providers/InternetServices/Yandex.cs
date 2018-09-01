@@ -383,8 +383,11 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         public static TrackFile DecodePolyline2(string encodedCoordinates)
         {
             string key = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_=";
-            int fgggg = encodedCoordinates.Length;
+
+            encodedCoordinates = "pkg_ArN2UgNdBQAAzF0AAFAcAQAplwAATuEAALdZ__8=";
+            //int fgggg = encodedCoordinates.Length;
             //encodedCoordinates = encodedCoordinates.TrimEnd('=');
+
             //создание строки бит
             int[] bytes = new int[encodedCoordinates.Length];
             for (int i = 0; i < encodedCoordinates.Length; i++)
@@ -518,6 +521,8 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         /// https://tech.yandex.ru/maps/doc/jsapi/1.x/dg/tasks/how-to-add-polyline-docpage/#encoding-polyline-points
         /// Для Python:
         /// https://yandex.ru/blog/mapsapi/16101
+        /// Для PHP:
+        /// https://yandex.ru/blog/mapsapi/8198
         /// Утилита кодирования:
         /// https://yandex.github.io/mapsapi-examples-old/html/mappolylineencodepoints.html
         /// </summary>
