@@ -1,17 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using System.Xml;
 using TrackConverter.Lib.Classes;
 using TrackConverter.Lib.Data.Interfaces;
 using TrackConverter.Lib.Data.Providers.InternetServices;
 using TrackConverter.Lib.Tracking;
-using TrackConverter.Res.Properties;
 
 namespace TrackConverter.Lib.Data
 {
@@ -23,7 +15,7 @@ namespace TrackConverter.Lib.Data
         /// <summary>
         /// поставщик сервиса прокладки маршрутов
         /// </summary>
-        private PathRouteProvider pathRouteProvider;
+        private readonly PathRouteProvider pathRouteProvider;
         private IRouterProvider router;
 
         /// <summary>

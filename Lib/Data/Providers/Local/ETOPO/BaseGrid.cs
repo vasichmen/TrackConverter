@@ -1,12 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data;
 using System.Data.SQLite;
 using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TrackConverter.Lib.Classes;
 
 namespace TrackConverter.Lib.Data.Providers.Local.ETOPO
@@ -14,7 +9,7 @@ namespace TrackConverter.Lib.Data.Providers.Local.ETOPO
     /// <summary>
     /// базовый класс базы данных ETOPO
     /// </summary>
-    abstract class BaseGrid : IDatabase
+    internal abstract class BaseGrid: IDatabase
     {
         protected int columns;
         protected int rows;
@@ -125,10 +120,11 @@ namespace TrackConverter.Lib.Data.Providers.Local.ETOPO
             double ic = rows / 2;
             double jc = columns / 2;
 
-            Point res = new Point();
-
-            res.Y = (int)Math.Round(ic - lat / in1cell, 0);
-            res.X = (int)Math.Round(jc + lon / in1cell, 0);
+            Point res = new Point
+            {
+                Y = (int)Math.Round(ic - lat / in1cell, 0),
+                X = (int)Math.Round(jc + lon / in1cell, 0)
+            };
 
             return res;
         }
@@ -178,17 +174,18 @@ namespace TrackConverter.Lib.Data.Providers.Local.ETOPO
             SQLiteConnection.CreateFile(FileName);
             SQLiteConnection con = new SQLiteConnection("Data Source = " + FileName + "; Version = 3;");
 
-            CreateTable(0, 1350, con, callback);
-            CreateTable(1350, 1350, con, callback);
-            CreateTable(2700, 1350, con, callback);
-            CreateTable(4050, 1350, con, callback);
-            CreateTable(5400, 1350, con, callback);
-            CreateTable(6750, 1350, con, callback);
-            CreateTable(8100, 1350, con, callback);
-            CreateTable(9450, 1350, con, callback);
+            createTable(0, 1350, con, callback);
+            createTable(1350, 1350, con, callback);
+            createTable(2700, 1350, con, callback);
+            createTable(4050, 1350, con, callback);
+            createTable(5400, 1350, con, callback);
+            createTable(6750, 1350, con, callback);
+            createTable(8100, 1350, con, callback);
+            createTable(9450, 1350, con, callback);
         }
 
-        private void CreateTable(int startIndex, int length, SQLiteConnection connection, Action<string> callback = null)
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2202:Не ликвидировать объекты несколько раз")]
+        private void createTable(int startIndex, int length, SQLiteConnection connection, Action<string> callback = null)
         {
             //СОЗДАНИЕ БД
             string table_name = "tb" + startIndex;

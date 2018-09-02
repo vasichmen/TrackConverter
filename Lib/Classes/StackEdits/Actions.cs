@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TrackConverter.Lib.Tracking;
 
 namespace TrackConverter.Lib.Classes.StackEdits
@@ -15,11 +11,11 @@ namespace TrackConverter.Lib.Classes.StackEdits
         /// <summary>
         /// информация о последнем перемещении маркера на карте
         /// </summary>
-        public class MarkerMoveInfo : IUndoInfo
+        public class MarkerMoveInfo: IUndoInfo
         {
-            Action<TrackPoint, TrackPoint> undoAction;
-            TrackPoint oldPoint;
-            TrackPoint newPoint;
+            private Action<TrackPoint, TrackPoint> undoAction;
+            private readonly TrackPoint oldPoint;
+            private readonly TrackPoint newPoint;
 
             /// <summary>
             /// создает новый экземпляр отмены действия с заданными данными для отмены
@@ -48,11 +44,11 @@ namespace TrackConverter.Lib.Classes.StackEdits
         /// <summary>
         /// информация о б изменении информации точки
         /// </summary>
-        public class MarkerEditInfo : IUndoInfo
+        public class MarkerEditInfo: IUndoInfo
         {
-            Action<TrackPoint, TrackPoint> undoAction;
-            TrackPoint oldPoint;
-            TrackPoint newPoint;
+            private Action<TrackPoint, TrackPoint> undoAction;
+            private readonly TrackPoint oldPoint;
+            private readonly TrackPoint newPoint;
 
             /// <summary>
             /// создает новый экземпляр отмены действия с заданными данными для отмены
@@ -82,10 +78,10 @@ namespace TrackConverter.Lib.Classes.StackEdits
         /// <summary>
         /// отмена удаления маркера
         /// </summary>
-        public class MarkerDeleteInfo : IUndoInfo
+        public class MarkerDeleteInfo: IUndoInfo
         {
-            Action<TrackPoint> undoAction;
-            TrackPoint oldPoint;
+            private Action<TrackPoint> undoAction;
+            private readonly TrackPoint oldPoint;
 
             /// <summary>
             /// создает новый экземпляр отмены действия с заданными данными для отмены
@@ -94,9 +90,7 @@ namespace TrackConverter.Lib.Classes.StackEdits
             /// <param name="undoAction">дейсвие для отмены изменения информации</param>
             public MarkerDeleteInfo(TrackPoint oldPoint, Action<TrackPoint> undoAction)
             {
-                if (undoAction == null)
-                    throw new ArgumentNullException("StackEdits.MarkerDeleteInfo: при создании пустые объекты недопустимы");
-                this.undoAction = undoAction;
+                this.undoAction = undoAction ?? throw new ArgumentNullException("StackEdits.MarkerDeleteInfo: при создании пустые объекты недопустимы");
                 this.oldPoint = oldPoint;
             }
 
@@ -113,10 +107,10 @@ namespace TrackConverter.Lib.Classes.StackEdits
         /// <summary>
         /// отмена добавления маркера
         /// </summary>
-        public class MarkerAddInfo : IUndoInfo
+        public class MarkerAddInfo: IUndoInfo
         {
-            Action<TrackPoint> undoAction;
-            TrackPoint newPoint;
+            private Action<TrackPoint> undoAction;
+            private readonly TrackPoint newPoint;
 
 
             /// <summary>
@@ -126,9 +120,7 @@ namespace TrackConverter.Lib.Classes.StackEdits
             /// <param name="undoAction">дейсвие для отмены изменения информации</param>
             public MarkerAddInfo(TrackPoint newPoint, Action<TrackPoint> undoAction)
             {
-                if (undoAction == null)
-                    throw new ArgumentNullException("StackEdits.MarkerAddInfo: при создании пустые объекты недопустимы");
-                this.undoAction = undoAction;
+                this.undoAction = undoAction ?? throw new ArgumentNullException("StackEdits.MarkerAddInfo: при создании пустые объекты недопустимы");
                 this.newPoint = newPoint;
             }
 

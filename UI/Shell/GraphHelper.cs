@@ -1,24 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Drawing.Imaging;
-using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Forms;
-using System.Windows.Forms.DataVisualization.Charting;
 using System.Windows.Input;
-using TrackConverter.Lib;
 using TrackConverter.Lib.Tracking;
-using TrackConverter.UI.Common;
 using ZedGraph;
 
 namespace TrackConverter.UI.Shell
 {
-    class GraphHelper
+    internal class GraphHelper
     {
         private FormMain formMain;
 
@@ -26,8 +17,8 @@ namespace TrackConverter.UI.Shell
         {
             this.formMain = formMain;
         }
-      
-        
+
+
         #region вспомогательные методы
 
         /// <summary>
@@ -74,35 +65,36 @@ namespace TrackConverter.UI.Shell
 
             //ДОБАВЛЕНИЕ ВЫДЕЛЕННОГО ТРЕКА
             //if (this == Program.winElevVisual) // если это окно - часть главного окна, то проверяем выделенный маршрут
-                if (Vars.currentSelectedTrack != null)
+            if (Vars.currentSelectedTrack != null)
+            {
+                PointPairList list = new PointPairList();
+                BaseTrack selTrack = Vars.currentSelectedTrack;
+                string name = selTrack.Name;
+                foreach (TrackPoint tt in selTrack)
                 {
-                    PointPairList list = new PointPairList();
-                    BaseTrack selTrack = Vars.currentSelectedTrack;
-                    string name = selTrack.Name;
-                    foreach (TrackPoint tt in selTrack)
-                    {
-                        //значения в километрах
-                        double x = tt.StartDistance * 1000.000;
-                        double y = tt.MetrAltitude;
+                    //значения в километрах
+                    double x = tt.StartDistance * 1000.000;
+                    double y = tt.MetrAltitude;
 
-                        //если настройки требуют, то перевод в метры
-                        if (Vars.Options.Graphs.isXKm)
-                            x /= 1000.000;
-                        if (Vars.Options.Graphs.isYKm)
-                            y /= 1000.000;
+                    //если настройки требуют, то перевод в метры
+                    if (Vars.Options.Graphs.isXKm)
+                        x /= 1000.000;
+                    if (Vars.Options.Graphs.isYKm)
+                        y /= 1000.000;
 
-                        //добавление пары
-                        list.Add(x, y);
-                    }
+                    //добавление пары
+                    list.Add(x, y);
+                }
 
                 formMain.curveSelectedTrack = new LineItem(name, list, selTrack.Color, SymbolType.None);
                 formMain.curveSelectedTrack.Line.IsSmooth = true;
                 formMain.curveSelectedTrack.Tag = "selectedTrack";
 
                 formMain.mainCurves.Add(formMain.curveSelectedTrack);
-                    gp.CurveList.Add(formMain.curveSelectedTrack);
-                }
-                else Clear();
+                gp.CurveList.Add(formMain.curveSelectedTrack);
+            }
+            else
+                Clear();
 
             formMain.zedGraph.AxisChange();
             formMain.zedGraph.Invalidate();
@@ -111,7 +103,7 @@ namespace TrackConverter.UI.Shell
         /// <summary>
         /// удаляет все элементы графа (выделенные точки), не являющиеся линиями высот
         /// </summary>
-        private void RemLastSelPoint()
+        private void remLastSelPoint()
         {
             GraphPane pane = formMain.zedGraph.GraphPane;
 
@@ -146,7 +138,8 @@ namespace TrackConverter.UI.Shell
         /// <param name="track"></param>
         public void AddTrack(TrackFile track)
         {
-            if (formMain.tracks == null) formMain.tracks = new TrackFileList();
+            if (formMain.tracks == null)
+                formMain.tracks = new TrackFileList();
             formMain.tracks.Add(track);
             ConfigureGraph();
         }
@@ -185,7 +178,7 @@ namespace TrackConverter.UI.Shell
         /// <param name="tt"></param>
         public void SelectPoint(TrackPoint tt)
         {
-            RemLastSelPoint();
+            remLastSelPoint();
 
             GraphPane pane = formMain.zedGraph.GraphPane;
 
@@ -233,7 +226,7 @@ namespace TrackConverter.UI.Shell
 
         internal void MouseLeave(object sender, EventArgs e)
         {
-            RemLastSelPoint(); //очистка графика
+            remLastSelPoint(); //очистка графика
             formMain.mapHelper.DeselectPoints(); //очитска карты
         }
 
@@ -244,10 +237,8 @@ namespace TrackConverter.UI.Shell
                 return false;
 
             // Сюда будет сохранена кривая, рядом с которой был произведен клик
-            CurveItem curve;
 
             // Сюда будет сохранен номер точки кривой, ближайшей к точке клика
-            int index;
 
             GraphPane pane = formMain.zedGraph.GraphPane;
 
@@ -255,14 +246,14 @@ namespace TrackConverter.UI.Shell
             // при котором еще считается, что клик попал в окрестность кривой.
             GraphPane.Default.NearestTol = 30;
 
-            bool result = pane.FindNearestPoint(e.Location, out curve, out index);
+            bool result = pane.FindNearestPoint(e.Location, out CurveItem curve, out int index);
 
             if (result && (string)curve.Tag == "selectedTrack")
             {
                 #region выделение точки на графике
 
                 //очистка графика от предыдущих точек
-                RemLastSelPoint();
+                remLastSelPoint();
 
                 // Максимально расстояние от точки клика до кривой не превысило NearestTol
                 // Добавим точку на график, вблизи которой произошел клик

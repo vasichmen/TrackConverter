@@ -175,6 +175,7 @@
     <Compile Include="Data\Providers\Local\OS\ObjectsMemoryCache.cs" />
     <Compile Include="Data\RastrMapLayer.cs" />
     <Compile Include="Data\VectorMapLayer.cs" />
+    <Compile Include="Exceptions\TrackConverterException.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Mathematic\Assessment\Normalizer.cs" />
     <Compile Include="Mathematic\Assessment\TrackHandler.cs" />

@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Windows.Forms;
 using TrackConverter.Lib.Data;
+using TrackConverter.Lib.Exceptions;
 using Word = Microsoft.Office.Interop.Word;
 
 namespace TrackConverter.Lib.Tracking.Helpers
@@ -12,7 +10,7 @@ namespace TrackConverter.Lib.Tracking.Helpers
     /// <summary>
     /// методы для работы с форматами MS Office
     /// </summary>
-    class OfficeHelper
+    internal class OfficeHelper
     {
         /// <summary>
         /// записать маршрут в указанный файл .doc
@@ -57,7 +55,7 @@ namespace TrackConverter.Lib.Tracking.Helpers
             for (int i = 0; i < track.Count; i++)
             {
                 if (callback != null)
-                    callback.Invoke("Идет сохранение  файла. Завершено: "  +(i /all  * 100d).ToString("0.0") + "%");
+                    callback.Invoke("Идет сохранение  файла. Завершено: " + (i / all * 100d).ToString("0.0") + "%");
 
                 string adr = coder.GetAddress(track[i].Coordinates);
 
@@ -97,18 +95,18 @@ namespace TrackConverter.Lib.Tracking.Helpers
         //должна быть в папке с программой, 
         //----- класс позволяет создать новый документ по шаблону, произвести поиск и замену строк (одно вхождение или все),
         //изменить видимость документа, закрыть документ
-        class WordDocument
+        private class WordDocument
         {
             // фиксированные параметры для передачи приложению Word
             private object _missingObj = Missing.Value;
-            private object _trueObj = true;
+            private readonly object _trueObj = true;
             private object _falseObj = false;
 
             //рабочие параметры если использовать Word.Application и Word.Document получим предупреждение от компиллятора
             private Word._Application _application;
             private Word._Document _document;
 
-            private object _templatePathObj;
+            private readonly object _templatePathObj;
 
             private Word.Range _currentRange = null;
 
@@ -131,8 +129,10 @@ namespace TrackConverter.Lib.Tracking.Helpers
             {
                 get
                 {
-                    if (_application == null || _document == null) { return true; }
-                    else { return false; }
+                    if (_application == null || _document == null)
+                    { return true; }
+                    else
+                    { return false; }
                 }
             }
 
@@ -141,13 +141,15 @@ namespace TrackConverter.Lib.Tracking.Helpers
             {
                 get
                 {
-                    if (Closed) { throw new Exception("Ошибка при попытке изменить видимость Microsoft Word. Программа или документ уже закрыты."); }
+                    if (Closed)
+                    { throw new Exception("Ошибка при попытке изменить видимость Microsoft Word. Программа или документ уже закрыты."); }
                     return _application.Visible;
 
                 }
                 set
                 {
-                    if (Closed) { throw new Exception("Ошибка при попытке изменить видимость Microsoft Word. Программа или документ уже закрыты."); }
+                    if (Closed)
+                    { throw new Exception("Ошибка при попытке изменить видимость Microsoft Word. Программа или документ уже закрыты."); }
                     _application.Visible = value;
                 }
                 // завершение public bool Visible  
@@ -166,7 +168,12 @@ namespace TrackConverter.Lib.Tracking.Helpers
             }
 
 
-            // КОНСТРУКТОР ПУСТОЙ ДОКУМЕНТ
+            // 
+            /// <summary>
+            /// КОНСТРУКТОР ПУСТОЙ ДОКУМЕНТ
+            /// </summary>
+            /// <param name="startVisible"></param>
+            /// <exception cref="TrackConverterException"></exception>
             public WordDocument(bool startVisible)
             {
                 //создаем обьект приложения word
@@ -180,7 +187,7 @@ namespace TrackConverter.Lib.Tracking.Helpers
                 catch (Exception error)
                 {
                     this.Close();
-                    throw error;
+                    throw new TrackConverterException(error.Message, error);
                 }
                 Visible = startVisible;
 
@@ -190,7 +197,13 @@ namespace TrackConverter.Lib.Tracking.Helpers
 
             public WordDocument() : this(false) { }
 
-            // КОНСТРУКТОР ШАБЛОН
+
+            /// <summary>
+            /// КОНСТРУКТОР ШАБЛОН
+            /// </summary>
+            /// <param name="templatePath"></param>
+            /// <param name="startVisible"></param>
+            /// <exception cref="TrackConverterException"></exception>
             public WordDocument(string templatePath, bool startVisible)
             {
                 //создаем обьект приложения word
@@ -208,7 +221,7 @@ namespace TrackConverter.Lib.Tracking.Helpers
                 catch (Exception error)
                 {
                     this.Close();
-                    throw error;
+                    throw new TrackConverterException(error.Message, error);
                 }
                 Visible = startVisible;
 
@@ -220,6 +233,12 @@ namespace TrackConverter.Lib.Tracking.Helpers
                 : this(templatePath, false) { }
 
 
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="pathToTemplate"></param>
+            /// <param name="fillWordDoc"></param>
+            /// <exception cref="TrackConverterException"></exception>
             public static void FillShowTemplate(string pathToTemplate, Action<WordDocument> fillWordDoc)
             {
 
@@ -232,8 +251,9 @@ namespace TrackConverter.Lib.Tracking.Helpers
                 }
                 catch (Exception error)
                 {
-                    if (wordDoc != null) { wordDoc.Close(); }
-                    throw error;
+                    if (wordDoc != null)
+                    { wordDoc.Close(); }
+                    throw new TrackConverterException(error.Message, error);
                 }
 
                 wordDoc.Visible = true;
@@ -243,11 +263,7 @@ namespace TrackConverter.Lib.Tracking.Helpers
             public void SetSelectionToText(string stringToFind)
             {
                 Word.Range foundRange = findRangeByString(stringToFind);
-                if (foundRange == null)
-                {
-                    throw new Exception("Ошибка при поиске текста в MS Word. Не удалось найти и выбрать заданный текст: " + stringToFind);
-                }
-                _currentRange = foundRange;
+                _currentRange = foundRange ?? throw new Exception("Ошибка при поиске текста в MS Word. Не удалось найти и выбрать заданный текст: " + stringToFind);
                 _selection = new WordSelection(foundRange, false);
             }
 
@@ -279,7 +295,8 @@ namespace TrackConverter.Lib.Tracking.Helpers
             // встаем на закладку, то есть получаем обьект Range по имени закладки и заноми его в переменужж экземпляра класса, доступную для других методов
             public void SetSelectionToBookmark(string bookmarkName, bool isParagraph)
             {
-                if (Closed) { throw new Exception("Ошибка при обращении к документу Word. Документ уже закрыт."); }
+                if (Closed)
+                { throw new Exception("Ошибка при обращении к документу Word. Документ уже закрыт."); }
 
                 Object bookmarkNameObj = bookmarkName;
                 Word.Range bookmarkRange = null;
@@ -310,16 +327,22 @@ namespace TrackConverter.Lib.Tracking.Helpers
 
             public void SetSelectionToCell(int rowIndex, int columnIndex)
             {
-                if (_table == null) { throw new Exception("Ошибка при выборе ячейки в таблице Word, не выбрана текущая таблица."); }
+                if (_table == null)
+                { throw new Exception("Ошибка при выборе ячейки в таблице Word, не выбрана текущая таблица."); }
 
                 _currentRange = _table.Cell(rowIndex, columnIndex).Range;
                 _selection = new WordSelection(_currentRange, false);
             }
+            
 
-            // вставляем пустой абзац, доступ к его тексту и свойствам через 
+            /// <summary>
+            /// вставляем пустой абзац, доступ к его тексту и свойствам через
+            /// </summary>
+            /// <exception cref="TrackConverterException"></exception>
             public void InsertParagraphAfter()
             {
-                if (Closed) { throw new Exception("Ошибка при обращении к документу Word. Документ уже закрыт."); }
+                if (Closed)
+                { throw new Exception("Ошибка при обращении к документу Word. Документ уже закрыт."); }
                 // сворачиваем текущую позицию и переходим в ее конец
                 Object collapseDirection = Word.WdCollapseDirection.wdCollapseEnd;
                 try
@@ -331,7 +354,7 @@ namespace TrackConverter.Lib.Tracking.Helpers
                 }
                 catch (Exception wordError)
                 {
-                    throw wordError;
+                    throw new TrackConverterException(wordError.Message, wordError);
                 }
             }
 
@@ -379,7 +402,8 @@ namespace TrackConverter.Lib.Tracking.Helpers
 
             public void SetColumnWidth(int columnIndex, int widthPixels)
             {
-                if (_table == null) { throw new Exception("Ошибка при установке ширины колонки в таблице Word - текущая таблица не выбрана (SetColumnWidth(int columnIndex, int widthPixels))"); }
+                if (_table == null)
+                { throw new Exception("Ошибка при установке ширины колонки в таблице Word - текущая таблица не выбрана (SetColumnWidth(int columnIndex, int widthPixels))"); }
                 _table.Columns[columnIndex].SetWidth(widthPixels, Word.WdRulerStyle.wdAdjustNone);
             }
 
@@ -405,7 +429,8 @@ namespace TrackConverter.Lib.Tracking.Helpers
             //ВСТАВЛЯЕМ ДОКУМЕНТ WORD ИЗ ФАЙЛА
             public void InsertFile(string pathToFile)
             {
-                if (_currentRange == null) { throw new Exception("Ничего не выбрано"); }
+                if (_currentRange == null)
+                { throw new Exception("Ничего не выбрано"); }
                 _currentRange.InsertFile(pathToFile);
             }
 
@@ -432,7 +457,8 @@ namespace TrackConverter.Lib.Tracking.Helpers
             // поиск строки и ее замена на заданную строку
             public void ReplaceAllStrings(string strToFind, string replaceStr)
             {
-                if (Closed) { throw new Exception("Ошибка при обращении к документу Word. Документ уже закрыт."); }
+                if (Closed)
+                { throw new Exception("Ошибка при обращении к документу Word. Документ уже закрыт."); }
 
                 // обьектные строки для Word
                 object strToFindObj = strToFind;
@@ -498,7 +524,8 @@ namespace TrackConverter.Lib.Tracking.Helpers
             private Word.Range findRangeByString(string stringToFind)
             {
                 // проверяем, не закрыт ли документ или приложение ворд
-                if (Closed) { throw new Exception("Ошибка при обращении к документу Word. Документ уже закрыт."); }
+                if (Closed)
+                { throw new Exception("Ошибка при обращении к документу Word. Документ уже закрыт."); }
                 // оформляем обьектные параметры
                 object stringToFindObj = stringToFind;
                 Word.Range wordRange;
@@ -524,7 +551,8 @@ namespace TrackConverter.Lib.Tracking.Helpers
 
                     rangeFound = (bool)wordFindObj.GetType().InvokeMember("Execute", BindingFlags.InvokeMethod, null, wordFindObj, wordFindParameters);
 
-                    if (rangeFound) { return wordRange; }
+                    if (rangeFound)
+                    { return wordRange; }
 
                 }
 
@@ -536,7 +564,8 @@ namespace TrackConverter.Lib.Tracking.Helpers
             private Word.Range findRangeByString(Word.Range containerRange, string stringToFind)
             {
                 // проверяем, не закрыт ли документ или приложение ворд
-                if (Closed) { throw new Exception("Ошибка при обращении к документу Word. Документ уже закрыт."); }
+                if (Closed)
+                { throw new Exception("Ошибка при обращении к документу Word. Документ уже закрыт."); }
                 // оформляем обьектные параметры
                 object stringToFindObj = stringToFind;
                 bool rangeFound;
@@ -557,8 +586,10 @@ namespace TrackConverter.Lib.Tracking.Helpers
 
 
 
-                if (rangeFound) { return containerRange; }
-                else { return null; }
+                if (rangeFound)
+                { return containerRange; }
+                else
+                { return null; }
 
             }
 
@@ -572,10 +603,10 @@ namespace TrackConverter.Lib.Tracking.Helpers
 
         /// Версия 1.3
         // класс - параграф MS Word, обертка над обьектом Range который соответствует параграфу (вставленному в документ), дает доступ к стилю текста, выравниваю, размеру шрифта (возможно дальнейшее расширение, по идее создается внутри класса документа при вставке абзаца как публичное свойство-обьект, позволяющее заполнять свои поля по необходимости
-        class WordSelection
+        private class WordSelection
         {
             private Word.Range _range;
-            private bool _insertParagrAfterText = true;
+            private readonly bool _insertParagrAfterText = true;
 
             // надо проверить возможно не нужно после последнего исправления (вставки параграфа после текста)
             private Word.WdParagraphAlignment _savedAligment;
@@ -618,14 +649,18 @@ namespace TrackConverter.Lib.Tracking.Helpers
                 get
                 {
                     // нет точных данных о возможных значениях, 1 жирный, 0 нет... но по идее может быть и еще
-                    if (_range.Bold == 1) { return true; }
-                    else { return false; }
+                    if (_range.Bold == 1)
+                    { return true; }
+                    else
+                    { return false; }
                 }
 
                 set
                 {
-                    if (value == true) { _range.Bold = 1; }
-                    else { _range.Bold = 0; }
+                    if (value == true)
+                    { _range.Bold = 1; }
+                    else
+                    { _range.Bold = 0; }
                 }
                 // завершение public bool Bold
             }
@@ -635,13 +670,17 @@ namespace TrackConverter.Lib.Tracking.Helpers
                 get
                 {
                     // открытый вопрос с возможными занчениями в Word по умолчанию, документация плохая
-                    if (_range.Italic == 1) { return true; }
-                    else { return false; }
+                    if (_range.Italic == 1)
+                    { return true; }
+                    else
+                    { return false; }
                 }
                 set
                 {
-                    if (value == true) { _range.Italic = 1; }
-                    else { _range.Italic = 0; }
+                    if (value == true)
+                    { _range.Italic = 1; }
+                    else
+                    { _range.Italic = 0; }
                 }
                 // завершение  public bool Italic
             }
@@ -659,7 +698,8 @@ namespace TrackConverter.Lib.Tracking.Helpers
                     { return TextAligment.Right; }
                     else if (_range.ParagraphFormat.Alignment == Word.WdParagraphAlignment.wdAlignParagraphJustify)
                     { return TextAligment.Justify; }
-                    else { throw new Exception("Ошибка при определении типа вырвнивания текста"); }
+                    else
+                    { throw new Exception("Ошибка при определении типа вырвнивания текста"); }
                 }
                 set
                 {
@@ -683,7 +723,8 @@ namespace TrackConverter.Lib.Tracking.Helpers
                         _range.ParagraphFormat.Alignment = Word.WdParagraphAlignment.wdAlignParagraphJustify;
                         _savedAligment = Word.WdParagraphAlignment.wdAlignParagraphJustify;
                     }
-                    else { throw new Exception("Неизвестный тип выравнивания текста"); }
+                    else
+                    { throw new Exception("Неизвестный тип выравнивания текста"); }
                 }
                 // завершение public TextAligment Aligment
             }
@@ -713,7 +754,8 @@ namespace TrackConverter.Lib.Tracking.Helpers
                 get { return Convert.ToInt32(this._range.Font.Size); }
                 set
                 {
-                    if (value < 1) { throw new Exception("Ошибка при установке размера шрифта  Word. Размер шрифта не может быть меньше 1."); }
+                    if (value < 1)
+                    { throw new Exception("Ошибка при установке размера шрифта  Word. Размер шрифта не может быть меньше 1."); }
                     float fontSize = (float)Convert.ToDouble(value);
                     this._range.Font.Size = fontSize;
                 }

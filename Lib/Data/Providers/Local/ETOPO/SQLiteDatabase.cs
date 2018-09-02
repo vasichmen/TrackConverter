@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data.SQLite;
 using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
 using TrackConverter.Lib.Classes;
 
 namespace TrackConverter.Lib.Data.Providers.Local.ETOPO
@@ -12,9 +9,9 @@ namespace TrackConverter.Lib.Data.Providers.Local.ETOPO
     /// <summary>
     /// Работа с базой данных ETOPO в формате SQLite
     /// </summary>
-    class SQLiteDatabase : IDatabase
+    internal class SQLiteDatabase: IDatabase
     {
-        private string dbFile;
+        private readonly string dbFile;
         private int rows;
         private int cols;
         private SQLiteConnection connection;
@@ -26,18 +23,20 @@ namespace TrackConverter.Lib.Data.Providers.Local.ETOPO
         public SQLiteDatabase(string file)
         {
             this.dbFile = file;
-            this.Load(file);
+            this.load(file);
         }
 
         /// <summary>
         /// открывает базу данных
         /// </summary>
         /// <param name="file">файл с базой данных</param>
-        private void Load(string file)
+        private void load(string file)
         {
             string connectionString = "Data Source = " + file;
-            connection = new SQLiteConnection();
-            connection.ConnectionString = connectionString;
+            connection = new SQLiteConnection
+            {
+                ConnectionString = connectionString
+            };
             cols = 10800;
             rows = 5400;
         }
@@ -46,7 +45,7 @@ namespace TrackConverter.Lib.Data.Providers.Local.ETOPO
         /// выполнение запроса с результатом
         /// </summary>
         /// <returns></returns>
-        private double GetElev(int i, int j)
+        private double getElev(int i, int j)
         {
             //выбор нужной таблицы
             int ind = -1;
@@ -54,7 +53,7 @@ namespace TrackConverter.Lib.Data.Providers.Local.ETOPO
                 if (j >= inn * 1350)
                 { ind = inn; break; }
 
-            string table_name = "tb" + ind*1350;
+            string table_name = "tb" + ind * 1350;
             connection.Open();
             SQLiteCommand cmd = connection.CreateCommand();
             cmd.CommandText = "SELECT * FROM " + table_name + " WHERE id = " + i.ToString();
@@ -62,7 +61,7 @@ namespace TrackConverter.Lib.Data.Providers.Local.ETOPO
 
             double res = double.NaN;
             if (dr.Read())
-                res = (double)dr["col"+j];
+                res = (double)dr["col" + j];
             connection.Close();
             return res;
         }
@@ -86,7 +85,7 @@ namespace TrackConverter.Lib.Data.Providers.Local.ETOPO
         {
             get
             {
-                Point pt = this.GeoToLocal(coordinate);
+                Point pt = this.geoToLocal(coordinate);
                 return this[pt.Y, pt.X];
             }
         }
@@ -96,7 +95,7 @@ namespace TrackConverter.Lib.Data.Providers.Local.ETOPO
         /// </summary>
         /// <param name="coordinate">географические координаты точки</param>
         /// <returns></returns>
-        private Point GeoToLocal(Coordinate coordinate)
+        private Point geoToLocal(Coordinate coordinate)
         {
             double lat = coordinate.Latitude.TotalDegrees;
             double lon = coordinate.Longitude.TotalDegrees;
@@ -104,10 +103,11 @@ namespace TrackConverter.Lib.Data.Providers.Local.ETOPO
             double ic = rows / 2;
             double jc = Columns / 2;
 
-            Point res = new Point();
-
-            res.Y = (int)Math.Round(ic - lat / in1cell, 0);
-            res.X = (int)Math.Round(jc + lon / in1cell, 0);
+            Point res = new Point
+            {
+                Y = (int)Math.Round(ic - lat / in1cell, 0),
+                X = (int)Math.Round(jc + lon / in1cell, 0)
+            };
 
             return res;
         }
@@ -122,7 +122,7 @@ namespace TrackConverter.Lib.Data.Providers.Local.ETOPO
         {
             get
             {
-                return GetElev(i, j);
+                return getElev(i, j);
             }
         }
 

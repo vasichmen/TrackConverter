@@ -1,19 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Windows.Forms;
-using System.Xml;
 using GMap.NET;
-using ICSharpCode.SharpZipLib.Zip;
 using Newtonsoft.Json;
-using TrackConverter.Lib.Classes;
-using TrackConverter.Lib.Mathematic;
-using TrackConverter.Lib.Mathematic.Geodesy;
 
 namespace TrackConverter.Lib.Tracking
 {
@@ -22,7 +11,7 @@ namespace TrackConverter.Lib.Tracking
     /// <summary>
     /// Трек
     /// </summary>
-    public class TrackFile : BaseTrack, IList<TrackPoint>, IEnumerable<TrackPoint>, ICollection<TrackPoint>, IComparable
+    public class TrackFile: BaseTrack, IList<TrackPoint>, IEnumerable<TrackPoint>, ICollection<TrackPoint>, IComparable
 #pragma warning restore CS0661 // Тип определяет оператор == или оператор !=, но не переопределяет Object.GetHashCode()
 #pragma warning restore CS0660 // Тип определяет оператор == или оператор !=, но не переопределяет Object.Equals(object o)
     {
@@ -180,7 +169,7 @@ namespace TrackConverter.Lib.Tracking
                 this.Clear();
                 foreach (DataRow dr in value.Rows)
                 {
-                    double lat = dr["Широта, º"] is  DBNull ? 0 : ((double)dr["Широта, º"]);
+                    double lat = dr["Широта, º"] is DBNull ? 0 : ((double)dr["Широта, º"]);
                     double lon = dr["Долгота, º"] is DBNull ? 0 : ((double)dr["Долгота, º"]);
 
                     TrackPoint np = new TrackPoint(lat, lon);
@@ -269,8 +258,8 @@ namespace TrackConverter.Lib.Tracking
         /// </summary>
         public override void CalculateAll()
         {
-            CalculatePartSpeedsDistances();
-            CalculateAzimuthsDeclination();
+            calculatePartSpeedsDistances();
+            calculateAzimuthsDeclination();
             foreach (TrackPoint tr in this)
                 tr.CalculateParametres();
         }
@@ -278,7 +267,7 @@ namespace TrackConverter.Lib.Tracking
         /// <summary>
         /// вычмсление азимутов в каждой точке
         /// </summary>
-        private void CalculateAzimuthsDeclination()
+        private void calculateAzimuthsDeclination()
         {
             for (int i = 0; i < this.Count - 1; i++)
             {
@@ -308,9 +297,10 @@ namespace TrackConverter.Lib.Tracking
         /// <summary>
         /// Расчет скоростей и расстояний в каждой точке
         /// </summary>
-        private void CalculatePartSpeedsDistances()
+        private void calculatePartSpeedsDistances()
         {
-            if (Track.Count <= 0) return;
+            if (Track.Count <= 0)
+                return;
             this.Track[0].StartDistance = 0;
 
             //начиная со второй точки считаем скорости
@@ -445,7 +435,8 @@ namespace TrackConverter.Lib.Tracking
         /// <returns></returns>
         public TrackFile Subtrack(double start, double length)
         {
-            if (start > this.Distance * 1000) throw new ArgumentException("Начало отрезка больше длины маршрута");
+            if (start > this.Distance * 1000)
+                throw new ArgumentException("Начало отрезка больше длины маршрута");
 
             TrackPoint startPt = null;
 
@@ -480,7 +471,8 @@ namespace TrackConverter.Lib.Tracking
         /// <returns></returns>
         public TrackFile Subtrack(int start, int end)
         {
-            if (end < start) throw new ArgumentException("Неправильное начало или конец отрезка");
+            if (end < start)
+                throw new ArgumentException("Неправильное начало или конец отрезка");
             TrackFile res = new TrackFile();
             for (int i = start; i <= end; i++)
                 res.Add(this[i]);
@@ -540,11 +532,13 @@ namespace TrackConverter.Lib.Tracking
         /// <returns>новый трек с добавленными точками</returns>
         public override BaseTrack AddIntermediatePoints(double length)
         {
-            TrackFile res = new TrackFile();
-            res.Name = this.Name;
-            res.FilePath = this.FilePath;
-            res.Description = this.Description;
-            res.Color = this.Color;
+            TrackFile res = new TrackFile
+            {
+                Name = this.Name,
+                FilePath = this.FilePath,
+                Description = this.Description,
+                Color = this.Color
+            };
             if (this.Count < 2)
                 return this;
 

@@ -184,7 +184,7 @@ namespace TrackConverter.Lib.Classes
         {
             get
             {
-                if (perimeter == double.NaN)
+                if (double.IsNaN(perimeter))
                     perimeter = Vars.CurrentGeosystem.CalculateDistance(this.Geometry.Points);
                 return perimeter;
             }

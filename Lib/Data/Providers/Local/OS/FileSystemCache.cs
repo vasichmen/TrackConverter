@@ -1,12 +1,9 @@
-﻿using Newtonsoft.Json.Linq;
-using System;
+﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using System.Linq;
 using System.Text;
-using System.Threading;
 using TrackConverter.Lib.Data.Interfaces;
 
 namespace TrackConverter.Lib.Data.Providers.Local.OS
@@ -14,12 +11,12 @@ namespace TrackConverter.Lib.Data.Providers.Local.OS
     /// <summary>
     /// кэш в файловой системе
     /// </summary>
-    public class FileSystemCache : IImagesCache, IWebCache
+    public class FileSystemCache: IImagesCache, IWebCache
     {
         /// <summary>
         /// информация о файле в кэше
         /// </summary>
-        class FileInfo
+        private class FileInfo
         {
             /// <summary>
             /// ключ, по которому был добавлен файл
@@ -40,22 +37,22 @@ namespace TrackConverter.Lib.Data.Providers.Local.OS
         /// <summary>
         /// имя файла с данными о файлах в кэше
         /// </summary>
-        string dataFileName = "data.txt";
+        private readonly string dataFileName = "data.txt";
 
         /// <summary>
         /// базовая папка с кэшем
         /// </summary>
-        string directory;
+        private readonly string directory;
 
         /// <summary>
         /// блокировка многопоточного доступа к файлу информации о кэше
         /// </summary>
-        static object locker = new object();
+        private static readonly object locker = new object();
 
         /// <summary>
         /// информация о файлах в кэше
         /// </summary>
-        ConcurrentDictionary<string, FileInfo> files_data;
+        private ConcurrentDictionary<string, FileInfo> files_data;
 
         /// <summary>
         /// создвёт новый объект кэша в указанной папке
@@ -68,10 +65,10 @@ namespace TrackConverter.Lib.Data.Providers.Local.OS
             files_data = new ConcurrentDictionary<string, FileInfo>();
 
             //заполнение информации о файлах
-            LoadDataFile(directory + "\\" + dataFileName);
+            loadDataFile(directory + "\\" + dataFileName);
 
             //удаление устаревших объектов
-            DeleteObjectsBefore(DateTime.Now - duration);
+            deleteObjectsBefore(DateTime.Now - duration);
         }
 
 
@@ -143,7 +140,8 @@ namespace TrackConverter.Lib.Data.Providers.Local.OS
                     return true;
                 }
             }
-            else return false;
+            else
+                return false;
         }
 
         #endregion
@@ -221,7 +219,7 @@ namespace TrackConverter.Lib.Data.Providers.Local.OS
                 return null;
         }
 
-        void append(string line)
+        private void append(string line)
         {
             lock (locker)
             {
@@ -288,7 +286,7 @@ namespace TrackConverter.Lib.Data.Providers.Local.OS
         /// удалить файлы в кэше, созданные раньше заданной даты
         /// </summary>
         /// <param name="dateTime">файлы, созданные ранее, будут удалены</param>
-        private void DeleteObjectsBefore(DateTime dateTime)
+        private void deleteObjectsBefore(DateTime dateTime)
         {
             List<string> urls = new List<string>();
 
@@ -303,19 +301,18 @@ namespace TrackConverter.Lib.Data.Providers.Local.OS
             }
 
             //удаление ключей
-            FileInfo info;
             foreach (string url in urls)
-                files_data.TryRemove(url, out info);
+                files_data.TryRemove(url, out FileInfo info);
 
             //перезапись файла информации
-            ExportDataFile(directory + "\\" + dataFileName);
+            exportDataFile(directory + "\\" + dataFileName);
         }
 
         /// <summary>
         /// записать информацию из files_data в файл информации (перед выходом, например)
         /// </summary>
         /// <param name="fname"></param>
-        private void ExportDataFile(string fname)
+        private void exportDataFile(string fname)
         {
             StreamWriter sw = new StreamWriter(fname, false, Encoding.UTF8);
             foreach (var kv in files_data)
@@ -330,7 +327,7 @@ namespace TrackConverter.Lib.Data.Providers.Local.OS
         /// загрузить информацию о файлах в кэше из заданного файла 
         /// </summary>
         /// <param name="fname">адрес файла информации о файлах в кэше</param>
-        private void LoadDataFile(string fname)
+        private void loadDataFile(string fname)
         {
             StreamReader sr;
             if (!File.Exists(fname))

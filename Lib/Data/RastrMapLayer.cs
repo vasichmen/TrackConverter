@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
 using TrackConverter.Lib.Data.Interfaces;
 using TrackConverter.Lib.Data.Providers.InternetServices;
 
@@ -11,9 +8,9 @@ namespace TrackConverter.Lib.Data
     /// <summary>
     /// работа с растровыми слоями карты
     /// </summary>
-    public class RastrMapLayer : IRastrMapLayerProvider
+    public class RastrMapLayer: IRastrMapLayerProvider
     {
-        private MapLayerProviders provider;
+        private readonly MapLayerProviders provider;
         private IRastrMapLayerProvider engine;
 
         /// <summary>
@@ -39,7 +36,8 @@ namespace TrackConverter.Lib.Data
                     break;
                 case MapLayerProviders.None:
                     throw new Exception("Нельзя создать поставщика слоя None");
-                default: throw new Exception("Данный поставщик слоя нельзя использовать в этом классе");
+                default:
+                    throw new Exception("Данный поставщик слоя нельзя использовать в этом классе");
             }
         }
 

@@ -1,11 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using TrackConverter.Lib.Tracking;
 
@@ -14,7 +7,7 @@ namespace TrackConverter.UI.Map
     /// <summary>
     /// окно выбора точки из списка
     /// </summary>
-    public partial class FormSelectPoint : Form
+    public partial class FormSelectPoint: Form
     {
         /// <summary>
         /// структура, добавляемая в список
@@ -94,11 +87,11 @@ namespace TrackConverter.UI.Map
             this.AllPoints = points.Clone();
             InitializeComponent();
             AllPoints.Remove(withoutPoint);
-            FillList(AllPoints);
+            fillList(AllPoints);
 
             listBoxPoints.SelectedIndex = 0;
             buttonCycled.Enabled = isCycledEnable;
-            label1.Text = labelText != null ? labelText : "Выберите точку";
+            label1.Text = labelText ?? "Выберите точку";
         }
 
         #endregion
@@ -153,14 +146,14 @@ namespace TrackConverter.UI.Map
         {
             //если запрос пустой
             if (string.IsNullOrWhiteSpace(textBoxSearch.Text))
-                FillList(AllPoints);
+                fillList(AllPoints);
 
             //отсев нужных точек
             TrackFile selected = new TrackFile();
             foreach (TrackPoint tt in AllPoints)
                 if (tt.Name.ToLower().Contains(textBoxSearch.Text.ToLower()))
                     selected.Add(tt);
-            FillList(selected);
+            fillList(selected);
         }
 
         /// <summary>
@@ -182,7 +175,7 @@ namespace TrackConverter.UI.Map
         /// заполнение списка указанными элементами
         /// </summary>
         /// <param name="points"></param>
-        private void FillList(BaseTrack points)
+        private void fillList(BaseTrack points)
         {
             this.points = points;
             listBoxPoints.Items.Clear();

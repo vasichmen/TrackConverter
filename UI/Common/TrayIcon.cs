@@ -1,22 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using TrackConverter.Res.Properties;
-using TrackConverter.UI.Converter;
 
-namespace TrackConverter.UI.Common {
+namespace TrackConverter.UI.Common
+{
 
     /// <summary>
     /// класс значка программы в трее
     /// </summary>
-    public class TrayIcon:IDisposable {
-
-        NotifyIcon notify;
-        Action onDoubleClick;
+    public class TrayIcon: IDisposable
+    {
+        private NotifyIcon notify;
+        private readonly Action onDoubleClick;
 
         /// <summary>
         /// возвращает значение, показывающее, виден ли значо в трее
@@ -28,12 +23,13 @@ namespace TrackConverter.UI.Common {
         /// </summary>
         /// <param name="onDoubleClick">событие при двойном щелчке мыши</param>
         /// <param name="contextMenu">контекстное меню</param>
-        public TrayIcon(Action onDoubleClick, ContextMenu contextMenu) {
+        public TrayIcon(Action onDoubleClick, ContextMenu contextMenu)
+        {
             notify = new NotifyIcon();
             this.notify.ContextMenu = contextMenu;
             this.onDoubleClick = onDoubleClick;
             notify.Icon = Resources.main_icon;
-            notify.DoubleClick += new EventHandler((f,r)=>{onDoubleClick.Invoke();});
+            notify.DoubleClick += new EventHandler((f, r) => { onDoubleClick.Invoke(); });
         }
 
 
@@ -48,7 +44,8 @@ namespace TrackConverter.UI.Common {
         /// <summary>
         /// прекращет отображение значка
         /// </summary>
-        public void UnShow() {
+        public void UnShow()
+        {
             notify.Visible = false;
         }
 
@@ -56,7 +53,7 @@ namespace TrackConverter.UI.Common {
         /// очищает ресурсы
         /// </summary>
         /// <param name="disposing">с</param>
-        protected virtual  void Dispose(bool disposing)
+        protected virtual void Dispose(bool disposing)
         {
             notify.Dispose();
         }

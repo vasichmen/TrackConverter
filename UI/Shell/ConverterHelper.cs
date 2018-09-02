@@ -1,14 +1,11 @@
-﻿using Microsoft.VisualBasic.Devices;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Microsoft.VisualBasic.Devices;
 using TrackConverter.Lib.Data;
 using TrackConverter.Lib.Mathematic.Assessment;
 using TrackConverter.Lib.Mathematic.Routing;
@@ -21,7 +18,7 @@ using TrackConverter.UI.Tools;
 
 namespace TrackConverter.UI.Shell
 {
-    class ConverterHelper
+    internal class ConverterHelper
     {
         private FormMain formMain;
 
@@ -66,13 +63,14 @@ namespace TrackConverter.UI.Shell
             foreach (DataGridViewColumn column in formMain.dataGridViewConverter.Columns)
                 column.SortMode = DataGridViewColumnSortMode.NotSortable;
 
-            RefreshRecentFiles(); //обновление списка последних файлов
+            refreshRecentFiles(); //обновление списка последних файлов
             formMain.dataGridViewConverter.ClearSelection();
 
             if (Vars.currentSelectedTrack != null)
             {
                 int ind = formMain.Tracks.IndexOf(Vars.currentSelectedTrack);
-                if (ind == -1) return;
+                if (ind == -1)
+                    return;
                 formMain.dataGridViewConverter.Rows[ind].Selected = true;
             }
         }
@@ -92,7 +90,7 @@ namespace TrackConverter.UI.Shell
         /// <summary>
         /// обновление списка последних загруженных файлов
         /// </summary>
-        private void RefreshRecentFiles()
+        private void refreshRecentFiles()
         {
             for (int i = 0; i < formMain.FileToolStripMenuItem.DropDownItems.Count; i += 0)
             {
@@ -159,14 +157,14 @@ namespace TrackConverter.UI.Shell
         public void DeleteRoute(BaseTrack route)
         {
             TrackFileList tl = new TrackFileList() { route };
-            DeleteRoute(tl);
+            deleteRoute(tl);
         }
 
         /// <summary>
         /// удаление нескольких  маршрутов из списка
         /// </summary>
         /// <param name="list"></param>
-        private void DeleteRoute(TrackFileList list)
+        private void deleteRoute(TrackFileList list)
         {
             foreach (BaseTrack tf in list)
                 formMain.Tracks.Remove(tf);
@@ -216,7 +214,7 @@ namespace TrackConverter.UI.Shell
         /// начало редактирования путешествия, которое уже есть в списке маршутов
         /// </summary>
         /// <param name="tripRouteFile">путешествие для редактирования</param>
-        private void BeginEditTrip(TripRouteFile tripRouteFile)
+        private void beginEditTrip(TripRouteFile tripRouteFile)
         {
             if (!formMain.Tracks.Contains(tripRouteFile))
                 throw new ApplicationException("Маршрута нет в списке");
@@ -279,7 +277,7 @@ namespace TrackConverter.UI.Shell
                     //открывается в новом потоке т.к. открытие идёт долго
                     new Task(new Action(() =>
                     {
-                        BaseTrack tf = Serializer.DeserializeTrackFile(FileName, formMain.setCurrentOperation);
+                        BaseTrack tf = Serializer.DeserializeTrackFile(FileName, formMain.SetCurrentOperation);
                         formMain.Invoke(new Action(() =>
                         {
                             AddRouteToList(tf);
@@ -400,7 +398,7 @@ namespace TrackConverter.UI.Shell
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void nm_Click(object sender, EventArgs e)
+        private void nm_Click(object sender, EventArgs e)
         {
             ToolStripMenuItem item = (ToolStripMenuItem)sender;
             try
@@ -411,7 +409,7 @@ namespace TrackConverter.UI.Shell
             {
                 MessageBox.Show(formMain, ex.Message, "Ошибка!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 Vars.Options.Converter.RecentFiles.Remove((string)item.Tag);
-                RefreshRecentFiles();
+                refreshRecentFiles();
             }
         }
 
@@ -483,7 +481,7 @@ namespace TrackConverter.UI.Shell
 
         }
 
-        internal void toolStripRemove(EventArgs e)
+        internal void ToolStripRemove(EventArgs e)
         {
             TrackFileList list = new TrackFileList();
             foreach (DataGridViewRow dgvr in formMain.dataGridViewConverter.SelectedRows)
@@ -492,11 +490,11 @@ namespace TrackConverter.UI.Shell
                 BaseTrack tttt = formMain.Tracks[row];
                 list.Add(tttt);
             }
-            DeleteRoute(list);
+            deleteRoute(list);
 
         }
 
-        internal void toolStripAddToComparison(EventArgs e)
+        internal void ToolStripAddToComparison(EventArgs e)
         {
             if (Program.winCompareTrackNullOrDisposed)
                 Program.winCompareTrack = new FormTrackComparison();
@@ -508,7 +506,7 @@ namespace TrackConverter.UI.Shell
             Program.winCompareTrack.Activate();
         }
 
-        internal void toolStripAddToJoin(EventArgs e)
+        internal void ToolStripAddToJoin(EventArgs e)
         {
             if (Program.winJoinTrackNullOrDisposed)
                 Program.winJoinTrack = new FormJoinTracks();
@@ -521,7 +519,7 @@ namespace TrackConverter.UI.Shell
             Program.winJoinTrack.Activate();
         }
 
-        internal void toolStripOpenRouteFolder(EventArgs e)
+        internal void ToolStripOpenRouteFolder(EventArgs e)
         {
 
             if (formMain.dataGridViewConverter.SelectedRows.Count > 1)
@@ -540,7 +538,7 @@ namespace TrackConverter.UI.Shell
 
         }
 
-        internal void toolStripElevGraph(EventArgs e)
+        internal void ToolStripElevGraph(EventArgs e)
         {
             TrackFileList tfl = new TrackFileList();
             Task pr = new Task(new Action(() =>
@@ -551,7 +549,7 @@ namespace TrackConverter.UI.Shell
                     int rowI = row.Index;
                     BaseTrack tf = formMain.Tracks[rowI];
 
-                    tf = new GeoInfo(Vars.Options.DataSources.GeoInfoProvider).GetElevation(tf, Program.winMain.setCurrentOperation);
+                    tf = new GeoInfo(Vars.Options.DataSources.GeoInfoProvider).GetElevation(tf, Program.winMain.SetCurrentOperation);
                     tf.CalculateAll();
                     tfl.Add(tf);
                 }
@@ -561,7 +559,7 @@ namespace TrackConverter.UI.Shell
             pr.Start();
         }
 
-        internal void toolStripElevGraphWithIntermediates(EventArgs e)
+        internal void ToolStripElevGraphWithIntermediates(EventArgs e)
         {
             FormReadText frt = new FormReadText(
                DialogType.ReadNumber,
@@ -585,7 +583,7 @@ namespace TrackConverter.UI.Shell
                         double lg = double.Parse(frt.Result);
                         tf = tf.AddIntermediatePoints(lg);
 
-                        tf = new GeoInfo(Vars.Options.DataSources.GeoInfoProvider).GetElevation(tf, Program.winMain.setCurrentOperation);
+                        tf = new GeoInfo(Vars.Options.DataSources.GeoInfoProvider).GetElevation(tf, Program.winMain.SetCurrentOperation);
                         tf.CalculateAll();
                         tfl.Add(tf);
                     }
@@ -596,7 +594,7 @@ namespace TrackConverter.UI.Shell
             }
         }
 
-        internal void toolStripShowRouteOnMap(EventArgs e)
+        internal void ToolStripShowRouteOnMap(EventArgs e)
         {
             foreach (DataGridViewRow r in formMain.dataGridViewConverter.SelectedRows)
             {
@@ -615,7 +613,7 @@ namespace TrackConverter.UI.Shell
             }
         }
 
-        internal void toolStripShowWaypoints(EventArgs e)
+        internal void ToolStripShowWaypoints(EventArgs e)
         {
             foreach (DataGridViewRow r in formMain.dataGridViewConverter.SelectedRows)
             {
@@ -633,7 +631,7 @@ namespace TrackConverter.UI.Shell
             }
         }
 
-        internal void toolStripJoinToTripRoute(EventArgs e)
+        internal void ToolStripJoinToTripRoute(EventArgs e)
         {
             int first = formMain.dataGridViewConverter.SelectedRows[0].Index;
             TrackFileList tfl = new TrackFileList();
@@ -653,7 +651,7 @@ namespace TrackConverter.UI.Shell
             RefreshData();
         }
 
-        internal void toolStripConvertToTripRoute(EventArgs e)
+        internal void ToolStripConvertToTripRoute(EventArgs e)
         {
             foreach (DataGridViewRow dr in formMain.dataGridViewConverter.SelectedRows)
             {
@@ -670,7 +668,7 @@ namespace TrackConverter.UI.Shell
             RefreshData();
         }
 
-        internal void toolStripNormalizeTrack(EventArgs e)
+        internal void ToolStripNormalizeTrack(EventArgs e)
         {
             int min = int.MaxValue;
             foreach (DataGridViewRow r in formMain.dataGridViewConverter.SelectedRows)
@@ -694,7 +692,7 @@ namespace TrackConverter.UI.Shell
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        internal void toolStripCreateOptimalOnBase(object sender, EventArgs e)
+        internal void ToolStripCreateOptimalOnBase(object sender, EventArgs e)
         {
             if (formMain.dataGridViewConverter.SelectedRows.Count > 1)
             {
@@ -723,7 +721,8 @@ namespace TrackConverter.UI.Shell
             FormSelectPoint fsp = new FormSelectPoint(track, true, "Выберите начальную точку");
             if (fsp.ShowDialog(Program.winMain) == DialogResult.OK)
                 startPoint = fsp.Result;
-            else return;
+            else
+                return;
 
             bool isCycled = startPoint == null;
 
@@ -732,7 +731,8 @@ namespace TrackConverter.UI.Shell
                 FormSelectPoint fsp1 = new FormSelectPoint(track, startPoint, false, "Выберите конечную точку");
                 if (fsp1.ShowDialog(Program.winMain) == DialogResult.OK)
                     endPoint = fsp1.Result;
-                else return;
+                else
+                    return;
             }
 
             Program.winMain.BeginOperation();
@@ -747,19 +747,19 @@ namespace TrackConverter.UI.Shell
                     switch (Vars.Options.Map.OptimalRouteMethod)
                     {
                         case OptimalMethodType.BranchBounds:
-                            route = new BranchBounds(Program.winMain.setCurrentOperation).Make(track, startPoint, isCycled);
+                            route = new BranchBounds(Program.winMain.SetCurrentOperation).Make(track, startPoint, isCycled);
                             break;
                         case OptimalMethodType.Greedy:
-                            route = new Greedy(Program.winMain.setCurrentOperation).Make(track, startPoint, isCycled);
+                            route = new Greedy(Program.winMain.SetCurrentOperation).Make(track, startPoint, isCycled);
                             break;
                         case OptimalMethodType.FullSearch:
-                            route = new FullSearch(Program.winMain.setCurrentOperation).Make(track, startPoint, isCycled);
+                            route = new FullSearch(Program.winMain.SetCurrentOperation).Make(track, startPoint, isCycled);
                             break;
                         case OptimalMethodType.PolarSearch:
-                            route = new PolarSearch(Program.winMain.setCurrentOperation).Make(track, startPoint, endPoint, isCycled);
+                            route = new PolarSearch(Program.winMain.SetCurrentOperation).Make(track, startPoint, endPoint, isCycled);
                             break;
                         default:
-                            route = new Greedy(Program.winMain.setCurrentOperation).Make(track, startPoint, isCycled);
+                            route = new Greedy(Program.winMain.SetCurrentOperation).Make(track, startPoint, isCycled);
                             break;
                     }
 
@@ -775,8 +775,8 @@ namespace TrackConverter.UI.Shell
                             //если надо открыть маршрут для редактирования
                             formMain.mapHelper.BeginEditRoute(route, (tf) =>
                             {
-                                //ввод названия марщрута
-                                readName:
+//ввод названия марщрута
+readName:
                                 FormReadText fr = new FormReadText(DialogType.ReadText, "Введите название маршрута", "", false, false, false, false);
                                 if (fr.ShowDialog(formMain) == DialogResult.OK)
                                 {
@@ -829,7 +829,7 @@ namespace TrackConverter.UI.Shell
         /// загрузить адреса в описания точек
         /// </summary>
         /// <param name="e"></param>
-        internal void toolStripLoadAddresses(EventArgs e)
+        internal void ToolStripLoadAddresses(EventArgs e)
         {
             Program.winMain.BeginOperation();
             Task ts = new Task(new Action(() =>
@@ -841,7 +841,7 @@ namespace TrackConverter.UI.Shell
                     {
                         int row = dgvr.Index;
                         BaseTrack tf = formMain.Tracks[row];
-                        new GeoCoder(Vars.Options.DataSources.GeoCoderProvider).GetAddresses(tf, Program.winMain.setCurrentOperation);
+                        new GeoCoder(Vars.Options.DataSources.GeoCoderProvider).GetAddresses(tf, Program.winMain.SetCurrentOperation);
                         er = 0;
                     }
                 }
@@ -865,7 +865,7 @@ namespace TrackConverter.UI.Shell
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        internal void toolStripSeparateRoute(object sender, EventArgs e)
+        internal void ToolStripSeparateRoute(object sender, EventArgs e)
         {
             //1. выбор способа: по точке или по расстоянию
             //2. раделение маршурта и добавление в список
@@ -921,8 +921,8 @@ namespace TrackConverter.UI.Shell
                 switch (sep_type)
                 {
                     case SeparateRouteType.Length:
-                        #region разделение по длине
-                        readLength:
+#region разделение по длине
+readLength:
                         FormReadText frt = new FormReadText(DialogType.ReadNumber, "Введите длину первого отрезка в км. Максимальная длина " + route.Distance.ToString("0.0") + " км.", "", false, false, false, false);
                         if (frt.ShowDialog(formMain) == DialogResult.OK)
                         {
@@ -985,7 +985,7 @@ namespace TrackConverter.UI.Shell
                 return;
         }
 
-        internal void toolStripApproximateAltitudes(EventArgs e)
+        internal void ToolStripApproximateAltitudes(EventArgs e)
         {
             FormReadText frt = new FormReadText(
                DialogType.ReadNumber,
@@ -1019,7 +1019,7 @@ namespace TrackConverter.UI.Shell
             }
         }
 
-        internal void toolStripRemoveElevations(EventArgs e)
+        internal void ToolStripRemoveElevations(EventArgs e)
         {
             if (MessageBox.Show(formMain, "Вы действительно хотите очистить высоты точек у выбранных маршрутов?", "Внимание!", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
             {
@@ -1042,7 +1042,7 @@ namespace TrackConverter.UI.Shell
             }
         }
 
-        internal void toolStripLoadElevations(EventArgs e)
+        internal void ToolStripLoadElevations(EventArgs e)
         {
             Program.winMain.BeginOperation();
             Task ts = new Task(new Action(() =>
@@ -1054,7 +1054,7 @@ namespace TrackConverter.UI.Shell
                     {
                         int row = dgvr.Index;
                         BaseTrack tf = formMain.Tracks[row];
-                        tf = new GeoInfo(Vars.Options.DataSources.GeoInfoProvider).GetElevation(tf, Program.winMain.setCurrentOperation);
+                        tf = new GeoInfo(Vars.Options.DataSources.GeoInfoProvider).GetElevation(tf, Program.winMain.SetCurrentOperation);
                         er = 0;
                     }
                 }
@@ -1088,7 +1088,7 @@ namespace TrackConverter.UI.Shell
             ts.Start();
         }
 
-        internal void toolStripEditWaypoints(EventArgs e)
+        internal void ToolStripEditWaypoints(EventArgs e)
         {
             if (formMain.dataGridViewConverter.SelectedRows.Count > 1)
             {
@@ -1099,7 +1099,7 @@ namespace TrackConverter.UI.Shell
             new FormPoints(formMain.Tracks[row]) { FormBorderStyle = FormBorderStyle.Sizable }.Show(Program.winMain);
         }
 
-        internal void toolStripSave(object sender, EventArgs e)
+        internal void ToolStripSave(object sender, EventArgs e)
         {
             int row = formMain.dataGridViewConverter.SelectedRows[0].Index;
             BaseTrack tf = formMain.Tracks[row];
@@ -1122,11 +1122,11 @@ namespace TrackConverter.UI.Shell
                 }
             }
             else
-                toolStripSaveAsFile(sender, e);
+                ToolStripSaveAsFile(sender, e);
 
         }
 
-        internal void toolStripEditRoute(EventArgs e)
+        internal void ToolStripEditRoute(EventArgs e)
         {
             if (formMain.dataGridViewConverter.SelectedRows.Count > 1)
             {
@@ -1137,14 +1137,14 @@ namespace TrackConverter.UI.Shell
             if (bt is TrackFile)
                 BeginEditRoute(bt as TrackFile);
             else
-                BeginEditTrip(bt as TripRouteFile);
+                beginEditTrip(bt as TripRouteFile);
         }
 
-        internal void toolStripSaveAsWikimapia(object sender, EventArgs e)
+        internal void ToolStripSaveAsWikimapia(object sender, EventArgs e)
         {
             BaseTrack tf = null;
 
-            if ((string)(((ToolStripMenuItem)sender).Name) == "saveWikimapiaContextToolStripMenuItem")
+            if (((ToolStripMenuItem)sender).Name == "saveWikimapiaContextToolStripMenuItem")
                 tf = formMain.Tracks[formMain.dataGridViewConverter.SelectedCells[0].RowIndex];
             else
             {
@@ -1184,11 +1184,11 @@ namespace TrackConverter.UI.Shell
             }
         }
 
-        internal void toolStripSaveAsYandex(object sender, EventArgs e)
+        internal void ToolStripSaveAsYandex(object sender, EventArgs e)
         {
             BaseTrack tf = null;
 
-            if ((string)(((ToolStripMenuItem)sender).Name) == "saveYandexContextToolStripMenuItem")
+            if (((ToolStripMenuItem)sender).Name == "saveYandexContextToolStripMenuItem")
                 tf = formMain.Tracks[formMain.dataGridViewConverter.SelectedCells[0].RowIndex];
             else
             {
@@ -1227,7 +1227,7 @@ namespace TrackConverter.UI.Shell
             }
         }
 
-        internal void toolStripInformation(EventArgs e)
+        internal void ToolStripInformation(EventArgs e)
         {
             if (formMain.dataGridViewConverter.SelectedRows.Count > 1)
             {
@@ -1248,7 +1248,7 @@ namespace TrackConverter.UI.Shell
             }
         }
 
-        internal void toolStripSaveAsFile(object sender, EventArgs e)
+        internal void ToolStripSaveAsFile(object sender, EventArgs e)
         {
             BaseTrack tf = null;
 
@@ -1277,8 +1277,10 @@ namespace TrackConverter.UI.Shell
             }
 
 
-            SaveFileDialog sf = new SaveFileDialog();
-            sf.Filter = "Файл маршрута TrackConverter(*.trr)|*.trr";
+            SaveFileDialog sf = new SaveFileDialog
+            {
+                Filter = "Файл маршрута TrackConverter(*.trr)|*.trr"
+            };
             sf.Filter += "|Файл маршрута Androzic (*.rt2)|*.rt2";
             sf.Filter += "|Треки Androzic (*.plt)|*.plt";
             sf.Filter += "|Путевые точки Ozi(*.wpt)|*.wpt";
@@ -1352,7 +1354,7 @@ namespace TrackConverter.UI.Shell
                         Program.winMain.BeginOperation();
                         Task ts = new Task(new Action(() =>
                         {
-                            Serializer.Serialize(sf.FileName, tf, FileFormats.AddressList, Program.winMain.setCurrentOperation);
+                            Serializer.Serialize(sf.FileName, tf, FileFormats.AddressList, Program.winMain.SetCurrentOperation);
                             Program.winMain.EndOperation();
                         }));
                         ts.Start();
@@ -1372,7 +1374,7 @@ namespace TrackConverter.UI.Shell
         #region события списка маршрутов
 
 
-        internal void dataGridViewSelectionChanged(EventArgs e)
+        internal void DataGridViewSelectionChanged(EventArgs e)
         {
             if (formMain.dataGridViewConverter.SelectedRows.Count != 1)
                 return;
@@ -1386,7 +1388,7 @@ namespace TrackConverter.UI.Shell
             formMain.pointsHelper.RefreshData();
         }
 
-        internal void dataGridViewPaint(PaintEventArgs e)
+        internal void DataGridViewPaint(PaintEventArgs e)
         {
             if (formMain.dataGridViewConverter.RowCount > 0 && formMain.dataGridViewConverter.ColumnCount > 0 && formMain.Tracks.Count > 0)
             {
@@ -1401,14 +1403,16 @@ namespace TrackConverter.UI.Shell
             }
         }
 
-        internal void dataGridViewKeyDown(KeyEventArgs e)
+        internal void DataGridViewKeyDown(KeyEventArgs e)
         {
-            if (formMain.dataGridViewConverter.RowCount == 0) return;
-            if (e.KeyData != Keys.Delete) return;
-            toolStripRemove(null);
+            if (formMain.dataGridViewConverter.RowCount == 0)
+                return;
+            if (e.KeyData != Keys.Delete)
+                return;
+            ToolStripRemove(null);
         }
 
-        internal void dataGridViewDragEnter(DragEventArgs e)
+        internal void DataGridViewDragEnter(DragEventArgs e)
         {
             if (e.Data.GetDataPresent(DataFormats.FileDrop) || e.Data.GetDataPresent(DataFormats.UnicodeText))
                 e.Effect = DragDropEffects.All;
@@ -1416,7 +1420,7 @@ namespace TrackConverter.UI.Shell
                 e.Effect = DragDropEffects.None;
         }
 
-        internal void dataGridViewDragDrop(DragEventArgs e)
+        internal void DataGridViewDragDrop(DragEventArgs e)
         {
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
@@ -1431,7 +1435,7 @@ namespace TrackConverter.UI.Shell
             }
         }
 
-        internal void dataGridViewCellMouseDown(DataGridViewCellMouseEventArgs e)
+        internal void DataGridViewCellMouseDown(DataGridViewCellMouseEventArgs e)
         {
             if (e.ColumnIndex == -1 || e.RowIndex == -1)
                 return;
@@ -1442,19 +1446,20 @@ namespace TrackConverter.UI.Shell
                 formMain.dataGridViewConverter.Rows[e.RowIndex].Selected = true;
         }
 
-        internal void dataGridViewCellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
+        internal void DataGridViewCellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
         {
             formMain.dataGridViewConverter.ClearSelection();
             formMain.dataGridViewConverter.Rows[e.RowIndex].Selected = true;
             if (formMain.Tracks[e.RowIndex] is TripRouteFile)
-                toolStripEditRoute(new EventArgs());
+                ToolStripEditRoute(new EventArgs());
             else
-                toolStripInformation(new EventArgs());
+                ToolStripInformation(new EventArgs());
         }
 
-        internal void dataGridViewCellFormatting(DataGridViewCellFormattingEventArgs e)
+        internal void DataGridViewCellFormatting(DataGridViewCellFormattingEventArgs e)
         {
-            if (formMain.Tracks.Count == 0 || e.RowIndex >= formMain.Tracks.Count) return;
+            if (formMain.Tracks.Count == 0 || e.RowIndex >= formMain.Tracks.Count)
+                return;
             if ((e.ColumnIndex == formMain.dataGridViewConverter.Columns[0].Index) && e.Value != null)
             {
                 DataGridViewCell cell = formMain.dataGridViewConverter.Rows[e.RowIndex].Cells[e.ColumnIndex];
@@ -1470,7 +1475,7 @@ namespace TrackConverter.UI.Shell
             }
         }
 
-        internal void dataGridViewCellClick(DataGridViewCellEventArgs e)
+        internal void DataGridViewCellClick(DataGridViewCellEventArgs e)
         {
             if (e.ColumnIndex == -1 || e.RowIndex == -1)
                 return;

@@ -1,11 +1,6 @@
-﻿using GMap.NET;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System;
 using System.Text.RegularExpressions;
-using System.Threading;
-using System.Threading.Tasks;
+using GMap.NET;
 using Newtonsoft.Json;
 
 namespace TrackConverter.Lib.Classes
@@ -20,8 +15,8 @@ namespace TrackConverter.Lib.Classes
 #pragma warning restore CS0661 // Тип определяет оператор == или оператор !=, но не переопределяет Object.GetHashCode()
 #pragma warning restore CS0659 // Тип переопределяет Object.Equals(object o), но не переопределяет Object.GetHashCode()
     {
-        private long llon;
-        private long llat;
+        private readonly long llon;
+        private readonly long llat;
 
         #region классы, перечисления
 

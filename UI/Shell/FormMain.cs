@@ -1,36 +1,25 @@
-﻿using GMap.NET;
-using GMap.NET.MapProviders;
-using GMap.NET.Projections;
-using GMap.NET.WindowsForms;
-using Microsoft.VisualBasic.Devices;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using TrackConverter.Lib;
+using GMap.NET;
+using GMap.NET.MapProviders;
+using GMap.NET.WindowsForms;
 using TrackConverter.Lib.Classes;
 using TrackConverter.Lib.Classes.StackEdits;
 using TrackConverter.Lib.Data;
-using TrackConverter.Lib.Data.Providers.InternetServices;
 using TrackConverter.Lib.Maping.GMap;
-using TrackConverter.Lib.Mathematic.Geodesy.Projections.GMapImported;
 using TrackConverter.Lib.Tracking;
 using TrackConverter.Res.Properties;
 using TrackConverter.UI.Map;
-using TrackConverter.UI.Tools;
 using ZedGraph;
 
 namespace TrackConverter.UI.Shell
 {
-    public partial class FormMain : Form
+    public partial class FormMain: Form
     {
         #region ПОЛЯ
 
@@ -428,9 +417,11 @@ namespace TrackConverter.UI.Shell
             ToolStripMenuItem c1 = null, c2 = null;
             foreach (MapProviderRecord mpr in Vars.Options.Map.AllMapProviders)
             {
-                ToolStripMenuItem it1 = new ToolStripMenuItem();
-                it1.Text = mpr.Title;
-                it1.Click += mapHelper.mpProvider_Click;
+                ToolStripMenuItem it1 = new ToolStripMenuItem
+                {
+                    Text = mpr.Title
+                };
+                it1.Click += mapHelper.MpProvider_Click;
                 it1.Tag = mpr;
                 it1.Image = new Bitmap(Application.StartupPath + mpr.IconName);
                 if (mpr.Enum == Vars.Options.Map.MapProvider.Enum)
@@ -440,9 +431,11 @@ namespace TrackConverter.UI.Shell
                         c1 = it1;
                 }
 
-                ToolStripMenuItem it2 = new ToolStripMenuItem();
-                it2.Text = mpr.Title;
-                it2.Click += mapHelper.mpProvider_Click;
+                ToolStripMenuItem it2 = new ToolStripMenuItem
+                {
+                    Text = mpr.Title
+                };
+                it2.Click += mapHelper.MpProvider_Click;
                 it2.Tag = mpr;
                 it2.Image = new Bitmap(Application.StartupPath + mpr.IconName);
                 if (mpr.Enum == Vars.Options.Map.MapProvider.Enum)
@@ -491,9 +484,11 @@ namespace TrackConverter.UI.Shell
             layerProviderToolStripMenuItem.DropDownItems.Clear();
             foreach (MapLayerProviderRecord lpr in Vars.Options.Map.AllLayerProviders)
             {
-                ToolStripMenuItem it1 = new ToolStripMenuItem();
-                it1.Text = lpr.Title;
-                it1.Click += mapHelper.lrProvider_Click;
+                ToolStripMenuItem it1 = new ToolStripMenuItem
+                {
+                    Text = lpr.Title
+                };
+                it1.Click += mapHelper.LrProvider_Click;
                 it1.Tag = lpr;
                 it1.Image = new Bitmap(Application.StartupPath + lpr.IconName);
                 if (lpr.Enum == Vars.Options.Map.LayerProvider.Enum)
@@ -519,7 +514,7 @@ namespace TrackConverter.UI.Shell
             Task pr = new Task(new Action(() =>
             {
                 BeginOperation();
-                setCurrentOperation("Построение профиля...");
+                SetCurrentOperation("Построение профиля...");
                 graphHelper.ConfigureGraph();
                 EndOperation();
             }));
@@ -538,7 +533,7 @@ namespace TrackConverter.UI.Shell
             }
         }
 
-        private void FormMain_Shown(object sender, EventArgs e)
+        private void formMain_Shown(object sender, EventArgs e)
         {
             #region ВНЕШНИЙ ВИД ОКНА
 
@@ -618,7 +613,7 @@ namespace TrackConverter.UI.Shell
                     Program.winMain.BeginOperation();
                     //метод обновления информации о выполняемой операции
 
-                    pts = Serializer.DeserializeTrackFile(openingFile, Program.winMain.setCurrentOperation);
+                    pts = Serializer.DeserializeTrackFile(openingFile, Program.winMain.SetCurrentOperation);
                     openingFile = null;
                     //обработка результатов
                     this.Invoke(new Action(() =>
@@ -655,7 +650,7 @@ namespace TrackConverter.UI.Shell
         }
 
 
-        private void FormMain_FormClosing(object sender, FormClosingEventArgs e)
+        private void formMain_FormClosing(object sender, FormClosingEventArgs e)
         {
             //e.Cancel = TryClose(sender, e);
             if (!e.Cancel)
@@ -730,7 +725,7 @@ namespace TrackConverter.UI.Shell
         /// установка надписи строки состояния операции внизу экрана
         /// </summary>
         /// <param name="obj"></param>
-        internal void setCurrentOperation(string obj)
+        internal void SetCurrentOperation(string obj)
         {
             if (this.InvokeRequired)
                 this.Invoke(new Action(() =>
@@ -869,7 +864,7 @@ namespace TrackConverter.UI.Shell
         /// <param name="e"></param>
         private void toolStripComboBoxSearch_DropDown(object sender, EventArgs e)
         {
-            mapHelper.toolStripComboBoxSearch_DropDown(sender, e);
+            mapHelper.ToolStripComboBoxSearch_DropDown(sender, e);
         }
 
         /// <summary>
@@ -879,7 +874,7 @@ namespace TrackConverter.UI.Shell
         /// <param name="e"></param>
         private void toolStripButtonLocateDevice_Click(object sender, EventArgs e)
         {
-            mapHelper.toolstripButtonLocateDevice(sender, e);
+            mapHelper.ToolstripButtonLocateDevice(sender, e);
         }
 
         /// <summary>
@@ -924,57 +919,57 @@ namespace TrackConverter.UI.Shell
 
         private void toolStripMenuItemAddWaypoint_Click(object sender, EventArgs e)
         {
-            mapHelper.toolStripAddWaypoint(e);
+            mapHelper.ToolStripAddWaypoint(e);
         }
 
         private void fromToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            mapHelper.toolStripCreateRoute(sender, e);
+            mapHelper.ToolStripCreateRoute(sender, e);
         }
 
         private void intermediatePointToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            mapHelper.toolStripCreateRoute(sender, e);
+            mapHelper.ToolStripCreateRoute(sender, e);
         }
 
         private void toToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            mapHelper.toolStripCreateRoute(sender, e);
+            mapHelper.ToolStripCreateRoute(sender, e);
         }
 
         private void clearFromtoMarkersToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            mapHelper.toolStripClearFromToMarkers(e);
+            mapHelper.ToolStripClearFromToMarkers(e);
         }
 
         private void toolStripMenuItemWhatsThere_Click(object sender, EventArgs e)
         {
-            mapHelper.toolStripWhatThere(e);
+            mapHelper.ToolStripWhatThere(e);
         }
 
         private void copyCoordinatesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            mapHelper.toolStripCopyCoordinates(e);
+            mapHelper.ToolStripCopyCoordinates(e);
         }
 
         private void editMarkerToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            mapHelper.toolStripEditMarker(e);
+            mapHelper.ToolStripEditMarker(e);
         }
 
         private void deleteMarkerToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            mapHelper.toolStripDeleteMarker(e);
+            mapHelper.ToolStripDeleteMarker(e);
         }
 
         private void editRouteToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            mapHelper.toolStripEditRoute(e);
+            mapHelper.ToolStripEditRoute(e);
         }
 
         private void removeRouteToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            mapHelper.toolStripDeleteRoute(e);
+            mapHelper.ToolStripDeleteRoute(e);
         }
 
 
@@ -993,47 +988,47 @@ namespace TrackConverter.UI.Shell
 
         private void informationToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            converterHelper.toolStripInformation(e);
+            converterHelper.ToolStripInformation(e);
         }
 
         private void saveFileContextToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            converterHelper.toolStripSaveAsFile(sender, e);
+            converterHelper.ToolStripSaveAsFile(sender, e);
         }
 
         private void saveYandexContextToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            converterHelper.toolStripSaveAsYandex(sender, e);
+            converterHelper.ToolStripSaveAsYandex(sender, e);
         }
 
         private void saveWikimapiaContextToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            converterHelper.toolStripSaveAsWikimapia(sender, e);
+            converterHelper.ToolStripSaveAsWikimapia(sender, e);
         }
 
         private void saveToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            converterHelper.toolStripSave(sender, e);
+            converterHelper.ToolStripSave(sender, e);
         }
 
         private void editRouteMapToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            converterHelper.toolStripEditRoute(e);
+            converterHelper.ToolStripEditRoute(e);
         }
 
         private void editWaypointsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            converterHelper.toolStripEditWaypoints(e);
+            converterHelper.ToolStripEditWaypoints(e);
         }
 
         private void separateRouteToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            converterHelper.toolStripSeparateRoute(sender, e);
+            converterHelper.ToolStripSeparateRoute(sender, e);
         }
 
         private void loadElevationsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            converterHelper.toolStripLoadElevations(e);
+            converterHelper.ToolStripLoadElevations(e);
         }
 
         /// <summary>
@@ -1043,7 +1038,7 @@ namespace TrackConverter.UI.Shell
         /// <param name="e"></param>
         private void loadAddressesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            converterHelper.toolStripLoadAddresses(e);
+            converterHelper.ToolStripLoadAddresses(e);
         }
 
         /// <summary>
@@ -1053,77 +1048,77 @@ namespace TrackConverter.UI.Shell
         /// <param name="e"></param>
         private void createOptimalOnBaseToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            converterHelper.toolStripCreateOptimalOnBase(sender, e);
+            converterHelper.ToolStripCreateOptimalOnBase(sender, e);
         }
 
         private void removeElevationsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            converterHelper.toolStripRemoveElevations(e);
+            converterHelper.ToolStripRemoveElevations(e);
         }
 
         private void approximateAltitudesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            converterHelper.toolStripApproximateAltitudes(e);
+            converterHelper.ToolStripApproximateAltitudes(e);
         }
 
         private void normalizeTrackToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            converterHelper.toolStripNormalizeTrack(e);
+            converterHelper.ToolStripNormalizeTrack(e);
         }
 
         private void toTripRouteFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            converterHelper.toolStripConvertToTripRoute(e);
+            converterHelper.ToolStripConvertToTripRoute(e);
         }
 
         private void joinToTripRouteToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            converterHelper.toolStripJoinToTripRoute(e);
+            converterHelper.ToolStripJoinToTripRoute(e);
         }
 
         private void showWaypointsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            converterHelper.toolStripShowWaypoints(e);
+            converterHelper.ToolStripShowWaypoints(e);
         }
 
         private void showOnMapToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            converterHelper.toolStripShowRouteOnMap(e);
+            converterHelper.ToolStripShowRouteOnMap(e);
         }
 
         private void elevgraphWithIntermediatesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            converterHelper.toolStripElevGraphWithIntermediates(e);
+            converterHelper.ToolStripElevGraphWithIntermediates(e);
         }
 
         private void elevgraphToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            converterHelper.toolStripElevGraph(e);
+            converterHelper.ToolStripElevGraph(e);
         }
 
         private void toolStripMenuItemShowElevGraphOnRoute_Paint(object sender, PaintEventArgs e)
         {
-            mainHelper.toolStripShowElevGraphOnRoute_Paint(sender, e);
+            mainHelper.ToolStripShowElevGraphOnRoute_Paint(sender, e);
         }
 
         private void openRouteFolderToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            converterHelper.toolStripOpenRouteFolder(e);
+            converterHelper.ToolStripOpenRouteFolder(e);
         }
 
         private void addToJoinToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            converterHelper.toolStripAddToJoin(e);
+            converterHelper.ToolStripAddToJoin(e);
         }
 
         private void addComparisonToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            converterHelper.toolStripAddToComparison(e);
+            converterHelper.ToolStripAddToComparison(e);
         }
 
         private void removeToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            converterHelper.toolStripRemove(e);
+            converterHelper.ToolStripRemove(e);
         }
 
         #endregion
@@ -1132,47 +1127,47 @@ namespace TrackConverter.UI.Shell
 
         private void dataGridViewConverter_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            converterHelper.dataGridViewCellClick(e);
+            converterHelper.DataGridViewCellClick(e);
         }
 
         private void dataGridViewConverter_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
-            converterHelper.dataGridViewCellFormatting(e);
+            converterHelper.DataGridViewCellFormatting(e);
         }
 
         private void dataGridViewConverter_CellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
         {
-            converterHelper.dataGridViewCellMouseDoubleClick(sender, e);
+            converterHelper.DataGridViewCellMouseDoubleClick(sender, e);
         }
 
         private void dataGridViewConverter_CellMouseDown(object sender, DataGridViewCellMouseEventArgs e)
         {
-            converterHelper.dataGridViewCellMouseDown(e);
+            converterHelper.DataGridViewCellMouseDown(e);
         }
 
         private void dataGridViewConverter_DragDrop(object sender, DragEventArgs e)
         {
-            converterHelper.dataGridViewDragDrop(e);
+            converterHelper.DataGridViewDragDrop(e);
         }
 
         private void dataGridViewConverter_DragEnter(object sender, DragEventArgs e)
         {
-            converterHelper.dataGridViewDragEnter(e);
+            converterHelper.DataGridViewDragEnter(e);
         }
 
         private void dataGridViewConverter_KeyDown(object sender, KeyEventArgs e)
         {
-            converterHelper.dataGridViewKeyDown(e);
+            converterHelper.DataGridViewKeyDown(e);
         }
 
         private void dataGridViewConverter_Paint(object sender, PaintEventArgs e)
         {
-            converterHelper.dataGridViewPaint(e);
+            converterHelper.DataGridViewPaint(e);
         }
 
         private void dataGridViewConverter_SelectionChanged(object sender, EventArgs e)
         {
-            converterHelper.dataGridViewSelectionChanged(e);
+            converterHelper.DataGridViewSelectionChanged(e);
         }
 
 
@@ -1184,132 +1179,132 @@ namespace TrackConverter.UI.Shell
 
         private void saveFileWaypointsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            mainHelper.toolStripSaveFileWaypoints(sender, e);
+            mainHelper.ToolStripSaveFileWaypoints(sender, e);
         }
 
         private void saveFileWaypointsRoutesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            mainHelper.toolStripSaveFileWaypointsRoutes(sender, e);
+            mainHelper.ToolStripSaveFileWaypointsRoutes(sender, e);
         }
 
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            mainHelper.toolStripOpen(sender, e);
+            mainHelper.ToolStripOpen(sender, e);
         }
 
         private void createRouteToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            mainHelper.toolStripCreateRoute(sender, e);
+            mainHelper.ToolStripCreateRoute(sender, e);
         }
 
         private void createTripToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            mainHelper.toolStripCreateTrip(sender, e);
+            mainHelper.ToolStripCreateTrip(sender, e);
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            mainHelper.toolStripExit(sender, e);
+            mainHelper.ToolStripExit(sender, e);
         }
 
         private void tmInternetToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            mainHelper.toolStripSourceInternet(sender, e);
+            mainHelper.ToolStripSourceInternet(sender, e);
         }
 
         private void tmCacheToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            mainHelper.toolStripSourceCache(sender, e);
+            mainHelper.ToolStripSourceCache(sender, e);
         }
 
         private void tmInternetCacheToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            mainHelper.toolStripSourceInternetCache(sender, e);
+            mainHelper.ToolStripSourceInternetCache(sender, e);
         }
 
         private void selectMapToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            mainHelper.toolStripSelectMap(sender, e);
+            mainHelper.ToolStripSelectMap(sender, e);
         }
 
         private void clearRoutesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            mainHelper.toolStripClearRoutes(sender, e);
+            mainHelper.ToolStripClearRoutes(sender, e);
         }
 
         private void clearMarkersToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            mainHelper.toolStripClearMarkers(sender, e);
+            mainHelper.ToolStripClearMarkers(sender, e);
         }
 
         private void clearAllToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            mainHelper.toolStripClearAll(sender, e);
+            mainHelper.ToolStripClearAll(sender, e);
         }
 
-        private void EditPointFileToolStripMenuItem_Click(object sender, EventArgs e)
+        private void editPointFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            mainHelper.toolStripEditPointFile(sender, e);
+            mainHelper.ToolStripEditPointFile(sender, e);
         }
 
-        private void CalculateDistanceToolStripMenuItem_Click(object sender, EventArgs e)
+        private void calculateDistanceToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            mainHelper.toolStripCalculateDistance(sender, e);
+            mainHelper.ToolStripCalculateDistance(sender, e);
         }
 
-        private void TransformCoordinateToolStripMenuItem_Click(object sender, EventArgs e)
+        private void transformCoordinateToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            mainHelper.toolStripTransformCoordinate(sender, e);
+            mainHelper.ToolStripTransformCoordinate(sender, e);
         }
 
         private void consoleToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            mainHelper.toolStripConsole(sender, e);
+            mainHelper.ToolStripConsole(sender, e);
         }
 
-        private void OptionsToolStripMenuItem_Click(object sender, EventArgs e)
+        private void optionsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            mainHelper.toolStripOptions(sender, e);
+            mainHelper.ToolStripOptions(sender, e);
         }
 
         private void showNavigatorToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            mainHelper.toolStripShowNavigator(sender, e);
+            mainHelper.ToolStripShowNavigator(sender, e);
         }
 
         private void helpToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            mainHelper.toolStripHelp(sender, e);
+            mainHelper.ToolStripHelp(sender, e);
         }
 
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            mainHelper.toolStripAbout(sender, e);
+            mainHelper.ToolStripAbout(sender, e);
         }
 
         private void toolStripMenuItemEditWaypoints_Click(object sender, EventArgs e)
         {
-            mainHelper.toolStripEditWaypoints(sender, e);
+            mainHelper.ToolStripEditWaypoints(sender, e);
         }
 
         private void toolStripMenuItemShowElevGraphOnRoute_Click(object sender, EventArgs e)
         {
-            mainHelper.toolStripShowElevGraphOnRoute(sender, e);
+            mainHelper.ToolStripShowElevGraphOnRoute(sender, e);
         }
 
         private void toolStripMenuItemcreateOptimalRoute_Click(object sender, EventArgs e)
         {
-            mainHelper.toolStripCreateOptimalRoute(sender, e);
+            mainHelper.ToolStripCreateOptimalRoute(sender, e);
         }
 
         private void toolStripMenuItemPointsToRoute_Click(object sender, EventArgs e)
         {
-            mainHelper.toolStripPointsToRoute(sender, e);
+            mainHelper.ToolStripPointsToRoute(sender, e);
         }
 
         private void toolStripMenuItemRouteToPoints_Click(object sender, EventArgs e)
         {
-            mainHelper.toolStripRouteToPoints(sender, e);
+            mainHelper.ToolStripRouteToPoints(sender, e);
         }
 
         #endregion
@@ -1348,7 +1343,7 @@ namespace TrackConverter.UI.Shell
             pointsHelper.toolStripShowGoogle(sender, e);
         }
 
-        private void RemovePointtoolStripMenuItem_Click(object sender, EventArgs e)
+        private void removePointtoolStripMenuItem_Click(object sender, EventArgs e)
         {
             pointsHelper.toolStripRemovePoint(sender, e);
         }

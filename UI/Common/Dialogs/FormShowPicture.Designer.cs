@@ -94,8 +94,8 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "FormShowPicture";
             this.TopMost = true;
-            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.FormShowPicture_FormClosed);
-            this.Shown += new System.EventHandler(this.FormShowPicture_Shown);
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.formShowPicture_FormClosed);
+            this.Shown += new System.EventHandler(this.formShowPicture_Shown);
             this.contextMenuStripPicture.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxImage)).EndInit();
             this.ResumeLayout(false);

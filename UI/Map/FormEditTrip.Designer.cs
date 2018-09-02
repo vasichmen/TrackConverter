@@ -540,7 +540,7 @@
             this.MinimumSize = new System.Drawing.Size(598, 392);
             this.Name = "FormEditTrip";
             this.Text = "Редактирование путешествия";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormEditTrip_FormClosing);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.formEditTrip_FormClosing);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewDays)).EndInit();
             this.contextMenuStripDays.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewWaypoints)).EndInit();

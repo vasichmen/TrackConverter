@@ -1,19 +1,11 @@
-﻿using GMap.NET;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using TrackConverter.Lib;
-using TrackConverter.Lib.Classes;
-using TrackConverter.Lib.Mathematic;
-using TrackConverter.Res;
-using TrackConverter.Lib.Mathematic.Geodesy;
-using TrackConverter.Lib.Mathematic.Astronomy;
-using Newtonsoft.Json.Serialization;
+﻿using System;
+using GMap.NET;
 using Newtonsoft.Json;
-using GMap.NET.WindowsForms;
+using TrackConverter.Lib.Classes;
+using TrackConverter.Lib.Exceptions;
+using TrackConverter.Lib.Mathematic.Astronomy;
+using TrackConverter.Lib.Mathematic.Geodesy;
+using TrackConverter.Res;
 
 namespace TrackConverter.Lib.Tracking
 {
@@ -21,7 +13,7 @@ namespace TrackConverter.Lib.Tracking
     /// <summary>
     /// Информация о точке (Широта, Долгота, Высота, Время)
     /// </summary>
-    public class TrackPoint : IComparable
+    public class TrackPoint: IComparable
 #pragma warning restore CS0659 // Тип переопределяет Object.Equals(object o), но не переопределяет Object.GetHashCode()
     {
         #region конструкторы
@@ -129,7 +121,7 @@ namespace TrackConverter.Lib.Tracking
         {
             get
             {
-                return  DateTime.UtcNow.Add(TimeZone.GetUtcOffset(DateTime.UtcNow));
+                return DateTime.UtcNow.Add(TimeZone.GetUtcOffset(DateTime.UtcNow));
             }
         }
 
@@ -142,12 +134,12 @@ namespace TrackConverter.Lib.Tracking
         /// <summary>
         /// Имя точки
         /// </summary>
-        public string Name { get { return name != null ? name.Replace(",", " ").Replace("\r\n", "") : null; } set { name = value; } }
+        public string Name { get => name?.Replace(",", " ").Replace("\r\n", ""); set { name = value; } }
 
         /// <summary>
         /// Описание точки
         /// </summary>
-        public string Description { get { return description != null ? description.Replace(",", " ").Replace("\r\n", "") : null; } set { description = value; } }
+        public string Description { get => description?.Replace(",", " ").Replace("\r\n", ""); set { description = value; } }
 
         /// <summary>
         /// Скорость в этой точке в км/ч
@@ -241,22 +233,33 @@ namespace TrackConverter.Lib.Tracking
         /// <summary>
         /// Текстовое представление типа точки
         /// </summary>
+        /// <exception cref="TrackConverterException"></exception>
         public string PointTypeString
         {
             get
             {
                 switch (this.PointType)
                 {
-                    case RouteWaypointType.Camp: return "Привал";
-                    case RouteWaypointType.CollectPoint: return "Точка сбора";
-                    case RouteWaypointType.Finish: return "Финиш";
-                    case RouteWaypointType.Interest: return "Достопримечательность";
-                    case RouteWaypointType.None: return "Точка";
-                    case RouteWaypointType.Overnight: return "Ночёвка";
-                    case RouteWaypointType.Start: return "Старт";
-                    case RouteWaypointType.WaterSource: return "Источник воды";
-                    case RouteWaypointType.Shop: return "Магазин";
-                    default: throw new ApplicationException("неизвестный тип точки " + this.PointType);
+                    case RouteWaypointType.Camp:
+                        return "Привал";
+                    case RouteWaypointType.CollectPoint:
+                        return "Точка сбора";
+                    case RouteWaypointType.Finish:
+                        return "Финиш";
+                    case RouteWaypointType.Interest:
+                        return "Достопримечательность";
+                    case RouteWaypointType.None:
+                        return "Точка";
+                    case RouteWaypointType.Overnight:
+                        return "Ночёвка";
+                    case RouteWaypointType.Start:
+                        return "Старт";
+                    case RouteWaypointType.WaterSource:
+                        return "Источник воды";
+                    case RouteWaypointType.Shop:
+                        return "Магазин";
+                    default:
+                        throw new TrackConverterException("неизвестный тип точки " + this.PointType);
                 }
             }
         }
@@ -264,11 +267,15 @@ namespace TrackConverter.Lib.Tracking
         /// <summary>
         /// координаты в формате GMap
         /// </summary>
-        public PointLatLng GMap { get {
-               // return  GMapIconMarker(this.Coordinates.GMap);
+        public PointLatLng GMap
+        {
+            get
+            {
+                // return  GMapIconMarker(this.Coordinates.GMap);
                 //return this.Coordinates.GMap;
-                return new PointLatLng(Coordinates.Latitude.TotalDegrees,Coordinates.Longitude.TotalDegrees);
-            } }
+                return new PointLatLng(Coordinates.Latitude.TotalDegrees, Coordinates.Longitude.TotalDegrees);
+            }
+        }
 
         #endregion
 
@@ -368,9 +375,9 @@ namespace TrackConverter.Lib.Tracking
         public override bool Equals(object obj)
         {
             if (obj is TrackPoint)
-               return this.Coordinates.Equals(((TrackPoint)obj).Coordinates);
+                return this.Coordinates.Equals(((TrackPoint)obj).Coordinates);
             else
-                 return false;
+                return false;
         }
 
 

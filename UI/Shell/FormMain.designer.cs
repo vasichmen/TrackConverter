@@ -476,7 +476,7 @@ namespace TrackConverter.UI.Shell
             this.EditPointFileToolStripMenuItem.Size = new System.Drawing.Size(283, 26);
             this.EditPointFileToolStripMenuItem.Text = "Правка путевых точек";
             this.EditPointFileToolStripMenuItem.ToolTipText = "Открытие маршрута как последовательность точек с возможностью редактирования";
-            this.EditPointFileToolStripMenuItem.Click += new System.EventHandler(this.EditPointFileToolStripMenuItem_Click);
+            this.EditPointFileToolStripMenuItem.Click += new System.EventHandler(this.editPointFileToolStripMenuItem_Click);
             // 
             // CalculateDistanceToolStripMenuItem
             // 
@@ -485,7 +485,7 @@ namespace TrackConverter.UI.Shell
             this.CalculateDistanceToolStripMenuItem.Size = new System.Drawing.Size(283, 26);
             this.CalculateDistanceToolStripMenuItem.Text = "Измерение расстояний";
             this.CalculateDistanceToolStripMenuItem.ToolTipText = "Измерение расстояний и азимутов между точками";
-            this.CalculateDistanceToolStripMenuItem.Click += new System.EventHandler(this.CalculateDistanceToolStripMenuItem_Click);
+            this.CalculateDistanceToolStripMenuItem.Click += new System.EventHandler(this.calculateDistanceToolStripMenuItem_Click);
             // 
             // TransformCoordinateToolStripMenuItem
             // 
@@ -494,7 +494,7 @@ namespace TrackConverter.UI.Shell
             this.TransformCoordinateToolStripMenuItem.Size = new System.Drawing.Size(283, 26);
             this.TransformCoordinateToolStripMenuItem.Text = "Преобразование координат";
             this.TransformCoordinateToolStripMenuItem.ToolTipText = "Преобразование координат в разные форматы";
-            this.TransformCoordinateToolStripMenuItem.Click += new System.EventHandler(this.TransformCoordinateToolStripMenuItem_Click);
+            this.TransformCoordinateToolStripMenuItem.Click += new System.EventHandler(this.transformCoordinateToolStripMenuItem_Click);
             // 
             // consoleToolStripMenuItem
             // 
@@ -516,7 +516,7 @@ namespace TrackConverter.UI.Shell
             this.OptionsToolStripMenuItem.Size = new System.Drawing.Size(283, 26);
             this.OptionsToolStripMenuItem.Text = "Настройки";
             this.OptionsToolStripMenuItem.ToolTipText = "Настройки программы";
-            this.OptionsToolStripMenuItem.Click += new System.EventHandler(this.OptionsToolStripMenuItem_Click);
+            this.OptionsToolStripMenuItem.Click += new System.EventHandler(this.optionsToolStripMenuItem_Click);
             // 
             // окноToolStripMenuItem
             // 
@@ -1006,7 +1006,7 @@ namespace TrackConverter.UI.Shell
             this.RemovePointtoolStripMenuItem.Name = "RemovePointtoolStripMenuItem";
             this.RemovePointtoolStripMenuItem.Size = new System.Drawing.Size(315, 26);
             this.RemovePointtoolStripMenuItem.Text = "Удалить";
-            this.RemovePointtoolStripMenuItem.Click += new System.EventHandler(this.RemovePointtoolStripMenuItem_Click);
+            this.RemovePointtoolStripMenuItem.Click += new System.EventHandler(this.removePointtoolStripMenuItem_Click);
             // 
             // splitContainerHorizontalRight
             // 
@@ -1457,8 +1457,8 @@ namespace TrackConverter.UI.Shell
             this.Name = "FormMain";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "TrackConverter";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormMain_FormClosing);
-            this.Shown += new System.EventHandler(this.FormMain_Shown);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.formMain_FormClosing);
+            this.Shown += new System.EventHandler(this.formMain_Shown);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.splitContainerVertical.Panel1.ResumeLayout(false);

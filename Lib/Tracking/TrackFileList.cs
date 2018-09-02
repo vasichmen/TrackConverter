@@ -1,14 +1,6 @@
-﻿using GMap.NET.WindowsForms;
-using ICSharpCode.SharpZipLib.Zip;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.IO;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Windows.Forms;
-using System.Xml;
-using System.Drawing;
 using Newtonsoft.Json;
 
 namespace TrackConverter.Lib.Tracking
@@ -16,7 +8,7 @@ namespace TrackConverter.Lib.Tracking
     /// <summary>
     /// представление нескольких маршрутов
     /// </summary>
-    public class TrackFileList : List<BaseTrack>
+    public class TrackFileList: List<BaseTrack>
     {
         /// <summary>
         /// создает новый список маршрутов
@@ -191,10 +183,12 @@ namespace TrackConverter.Lib.Tracking
         {
             if (this.Count == 0)
                 return new TripRouteFile();
-            TripRouteFile res = new TripRouteFile(this, null);
-            res.Color = Vars.Options.Converter.GetColor();
-            res.FilePath = null;
-            res.Name = this[0].Name;
+            TripRouteFile res = new TripRouteFile(this, null)
+            {
+                Color = Vars.Options.Converter.GetColor(),
+                FilePath = null,
+                Name = this[0].Name
+            };
             return res;
         }
     }

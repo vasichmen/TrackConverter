@@ -185,8 +185,8 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "FormShowObjectInfo";
             this.TopMost = true;
-            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.FormShowObjectInfo_FormClosed);
-            this.Shown += new System.EventHandler(this.FormShowObjectInfo_Shown);
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.formShowObjectInfo_FormClosed);
+            this.Shown += new System.EventHandler(this.formShowObjectInfo_Shown);
             this.flowLayoutPanelWrapper.ResumeLayout(false);
             this.flowLayoutPanelWrapper.PerformLayout();
             this.contextMenuStripLinkLabel.ResumeLayout(false);

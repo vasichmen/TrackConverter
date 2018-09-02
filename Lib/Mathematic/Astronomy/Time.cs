@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using Newtonsoft.Json;
+using TrackConverter.Lib.Exceptions;
 
 namespace TrackConverter.Lib.Mathematic.Astronomy
 {
@@ -85,7 +86,8 @@ namespace TrackConverter.Lib.Mathematic.Astronomy
         /// строковое предствление времени
         /// </summary>
         /// <returns></returns>
-        public new string ToString()
+        /// <exception cref="TrackConverterException"></exception>
+        public override string ToString()
         {
             switch (this.DayType)
             {
@@ -96,7 +98,7 @@ namespace TrackConverter.Lib.Mathematic.Astronomy
                 case WOSet.PolarNight:
                     return "Полярная ночь";
             }
-            throw new ApplicationException("что-то не так");
+            throw new TrackConverterException("что-то не так");
         }
 
         /// <summary>

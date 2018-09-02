@@ -1,14 +1,12 @@
-﻿using GMap.NET;
-using System;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
-using System.Xml.Serialization;
-using TrackConverter.Lib.Classes.Options;
+using System.Linq;
 using System.Runtime.Serialization.Json;
 using System.Text;
-using System.Collections.Generic;
-using TrackConverter.Res.Properties;
-using System.Linq;
 using System.Windows.Forms;
+using System.Xml.Serialization;
+using TrackConverter.Res.Properties;
 
 namespace TrackConverter.Lib.Classes.Options
 {
@@ -87,7 +85,7 @@ namespace TrackConverter.Lib.Classes.Options
             switch (this.Format)
             {
                 case OptionsFormat.JSON:
-                    File.Delete(Application.StartupPath+ Resources.options_folder + "\\options.xml");
+                    File.Delete(Application.StartupPath + Resources.options_folder + "\\options.xml");
                     JSONSerialize(Directory + "options.json");
                     break;
                 case OptionsFormat.XML:
@@ -112,9 +110,12 @@ namespace TrackConverter.Lib.Classes.Options
                 string name = Path.GetFileName(file);
                 switch (name)
                 {
-                    case "options.xml": return XMLDeserialize(file);
-                    case "options.json": return JSONDeserialize(file);
-                    default: continue;
+                    case "options.xml":
+                        return XMLDeserialize(file);
+                    case "options.json":
+                        return JSONDeserialize(file);
+                    default:
+                        continue;
                 }
             }
 
@@ -168,21 +169,23 @@ namespace TrackConverter.Lib.Classes.Options
             if (!File.Exists(FilePath))
                 return new Options();
 
-            
+
             FileStream fs = new FileStream(FilePath, FileMode.Open);
             XmlSerializer se = new XmlSerializer(typeof(Options));
             try
             {
                 Options res = (Options)se.Deserialize(fs);
                 res.Format = OptionsFormat.XML;
-                fs.Close();
                 res.FilePath = FilePath;
                 return res;
             }
             catch (Exception)
             {
-                fs.Close();
                 return new Options();
+            }
+            finally
+            {
+                fs.Close();
             }
         }
 

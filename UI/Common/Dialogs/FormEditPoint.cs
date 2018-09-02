@@ -1,22 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using TrackConverter.Lib.Classes;
 using TrackConverter.Lib.Data;
 using TrackConverter.Lib.Tracking;
 using TrackConverter.Res;
 using TrackConverter.Res.Properties;
-using TrackConverter.UI.Common.Dialogs;
-using TrackConverter.UI.Converter;
 using TrackConverter.UI.Map;
 
 namespace TrackConverter.UI.Common.Dialogs
@@ -24,7 +18,7 @@ namespace TrackConverter.UI.Common.Dialogs
     /// <summary>
     /// окно изменнения или добавления точки
     /// </summary>
-    public partial class FormEditPoint : Form
+    public partial class FormEditPoint: Form
     {
         /// <summary>
         /// редактируемая точка
@@ -155,7 +149,8 @@ namespace TrackConverter.UI.Common.Dialogs
                     case RouteWaypointType.Shop:
                         comboBoxPointType.SelectedIndex = 7; //магазин
                         break;
-                    default: throw new ApplicationException("неизвестный индекс точки " + comboBoxPointType.SelectedIndex);
+                    default:
+                        throw new ApplicationException("неизвестный индекс точки " + comboBoxPointType.SelectedIndex);
                 }
 
                 //если иконки точки нет в списке, то выделяем первую иконку
@@ -173,11 +168,6 @@ namespace TrackConverter.UI.Common.Dialogs
 
                 #endregion
             }
-        }
-
-        private void ButtonSave_Click(object sender, EventArgs e)
-        {
-            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -246,7 +236,8 @@ namespace TrackConverter.UI.Common.Dialogs
                 case 8:
                     type = RouteWaypointType.WaterSource;
                     break;
-                default: throw new ApplicationException("неизвестный индекс точки " + comboBoxPointType.SelectedIndex);
+                default:
+                    throw new ApplicationException("неизвестный индекс точки " + comboBoxPointType.SelectedIndex);
             }
             Result.PointType = type;
             Close();
@@ -344,7 +335,8 @@ namespace TrackConverter.UI.Common.Dialogs
                 case GeoCoderProvider.Google:
                     link = new Coordinate(textBoxLat.Text, textBoxLon.Text).ExportGoogle();
                     break;
-                default: throw new ApplicationException("Неподдерживаемый геокодер " + Vars.Options.DataSources.GeoCoderProvider);
+                default:
+                    throw new ApplicationException("Неподдерживаемый геокодер " + Vars.Options.DataSources.GeoCoderProvider);
             }
 
             new FormReadText(DialogType.ExportText, "Ссылка на точку:", link, false, true, true, true).ShowDialog(this);
@@ -508,9 +500,11 @@ namespace TrackConverter.UI.Common.Dialogs
         }
         private void toolStripButtonInsImage_Click(object sender, EventArgs e)
         {
-            OpenFileDialog of = new OpenFileDialog();
-            of.InitialDirectory = Vars.Options.Common.LastFileLoadDirectory;
-            of.Filter = "Все изображения(*.jpg, *.jpeg, *.png, *.bmp, *.ico, *.wmf, *.emf)|*.jpg; *.jpeg; *.png; *.bmp; *.ico; *.wmf; *.emf";
+            OpenFileDialog of = new OpenFileDialog
+            {
+                InitialDirectory = Vars.Options.Common.LastFileLoadDirectory,
+                Filter = "Все изображения(*.jpg, *.jpeg, *.png, *.bmp, *.ico, *.wmf, *.emf)|*.jpg; *.jpeg; *.png; *.bmp; *.ico; *.wmf; *.emf"
+            };
             if (of.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
                 textBoxDescription.Text = textBoxDescription.Text.Insert(textBoxDescription.SelectionStart, "<img src=\"" + of.FileName + "\"/>");
         }

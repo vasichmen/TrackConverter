@@ -1,12 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Net;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using TrackConverter.Lib.Data.Providers.InternetServices;
@@ -16,37 +11,37 @@ namespace TrackConverter.UI.Common.Dialogs
     /// <summary>
     /// окно вывода изображения
     /// </summary>
-    public partial class FormShowPicture : Form
+    public partial class FormShowPicture: Form
     {
         /// <summary>
         /// адрес изображения
         /// </summary>
-        List<Wikimapia.ExtInfo.PhotoInfo> photos;
+        private List<Wikimapia.ExtInfo.PhotoInfo> photos;
 
         /// <summary>
         /// текущий номер изображения
         /// </summary>
-        int cur_ind;
+        private int cur_ind;
 
         /// <summary>
         /// первое изображение, которое надо показать при запуске
         /// </summary>
-        int start;
+        private int start;
 
         /// <summary>
         /// url текущего изображения
         /// </summary>
-        string cur_url;
+        private string cur_url;
 
         /// <summary>
         /// тултип на изображении (ссылка)
         /// </summary>
-        ToolTip tooltip = new ToolTip();
+        private ToolTip tooltip = new ToolTip();
 
         /// <summary>
         /// метод установки заголовка окна
         /// </summary>
-        Action<string> setOperation;
+        private Action<string> setOperation;
 
         /// <summary>
         /// создаёт окно вывода изображения
@@ -57,7 +52,7 @@ namespace TrackConverter.UI.Common.Dialogs
             InitializeComponent();
             this.photos = photos;
             this.start = start;
-            
+
             pictureBoxImage.SizeMode = PictureBoxSizeMode.Zoom;
 
             setOperation = new Action<string>((obj) =>
@@ -86,9 +81,9 @@ namespace TrackConverter.UI.Common.Dialogs
 
         }
 
-        private void FormShowPicture_Shown(object sender, EventArgs e)
+        private void formShowPicture_Shown(object sender, EventArgs e)
         {
-            ShowPict(start);
+            showPict(start);
             cur_ind = start;
             Text = "Изображение " + (cur_ind + 1) + "/" + photos.Count;
         }
@@ -112,7 +107,7 @@ namespace TrackConverter.UI.Common.Dialogs
                     else
                     {
                         cur_ind--;
-                        ShowPict(cur_ind);
+                        showPict(cur_ind);
                     }
                 else //следующее изображение
                 {
@@ -121,17 +116,17 @@ namespace TrackConverter.UI.Common.Dialogs
                     else
                     {
                         cur_ind++;
-                        ShowPict(cur_ind);
+                        showPict(cur_ind);
                     }
                 }
-                Text = "Изображение " + (cur_ind + 1) + "/" + photos.Count+", загружено "+photos[cur_ind].TimeString;
+                Text = "Изображение " + (cur_ind + 1) + "/" + photos.Count + ", загружено " + photos[cur_ind].TimeString;
             }
         }
         /// <summary>
         /// загрузить и показать указанное изображени по ссылке
         /// </summary>
         /// <param name="url"></param>
-        private void ShowPict(int ind)
+        private void showPict(int ind)
         {
             Wikimapia.ExtInfo.PhotoInfo pho = photos[ind];
             cur_url = !string.IsNullOrWhiteSpace(pho.UrlFull) ? pho.UrlFull :
@@ -174,7 +169,7 @@ namespace TrackConverter.UI.Common.Dialogs
             }
         }
 
-        private void FormShowPicture_FormClosed(object sender, FormClosedEventArgs e)
+        private void formShowPicture_FormClosed(object sender, FormClosedEventArgs e)
         {
             pictureBoxImage.Image = null;
         }
@@ -202,9 +197,11 @@ namespace TrackConverter.UI.Common.Dialogs
 
         private void saveImageAsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            SaveFileDialog sf = new SaveFileDialog();
-            sf.InitialDirectory = Application.StartupPath;
-            sf.FileName = Path.GetFileName(cur_url);
+            SaveFileDialog sf = new SaveFileDialog
+            {
+                InitialDirectory = Application.StartupPath,
+                FileName = Path.GetFileName(cur_url)
+            };
 
             if (sf.ShowDialog() == DialogResult.OK)
                 pictureBoxImage.Image.Save(sf.FileName);

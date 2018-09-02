@@ -40,7 +40,6 @@ namespace TrackConverter.Lib.Mathematic.Geodesy.MapCalibrations
                 world.WriteLine("{0:0.000000000000}", (-Area.HeightLat / pxDelta.Y));
                 world.WriteLine("{0:0.000000000000}", Area.Left);
                 world.WriteLine("{0:0.000000000000}", Area.Top);
-                world.Close();
             }
         }
 

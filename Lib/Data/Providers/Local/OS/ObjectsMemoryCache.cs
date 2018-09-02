@@ -1,36 +1,31 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
+using System.Security.Cryptography;
 using System.Text;
 using GMap.NET;
-using TrackConverter.Lib.Data.Interfaces;
 using TrackConverter.Lib.Classes;
-using System.Security.Cryptography;
-using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.Runtime.Serialization;
+using TrackConverter.Lib.Data.Interfaces;
 
 namespace TrackConverter.Lib.Data.Providers.Local.OS
 {
     /// <summary>
     /// кэш загруженных объектов в оперативной памяти по масштабам
     /// </summary>
-    class ObjectsMemoryCache : IVectorMapLayerCache
+    internal class ObjectsMemoryCache: IVectorMapLayerCache
     {
         /// <summary>
         /// адрес папки для сохранения
         /// </summary>
-        string dname;
+        private readonly string dname;
 
         /// <summary>
         /// максимальное количество масштабов карты
         /// </summary>
-        const int zooms = 30;
+        private const int ZOOMS = 30;
 
         /// <summary>
         /// массив по масштабам карты (0..zooms-1)
         /// </summary>
-        MemoryCache[] c;
+        private readonly MemoryCache[] c;
 
         /// <summary>
         /// создвёт новый объект кэша в памяти
@@ -39,7 +34,7 @@ namespace TrackConverter.Lib.Data.Providers.Local.OS
         public ObjectsMemoryCache(string dname)
         {
             this.dname = dname;
-            c = new MemoryCache[zooms];
+            c = new MemoryCache[ZOOMS];
         }
         /// <summary>
         /// добавить объекты в заданной области при заданном масштабе

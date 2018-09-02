@@ -90,7 +90,7 @@
             this.SaveFileToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
             this.SaveFileToolStripMenuItem.Text = "Файл";
             this.SaveFileToolStripMenuItem.ToolTipText = "Сохранение точек в файл";
-            this.SaveFileToolStripMenuItem.Click += new System.EventHandler(this.SaveFileToolStripMenuItem_Click);
+            this.SaveFileToolStripMenuItem.Click += new System.EventHandler(this.saveFileToolStripMenuItem_Click);
             // 
             // toolStripMenuItem1
             // 
@@ -109,7 +109,7 @@
             this.toolStripMenuItem2.Size = new System.Drawing.Size(116, 22);
             this.toolStripMenuItem2.Text = "Файл";
             this.toolStripMenuItem2.ToolTipText = "Загрузка точек из файла ";
-            this.toolStripMenuItem2.Click += new System.EventHandler(this.LoadFileToolStripMenuItem_Click);
+            this.toolStripMenuItem2.Click += new System.EventHandler(this.loadFileToolStripMenuItem_Click);
             // 
             // toolStripMenuItem3
             // 
@@ -118,7 +118,7 @@
             this.toolStripMenuItem3.Size = new System.Drawing.Size(116, 22);
             this.toolStripMenuItem3.Text = "Ссылка";
             this.toolStripMenuItem3.ToolTipText = "Загрузка точек из ссылки";
-            this.toolStripMenuItem3.Click += new System.EventHandler(this.LoadLinkToolStripMenuItem_Click);
+            this.toolStripMenuItem3.Click += new System.EventHandler(this.loadLinkToolStripMenuItem_Click);
             // 
             // йствияToolStripMenuItem
             // 
@@ -144,7 +144,7 @@
             this.openOnMapToolStripMenuItem.Name = "openOnMapToolStripMenuItem";
             this.openOnMapToolStripMenuItem.Size = new System.Drawing.Size(244, 22);
             this.openOnMapToolStripMenuItem.Text = "Открыть точки на карте";
-            this.openOnMapToolStripMenuItem.Click += new System.EventHandler(this.OpenOnMapToolStripMenuItem_Click);
+            this.openOnMapToolStripMenuItem.Click += new System.EventHandler(this.openOnMapToolStripMenuItem_Click);
             // 
             // dataGridViewPoints
             // 
@@ -249,7 +249,7 @@
             this.Name = "FormPoints";
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "Правка путевых точек";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormPoints_FormClosing);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.formPoints_FormClosing);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewPoints)).EndInit();

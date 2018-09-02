@@ -1,20 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Text;
-using TrackConverter.Lib.Tracking;
 
 namespace TrackConverter.Lib.Mathematic.Routing.BranchBoundsElements
 {
     /// <summary>
     /// двумерный массив объектов
     /// </summary>
-     class Graph
+    internal class Graph
     {
 
-        private int[,] matrix;
+        private readonly int[,] matrix;
 
         /// <summary>
         /// выбранные ребра на этом этапе
@@ -67,9 +63,10 @@ namespace TrackConverter.Lib.Mathematic.Routing.BranchBoundsElements
         /// <returns></returns>
         public Graph Clone()
         {
-            Graph r = new Graph(this.RowCount, this.ColCount, this.selectedIndexes);
-
-            r.selectedIndexes = new Dictionary<int, int>(this.selectedIndexes);
+            Graph r = new Graph(this.RowCount, this.ColCount, this.selectedIndexes)
+            {
+                selectedIndexes = new Dictionary<int, int>(this.selectedIndexes)
+            };
 
             for (int i = 0; i < this.RowCount; i++)
                 for (int j = 0; j < this.ColCount; j++)
@@ -87,11 +84,11 @@ namespace TrackConverter.Lib.Mathematic.Routing.BranchBoundsElements
         {
             int min = int.MaxValue;
             for (int i = 0; i < this.RowCount; i++)
-                if (this[i, j] >=0) //если точка активна
+                if (this[i, j] >= 0) //если точка активна
                     if (i != withoutRow)//если номер строки не исключен
                         if (this[i, j] < min)//сравнение
                             min = this[i, j];
-            return min != int.MaxValue && min>0? min : 0;
+            return min != int.MaxValue && min > 0 ? min : 0;
         }
 
         /// <summary>
@@ -104,11 +101,11 @@ namespace TrackConverter.Lib.Mathematic.Routing.BranchBoundsElements
         {
             int min = int.MaxValue;
             for (int j = 0; j < this.ColCount; j++)
-                if (this[i, j]>=0)//если точка активна
+                if (this[i, j] >= 0)//если точка активна
                     if (j != withoutCol)//если номер столбца не исключен
                         if (this[i, j] < min)//сравнение
                             min = this[i, j];
-            return min != int.MaxValue && min>0 ? min : 0;
+            return min != int.MaxValue && min > 0 ? min : 0;
         }
 
         /// <summary>
@@ -119,7 +116,7 @@ namespace TrackConverter.Lib.Mathematic.Routing.BranchBoundsElements
         {
             for (int j = 0; j < this.ColCount; j++)
                 for (int i = 0; i < this.RowCount; i++)
-                    if (matrix[i, j]>=0)
+                    if (matrix[i, j] >= 0)
                         matrix[i, j] -= row[j];
         }
 
@@ -131,7 +128,7 @@ namespace TrackConverter.Lib.Mathematic.Routing.BranchBoundsElements
         {
             for (int i = 0; i < this.RowCount; i++)
                 for (int j = 0; j < this.ColCount; j++)
-                    if (matrix[i, j]>=0)
+                    if (matrix[i, j] >= 0)
                         matrix[i, j] -= col[i];
         }
 
@@ -149,7 +146,7 @@ namespace TrackConverter.Lib.Mathematic.Routing.BranchBoundsElements
             //обход всех элементов
             for (int i = 0; i < this.RowCount; i++)
                 for (int j = 0; j < this.ColCount; j++)
-                    if (this[i, j]>=0)
+                    if (this[i, j] >= 0)
                         if (this[i, j] == 0)
                         {
                             //поиск минимального расстояния в строке
@@ -170,7 +167,8 @@ namespace TrackConverter.Lib.Mathematic.Routing.BranchBoundsElements
                         }
             if (!pt.IsEmpty)
                 return pt;
-            else throw new InvalidOperationException("Ошибка при поиске минимальной оценки в графе");
+            else
+                throw new InvalidOperationException("Ошибка при поиске минимальной оценки в графе");
         }
 
         /// <summary>
@@ -208,7 +206,8 @@ namespace TrackConverter.Lib.Mathematic.Routing.BranchBoundsElements
                         }
             if (!pt.IsEmpty)
                 return pt;
-            else throw new InvalidOperationException("Ошибка при поиске минимальной оценки в графе");
+            else
+                throw new InvalidOperationException("Ошибка при поиске минимальной оценки в графе");
         }
 
         /// <summary>
@@ -261,9 +260,9 @@ namespace TrackConverter.Lib.Mathematic.Routing.BranchBoundsElements
             this.selectedIndexes.Add(row, col);
 
             for (int i = 0; i < this.RowCount; i++)
-                matrix[i, col]=-1;
+                matrix[i, col] = -1;
             for (int j = 0; j < this.ColCount; j++)
-                matrix[row, j]=-1;
+                matrix[row, j] = -1;
         }
 
         /// <summary>
@@ -273,7 +272,7 @@ namespace TrackConverter.Lib.Mathematic.Routing.BranchBoundsElements
         /// <param name="i"></param>
         public void RemoveCell(int i, int j)
         {
-            matrix[i, j]=-1;
+            matrix[i, j] = -1;
         }
 
 
@@ -293,8 +292,10 @@ namespace TrackConverter.Lib.Mathematic.Routing.BranchBoundsElements
                 int start = kv.Key; //начало всего маршрута из текущего ребра
                 int current = kv.Value; //окончание текущего ребра
 
-                Dictionary<int, int> cur = new Dictionary<int, int>();
-                cur.Add(start, current); //добавление первого ребра в текущий маршрут
+                Dictionary<int, int> cur = new Dictionary<int, int>
+                {
+                    { start, current } //добавление первого ребра в текущий маршрут
+                };
 
 
                 //пока можно продолжить маршрут, добавляем ребра

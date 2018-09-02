@@ -9,7 +9,7 @@ namespace TrackConverter.UI.Converter
     /// <summary>
     /// окно подробной информации о маршруте
     /// </summary>
-    public partial class FormTrackInformation : Form
+    public partial class FormTrackInformation: Form
     {
 
         /// <summary>
@@ -33,7 +33,7 @@ namespace TrackConverter.UI.Converter
             linkLabelStartYandex.Visible = trackFile.Count > 0;
             buttonOpenWikimapia.Enabled = trackFile.Count > 0;
             buttonOpenYandex.Enabled = trackFile.Count > 0;
-            
+
             //заполненеие информации
             textBoxCount.Text = trackFile.Count.ToString();
             textBoxDescription.Text = trackFile.Description;
@@ -155,8 +155,10 @@ namespace TrackConverter.UI.Converter
         /// <param name="e"></param>
         private void pictureBoxColor_Click(object sender, EventArgs e)
         {
-            ColorDialog cd = new ColorDialog();
-            cd.Color = pictureBoxColor.BackColor;
+            ColorDialog cd = new ColorDialog
+            {
+                Color = pictureBoxColor.BackColor
+            };
             if (cd.ShowDialog(this) == DialogResult.OK)
                 pictureBoxColor.BackColor = cd.Color;
         }

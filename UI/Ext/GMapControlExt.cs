@@ -1,25 +1,25 @@
-﻿using GMap.NET;
-using GMap.NET.WindowsForms;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using GMap.NET;
+using GMap.NET.Projections;
+using GMap.NET.WindowsForms;
 using TrackConverter.Lib.Classes;
 using TrackConverter.Lib.Data;
-using TrackConverter.Lib.Tracking;
+using TrackConverter.Lib.Exceptions;
 using TrackConverter.Lib.Mathematic.Geodesy.Projections.GMapImported;
-using GMap.NET.Projections;
 
 namespace TrackConverter.UI.Ext
 {
     /// <summary>
     /// область карты с возможностью отображения слоёв
     /// </summary>
-    public class GMapControlExt : GMapControl
+    public class GMapControlExt: GMapControl
     {
         #region поля
 
@@ -56,27 +56,27 @@ namespace TrackConverter.UI.Ext
         /// <summary>
         /// ID слоя с объектами
         /// </summary>
-        private string vectorLayersOverlayID = "vectorLayersOverlay";
+        private readonly string vectorLayersOverlayID = "vectorLayersOverlay";
 
         /// <summary>
         /// цвет границы объекта
         /// </summary>
-        private Pen polygonStroke = Pens.Gray;
+        private readonly Pen polygonStroke = Pens.Gray;
 
         /// <summary>
         /// цвет границы невидимого объекта
         /// </summary>
-        private Pen invisPolygonStroke = Pens.Transparent;
+        private readonly Pen invisPolygonStroke = Pens.Transparent;
 
         /// <summary>
         /// заливка объекта
         /// </summary>
-        private Brush polygonBrush = Brushes.Transparent;
+        private readonly Brush polygonBrush = Brushes.Transparent;
 
         /// <summary>
         /// цвет выделенного объекта
         /// </summary>
-        private Brush selectedPolygonBrush = new SolidBrush(Color.FromArgb(128, Color.Red));
+        private readonly Brush selectedPolygonBrush = new SolidBrush(Color.FromArgb(128, Color.Red));
 
         /// <summary>
         /// всплывающие подсказки на объектах
@@ -98,6 +98,10 @@ namespace TrackConverter.UI.Ext
         /// </summary>
         private RastrMapLayer rastrLayerProviderEngine;
 
+        /// <summary>
+        /// блокировка объекта Graphics для рисования растровых слоёв
+        /// </summary>
+        private static readonly object lockGraphics = new object();
 
         /// <summary>
         /// если истина, то все тайлы карты загружены
@@ -123,7 +127,7 @@ namespace TrackConverter.UI.Ext
             set
             {
                 layerProvider = value;
-                ClearLayers();
+                clearLayers();
                 if (value != MapLayerProviders.None)
                 {
                     switch (value)
@@ -146,6 +150,7 @@ namespace TrackConverter.UI.Ext
         /// <summary>
         /// проекция поставщика текущего слоя 
         /// </summary>
+        /// <exception cref="TrackConverterException">Если для слоя не определена проекция</exception>
         public PureProjection LayerProjection
         {
             get
@@ -168,7 +173,8 @@ namespace TrackConverter.UI.Ext
                         break;
                     case MapLayerProviders.None:
                         return MapProvider.Projection;
-                    default: throw new Exception("Для этого слоя не определена проекция карты!");
+                    default:
+                        throw new TrackConverterException("Для этого слоя не определена проекция карты!");
                 }
                 return proj;
             }
@@ -187,14 +193,14 @@ namespace TrackConverter.UI.Ext
             this.Overlays.Add(vectorLayersOverlay);
 
             //добавляем событие обновления слоёв карты
-            this.MouseUp += GMapControlExt_MouseUp;
-            this.OnMapZoomChanged += GMapControlExt_OnMapZoomChanged;
-            this.OnPolygonEnter += GMapControlExt_OnPolygonEnter;
-            this.OnPolygonLeave += GMapControlExt_OnPolygonLeave;
-            this.SizeChanged += GMapControlExt_SizeChanged;
-            this.OnTileLoadComplete += GMapControlExt_OnTileLoadComplete;
-            this.OnTileLoadStart += GMapControlExt_OnTileLoadStart;
-            this.Paint += GMapControlExt_Paint;
+            this.MouseUp += gMapControlExt_MouseUp;
+            this.OnMapZoomChanged += gMapControlExt_OnMapZoomChanged;
+            this.OnPolygonEnter += gMapControlExt_OnPolygonEnter;
+            this.OnPolygonLeave += gMapControlExt_OnPolygonLeave;
+            this.SizeChanged += gMapControlExt_SizeChanged;
+            this.OnTileLoadComplete += gMapControlExt_OnTileLoadComplete;
+            this.OnTileLoadStart += gMapControlExt_OnTileLoadStart;
+            this.Paint += gMapControlExt_Paint;
         }
 
         #region события карты 
@@ -204,7 +210,7 @@ namespace TrackConverter.UI.Ext
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void GMapControlExt_Paint(object sender, PaintEventArgs e)
+        private void gMapControlExt_Paint(object sender, PaintEventArgs e)
         {
             lock (loadedRastrAreas)
             {
@@ -216,7 +222,7 @@ namespace TrackConverter.UI.Ext
                     case MapLayerProviders.OSMRoadSurface:
                         foreach (var kv in this.loadedRastrAreas)
                         {
-                            ShowRastrLayerTile(kv.Value, kv.Key, e.Graphics);
+                            showRastrLayerTile(kv.Value, kv.Key, e.Graphics);
                         }
                         break;
                 }
@@ -226,7 +232,7 @@ namespace TrackConverter.UI.Ext
         /// <summary>
         /// устанавливает флаг начала загрузки карты
         /// </summary>
-        private void GMapControlExt_OnTileLoadStart()
+        private void gMapControlExt_OnTileLoadStart()
         {
             isTilesLoaded = false;
         }
@@ -235,7 +241,7 @@ namespace TrackConverter.UI.Ext
         /// устанавливает флаг окончания загрузки карты
         /// </summary>
         /// <param name="ElapsedMilliseconds"></param>
-        private void GMapControlExt_OnTileLoadComplete(long ElapsedMilliseconds)
+        private void gMapControlExt_OnTileLoadComplete(long ElapsedMilliseconds)
         {
             isTilesLoaded = true;
         }
@@ -245,7 +251,7 @@ namespace TrackConverter.UI.Ext
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void GMapControlExt_SizeChanged(object sender, EventArgs e)
+        private void gMapControlExt_SizeChanged(object sender, EventArgs e)
         {
             RefreshLayers();
         }
@@ -254,7 +260,7 @@ namespace TrackConverter.UI.Ext
         /// вывод подсказки над картой при попадании курсора на объект
         /// </summary>
         /// <param name="item"></param>
-        private void GMapControlExt_OnPolygonEnter(GMapPolygon item)
+        private void gMapControlExt_OnPolygonEnter(GMapPolygon item)
         {
             List<VectorMapLayerObject> objects = GetVectorObjectsUnderCursor();
             refreshToolTipObjects(objects);
@@ -269,7 +275,7 @@ namespace TrackConverter.UI.Ext
         /// при уходе курсора с объекта обновить подсказку
         /// </summary>
         /// <param name="item"></param>
-        private void GMapControlExt_OnPolygonLeave(GMapPolygon item)
+        private void gMapControlExt_OnPolygonLeave(GMapPolygon item)
         {
             List<VectorMapLayerObject> objects = GetVectorObjectsUnderCursor();
             refreshToolTipObjects(objects);
@@ -293,7 +299,7 @@ namespace TrackConverter.UI.Ext
         /// <summary>
         /// обновитьь всплывающую подсказку для объекта
         /// </summary>
-        void refreshToolTipObjects(List<VectorMapLayerObject> objects)
+        private void refreshToolTipObjects(List<VectorMapLayerObject> objects)
         {
 
             string text = "";
@@ -309,11 +315,11 @@ namespace TrackConverter.UI.Ext
         /// <summary>
         /// перерисовка слоёв  при изменении масштаба карты
         /// </summary>
-        private void GMapControlExt_OnMapZoomChanged()
+        private void gMapControlExt_OnMapZoomChanged()
         {
             if (LayerProvider != MapLayerProviders.None)
             {
-                ClearLayers();
+                clearLayers();
                 RefreshLayers();
             }
         }
@@ -323,7 +329,7 @@ namespace TrackConverter.UI.Ext
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void GMapControlExt_MouseUp(object sender, MouseEventArgs e)
+        private void gMapControlExt_MouseUp(object sender, MouseEventArgs e)
         {
             if (this.IsDragging)
                 RefreshLayers();
@@ -382,7 +388,7 @@ namespace TrackConverter.UI.Ext
         /// <param name="tile">картинка - тайл</param>
         /// <param name="position">тайловые координаты</param>
         /// <param name="gr">если null, то используется площадь для рисования по умолчанию rastrLayersGraphics</param>
-        private void ShowRastrLayerTile(Image tile, GPoint position, Graphics gr = null)
+        private void showRastrLayerTile(Image tile, GPoint position, Graphics gr = null)
         {
             //ожидание завершения загрузки карты
             while (!isTilesLoaded)
@@ -397,7 +403,7 @@ namespace TrackConverter.UI.Ext
             y = position.Y * 256 - va_lt_pix.Y;
             if (gr == null)
                 gr = rastrLayersGraphics;
-            lock (gr)
+            lock (lockGraphics)
             {
                 try
                 {
@@ -417,7 +423,7 @@ namespace TrackConverter.UI.Ext
         /// возвращает области-тайлы, которые сейчас выдны на экране. При этом исключаются области, загруженные ранее.
         /// </summary>
         /// <returns></returns>
-        private List<RectLatLng> GetVisibleLatLngTiles()
+        private List<RectLatLng> getVisibleLatLngTiles()
         {
             //тайловый способ
             //https://tech.yandex.ru/maps/doc/jsapi/2.1/theory/index-docpage/#tile_coordinates
@@ -474,7 +480,7 @@ namespace TrackConverter.UI.Ext
         /// прорисовка объекта слоя на карте (потокобезопасный)
         /// </summary>
         /// <param name="obj"></param>
-        private void ShowVectorLayerObject(VectorMapLayerObject obj)
+        private void showVectorLayerObject(VectorMapLayerObject obj)
         {
             if (VectorLayerObjects.ContainsKey(obj.ID))
                 return;
@@ -507,11 +513,11 @@ namespace TrackConverter.UI.Ext
         /// быстрое добавление нескольких объектов
         /// </summary>
         /// <param name="list">коллекция объектов</param>
-        private void ShowVectorLayerObjects(List<VectorMapLayerObject> list)
+        private void showVectorLayerObjects(List<VectorMapLayerObject> list)
         {
             this.SuspendLayout();
             foreach (VectorMapLayerObject obj in list)
-                ShowVectorLayerObject(obj);
+                showVectorLayerObject(obj);
             this.ResumeLayout(false);
         }
 
@@ -591,7 +597,7 @@ namespace TrackConverter.UI.Ext
                 Task ts = new Task(() =>
                 {
                     Program.winMain.BeginOperation();
-                    Program.winMain.setCurrentOperation("Загрузка слоёв " + LayerProvider.ToString() + ", завершено 0%");
+                    Program.winMain.SetCurrentOperation("Загрузка слоёв " + LayerProvider.ToString() + ", завершено 0%");
 
                     //начальные параметры отображения
                     MapLayerProviders provider = this.LayerProvider;
@@ -606,7 +612,7 @@ namespace TrackConverter.UI.Ext
                             #region ДЛЯ ВЕКТОРНЫХ СЛОЁВ
 
                             //области, которые необходимо загрузить
-                            List<RectLatLng> tiles = this.GetVisibleLatLngTiles();
+                            List<RectLatLng> tiles = this.getVisibleLatLngTiles();
 
                             int i = 0; //количество загруженных тайлов
                             Parallel.ForEach(tiles, new ParallelOptions() { MaxDegreeOfParallelism = 6 }, (tile) =>
@@ -625,9 +631,9 @@ namespace TrackConverter.UI.Ext
                                        if (!this.IsDisposed)
                                        {
                                            loadedVectorAreas.Add(tile.LocationMiddle);
-                                           ShowVectorLayerObjects(nobj);
+                                           showVectorLayerObjects(nobj);
                                            string prc = (((double)i++ / tiles.Count) * 100d).ToString("0");
-                                           Program.winMain.setCurrentOperation("Загрузка слоёв " + provider.ToString() + ", завершено " + prc + "%");
+                                           Program.winMain.SetCurrentOperation("Загрузка слоёв " + provider.ToString() + ", завершено " + prc + "%");
                                        }
                                    }
                                    catch (Exception e) //ловим ошибки при отсутствии интернета
@@ -664,9 +670,9 @@ namespace TrackConverter.UI.Ext
                                     if (!this.IsDisposed)
                                     {
                                         loadedRastrAreas.TryAdd(tile, tl);
-                                        ShowRastrLayerTile(tl, tile);
+                                        showRastrLayerTile(tl, tile);
                                         string prc = (((double)iR++ / tilesR.Count) * 100d).ToString("0");
-                                        Program.winMain.setCurrentOperation("Загрузка слоёв " + LayerProvider.ToString() + ", завершено " + prc + "%");
+                                        Program.winMain.SetCurrentOperation("Загрузка слоёв " + LayerProvider.ToString() + ", завершено " + prc + "%");
                                     }
                                 }
                                 catch (Exception e) //ловим ошибки при отсутствии интернета
@@ -678,7 +684,8 @@ namespace TrackConverter.UI.Ext
                         case MapLayerProviders.None:
                             return;
 
-                        default: throw new Exception("Нет обработчика этого поставщика слоя");
+                        default:
+                            throw new Exception("Нет обработчика этого поставщика слоя");
 
                     }
 
@@ -708,12 +715,12 @@ namespace TrackConverter.UI.Ext
                 proj = this.MapProvider.Projection;
             GPoint center = proj.FromLatLngToPixel(Position, (int)Zoom);
 
-            long lt_y = (long)(center.Y - this.Height / 2);
-            long lt_x = (long)(center.X - this.Width / 2);
+            long lt_y = center.Y - this.Height / 2;
+            long lt_x = center.X - this.Width / 2;
             PointLatLng lt = proj.FromPixelToLatLng(new GPoint(lt_x, lt_y), (int)Zoom);
 
-            long rb_y = (long)(center.Y + this.Height / 2);
-            long rb_x = (long)(center.X + this.Width / 2);
+            long rb_y = center.Y + this.Height / 2;
+            long rb_x = center.X + this.Width / 2;
             PointLatLng rb = proj.FromPixelToLatLng(new GPoint(rb_x, rb_y), (int)Zoom);
 
             double deg_height = lt.Lat - rb.Lat;
@@ -729,7 +736,7 @@ namespace TrackConverter.UI.Ext
         /// <summary>
         /// очичтить слои карты
         /// </summary>
-        private void ClearLayers()
+        private void clearLayers()
         {
             ToolTipPolygonTitles.RemoveAll(); //удаление подсказок на объектах
             vectorLayersOverlay.Polygons.Clear(); //очистка карты

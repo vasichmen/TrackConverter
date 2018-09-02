@@ -1,29 +1,17 @@
-﻿using GMap.NET;
-using IWshRuntimeLibrary;
-using Microsoft.Win32;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
+﻿using System;
 using System.Diagnostics;
-using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using TrackConverter.Lib.Classes;
+using GMap.NET;
+using IWshRuntimeLibrary;
 using TrackConverter.Lib.Data.Providers.Local.ETOPO;
 using TrackConverter.Res.Properties;
-using TrackConverter.UI.Common;
-using System.Threading;
 
 namespace TrackConverter.UI.Tools
 {
     /// <summary>
     /// окно настроек
     /// </summary>
-    public partial class FormOptions : Form
+    public partial class FormOptions: Form
     {
         /// <summary>
         /// создает новое окно настроек
@@ -222,7 +210,8 @@ namespace TrackConverter.UI.Tools
                 case LinkShorterProvider.Bitly:
                     comboBoxLinkShorter.SelectedIndex = 3;
                     break;
-                default: throw new ApplicationException("неизвестный поставщик поиска " + Vars.Options.Services.LinkShorterProvider);
+                default:
+                    throw new ApplicationException("неизвестный поставщик поиска " + Vars.Options.Services.LinkShorterProvider);
             }
 
             //кэш ФС при построении
@@ -292,8 +281,7 @@ namespace TrackConverter.UI.Tools
                 Vars.Options.Converter.NormalizerBehavior = NormalizerBehavior.RemovePoint;
             if (comboBoxNormalizeBehavior.SelectedIndex == 1)
                 Vars.Options.Converter.NormalizerBehavior = NormalizerBehavior.AddCritical;
-            double ang = 45;
-            bool f = double.TryParse(textBoxMinimalNormalizeAngle.Text.Trim().Replace('.', Vars.DecimalSeparator), out ang);
+            bool f = double.TryParse(textBoxMinimalNormalizeAngle.Text.Trim().Replace('.', Vars.DecimalSeparator), out double ang);
             if (!f || ang >= 180)
             {
                 MessageBox.Show(this, "Ошибка ввода.\r\nМинимальный угол нормализации должен быть в пределах от 0 до 180 градусов", "Настройки", MessageBoxButtons.OK, MessageBoxIcon.Warning);

@@ -1,14 +1,9 @@
-﻿using GMap.NET.MapProviders;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using TrackConverter.Lib.Data.Interfaces;
-using GMap.NET;
-using GMap.NET.WindowsForms;
-using GMap.NET.Projections;
-using System.Net;
+﻿using System;
 using System.IO;
+using System.Net;
+using GMap.NET;
+using GMap.NET.MapProviders;
+using GMap.NET.Projections;
 
 namespace TrackConverter.Lib.Data.Providers.InternetServices
 {
@@ -18,7 +13,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         /// <summary>
         /// основные методы для получения карт ГГЦ
         /// </summary>
-        public abstract class BaseGenshtab : BaseMapProvider
+        public abstract class BaseGenshtab: BaseMapProvider
         {
             public override PureProjection Projection
             {
@@ -31,10 +26,10 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
             public abstract string[] Mirrors { get; }
             public abstract string Extension { get; }
 
-            int buf_ok = int.MinValue;
-            int buf_no = int.MinValue;
+            private int buf_ok = int.MinValue;
+            private int buf_no = int.MinValue;
 
-            private int GetCode(string url)
+            private int getCode(string url)
             {
                 WebClient wc = new WebClient();
                 try
@@ -74,7 +69,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
 
                 if (zoom > z_ok)
                 {
-                    int code = GetCode(url + "z" + (zoom + 1) + "/");
+                    int code = getCode(url + "z" + (zoom + 1) + "/");
                     // Внимание! Если сервер вернёт 403 - code почему-то будет 0. Так что выбор "404 или что-то иное"
                     // Если дело дошло до проверки наличия масштаба - значит какая-то граница (z_ok / z_no) точно подвинется.
 
@@ -102,7 +97,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         /// <summary>
         /// километровка 
         /// </summary>
-        public class KM1 : BaseGenshtab
+        public class KM1: BaseGenshtab
         {
             public static KM1 Instance;
 
@@ -166,7 +161,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         /// <summary>
         /// 250 метров 
         /// </summary>
-        public class M250 : BaseGenshtab
+        public class M250: BaseGenshtab
         {
             public static M250 Instance;
 
@@ -231,7 +226,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         /// <summary>
         /// 250 метров 
         /// </summary>
-        public class M500 : BaseGenshtab
+        public class M500: BaseGenshtab
         {
             public static M500 Instance;
 
@@ -296,7 +291,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         /// <summary>
         /// 250 метров 
         /// </summary>
-        public class KM5 : BaseGenshtab
+        public class KM5: BaseGenshtab
         {
             public static KM5 Instance;
 
@@ -361,7 +356,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         /// <summary>
         /// 250 метров 
         /// </summary>
-        public class KM10 : BaseGenshtab
+        public class KM10: BaseGenshtab
         {
             public static KM10 Instance;
 

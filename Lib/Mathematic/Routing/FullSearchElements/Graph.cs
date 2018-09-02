@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using TrackConverter.Lib.Tracking;
 
 namespace TrackConverter.Lib.Mathematic.Routing.FullSearchElements
@@ -9,7 +7,7 @@ namespace TrackConverter.Lib.Mathematic.Routing.FullSearchElements
     /// <summary>
     /// двумерный массив объектов
     /// </summary>
-     class Graph
+    internal class Graph
     {
         /// <summary>
         /// содержимое ячейк матрицы
@@ -69,9 +67,9 @@ namespace TrackConverter.Lib.Mathematic.Routing.FullSearchElements
             }
         }
 
-        private Cell[,] matrix;
-        private int Cols;
-        private int Rows;
+        private readonly Cell[,] matrix;
+        private readonly int Cols;
+        private readonly int Rows;
         public Dictionary<TrackPoint, TrackPoint> selected;
 
         /// <summary>

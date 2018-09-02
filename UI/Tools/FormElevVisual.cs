@@ -1,19 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Drawing.Imaging;
-using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Windows.Forms.DataVisualization.Charting;
 using System.Windows.Input;
-using TrackConverter.Lib;
 using TrackConverter.Lib.Tracking;
-using TrackConverter.UI.Common;
 using ZedGraph;
 
 namespace TrackConverter.UI.Tools
@@ -22,7 +14,7 @@ namespace TrackConverter.UI.Tools
     /// окно вывода профиля высот трека
     /// http://jenyay.net/Programming/ZedGraph
     /// </summary>
-    public partial class FormElevVisual : Form
+    public partial class FormElevVisual: Form
     {
         /// <summary>
         /// список выводящих треков, не включая выделенный трек
@@ -33,7 +25,7 @@ namespace TrackConverter.UI.Tools
         /// основные линии на графике, не включая линию выдленного трека
         /// </summary>
         private List<LineItem> mainCurves;
-        
+
         /// <summary>
         /// создает новый объект FormElevVisual с заданным списком треков
         /// </summary>
@@ -45,8 +37,8 @@ namespace TrackConverter.UI.Tools
             Task pr = new Task(new Action(() =>
             {
                 Program.winMain.BeginOperation();
-                Program.winMain.setCurrentOperation("Построение профиля...");
-                ConfigureGraph();
+                Program.winMain.SetCurrentOperation("Построение профиля...");
+                configureGraph();
                 Program.winMain.EndOperation();
             }));
             pr.Start();
@@ -70,10 +62,8 @@ namespace TrackConverter.UI.Tools
                 return false;
 
             // Сюда будет сохранена кривая, рядом с которой был произведен клик
-            CurveItem curve;
 
             // Сюда будет сохранен номер точки кривой, ближайшей к точке клика
-            int index;
 
             GraphPane pane = zedGraph.GraphPane;
 
@@ -81,14 +71,14 @@ namespace TrackConverter.UI.Tools
             // при котором еще считается, что клик попал в окрестность кривой.
             GraphPane.Default.NearestTol = 30;
 
-            bool result = pane.FindNearestPoint(e.Location, out curve, out index);
+            bool result = pane.FindNearestPoint(e.Location, out CurveItem curve, out int index);
 
             if (result && (string)curve.Tag == "selectedTrack")
             {
                 #region выделение точки на графике
 
                 //очистка графика от предыдущих точек
-                RemLastSelPoint();
+                remLastSelPoint();
 
                 // Максимально расстояние от точки клика до кривой не превысило NearestTol
                 // Добавим точку на график, вблизи которой произошел клик
@@ -148,7 +138,7 @@ namespace TrackConverter.UI.Tools
         /// <param name="e"></param>
         private void zedGraph_MouseLeave(object sender, EventArgs e)
         {
-            RemLastSelPoint(); //очистка графика
+            remLastSelPoint(); //очистка графика
             Program.winMain.mapHelper.DeselectPoints(); //очитска карты
         }
 
@@ -182,9 +172,10 @@ namespace TrackConverter.UI.Tools
         /// <param name="track"></param>
         public void AddTrack(TrackFile track)
         {
-            if (tracks == null) tracks = new TrackFileList();
+            if (tracks == null)
+                tracks = new TrackFileList();
             tracks.Add(track);
-            ConfigureGraph();
+            configureGraph();
         }
 
         /// <summary>
@@ -194,7 +185,7 @@ namespace TrackConverter.UI.Tools
         public void RemoveTrack(TrackFile track)
         {
             tracks.Remove(track);
-            ConfigureGraph();
+            configureGraph();
         }
 
         /// <summary>
@@ -212,7 +203,7 @@ namespace TrackConverter.UI.Tools
         /// </summary>
         public void RefreshData()
         {
-            ConfigureGraph();
+            configureGraph();
         }
 
         /// <summary>
@@ -221,7 +212,7 @@ namespace TrackConverter.UI.Tools
         /// <param name="tt"></param>
         public void SelectPoint(TrackPoint tt)
         {
-            RemLastSelPoint();
+            remLastSelPoint();
 
             GraphPane pane = zedGraph.GraphPane;
 
@@ -266,7 +257,7 @@ namespace TrackConverter.UI.Tools
         /// <summary>
         /// обновление графика
         /// </summary>
-        private void ConfigureGraph()
+        private void configureGraph()
         {
             GraphPane gp = zedGraph.GraphPane;
             gp.Title.IsVisible = false;
@@ -336,7 +327,7 @@ namespace TrackConverter.UI.Tools
             //        gp.CurveList.Add(curveSelectedTrack);
             //    }
             //    else
-                    Clear();
+            Clear();
 
             zedGraph.AxisChange();
             zedGraph.Invalidate();
@@ -345,7 +336,7 @@ namespace TrackConverter.UI.Tools
         /// <summary>
         /// удаляет все элементы графа (выделенные точки), не являющиеся линиями высот
         /// </summary>
-        private void RemLastSelPoint()
+        private void remLastSelPoint()
         {
             GraphPane pane = zedGraph.GraphPane;
 

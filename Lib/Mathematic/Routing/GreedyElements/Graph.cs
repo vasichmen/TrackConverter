@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
 using TrackConverter.Lib.Tracking;
 
 namespace TrackConverter.Lib.Mathematic.Routing.GreedyElements
@@ -10,7 +7,7 @@ namespace TrackConverter.Lib.Mathematic.Routing.GreedyElements
     /// <summary>
     /// двумерный массив объектов
     /// </summary>
-    class Graph
+    internal class Graph
     {
         /// <summary>
         /// выбранные элементы на этом уровне
@@ -19,9 +16,9 @@ namespace TrackConverter.Lib.Mathematic.Routing.GreedyElements
 
         public Dictionary<int, int> selectedIndexes;
 
-        private Cell[,] matrix;
-        private int Cols;
-        private int Rows;
+        private readonly Cell[,] matrix;
+        private readonly int Cols;
+        private readonly int Rows;
 
         /// <summary>
         /// задает или возвращает значение ячейки
@@ -135,8 +132,10 @@ namespace TrackConverter.Lib.Mathematic.Routing.GreedyElements
                 int start = kv.Key; //начало всего маршрута из текущего ребра
                 int current = kv.Value; //окончание текущего ребра
 
-                Dictionary<int, int> cur = new Dictionary<int, int>();
-                cur.Add(start, current); //добавление первого ребра в текущий маршрут
+                Dictionary<int, int> cur = new Dictionary<int, int>
+                {
+                    { start, current } //добавление первого ребра в текущий маршрут
+                };
 
 
                 //пока можно продолжить маршрут, добавляем ребра

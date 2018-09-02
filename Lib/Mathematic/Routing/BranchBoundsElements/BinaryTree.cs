@@ -8,7 +8,7 @@ namespace TrackConverter.Lib.Mathematic.Routing.BranchBoundsElements
     /// бинарное дерево поиска. Хранит упоредоченную коллекцию элементов в иде дерева
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    class BinaryTree<T> : ICollection<T>
+    internal class BinaryTree<T>: ICollection<T>
     {
         /// <summary>
         /// узел дерева
@@ -76,9 +76,7 @@ namespace TrackConverter.Lib.Mathematic.Routing.BranchBoundsElements
         /// <param name="defaultComparer"></param>
         public BinaryTree(IComparer<T> defaultComparer)
         {
-            if (defaultComparer == null)
-                throw new ArgumentNullException("Default comparer is null");
-            comparer = defaultComparer;
+            comparer = defaultComparer ?? throw new ArgumentNullException("Default comparer is null");
         }
 
         /// <summary>

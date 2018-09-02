@@ -2,13 +2,9 @@
 using System.Data;
 using System.Diagnostics;
 using System.IO;
-using System.Windows.Forms;
-using TrackConverter.Lib;
-using TrackConverter.Lib.Tracking;
-using TrackConverter.UI.Common;
-using TrackConverter.UI.Map;
 using System.Text.RegularExpressions;
-using TrackConverter.UI.Converter;
+using System.Windows.Forms;
+using TrackConverter.Lib.Tracking;
 using TrackConverter.UI.Common.Dialogs;
 
 namespace TrackConverter.UI.Tools
@@ -16,7 +12,7 @@ namespace TrackConverter.UI.Tools
     /// <summary>
     /// окно редактирования путевых точек
     /// </summary>
-    public partial class FormPoints : Form
+    public partial class FormPoints: Form
     {
 
         /// <summary>
@@ -63,7 +59,7 @@ namespace TrackConverter.UI.Tools
 
             this.Points = waypoints;
             this.endEditWaypointsAction = callEndEditWaypointsOnMap;
-            FillDGV(Points.Source);
+            fillDGV(Points.Source);
 
         }
 
@@ -78,13 +74,15 @@ namespace TrackConverter.UI.Tools
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void LoadFileToolStripMenuItem_Click(object sender, EventArgs e)
+        private void loadFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
             try
             {
                 Points = new TrackFile();
-                OpenFileDialog of = new OpenFileDialog();
-                of.Filter = "Все поддерживаемые форматы(*.crd, *.wpt, *.plt, *.rt2, *.kml, *.gpx, *.kmz,*.rte)|*.crd; *.wpt; *.plt; *rt2; *.kml;*.kmz; *.gpx; *.rte";
+                OpenFileDialog of = new OpenFileDialog
+                {
+                    Filter = "Все поддерживаемые форматы(*.crd, *.wpt, *.plt, *.rt2, *.kml, *.gpx, *.kmz,*.rte)|*.crd; *.wpt; *.plt; *rt2; *.kml;*.kmz; *.gpx; *.rte"
+                };
                 of.Filter += "|Треки Androzic (*.plt)|*.plt";
                 of.Filter += "|Маршрут Androzic (*.rt2)|*.rt2";
                 of.Filter += "|Путевые точки Ozi(*.wpt)|*.wpt";
@@ -102,7 +100,7 @@ namespace TrackConverter.UI.Tools
                 {
                     Points = Serializer.DeserializeTrackFile(of.FileName);
 
-                    FillDGV(Points.Source);
+                    fillDGV(Points.Source);
                     Vars.Options.Common.LastFileLoadDirectory = Path.GetDirectoryName(of.FileName);
                 }
             }
@@ -115,13 +113,15 @@ namespace TrackConverter.UI.Tools
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void SaveFileToolStripMenuItem_Click(object sender, EventArgs e)
+        private void saveFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
 
             Points.Source = (DataTable)dataGridViewPoints.DataSource;
 
-            SaveFileDialog sf = new SaveFileDialog();
-            sf.Filter = "Файл маршрута Androzic (*.rt2)|*.rt2";
+            SaveFileDialog sf = new SaveFileDialog
+            {
+                Filter = "Файл маршрута Androzic (*.rt2)|*.rt2"
+            };
             sf.Filter += "|Треки Androzic (*.plt)|*.plt";
             sf.Filter += "|Путевые точки Ozi(*.wpt)|*.wpt";
             sf.Filter += "|Файл координат(*.crd)|*.crd";
@@ -164,7 +164,7 @@ namespace TrackConverter.UI.Tools
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void LoadLinkToolStripMenuItem_Click(object sender, EventArgs e)
+        private void loadLinkToolStripMenuItem_Click(object sender, EventArgs e)
         {
             try
             {
@@ -173,7 +173,7 @@ namespace TrackConverter.UI.Tools
                 {
                     BaseTrack tf = Serializer.DeserializeTrackFile(of.Result);
                     Points = tf;
-                    FillDGV(Points.Source);
+                    fillDGV(Points.Source);
                 }
             }
             catch (Exception ex) { MessageBox.Show(this, ex.Message, "Ошибка!", MessageBoxButtons.OK, MessageBoxIcon.Error); }
@@ -184,7 +184,7 @@ namespace TrackConverter.UI.Tools
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OpenOnMapToolStripMenuItem_Click(object sender, EventArgs e)
+        private void openOnMapToolStripMenuItem_Click(object sender, EventArgs e)
         {
             refreshAzimuthsToolStripMenuItem_Click(null, null);
             Program.winMain.mapHelper.ShowWaypoints(Points, false, false);
@@ -223,7 +223,7 @@ namespace TrackConverter.UI.Tools
             {
                 DataTable dt = (DataTable)dataGridViewPoints.DataSource;
                 Points.Source = dt;
-                FillDGV(Points.Source);
+                fillDGV(Points.Source);
             }
             catch (Exception ex) { MessageBox.Show(ex.Message); }
         }
@@ -253,7 +253,8 @@ namespace TrackConverter.UI.Tools
         /// <param name="e"></param>
         private void removeToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (dataGridViewPoints.SelectedRows.Count == 0) return;
+            if (dataGridViewPoints.SelectedRows.Count == 0)
+                return;
 
             int first = int.MaxValue;
             int i = 0;
@@ -265,7 +266,7 @@ namespace TrackConverter.UI.Tools
                 i++;
             }
 
-            FillDGV(Points.Source);
+            fillDGV(Points.Source);
             this.isEdited = true;
 
             if (dataGridViewPoints.Rows.Count != 0)
@@ -316,7 +317,7 @@ namespace TrackConverter.UI.Tools
             {
                 Points.Insert(row, fep.Result);
                 Points.CalculateAll();
-                FillDGV(Points.Source);
+                fillDGV(Points.Source);
                 this.isEdited = true;
 
             }
@@ -336,7 +337,7 @@ namespace TrackConverter.UI.Tools
             {
                 Points[row] = fep.Result;
                 Points.CalculateAll();
-                FillDGV(Points.Source);
+                fillDGV(Points.Source);
                 this.isEdited = true;
 
                 Vars.currentSelectedTrack = this.Points;
@@ -366,8 +367,10 @@ namespace TrackConverter.UI.Tools
         /// <param name="e"></param>
         private void dataGridView1_KeyDown(object sender, KeyEventArgs e)
         {
-            if (dataGridViewPoints.RowCount == 0) return;
-            if (e.KeyData != Keys.Delete) return;
+            if (dataGridViewPoints.RowCount == 0)
+                return;
+            if (e.KeyData != Keys.Delete)
+                return;
             removeToolStripMenuItem_Click(null, null);
         }
 
@@ -407,7 +410,7 @@ namespace TrackConverter.UI.Tools
             }
             if (loaded)
             {
-                FillDGV(Points.Source);
+                fillDGV(Points.Source);
             }
         }
 
@@ -418,7 +421,8 @@ namespace TrackConverter.UI.Tools
         /// <param name="e"></param>
         private void dataGridView1_CellMouseDown(object sender, DataGridViewCellMouseEventArgs e)
         {
-            if (e.ColumnIndex == -1 || e.RowIndex == -1) return;
+            if (e.ColumnIndex == -1 || e.RowIndex == -1)
+                return;
             if (e.Button == System.Windows.Forms.MouseButtons.Left || e.Button == System.Windows.Forms.MouseButtons.Right)
             {
                 dataGridViewPoints[e.ColumnIndex, e.RowIndex].Selected = true;
@@ -433,7 +437,8 @@ namespace TrackConverter.UI.Tools
         /// <param name="e"></param>
         private void dataGridView1_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
         {
-            if (dataGridViewPoints.Rows[e.RowIndex].IsNewRow) return;
+            if (dataGridViewPoints.Rows[e.RowIndex].IsNewRow)
+                return;
             if (dataGridViewPoints.IsCurrentCellDirty) //если текущая ячейка редактируется
                 if (e.ColumnIndex == 1 || e.ColumnIndex == 2 || e.ColumnIndex == 3) //если это широта, долгота, высота
                     if (((string)e.FormattedValue).Trim() != "") //если не пустое значение
@@ -464,7 +469,7 @@ namespace TrackConverter.UI.Tools
                 this.Points[row] = fep.Result;
                 Vars.currentSelectedTrack = this.Points;
                 Points.CalculateAll();
-                FillDGV(Points.Source);
+                fillDGV(Points.Source);
                 dataGridViewPoints.Rows[e.RowIndex].ErrorText = null;
                 isEdited = true;
             }
@@ -495,7 +500,7 @@ namespace TrackConverter.UI.Tools
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void FormPoints_FormClosing(object sender, FormClosingEventArgs e)
+        private void formPoints_FormClosing(object sender, FormClosingEventArgs e)
         {
             //if (this != Program.winPoints) //если это не часть основного окна, то выполняем действие
             if (endEditWaypointsAction != null)
@@ -516,7 +521,7 @@ namespace TrackConverter.UI.Tools
         internal void SetTrack(TrackFile tf)
         {
             this.Points = tf;
-            FillDGV(Points.Source);
+            fillDGV(Points.Source);
         }
 
         /// <summary>
@@ -525,7 +530,7 @@ namespace TrackConverter.UI.Tools
         internal void Clear()
         {
             this.Points.Clear();
-            FillDGV(Points.Source);
+            fillDGV(Points.Source);
         }
 
         /// <summary>
@@ -545,7 +550,7 @@ namespace TrackConverter.UI.Tools
             else
                 this.Points.Clear();
 
-            FillDGV(Points.Source);
+            fillDGV(Points.Source);
         }
 
 
@@ -557,7 +562,7 @@ namespace TrackConverter.UI.Tools
         /// заполнение таблицы
         /// </summary>
         /// <param name="source"></param>
-        void FillDGV(object source)
+        private void fillDGV(object source)
         {
             dataGridViewPoints.DataSource = null;
             dataGridViewPoints.DataSource = source;

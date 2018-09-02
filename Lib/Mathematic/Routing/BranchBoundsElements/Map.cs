@@ -1,17 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace TrackConverter.Lib.Mathematic.Routing.BranchBoundsElements
+﻿namespace TrackConverter.Lib.Mathematic.Routing.BranchBoundsElements
 {
     /// <summary>
     /// матрица ребер графа
     /// </summary>
-    class Map
+    internal class Map
     {
 
-        private MapCell[,] map;
+        private readonly MapCell[,] map;
 
         /// <summary>
         /// создает матрицу указанного размера

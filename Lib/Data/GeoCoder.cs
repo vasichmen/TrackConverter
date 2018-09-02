@@ -1,7 +1,7 @@
-﻿using GMap.NET;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
+using GMap.NET;
 using TrackConverter.Lib.Classes;
 using TrackConverter.Lib.Data.Interfaces;
 using TrackConverter.Lib.Data.Providers.InternetServices;
@@ -18,7 +18,7 @@ namespace TrackConverter.Lib.Data
         /// <summary>
         /// поставщик геокодера
         /// </summary>
-        private GeoCoderProvider provider;
+        private readonly GeoCoderProvider provider;
 
         /// <summary>
         /// геокодер
@@ -36,7 +36,7 @@ namespace TrackConverter.Lib.Data
             switch (provider)
             {
                 case GeoCoderProvider.Yandex:
-                    coder = new Yandex(Application.StartupPath+ Resources.cache_directory+"\\http_cache\\yandex");
+                    coder = new Yandex(Application.StartupPath + Resources.cache_directory + "\\http_cache\\yandex");
                     break;
                 case GeoCoderProvider.Google:
                     coder = new Google(Application.StartupPath + Resources.cache_directory + "\\http_cache\\google");
@@ -44,7 +44,8 @@ namespace TrackConverter.Lib.Data
                 case GeoCoderProvider.Nominatim:
                     coder = new Nominatim();
                     break;
-                default: throw new Exception("Неизвестный поставщик геокодера");
+                default:
+                    throw new Exception("Неизвестный поставщик геокодера");
             }
         }
 
@@ -72,7 +73,8 @@ namespace TrackConverter.Lib.Data
                 Vars.dataCache.PutGeocoder(coordinate, adrI);
                 return adrI;
             }
-            else return adr;
+            else
+                return adr;
         }
 
         /// <summary>
@@ -111,7 +113,8 @@ namespace TrackConverter.Lib.Data
                 Vars.dataCache.PutGeocoder(coord, address);
                 return coord;
             }
-            else return res;
+            else
+                return res;
 
 
         }
@@ -166,7 +169,8 @@ namespace TrackConverter.Lib.Data
                 Vars.dataCache.PutGeoInfo(coordinates, tzi);
                 return tzi;
             }
-            else return tz;
+            else
+                return tz;
         }
 
         /// <summary>

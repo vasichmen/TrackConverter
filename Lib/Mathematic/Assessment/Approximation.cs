@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TrackConverter.Lib.Tracking;
 
 namespace TrackConverter.Lib.Mathematic.Assessment
@@ -15,24 +11,24 @@ namespace TrackConverter.Lib.Mathematic.Assessment
     /// http://www.cyberforum.ru/windows-forms/thread745949.html
     /// 
     /// </summary>
-    static class Approximator
+    internal static class Approximator
     {
         private class Polynomial
         {
             /// <summary>
             /// Сетка по X
             /// </summary>
-            double[] _x;
+            private double[] _x;
 
             /// <summary>
             /// Значения функции в точках _x
             /// </summary>
-            double[] _y;
+            private readonly double[] _y;
 
             /// <summary>
             /// Значения коэффициентов
             /// </summary>
-            double[] _coefficients;
+            private readonly double[] _coefficients;
 
             public double[] Coefficients
             {
@@ -42,7 +38,7 @@ namespace TrackConverter.Lib.Mathematic.Assessment
             /// <summary>
             /// Степень полинома
             /// </summary>
-            int _amount;
+            private readonly int _amount;
 
             public int Amount
             {

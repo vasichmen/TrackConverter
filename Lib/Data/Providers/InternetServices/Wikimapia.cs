@@ -1,27 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Net;
 using GMap.NET;
+using GMap.NET.WindowsForms;
+using HtmlAgilityPack;
+using Newtonsoft.Json.Linq;
 using TrackConverter.Lib.Classes;
 using TrackConverter.Lib.Data.Interfaces;
-using GMap.NET.WindowsForms;
-using Newtonsoft.Json.Linq;
-using System.IO;
-using System.Threading;
 using TrackConverter.Lib.Tracking.Helpers;
 using TrackConverter.Res.Properties;
-using System.Xml;
-using System.Net;
-using HtmlAgilityPack;
-using TrackConverter.Lib.Data.Providers.Local.OS;
 
 namespace TrackConverter.Lib.Data.Providers.InternetServices
 {
     /// <summary>
     /// Класс взаимодействия с API Wikimapia.org
     /// </summary>
-    public class Wikimapia : BaseConnection, IVectorMapLayerProvider
+    public class Wikimapia: BaseConnection, IVectorMapLayerProvider
     {
         /// <summary>
         /// расширенная инфорация об объекте (фотографии, комментарии итд)
@@ -198,7 +192,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         /// </summary>
         /// <param name="area">область</param>
         /// <param name="perimeter">минимальный размер периметра объекта в метрах</param>
-        List<VectorMapLayerObject> GetObjects2(RectLatLng area, double perimeter)
+        private List<VectorMapLayerObject> getObjects2(RectLatLng area, double perimeter)
         {
             //http://api.wikimapia.org/?function=box&key=087ECBE0-AACD80A2-30627FE3-02F13F18-24AF43B7-E7C48BDE-202D8280-69841637&bbox=37.61605,55.73522,37.64279,55.74341&count=100&format=xml&language=ru&page=2&disable=location
 
@@ -253,7 +247,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                     foreach (JToken jt in folder)
                     {
                         JToken polygon = jt["polygon"];
-                        GMapPolygon pol = GetPolygon(polygon); //преобразуем координаты
+                        GMapPolygon pol = getPolygon(polygon); //преобразуем координаты
                         string name = jt["name"].ToString();
                         string link = jt["url"].ToString();
                         string id = jt["id"].ToString();
@@ -263,7 +257,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                     }
 
                     //проверяем длину периметра. Если периметр последнего объекта меньше заданного, то выходим из цикла
-                    double per = GetPerimeter(res[res.Count - 1].Geometry);
+                    double per = getPerimeter(res[res.Count - 1].Geometry);
                     if (per < perimeter)
                         stop = true;
 
@@ -301,7 +295,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
             string url = string.Format("http://wikimapia.org/d?lng=1{0}", bbox);
 
             string kml = SendStringGetRequest(url);
-            List<VectorMapLayerObject> res = KmlHelper.ParseWikimapiaObjectsAnswer(kml,perimeter);
+            List<VectorMapLayerObject> res = KmlHelper.ParseWikimapiaObjectsAnswer(kml, perimeter);
             return res;
         }
 
@@ -327,32 +321,38 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
             if (json["debug"] != null)
                 throw new Exception(json["debug"]["message"].ToString());
 
-            ExtInfo res = new ExtInfo();
-            res.Description = json["description"] != null ? json["description"].ToString() : "";
-            res.Title = json["title"].ToString();
-            res.Link = "htp://wikimapia.org/" + id + "/" + json["language_iso"].ToString();
-            res.Wikipedia = json["wikipedia"] != null ? json["wikipedia"].ToString() : "";
+            ExtInfo res = new ExtInfo
+            {
+                Description = json["description"] != null ? json["description"].ToString() : "",
+                Title = json["title"].ToString(),
+                Link = "htp://wikimapia.org/" + id + "/" + json["language_iso"].ToString(),
+                Wikipedia = json["wikipedia"] != null ? json["wikipedia"].ToString() : ""
+            };
             foreach (JObject jo in json["tags"])
                 res.Tags.Add(jo["title"].ToString());
             foreach (JObject jo in json["photos"])
             {
-                ExtInfo.PhotoInfo np = new ExtInfo.PhotoInfo();
-                np.TimeString = jo["time_str"].ToString();
-                np.Url960 = jo["960_url"] != null ? jo["960_url"].ToString() : null;
-                np.Url1280 = jo["1280_url"] != null ? jo["1280_url"].ToString() : null;
-                np.UrlBig = jo["big_url"] != null ? jo["big_url"].ToString() : null;
-                np.UrlFull = jo["full_url"] != null ? jo["full_url"].ToString() : null;
-                np.UrlThumbnail = jo["thumbnail_url"] != null ? jo["thumbnail_url"].ToString() : "";
-                np.UserName = jo["user_name"].ToString();
+                ExtInfo.PhotoInfo np = new ExtInfo.PhotoInfo
+                {
+                    TimeString = jo["time_str"].ToString(),
+                    Url960 = jo["960_url"]?.ToString(),
+                    Url1280 = jo["1280_url"]?.ToString(),
+                    UrlBig = jo["big_url"]?.ToString(),
+                    UrlFull = jo["full_url"]?.ToString(),
+                    UrlThumbnail = jo["thumbnail_url"] != null ? jo["thumbnail_url"].ToString() : "",
+                    UserName = jo["user_name"].ToString()
+                };
                 res.Photos.Add(np);
             }
             foreach (JObject jo in json["comments"])
             {
-                ExtInfo.CommentInfo nc = new ExtInfo.CommentInfo();
-                nc.UserName = jo["name"].ToString();
-                nc.Message = jo["message"].ToString();
-                nc.Date = DateTime.Parse("01.01.1970") + TimeSpan.FromSeconds(int.Parse(jo["date"].ToString()));
-                nc.UserPhoto = "http://wikimapia.org" + jo["user_photo"].ToString();
+                ExtInfo.CommentInfo nc = new ExtInfo.CommentInfo
+                {
+                    UserName = jo["name"].ToString(),
+                    Message = jo["message"].ToString(),
+                    Date = DateTime.Parse("01.01.1970") + TimeSpan.FromSeconds(int.Parse(jo["date"].ToString())),
+                    UserPhoto = "http://wikimapia.org" + jo["user_photo"].ToString()
+                };
                 res.Comments.Add(nc);
             }
             return res;
@@ -387,12 +387,11 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                     break;
             }
             url = string.Format(url + "{0}/{1}", id, lang);
-            HttpStatusCode code;
 
             // url = "http://wikimapia.org/32984750/ru/"; //удаленный объект
             //url = "http://wikimapia.org/11025563/ru/"; // невидимый объект
 
-            HtmlDocument html = SendHtmlGetRequest(url, out code);
+            HtmlDocument html = SendHtmlGetRequest(url, out HttpStatusCode code);
 
             //HtmlDocument html = new HtmlDocument();
             //html.Load(new StreamReader("f.html"));
@@ -405,9 +404,11 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                 case HttpStatusCode.OK:
                     //обработка ответа сервера
 
-                    ExtInfo res = new ExtInfo();
-                    res.ID = id;
-                    res.Link = url;
+                    ExtInfo res = new ExtInfo
+                    {
+                        ID = id,
+                        Link = url
+                    };
 
                     var body = html.DocumentNode.ChildNodes["html"].ChildNodes["body"];
 
@@ -502,8 +503,10 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                     return res;
 
                 //обработка ошибок
-                case HttpStatusCode.NotFound: throw new Exception("Объект с id " + id + " не существует");
-                default: throw new Exception("Неизвестная ошибка: " + code.ToString());
+                case HttpStatusCode.NotFound:
+                    throw new Exception("Объект с id " + id + " не существует");
+                default:
+                    throw new Exception("Неизвестная ошибка: " + code.ToString());
             }
 
         }
@@ -513,7 +516,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         /// </summary>
         /// <param name="geometry">полигон</param>
         /// <returns></returns>
-        private double GetPerimeter(GMapPolygon geometry)
+        private double getPerimeter(GMapPolygon geometry)
         {
             double res = 0;
             for (int i = 1; i < geometry.Points.Count; i++)
@@ -526,7 +529,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         /// </summary>
         /// <param name="polygon">координаты в JSON</param>
         /// <returns></returns>
-        private GMapPolygon GetPolygon(JToken polygon)
+        private GMapPolygon getPolygon(JToken polygon)
         {
             List<PointLatLng> points = new List<PointLatLng>();
             foreach (JToken jt in polygon)

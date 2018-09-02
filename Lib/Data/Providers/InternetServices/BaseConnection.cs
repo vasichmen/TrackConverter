@@ -1,17 +1,14 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.Net;
-using System.Net.NetworkInformation;
-using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Xml;
-using Newtonsoft.Json.Linq;
 using HtmlAgilityPack;
+using Newtonsoft.Json.Linq;
 using TrackConverter.Lib.Data.Providers.Local.OS;
-using System.Threading.Tasks;
-using System.ComponentModel;
 
 namespace TrackConverter.Lib.Data.Providers.InternetServices
 {
@@ -51,12 +48,11 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         /// <summary>
         /// время последнего запроса к сервису
         /// </summary>
-        DateTime lastQuery;
-
-        bool useCache;
-        string cacheDirectory;
-        int duration;
-        FileSystemCache cache;
+        private DateTime lastQuery;
+        private readonly bool useCache;
+        private readonly string cacheDirectory;
+        private readonly int duration;
+        private FileSystemCache cache;
 
         /// <summary>
         /// загрузка изображения по заданной ссылке
@@ -117,7 +113,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                 string ans = sr.ReadToEnd();
                 sr.Close();
                 if (ex.Status == WebExceptionStatus.ProtocolError)
-                    throw new ApplicationException(ans,ex);
+                    throw new ApplicationException(ans, ex);
                 else
                     return new Bitmap(256, 256);
             }
@@ -174,8 +170,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         /// <exception cref="WebException">Если произошла ошибка при подключении</exception>
         protected string SendStringGetRequest(string url)
         {
-            HttpStatusCode code;
-            string ans = SendStringGetRequest(url, out code);
+            string ans = SendStringGetRequest(url, out HttpStatusCode code);
             return ans;
         }
 
@@ -250,7 +245,8 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
             string json = SendStringGetRequest(url);
             json = json.Substring(json.IndexOf('{'));
             json = json.TrimEnd(new char[] { ';', ')' });
-            try { jobj = JObject.Parse(json); }
+            try
+            { jobj = JObject.Parse(json); }
             catch (Exception ex) { throw new ApplicationException("Ошибка в парсере JSON. Сервер вернул некорректный объект.", ex); }
             return jobj;
         }

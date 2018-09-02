@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 using Newtonsoft.Json;
 
@@ -11,7 +9,7 @@ namespace TrackConverter.Lib.Tracking.Helpers
     /// <summary>
     /// методы для работы с форматом Trip Route
     /// </summary>
-    static class TrrHelper
+    internal static class TrrHelper
     {
         /// <summary>
         /// разделитель разделов информации, точек, маршртов
@@ -31,19 +29,19 @@ namespace TrackConverter.Lib.Tracking.Helpers
         /// <summary>
         /// структура для сериализации информации
         /// </summary>
-        class info
+        private class Info
         {
             /// <summary>
             /// для Json
             /// </summary>
-            public info()
+            public Info()
             { }
 
             /// <summary>
             /// создает структуру из объекта  TrackFile
             /// </summary>
             /// <param name="trip"></param>
-            public info(TripRouteFile trip)
+            public Info(TripRouteFile trip)
             {
                 this.Name = trip.Name;
                 this.Description = trip.Description;
@@ -59,10 +57,12 @@ namespace TrackConverter.Lib.Tracking.Helpers
             /// <returns></returns>
             public TripRouteFile ToTripRoute()
             {
-                TripRouteFile res = new TripRouteFile();
-                res.Name = this.Name;
-                res.Description = this.Description;
-                res.Color = this.Color;
+                TripRouteFile res = new TripRouteFile
+                {
+                    Name = this.Name,
+                    Description = this.Description,
+                    Color = this.Color
+                };
                 return res;
             }
 
@@ -81,7 +81,7 @@ namespace TrackConverter.Lib.Tracking.Helpers
 
         public static string GetInformation(TripRouteFile trip)
         {
-            info info = new info(trip);
+            Info info = new Info(trip);
             string json = JsonConvert.SerializeObject(info, Formatting.Indented);
             return json;
         }
@@ -89,9 +89,9 @@ namespace TrackConverter.Lib.Tracking.Helpers
         public static string GetRoutes(TripRouteFile trip)
         {
             string array = JsonConvert.SerializeObject(trip.DaysRoutes, Formatting.Indented);
-            List<info> infs = new List<info>();
+            List<Info> infs = new List<Info>();
             foreach (TrackFile tf in trip.DaysRoutes)
-                infs.Add(new info()
+                infs.Add(new Info()
                 {
                     Color = tf.Color,
                     Time = tf.Time,
@@ -117,7 +117,7 @@ namespace TrackConverter.Lib.Tracking.Helpers
 
         public static TripRouteFile GetInformation(string jsonInformation)
         {
-            info info = JsonConvert.DeserializeObject<info>(jsonInformation.Trim(new char[] { '\r', '\n', ' ' }));
+            Info info = JsonConvert.DeserializeObject<Info>(jsonInformation.Trim(new char[] { '\r', '\n', ' ' }));
             return info.ToTripRoute();
         }
 
@@ -132,7 +132,7 @@ namespace TrackConverter.Lib.Tracking.Helpers
             List<TrackFile> array = JsonConvert.DeserializeObject<List<TrackFile>>(data[0]);
 
             //информация
-            List<info> infs = JsonConvert.DeserializeObject<List<info>>(data[1]);
+            List<Info> infs = JsonConvert.DeserializeObject<List<Info>>(data[1]);
 
             if (array.Count != infs.Count)
                 throw new ApplicationException("В файле не хватает информации о дневных маршрутах");

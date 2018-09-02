@@ -1,24 +1,24 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
+using GMap.NET;
+using GMap.NET.MapProviders;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using TrackConverter.Lib.Classes;
 using TrackConverter.Lib.Data.Interfaces;
+using TrackConverter.Lib.Exceptions;
+using TrackConverter.Lib.Mathematic.Geodesy.Projections.GMapImported;
 using TrackConverter.Lib.Tracking;
 using TrackConverter.Res.Properties;
-using Newtonsoft.Json;
-using System.Drawing;
-using System.Net;
-using GMap.NET;
-using GMap.NET.WindowsForms;
-using TrackConverter.Lib.Mathematic.Geodesy.Projections.GMapImported;
-using GMap.NET.MapProviders;
 
 namespace TrackConverter.Lib.Data.Providers.InternetServices
 {
@@ -28,14 +28,14 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
     /// 
     /// Работа с маршрутихатором организована опытным путем
     /// </summary>
-    public class Yandex : BaseConnection, IRouterProvider, IGeoсoderProvider, IRastrMapLayerProvider
+    public class Yandex: BaseConnection, IRouterProvider, IGeoсoderProvider, IRastrMapLayerProvider
     {
         #region вложенные классы
 
         /// <summary>
         /// карта спутника Яндекса
         /// </summary>
-        public class SatelliteMap : BaseMapProvider
+        public class SatelliteMap: BaseMapProvider
         {
             /// <summary>
             /// экземпляр провайдера
@@ -108,7 +108,8 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                     case LanguageType.Russian:
                         lang = "ru_RU";
                         break;
-                    default: throw new Exception("Этот язык не реализован");
+                    default:
+                        throw new Exception("Этот язык не реализован");
                 }
 
                 url = string.Format(url, server, pos.X, pos.Y, zoom, lang);
@@ -120,7 +121,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         /// <summary>
         /// карта яндекс.гибрид
         /// </summary>
-        public class HybridMap : BaseMapProvider
+        public class HybridMap: BaseMapProvider
         {
             /// <summary>
             /// экземпляр поставщика
@@ -203,8 +204,15 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         /// </summary>
         private string temp_fold = null;
 
+        /// <summary>
+        /// параметр tm для запросов к слою пробок
+        /// </summary>
         private string traffic_map = null;
-        private DateTime lastUpdate_tm = DateTime.MinValue;
+
+        /// <summary>
+        /// последнее время обновления параметра traffic_map
+        /// </summary>
+        private readonly DateTime lastUpdate_tm = DateTime.MinValue;
 
         /// <summary>
         /// минимальное время между запросами
@@ -239,7 +247,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         /// <returns></returns>
         public TrackFile CreateRoute(Coordinate from, Coordinate to, TrackFile waypoints)
         {
-            JObject jobj = GetRouteJSON(from, to, waypoints);
+            JObject jobj = getRouteJSON(from, to, waypoints);
             return decodeJSONPath(jobj);
         }
 
@@ -250,7 +258,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         /// <param name="to"></param>
         /// <param name="waypoints"></param>
         /// <returns></returns>
-        private JObject GetRouteJSON(Coordinate from, Coordinate to, TrackFile waypoints = null, string auth_token = null)
+        private JObject getRouteJSON(Coordinate from, Coordinate to, TrackFile waypoints = null, string auth_token = null)
         {
             //последовательность запросов
             //https://api-maps.yandex.ru/2.0/?load=package.standard,package.geoObjects,package.route&lang=ru-RU
@@ -294,7 +302,8 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                 case PathRouteMode.Walk:
                     param = "rtm=atm&&rtt=pd";
                     break;
-                default: throw new ArgumentException("Неподдерживаемый тип маршрута " + Vars.Options.Services.PathRouteMode);
+                default:
+                    throw new ArgumentException("Неподдерживаемый тип маршрута " + Vars.Options.Services.PathRouteMode);
             }
 
             //промежуточные точки
@@ -323,7 +332,8 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         /// возвращает токен для получения маршшрутов
         /// </summary>
         /// <returns></returns>
-        string getRouterToken() {
+        private string getRouterToken()
+        {
 
             //запрос токена. Возвращается текст javascript , со структурой , в которой есть токен. 
             string urlGetToken = "https://api-maps.yandex.ru/2.0/?load=package.standard,package.geoObjects,package.route&lang=ru-RU";
@@ -353,14 +363,14 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                 foreach (JToken jt in route)
                 {
                     string coords = jt["properties"]["encodedCoordinates"].ToString();
-                    TrackFile part=null;
+                    TrackFile part = null;
                     try
                     {
-                        part = Yandex.DecodePolyline2(coords);
+                        part = Yandex.decodePolyline2(coords);
                     }
                     catch (OverflowException)
                     {
-                        part = Yandex.DecodePolyline(coords);
+                        part = Yandex.decodePolyline(coords);
                     }
                     finally
                     {
@@ -380,11 +390,11 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         /// </summary>
         /// <param name="encodedCoordinates"></param>
         /// <returns></returns>
-        public static TrackFile DecodePolyline2(string encodedCoordinates)
+        private static TrackFile decodePolyline2(string encodedCoordinates)
         {
             string key = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_=";
 
-            encodedCoordinates = "pkg_ArN2UgNdBQAAzF0AAFAcAQAplwAATuEAALdZ__8=";
+            //encodedCoordinates = "pkg_ArN2UgNdBQAAzF0AAFAcAQAplwAATuEAALdZ__8=";
             //int fgggg = encodedCoordinates.Length;
             //encodedCoordinates = encodedCoordinates.TrimEnd('=');
 
@@ -422,7 +432,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                     int b = c >> lenost; //сдвиг на нужную позицию
                     a = a | b; //сложение
 
-                    int f = Perest(a); //инверсия порядка байт
+                    int f = perest(a); //инверсия порядка байт
                     pairs.Add(f); //добавление в список
 
                     //добавление остатка к новому числу
@@ -481,7 +491,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         /// </summary>
         /// <param name="inp"></param>
         /// <returns></returns>
-        public static int Perest(int inp)
+        private static int perest(int inp)
         {
             uint a = (uint)inp;
 
@@ -528,7 +538,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         /// </summary>
         /// <param name="encodedCoordinates"></param>
         /// <returns></returns>
-        public static TrackFile DecodePolyline(string encodedCoordinates)
+        private static TrackFile decodePolyline(string encodedCoordinates)
         {
             string key = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_=";
             encodedCoordinates = encodedCoordinates.Replace("=", "");
@@ -602,7 +612,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
             //запись результата
             TrackFile res = new TrackFile();
             foreach (List<int> cd in coords)
-                res.Add(new TrackPoint((double)(cd[1] / 1000000d), (double)(cd[0] / 1000000d)));
+                res.Add(new TrackPoint(cd[1] / 1000000d, cd[0] / 1000000d));
 
             //удаление последней точки (почему-то всегда лишняя)
             res.RemoveAt(res.Count - 1);
@@ -616,20 +626,24 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         /// </summary>
         /// <param name="points"></param>
         /// <returns></returns>
-        private static string EncodePolyline(TrackFile points)
+        private static string encodePolyline(TrackFile points)
         {
             throw new NotImplementedException("Yandex.EncodePolyline не реализован");
 
-            points = new TrackFile();
-            points.Add(new TrackPoint("55.742186", "37.623521"));
+            points = new TrackFile
+            {
+                new TrackPoint("55.742186", "37.623521")
+            };
 
             //координаты в целом виде
             List<List<int>> coords = new List<List<int>>();
             foreach (TrackPoint tt in points)
             {
-                List<int> cd = new List<int>(); //lon lat
-                cd.Add((int)(tt.Coordinates.Longitude.TotalDegrees * 1000000d));
-                cd.Add((int)(tt.Coordinates.Latitude.TotalDegrees * 1000000d));
+                List<int> cd = new List<int>
+                {
+                    (int)(tt.Coordinates.Longitude.TotalDegrees * 1000000d),
+                    (int)(tt.Coordinates.Latitude.TotalDegrees * 1000000d)
+                }; //lon lat
                 coords.Add(cd);
             }
 
@@ -654,9 +668,11 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                 string lat = Convert.ToString(cd[1], 2); //перевод в двоичную СС
                 lat = lat.PadLeft(32, '0'); //выравнивание до 32 символов
 
-                List<string> cdBin = new List<string>();
-                cdBin.Add(lon);
-                cdBin.Add(lat);
+                List<string> cdBin = new List<string>
+                {
+                    lon,
+                    lat
+                };
                 coordsBin.Add(cdBin);
             }
 
@@ -710,6 +726,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         /// </summary>
         /// <param name="points">точки</param>
         /// <param name="callback">метод для вывода информации об операции</param>
+        /// <exception cref="TrackConverterException"></exception>
         /// <returns></returns>
         public List<List<TrackFile>> CreateRoutes(BaseTrack points, Action<string> callback)
         {
@@ -718,7 +735,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
             bool isRequestComplete = false; //истина, если завершены все запросы к серверу
 
             //токен авторизации
-            string auth_token =getRouterToken();
+            string auth_token = getRouterToken();
 
             //действие обработки очереди JSON ответов сервера
             Action polylinerAction = new Action(() =>
@@ -779,7 +796,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                                     sw.Write(textJO);
                                     sw.Close();
                                 }
-                                catch (Exception e) { throw e; }
+                                catch (Exception e) { throw new TrackConverterException(e.Message, e); }
                             }
                             else //если надо все хранить в памяти и обрабатывать сразу
                             {
@@ -810,7 +827,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                         queue.Enqueue(null);
                     else
                     {
-                        JObject jo = GetRouteJSON(points[i].Coordinates, points[j].Coordinates,null, auth_token);
+                        JObject jo = getRouteJSON(points[i].Coordinates, points[j].Coordinates, null, auth_token);
                         try
                         {
                             jo.SelectToken("data.features[0].features[0].properties.encodedCoordinates", true);
@@ -912,7 +929,8 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
             Dictionary<string, Coordinate> res = new Dictionary<string, Coordinate>();
             foreach (XmlNode feature in features)
             {
-                if (feature.LocalName == "metaDataProperty") continue;
+                if (feature.LocalName == "metaDataProperty")
+                    continue;
                 if (feature.LocalName == "featureMember")
                 {
                     XmlNode geoobj = feature["GeoObject"];
@@ -1013,18 +1031,19 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                 {
                     att++;
                     if (att == MaxAttempts)
-                        throw we;
+                        throw new TrackConverterException("Достигнуто максимальное количество попыток подключения", we);
                     Thread.Sleep(50);
                     continue;
                 }
             }
-            throw new Exception("Превышено количество попыток подключения");
+            throw new TrackConverterException("Превышено количество попыток подключения");
         }
 
         /// <summary>
         /// получить параметр tm для запроса пробок
         /// </summary>
         /// <returns></returns>
+        /// <exception cref="TrackConverterException"></exception>
         private string getTrafficMapId()
         {
             //последовательность запросов:
@@ -1053,12 +1072,12 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                 catch (WebException we) //если ошибка подключения, то ожидаем немного и пробуем снова
                 {
                     if (att == MaxAttempts)
-                        throw we;
+                        throw new TrackConverterException("Достигнуто максимальное количество попыток подключения",we);
                     Thread.Sleep(50);
                     continue;
                 }
             }
-            throw new Exception("Превышено количество попыток подключения");
+            throw new TrackConverterException("Превышено количество попыток подключения");
         }
 
         #endregion

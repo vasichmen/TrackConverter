@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TrackConverter.Lib.Data.Interfaces;
 using TrackConverter.Lib.Data.Providers.InternetServices;
 
@@ -14,7 +10,7 @@ namespace TrackConverter.Lib.Data
     public class LinkShorter
     {
 
-        private LinkShorterProvider provider;
+        private readonly LinkShorterProvider provider;
         private ILinkShorterProvider shorter;
 
         /// <summary>

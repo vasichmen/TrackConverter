@@ -1,5 +1,4 @@
-﻿using System;
-using System.Drawing;
+﻿using System.Drawing;
 using GMap.NET;
 using GMap.NET.WindowsForms;
 using TrackConverter.Lib.Classes;
@@ -10,7 +9,7 @@ namespace TrackConverter.Lib.Maping.GMap
     /// <summary>
     /// маркер на карте
     /// </summary>
-    public class MapMarker : GMapMarker
+    public class MapMarker: GMapMarker
     {
 
         /// <summary>
@@ -21,7 +20,7 @@ namespace TrackConverter.Lib.Maping.GMap
         /// <summary>
         /// картинка маркера
         /// </summary>
-        private Icon image;
+        private readonly Icon image;
 
         /// <summary>
         /// создает новый маркер с указанным изображением и координатами

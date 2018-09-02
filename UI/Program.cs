@@ -388,7 +388,7 @@ namespace TrackConverter.UI
                  try
                  {
                      if (GeoInfo.IsETOPOReady)
-                         GeoInfo.ETOPOProvider = new ETOPOProvider(Vars.Options.DataSources.ETOPODBFolder, winMain.setCurrentOperation);
+                         GeoInfo.ETOPOProvider = new ETOPOProvider(Vars.Options.DataSources.ETOPODBFolder, winMain.SetCurrentOperation);
                      else throw new ApplicationException("База данных ETOPO не установлена. Укажите в настройках путь к файлам базы данных");
                  }
                  catch (Exception exc)

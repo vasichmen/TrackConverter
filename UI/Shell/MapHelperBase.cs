@@ -1,8 +1,8 @@
-﻿using GMap.NET;
-using GMap.NET.WindowsForms;
-using System.Drawing;
+﻿using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
+using GMap.NET;
+using GMap.NET.WindowsForms;
 using TrackConverter.Lib.Maping.GMap;
 using TrackConverter.Lib.Tracking;
 using TrackConverter.Res;
@@ -10,7 +10,7 @@ using TrackConverter.Res.Properties;
 
 namespace TrackConverter.UI.Shell
 {
-    class MapHelperBase
+    internal class MapHelperBase
     {
 
         protected FormMain formMain;
@@ -27,7 +27,8 @@ namespace TrackConverter.UI.Shell
         /// <param name="lay">слой</param>
         public void DeleteWaypoint(TrackPoint trackPoint, GMapOverlay lay)
         {
-            if (trackPoint == null) return;
+            if (trackPoint == null)
+                return;
 
             for (int i = 0; i < lay.Markers.Count; i++)
             {
@@ -214,10 +215,12 @@ namespace TrackConverter.UI.Shell
                 return;
             if (route.Color.IsEmpty)
                 route.Color = Vars.Options.Converter.GetColor();
-            GMapRoute rr = new GMapRoute(route.GMapPoints, route.Name);
-            rr.IsHitTestVisible = true;
-            rr.IsVisible = true;
-            rr.Stroke = new Pen(new SolidBrush(route.Color));
+            GMapRoute rr = new GMapRoute(route.GMapPoints, route.Name)
+            {
+                IsHitTestVisible = true,
+                IsVisible = true,
+                Stroke = new Pen(new SolidBrush(route.Color))
+            };
             rr.Stroke.Width = 3;
             rr.Tag = route;
 

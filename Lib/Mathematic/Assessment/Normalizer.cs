@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using TrackConverter.Lib.Classes;
 using TrackConverter.Lib.Mathematic.Base;
-using TrackConverter.Lib.Mathematic.Geodesy.Models;
 using TrackConverter.Lib.Tracking;
 
 namespace TrackConverter.Lib.Mathematic.Assessment
@@ -12,7 +8,7 @@ namespace TrackConverter.Lib.Mathematic.Assessment
     /// <summary>
     /// удаляет из трека или заменяет точки, которые приводят к острым углам (возникающий из-за погрешности GPS)
     /// </summary>
-    static class Normalizer
+    internal static class Normalizer
     {
 
         /// <summary>
@@ -25,9 +21,12 @@ namespace TrackConverter.Lib.Mathematic.Assessment
         {
             switch (behavior)
             {
-                case NormalizerBehavior.AddCritical: return AddCritical(track, minimalAngle);
-                case NormalizerBehavior.RemovePoint: return RemovePoint(track, minimalAngle);
-                default: throw new ArgumentException("неизвестное поведение нормализатора: " + behavior);
+                case NormalizerBehavior.AddCritical:
+                    return addCritical(track, minimalAngle);
+                case NormalizerBehavior.RemovePoint:
+                    return removePoint(track, minimalAngle);
+                default:
+                    throw new ArgumentException("неизвестное поведение нормализатора: " + behavior);
             }
         }
 
@@ -37,7 +36,7 @@ namespace TrackConverter.Lib.Mathematic.Assessment
         /// <param name="track"></param>
         /// <param name="minimalAngle"></param>
         /// <returns></returns>
-        private static TrackFile RemovePoint(TrackFile track, double minimalAngle)
+        private static TrackFile removePoint(TrackFile track, double minimalAngle)
         {
             for (int i = 1; i < track.Count - 1; i++)
             {
@@ -66,7 +65,7 @@ namespace TrackConverter.Lib.Mathematic.Assessment
         /// <param name="track">трек для обработки</param>
         /// <param name="minimalAngle">минимальный угол в градусах</param>
         /// <returns></returns>
-        private static TrackFile AddCritical(TrackFile track, double minimalAngle)
+        private static TrackFile addCritical(TrackFile track, double minimalAngle)
         {
 
             for (int i = 1; i < track.Count - 1; i++)

@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace TrackConverter.Lib.Mathematic.Routing.FullSearchElements
+﻿namespace TrackConverter.Lib.Mathematic.Routing.FullSearchElements
 {
-    class IndexArray
+    internal class IndexArray
     {
         public int Length;
         public int[] array;
         private bool first;
-        
+
         public double WayLength { get; set; }
 
         public int this[int index] { get { return array[index]; } }
@@ -64,7 +59,7 @@ namespace TrackConverter.Lib.Mathematic.Routing.FullSearchElements
                         return false;
                 }
 
-                f = !IsAccords(); //если комбинация не подходит, то еще раз прибавляем
+                f = !isAccords(); //если комбинация не подходит, то еще раз прибавляем
             }
 
             //если что-то прибавили, то продолжаем перебор
@@ -75,7 +70,7 @@ namespace TrackConverter.Lib.Mathematic.Routing.FullSearchElements
         /// возвращает истину, если указанная комбинация может существовать
         /// </summary>
         /// <returns></returns>
-        private bool IsAccords()
+        private bool isAccords()
         {
             //1. на позициях не могут стоять числа, равные индексу
             //2. все числа должны быть уникальны
@@ -87,7 +82,8 @@ namespace TrackConverter.Lib.Mathematic.Routing.FullSearchElements
                 res &= i != array[i];
 
             //если не подходит, то выход сразу
-            if (!res) return res;
+            if (!res)
+                return res;
 
             //2 уникальность
             for (int i = 0; i < this.Length; i++)
@@ -101,7 +97,8 @@ namespace TrackConverter.Lib.Mathematic.Routing.FullSearchElements
             }
 
             //если не подходит, то выход сразу
-            if (!res) return res;
+            if (!res)
+                return res;
 
             //3 циклы
             //Dictionary<int, int> way = new Dictionary<int, int>();
@@ -161,8 +158,10 @@ namespace TrackConverter.Lib.Mathematic.Routing.FullSearchElements
         /// <returns></returns>
         public IndexArray CloneArray()
         {
-            IndexArray res = new IndexArray(this.Length);
-            res.WayLength = this.WayLength;
+            IndexArray res = new IndexArray(this.Length)
+            {
+                WayLength = this.WayLength
+            };
             for (int i = 0; i < this.Length; i++)
                 res.array[i] = this[i];
             return res;

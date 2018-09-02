@@ -1,17 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Diagnostics;
 using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using TrackConverter.Lib.Classes;
-using TrackConverter.Lib.Data;
 using TrackConverter.Lib.Data.Providers.InternetServices;
 using TrackConverter.Res.Properties;
 using TrackConverter.UI.Common.Dialogs;
@@ -21,10 +13,10 @@ namespace TrackConverter.UI.Map
     /// <summary>
     /// окно подробной информации об объекте
     /// </summary>
-    public partial class FormShowObjectInfo : Form
+    public partial class FormShowObjectInfo: Form
     {
         private VectorMapLayerObject Obj;
-        Wikimapia.ExtInfo info = null;
+        private Wikimapia.ExtInfo info = null;
         /// <summary>
         /// создает окно подробной информации об объекте
         /// </summary>
@@ -40,15 +32,15 @@ namespace TrackConverter.UI.Map
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void PictureBox_MouseClick(object sender, MouseEventArgs e)
+        private void pictureBox_MouseClick(object sender, MouseEventArgs e)
         {
             Wikimapia.ExtInfo.PhotoInfo pho = (sender as PictureBox).Tag as Wikimapia.ExtInfo.PhotoInfo;
             FormShowPicture fsp = new FormShowPicture(info.Photos, info.Photos.IndexOf(pho));
-            fsp.Show();
+            fsp.Show(this);
         }
 
 
-        private void FormShowObjectInfo_Shown(object sender, EventArgs e)
+        private void formShowObjectInfo_Shown(object sender, EventArgs e)
         {
             this.Text = Obj.Name;
             this.labelName.Text = Obj.Name;
@@ -61,7 +53,7 @@ namespace TrackConverter.UI.Map
                     try
                     {
                         Program.winMain.BeginOperation();
-                        Program.winMain.setCurrentOperation("Загрузка информации об объекте...");
+                        Program.winMain.SetCurrentOperation("Загрузка информации об объекте...");
                         load = new Task(() =>
                         {
                             if (Vars.dataCache.ContainsLayerObjectExtInfo(Obj.ID))
@@ -107,16 +99,18 @@ namespace TrackConverter.UI.Map
                           {
                               this.Invoke(new Action(() =>
                               {
-                                  PictureBox pb = new PictureBox();
-                                  pb.BackgroundImage = img;
-                                  pb.Width = 120 - 3;
-                                  pb.Height = (int)((pb.BackgroundImage.Width / pb.BackgroundImage.Height) * pb.Width);
-                                  pb.BorderStyle = BorderStyle.FixedSingle;
-                                  pb.Parent = flowLayoutPanelImages;
-                                  pb.MouseClick += PictureBox_MouseClick;
-                                  pb.Tag = pho;
-                                  pb.Cursor = Cursors.Hand;
-                                  pb.BackgroundImageLayout = ImageLayout.Stretch;
+                                  PictureBox pb = new PictureBox
+                                  {
+                                      BackgroundImage = img,
+                                      Width = 120 - 3,
+                                      BorderStyle = BorderStyle.FixedSingle,
+                                      Parent = flowLayoutPanelImages,
+                                      Tag = pho,
+                                      Cursor = Cursors.Hand,
+                                      BackgroundImageLayout = ImageLayout.Stretch
+                                  };
+                                  pb.Height = (pb.BackgroundImage.Width / pb.BackgroundImage.Height) * pb.Width;
+                                  pb.MouseClick += pictureBox_MouseClick;
                                   new ToolTip().SetToolTip(pb, "Загружено " + pho.TimeString);
                               }));
                           });
@@ -174,7 +168,7 @@ namespace TrackConverter.UI.Map
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void FormShowObjectInfo_FormClosed(object sender, FormClosedEventArgs e)
+        private void formShowObjectInfo_FormClosed(object sender, FormClosedEventArgs e)
         {
             Program.winMain.gmapControlMap.DisSelectPolygon(this.Obj.ID);
 

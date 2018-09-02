@@ -1,14 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Net;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using TrackConverter;
 using TrackConverter.Lib.Data;
 using TrackConverter.Lib.Tracking;
 
@@ -17,10 +9,10 @@ namespace TrackConverter.UI.Map
     /// <summary>
     /// окно информации о точке
     /// </summary>
-    public partial class FormWhatsthere : Form
+    public partial class FormWhatsthere: Form
     {
-        TrackPoint point;
-        Timer timer;
+        private TrackPoint point;
+        private Timer timer;
 
         /// <summary>
         /// создает новое окно информации о точке с заданными данными
@@ -37,7 +29,7 @@ namespace TrackConverter.UI.Map
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void FormWhatsthere_Load(object sender, EventArgs e)
+        private void formWhatsthere_Load(object sender, EventArgs e)
         {
             Task addr = new Task(new Action(() =>
             {
@@ -132,13 +124,15 @@ namespace TrackConverter.UI.Map
             this.labeldayLength.Text = point.DayLength.ToString();
 
             //обновление времени
-            timer = new Timer();
-            timer.Interval = 100;
-            timer.Tick += Timer_Tick;
+            timer = new Timer
+            {
+                Interval = 100
+            };
+            timer.Tick += timer_Tick;
             timer.Start();
         }
 
-        private void Timer_Tick(object sender, EventArgs e)
+        private void timer_Tick(object sender, EventArgs e)
         {
             this.Invoke(new Action(() =>
           this.labelLocalTime.Text = point.CurrentTime.ToString())
@@ -151,7 +145,7 @@ namespace TrackConverter.UI.Map
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void FormWhatsthere_FormClosed(object sender, FormClosedEventArgs e)
+        private void formWhatsthere_FormClosed(object sender, FormClosedEventArgs e)
         {
             if (Program.winMain.ActiveWhatThereForms.ContainsKey(point))
                 Program.winMain.ActiveWhatThereForms.Remove(point);

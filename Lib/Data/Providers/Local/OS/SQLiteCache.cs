@@ -2,18 +2,16 @@
 using System.Collections.Generic;
 using System.Data.SQLite;
 using System.IO;
-using GMap.NET;
 using TrackConverter.Lib.Classes;
 using TrackConverter.Lib.Data.Interfaces;
 using TrackConverter.Lib.Tracking;
-using System.Threading;
 
 namespace TrackConverter.Lib.Data.Providers.Local.OS
 {
     /// <summary>
     /// кэш данных геокодера, высот итд  в файловой системе. 
     /// </summary>
-    public class SQLiteCache : IGeoInfoProvider, IGeoсoderProvider, IDisposable, IGeocoderCache, IGeoInfoCache
+    public class SQLiteCache: IGeoInfoProvider, IGeoсoderProvider, IDisposable, IGeocoderCache, IGeoInfoCache
     {
         /// <summary>
         /// строка в таблице кэша геокодера
@@ -30,18 +28,19 @@ namespace TrackConverter.Lib.Data.Providers.Local.OS
             public string TZid;
         }
 
-        SQLiteConnection cache_connection;
-        string directory;
-        string cache_file;
-        string cache_connectionString;
-        string geocoder_table = "tb_geocoder";
-        string wikimapia_objects_table = "tb_wikimapia_objects";
+        private static readonly object cache_connection_lock = new object();
+        private SQLiteConnection cache_connection;
+        private readonly string directory;
+        private readonly string cache_file;
+        private readonly string cache_connectionString;
+        private readonly string geocoder_table = "tb_geocoder";
+        private readonly string wikimapia_objects_table = "tb_wikimapia_objects";
 
         /// <summary>
         /// округление в таблице геокодера
         /// </summary>
-        int decimal_digits = 4;
-        
+        private readonly int decimal_digits = 4;
+
         /// <summary>
         /// открывает базу данных в указанной папке
         /// </summary>
@@ -55,10 +54,12 @@ namespace TrackConverter.Lib.Data.Providers.Local.OS
             cache_connectionString = "Data Source = " + cache_file;
 
             if (!File.Exists(cache_file))
-                CreateDB(cache_file);
+                createDB(cache_file);
 
-            cache_connection = new SQLiteConnection();
-            cache_connection.ConnectionString = cache_connectionString;
+            cache_connection = new SQLiteConnection
+            {
+                ConnectionString = cache_connectionString
+            };
         }
 
         #region работа с базой данных
@@ -67,7 +68,7 @@ namespace TrackConverter.Lib.Data.Providers.Local.OS
         /// создает новую базу данных
         /// </summary>
         /// <param name="baseName"></param>
-        private void CreateDB(string baseName)
+        private void createDB(string baseName)
         {
             Directory.CreateDirectory(Path.GetDirectoryName(baseName));
             SQLiteConnection.CreateFile(baseName);
@@ -121,9 +122,9 @@ namespace TrackConverter.Lib.Data.Providers.Local.OS
         /// </summary>
         /// <param name="query"></param>
         /// <returns></returns>
-        private int ExecuteQuery(string query)
+        private int executeQuery(string query)
         {
-            lock (this.cache_connection)
+            lock (cache_connection_lock)
             {
                 cache_connection.Open();
                 SQLiteCommand com = cache_connection.CreateCommand();
@@ -146,9 +147,9 @@ namespace TrackConverter.Lib.Data.Providers.Local.OS
         /// <param name="alt">высота</param>
         /// <param name="addr">адрес</param>
         /// <param name="tzone">временнАя зона</param>
-        private void AddGeocoder(double lat, double lon, double alt, string addr, TimeZoneInfo tzone)
+        private void addGeocoder(double lat, double lon, double alt, string addr, TimeZoneInfo tzone)
         {
-            ExecuteQuery(CreateCommandGeocoder(lat, lon, alt, addr, tzone));
+            executeQuery(createCommandGeocoder(lat, lon, alt, addr, tzone));
         }
 
         /// <summary>
@@ -160,7 +161,7 @@ namespace TrackConverter.Lib.Data.Providers.Local.OS
         /// <param name="addr">адрес</param>
         /// <param name="tzone">временная зона</param>
         /// <returns></returns>
-        private string CreateCommandGeocoder(double lat, double lon, double alt, string addr, TimeZoneInfo tzone)
+        private string createCommandGeocoder(double lat, double lon, double alt, string addr, TimeZoneInfo tzone)
         {
             string com = "";
             //if (double.IsNaN(lat) && double.IsNaN(lon))
@@ -187,9 +188,9 @@ namespace TrackConverter.Lib.Data.Providers.Local.OS
         /// </summary>
         /// <param name="com"></param>
         /// <returns></returns>
-        private List<RowGeocoder> ExecuteReaderGeocoder(string com)
+        private List<RowGeocoder> executeReaderGeocoder(string com)
         {
-            lock (this.cache_connection)
+            lock (cache_connection_lock)
             {
                 cache_connection.Open();
                 SQLiteCommand cmd = cache_connection.CreateCommand();
@@ -224,9 +225,9 @@ namespace TrackConverter.Lib.Data.Providers.Local.OS
         private void remNullsGeocoder()
         {
             string com = "DELETE FROM '" + geocoder_table + "' WHERE address IS NULL AND altitude IS NULL";
-            int i = ExecuteQuery(com);
+            int i = executeQuery(com);
             string sel = "SELECT * FROM " + geocoder_table;
-            List<RowGeocoder> all = ExecuteReaderGeocoder(sel);
+            List<RowGeocoder> all = executeReaderGeocoder(sel);
         }
 
         /// <summary>
@@ -236,7 +237,7 @@ namespace TrackConverter.Lib.Data.Providers.Local.OS
         /// <param name="Altitude"></param>
         public void PutGeoInfo(Coordinate Coordinate, double Altitude)
         {
-            this.AddGeocoder(
+            this.addGeocoder(
                 Coordinate.Latitude.TotalDegrees,
                 Coordinate.Longitude.TotalDegrees,
                 Altitude,
@@ -252,7 +253,7 @@ namespace TrackConverter.Lib.Data.Providers.Local.OS
         /// <param name="Address"></param>
         public void PutGeocoder(Coordinate Coordinate, string Address)
         {
-            this.AddGeocoder(
+            this.addGeocoder(
                 Coordinate.Latitude.TotalDegrees,
                 Coordinate.Longitude.TotalDegrees,
                 double.NaN,
@@ -270,7 +271,7 @@ namespace TrackConverter.Lib.Data.Providers.Local.OS
         public void PutGeoInfo(BaseTrack track, List<double> els, Action<string> callback = null)
         {
             //ЭКСПОРТ ДАННЫХ
-            lock (this.cache_connection)
+            lock (cache_connection_lock)
             {
                 this.cache_connection.Open();
                 SQLiteTransaction trans = this.cache_connection.BeginTransaction();
@@ -279,7 +280,7 @@ namespace TrackConverter.Lib.Data.Providers.Local.OS
                 {
                     SQLiteCommand cm = cache_connection.CreateCommand();
 
-                    string command = CreateCommandGeocoder(
+                    string command = createCommandGeocoder(
                     track[i].Coordinates.Latitude.TotalDegrees,
                     track[i].Coordinates.Longitude.TotalDegrees,
                     els[i],
@@ -303,7 +304,7 @@ namespace TrackConverter.Lib.Data.Providers.Local.OS
         /// <param name="tzi"></param>
         public void PutGeoInfo(Coordinate coordinates, TimeZoneInfo tzi)
         {
-            this.AddGeocoder(
+            this.addGeocoder(
                 coordinates.Latitude.TotalDegrees,
                 coordinates.Longitude.TotalDegrees,
                 double.NaN,
@@ -318,7 +319,7 @@ namespace TrackConverter.Lib.Data.Providers.Local.OS
         public void ClearGeocoder()
         {
             string seln = "UPDATE '" + geocoder_table + "' SET address = NULL";
-            int i = ExecuteQuery(seln);
+            int i = executeQuery(seln);
             remNullsGeocoder();
         }
 
@@ -328,7 +329,7 @@ namespace TrackConverter.Lib.Data.Providers.Local.OS
         public void ClearAltitudes()
         {
             string seln = "UPDATE '" + geocoder_table + "' SET altitude = NULL";
-            int i = ExecuteQuery(seln);
+            int i = executeQuery(seln);
             remNullsGeocoder();
         }
 
@@ -507,7 +508,7 @@ namespace TrackConverter.Lib.Data.Providers.Local.OS
                 Math.Round(coordinate.Latitude.TotalDegrees, decimal_digits).ToString().Replace(',', '.'),
                 Math.Round(coordinate.Longitude.TotalDegrees, decimal_digits).ToString().Replace(',', '.')
                 );
-            List<RowGeocoder> dr = ExecuteReaderGeocoder(sel);
+            List<RowGeocoder> dr = executeReaderGeocoder(sel);
             if (dr.Count == 0)
                 return null;
             return dr[0].adr;
@@ -521,7 +522,7 @@ namespace TrackConverter.Lib.Data.Providers.Local.OS
         public Coordinate GetCoordinate(string address)
         {
             string sel = string.Format(@"SELECT * FROM '" + geocoder_table + @"' WHERE address = '{0}'", address);
-            List<RowGeocoder> dr = ExecuteReaderGeocoder(sel);
+            List<RowGeocoder> dr = executeReaderGeocoder(sel);
             if (dr.Count == 0)
                 return Coordinate.Empty;
             return new Coordinate(dr[0].lat, dr[0].lon);
@@ -538,7 +539,7 @@ namespace TrackConverter.Lib.Data.Providers.Local.OS
            Math.Round(coordinates.Latitude.TotalDegrees, decimal_digits).ToString().Replace(',', '.'),
            Math.Round(coordinates.Longitude.TotalDegrees, decimal_digits).ToString().Replace(',', '.')
            );
-            List<RowGeocoder> dr = ExecuteReaderGeocoder(sel);
+            List<RowGeocoder> dr = executeReaderGeocoder(sel);
             if (dr.Count == 0)
                 return null;
             if (Vars.Options.DataSources.UseSystemTimeZones)
@@ -575,7 +576,7 @@ namespace TrackConverter.Lib.Data.Providers.Local.OS
             Math.Round(coordinate.Latitude.TotalDegrees, decimal_digits).ToString().Replace(',', '.'),
             Math.Round(coordinate.Longitude.TotalDegrees, decimal_digits).ToString().Replace(',', '.')
             );
-            List<RowGeocoder> dr = ExecuteReaderGeocoder(sel);
+            List<RowGeocoder> dr = executeReaderGeocoder(sel);
             if (dr.Count == 0)
                 return double.NaN;
             return dr[0].alt;
@@ -596,10 +597,8 @@ namespace TrackConverter.Lib.Data.Providers.Local.OS
             {
                 cache_connection.Close();
                 cache_connection.Dispose();
-                GC.SuppressFinalize(this);
             }
-            
-
+            GC.SuppressFinalize(this);
         }
 
         #endregion

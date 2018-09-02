@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Collections.Concurrent;
-using System.Threading.Tasks;
 using TrackConverter.Lib.Data;
 using TrackConverter.Lib.Tracking;
-using TrackConverter.Lib.Data.Interfaces;
 
 namespace TrackConverter.Lib.Mathematic.Routing
 {
@@ -68,7 +65,7 @@ namespace TrackConverter.Lib.Mathematic.Routing
                 {
                     TrackFile cur = routes[way[i]][way[i + 1]];
                     int count = -1;
-                    if (i == way.Length - 2) 
+                    if (i == way.Length - 2)
                         if (isCycled)
                             count = cur.Count - 1;
                         else
@@ -118,9 +115,11 @@ namespace TrackConverter.Lib.Mathematic.Routing
                         row.Add(null);
                     else
                     {
-                        TrackFile route = new TrackFile();
-                        route.Add(points[i]);
-                        route.Add(points[j]);
+                        TrackFile route = new TrackFile
+                        {
+                            points[i],
+                            points[j]
+                        };
                         route.CalculateAll();
                         row.Add(route);
                     }

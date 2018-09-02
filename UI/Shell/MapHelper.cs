@@ -1,17 +1,19 @@
-﻿using GMap.NET;
-using GMap.NET.MapProviders;
-using GMap.NET.WindowsForms;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Text;
 using System.Windows.Forms;
+using GMap.NET;
+using GMap.NET.MapProviders;
+using GMap.NET.WindowsForms;
 using TrackConverter.Lib.Classes;
 using TrackConverter.Lib.Classes.StackEdits;
 using TrackConverter.Lib.Data;
+using TrackConverter.Lib.Data.Providers.InternetServices;
+using TrackConverter.Lib.Data.Providers.Local.OS;
 using TrackConverter.Lib.Maping.GMap;
 using TrackConverter.Lib.Tracking;
 using TrackConverter.Res;
@@ -19,9 +21,6 @@ using TrackConverter.Res.Properties;
 using TrackConverter.UI.Common.Dialogs;
 using TrackConverter.UI.Map;
 using static TrackConverter.Lib.Classes.StackEdits.Actions;
-using System.ComponentModel;
-using TrackConverter.Lib.Data.Providers.Local.OS;
-using TrackConverter.Lib.Data.Providers.InternetServices;
 
 namespace TrackConverter.UI.Shell
 {
@@ -29,7 +28,7 @@ namespace TrackConverter.UI.Shell
     /// <summary>
     /// вспомогательные функции для работы интерфейса карты
     /// </summary>
-    internal partial class MapHelper : MapHelperBase
+    internal partial class MapHelper: MapHelperBase
     {
 
         /// <summary>
@@ -220,7 +219,7 @@ namespace TrackConverter.UI.Shell
                 !formMain.isMarkerClicked)
             {
                 //обновление информации в списке точек после перемещения
-                RefreshWaypoints();
+                refreshWaypoints();
 
                 if (formMain.isCreatingRoute)
                 {
@@ -300,7 +299,7 @@ namespace TrackConverter.UI.Shell
             {
                 formMain.markerClicked = item;
                 formMain.isMarkerClicked = true;
-                toolStripEditMarker(e);
+                ToolStripEditMarker(e);
                 return;
             }
 
@@ -465,7 +464,7 @@ namespace TrackConverter.UI.Shell
                     //если это маркер построения маршрута, то перестраиваем маршрут
                     if (formMain.currentMarker.Tag.Type == MarkerTypes.PathingRoute)
                     {
-                        TryPathRoute(formMain.currentMarker.Tag.Info.Name, false);
+                        tryPathRoute(formMain.currentMarker.Tag.Info.Name, false);
                     }
 
                     //добавление информации для отмены действия
@@ -496,12 +495,12 @@ namespace TrackConverter.UI.Shell
                                 )
                             )
                         );
-                    UpdateUndoButton();
+                    updateUndoButton();
                     formMain.isMarkerMoving = false;
                 }
 
                 //обновление информации в списке точек после перемещения
-                RefreshWaypoints();
+                refreshWaypoints();
                 return;
             }
 
@@ -622,9 +621,11 @@ namespace TrackConverter.UI.Shell
 
                 if (!contains) //если такой точки нет, то добавляем
                 {
-                    TrackPoint t = new TrackPoint(kv.Value);
-                    t.Name = kv.Key;
-                    t.Icon = IconOffsets.search_result_icon;
+                    TrackPoint t = new TrackPoint(kv.Value)
+                    {
+                        Name = kv.Key,
+                        Icon = IconOffsets.search_result_icon
+                    };
                     this.ShowWaypoint(t, formMain.searchOverlay, Resources.search_result_icon, MarkerTypes.SearchResult, MarkerTooltipMode.OnMouseOver);
                 }
             }
@@ -636,7 +637,7 @@ namespace TrackConverter.UI.Shell
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        internal void toolstripButtonLocateDevice(object sender, EventArgs e)
+        internal void ToolstripButtonLocateDevice(object sender, EventArgs e)
         {
             try
             {
@@ -651,7 +652,7 @@ namespace TrackConverter.UI.Shell
 
         }
 
-        internal void toolStripComboBoxSearch_DropDown(object sender, EventArgs e)
+        internal void ToolStripComboBoxSearch_DropDown(object sender, EventArgs e)
         {
             formMain.toolStripComboBoxSearch.Items.Clear();
             formMain.toolStripComboBoxSearch.Items.AddRange(Vars.Options.Map.LastSearchRequests.ToArray());
@@ -706,7 +707,7 @@ namespace TrackConverter.UI.Shell
         {
             if (formMain.LastEditsStack.Count > 0)
                 formMain.LastEditsStack.Pop().Data.Undo();
-            UpdateUndoButton();
+            updateUndoButton();
         }
 
         internal void ZoomIn_Click(EventArgs e)
@@ -732,7 +733,8 @@ namespace TrackConverter.UI.Shell
                 null,
                 null
                 );
-            Program.winRouteEditor.Show(Program.winMain); ;
+            Program.winRouteEditor.Show(Program.winMain);
+            ;
         }
 
 
@@ -747,7 +749,7 @@ namespace TrackConverter.UI.Shell
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        internal void mpProvider_Click(object sender, EventArgs e)
+        internal void MpProvider_Click(object sender, EventArgs e)
         {
             MapProviderRecord mpr = (MapProviderRecord)((ToolStripMenuItem)sender).Tag;
             switch (mpr.Enum)
@@ -807,7 +809,7 @@ namespace TrackConverter.UI.Shell
         /// </summary>
         /// <param name="menu">пункт мен с кнопками карт</param>
         /// <param name="id">id карты, которая сейчас открыта</param>
-        void selectDropDownMapItems(ToolStripDropDownItem menu, int id)
+        private void selectDropDownMapItems(ToolStripDropDownItem menu, int id)
         {
             ToolStripMenuItem item = null;
             foreach (ToolStripMenuItem ti in menu.DropDownItems)
@@ -836,7 +838,7 @@ namespace TrackConverter.UI.Shell
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        internal void lrProvider_Click(object sender, EventArgs e)
+        internal void LrProvider_Click(object sender, EventArgs e)
         {
             MapLayerProviderRecord lpr = (MapLayerProviderRecord)((ToolStripMenuItem)sender).Tag;
             switch (lpr.Enum)
@@ -875,12 +877,12 @@ namespace TrackConverter.UI.Shell
             formMain.editMarkerToolStripMenuItem.Visible = canEdit;
         }
 
-        internal void toolStripDeleteRoute(EventArgs e)
+        internal void ToolStripDeleteRoute(EventArgs e)
         {
             formMain.converterHelper.DeleteRoute(formMain.routeClicked.Tag as TrackFile);
         }
 
-        internal void toolStripDeleteMarker(EventArgs e)
+        internal void ToolStripDeleteMarker(EventArgs e)
         {
             if (MessageBox.Show(formMain, "Вы действительно хотите удалить этот маркер?", "Внимание!", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
             {
@@ -907,7 +909,7 @@ namespace TrackConverter.UI.Shell
                 }
                 else
                 {
-                    UpdateUndoButton();
+                    updateUndoButton();
                     formMain.LastEditsStack.Push(
                         new StackItem(
                             new MarkerDeleteInfo(formMain.markerClicked.Tag.Info, new Action<TrackPoint>(
@@ -920,12 +922,12 @@ namespace TrackConverter.UI.Shell
                                 )
                             )
                         );
-                    UpdateUndoButton();
+                    updateUndoButton();
                 }
             }
         }
 
-        internal void toolStripEditRoute(EventArgs e)
+        internal void ToolStripEditRoute(EventArgs e)
         {
 
             if (formMain.routeClicked.Tag != null)
@@ -936,7 +938,7 @@ namespace TrackConverter.UI.Shell
             }
         }
 
-        internal void toolStripEditMarker(EventArgs e)
+        internal void ToolStripEditMarker(EventArgs e)
         {
             //запоминание предыдущего тега
             MarkerTag tag = formMain.markerClicked.Tag;
@@ -951,7 +953,7 @@ namespace TrackConverter.UI.Shell
                 formMain.markerClicked.Tag.Info = fe.Result; //запись нофой информации в тег
                 DeleteWaypoint(formMain.markerClicked.Tag.Info, formMain.baseOverlay); //удаление маркера со слоя
                 ShowWaypoint(formMain.markerClicked.Tag.Info, formMain.baseOverlay, false); //добавление маркера в слой
-                UpdateUndoButton();
+                updateUndoButton();
                 formMain.LastEditsStack.Push(
                     new StackItem(
                         new MarkerEditInfo(fe.Result, tag.Info, new Action<TrackPoint, TrackPoint>(
@@ -968,7 +970,7 @@ namespace TrackConverter.UI.Shell
                     )
 
                );
-                UpdateUndoButton();
+                updateUndoButton();
 
             }
             //если нет - старую
@@ -976,16 +978,18 @@ namespace TrackConverter.UI.Shell
                 formMain.markerClicked.Tag = tag;
         }
 
-        internal void toolStripCopyCoordinates(EventArgs e)
+        internal void ToolStripCopyCoordinates(EventArgs e)
         {
             Coordinate cr = new Coordinate(formMain.pointClicked);
             Clipboard.SetText(cr.ToString("{lat} {lon}", "ddºmm'ss.s\"H"));
         }
 
-        internal void toolStripWhatThere(EventArgs e)
+        internal void ToolStripWhatThere(EventArgs e)
         {
-            TrackPoint point = new TrackPoint(formMain.pointClicked);
-            point.Icon = IconOffsets.what_there;
+            TrackPoint point = new TrackPoint(formMain.pointClicked)
+            {
+                Icon = IconOffsets.what_there
+            };
             try
             {
                 FormWhatsthere wt = new FormWhatsthere(point);
@@ -1005,7 +1009,7 @@ namespace TrackConverter.UI.Shell
             }
         }
 
-        internal void toolStripClearFromToMarkers(EventArgs e)
+        internal void ToolStripClearFromToMarkers(EventArgs e)
         {
             formMain.fromToOverlay.Clear();
             formMain.fromPoint = null;
@@ -1013,12 +1017,12 @@ namespace TrackConverter.UI.Shell
             formMain.IntermediatePoints = null;
         }
 
-        internal void toolStripCreateRoute(object sender, EventArgs e)
+        internal void ToolStripCreateRoute(object sender, EventArgs e)
         {
-            TryPathRoute((string)((ToolStripMenuItem)sender).Tag, true);
+            tryPathRoute((string)((ToolStripMenuItem)sender).Tag, true);
         }
 
-        internal void toolStripAddWaypoint(EventArgs e)
+        internal void ToolStripAddWaypoint(EventArgs e)
         {
             if (formMain.waypoints == null)
                 formMain.waypoints = new TrackFile();
@@ -1042,7 +1046,7 @@ namespace TrackConverter.UI.Shell
                         )
                     )
                     );
-                UpdateUndoButton();
+                updateUndoButton();
 
             }
         }
@@ -1054,7 +1058,7 @@ namespace TrackConverter.UI.Shell
         /// <summary>
         /// обновление списка точек после перемещения точки
         /// </summary>
-        private void RefreshWaypoints()
+        private void refreshWaypoints()
         {
             if (formMain.waypoints == null)
                 formMain.waypoints = new TrackFile();
@@ -1091,14 +1095,14 @@ namespace TrackConverter.UI.Shell
             }
             track.Color = Color.DarkBlue;
             ShowRoute(track, overlay, false);
-            RefreshToolTipsCreatingRoute(overlay);
+            refreshToolTipsCreatingRoute(overlay);
             formMain.toolStripLabelInfo.Text = "Расстояние: " + track.Distance + " км, количество точек: " + track.Count;
         }
 
         /// <summary>
         /// обновление состояния кнопки отмены действия
         /// </summary>
-        private void UpdateUndoButton()
+        private void updateUndoButton()
         {
             formMain.toolStripButtonUndo.Enabled = formMain.LastEditsStack.Count > 0;
             if (formMain.LastEditsStack.Count > 0)
@@ -1116,7 +1120,7 @@ namespace TrackConverter.UI.Shell
         /// <param name="isAddedNewPoint">если истина, то была добавлена новая точка и надо определить ее тип, 
         /// если ложь, то значит были только передвижения точек  добавлять их не надо
         /// </param>
-        private void TryPathRoute(string tag, bool isAddedNewPoint)
+        private void tryPathRoute(string tag, bool isAddedNewPoint)
         {
             //если была добавлена новая точка, то проверяем, что за точка, добавляем, и пробуем строить
             if (isAddedNewPoint)
@@ -1158,7 +1162,8 @@ namespace TrackConverter.UI.Shell
                 //построение маршрута
                 GeoRouter gr = new GeoRouter(Vars.Options.Services.PathRouteProvider);
                 TrackFile rt = null;
-                try { rt = gr.CreateRoute(formMain.fromPoint.Coordinates, formMain.toPoint.Coordinates, formMain.IntermediatePoints); }
+                try
+                { rt = gr.CreateRoute(formMain.fromPoint.Coordinates, formMain.toPoint.Coordinates, formMain.IntermediatePoints); }
                 catch (Exception e)
                 {
                     MessageBox.Show(formMain, e.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -1182,7 +1187,8 @@ namespace TrackConverter.UI.Shell
                             MapMarker m = o as MapMarker;
                             if (m.Tag.Type == MarkerTypes.PathingRoute)
                                 formMain.fromToOverlay.Markers.Remove(o as GMapMarker);
-                            else i++;
+                            else
+                                i++;
                         }
                     });
                 }
@@ -1232,7 +1238,7 @@ namespace TrackConverter.UI.Shell
         /// <summary>
         /// обновление подсказок над маркерами создаваемого маршрута
         /// </summary>
-        private void RefreshToolTipsCreatingRoute(GMapOverlay overlay)
+        private void refreshToolTipsCreatingRoute(GMapOverlay overlay)
         {
             if (Vars.Options.Map.ShowAziMarkers)
             {
@@ -1256,7 +1262,7 @@ namespace TrackConverter.UI.Shell
         /// </summary>
         public void Clear()
         {
-            formMain.mainHelper.toolStripClearAll(null, null);
+            formMain.mainHelper.ToolStripClearAll(null, null);
         }
 
         /// <summary>
@@ -1270,7 +1276,7 @@ namespace TrackConverter.UI.Shell
             if (trackFile == null)
                 throw new ArgumentNullException("trackFile не может быть null в FormMap.BeginEditRoute()");
 
-            formMain.gmapControlMap.DragButton = System.Windows.Forms.MouseButtons.Right;
+            formMain.gmapControlMap.DragButton = MouseButtons.Right;
 
 
             //если идет сздание маршрута, то прерываем
@@ -1298,7 +1304,7 @@ namespace TrackConverter.UI.Shell
                 );
             Program.winRouteEditor.Show(formMain);
             ShowCreatingRoute(formMain.creatingRouteOverlay, formMain.creatingRoute);
-            RefreshToolTipsCreatingRoute(formMain.creatingRouteOverlay);
+            refreshToolTipsCreatingRoute(formMain.creatingRouteOverlay);
             formMain.gmapControlMap.ZoomAndCenterRoute(formMain.creatingRouteOverlay.Routes[0]);
         }
 

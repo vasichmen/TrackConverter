@@ -23,7 +23,7 @@ namespace TrackConverter.Lib.Data
         /// <summary>
         /// поставщик геокодера
         /// </summary>
-        private GeoInfoProvider provider;
+        private readonly GeoInfoProvider provider;
 
         /// <summary>
         /// поставщик информации о высотах
@@ -53,7 +53,8 @@ namespace TrackConverter.Lib.Data
                 case GeoInfoProvider.GTOPO30:
                     geoinfo = new GTOPO30();
                     break;
-                default: throw new Exception("Неизвестный поставщик ");
+                default:
+                    throw new Exception("Неизвестный поставщик ");
             }
         }
 
@@ -76,7 +77,8 @@ namespace TrackConverter.Lib.Data
                 Vars.dataCache.PutGeoInfo(coordinate, elev);
                 return elev;
             }
-            else return res;
+            else
+                return res;
         }
 
         /// <summary>
@@ -116,11 +118,13 @@ namespace TrackConverter.Lib.Data
                     return ((Google)geoinfo).GetElevations(track, callback);
 
                 //если приходится работать с каждой точкой отдельно
-                TrackFile res = new TrackFile();
-                res.Name = track.Name;
-                res.FilePath = track.FilePath;
-                res.Description = track.Description;
-                res.Color = track.Color;
+                TrackFile res = new TrackFile
+                {
+                    Name = track.Name,
+                    FilePath = track.FilePath,
+                    Description = track.Description,
+                    Color = track.Color
+                };
                 double all = track.Count;
                 double c = 0;
                 foreach (TrackPoint tp in track)

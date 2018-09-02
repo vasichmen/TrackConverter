@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using TrackConverter.Lib.Classes;
 
 namespace TrackConverter.Lib.Mathematic.Astronomy
 {
@@ -89,7 +85,7 @@ namespace TrackConverter.Lib.Mathematic.Astronomy
         public int Azimuths(double time_zone, double latA, double lonA, ref double rise, ref double set)
         {
             TimeStruct ts = new TimeStruct(true);
-            return this.Azimuths(ts, time_zone, latA, lonA, ref rise, ref set);
+            return this.azimuths(ts, time_zone, latA, lonA, ref rise, ref set);
         }
 
         /// <summary>
@@ -102,7 +98,7 @@ namespace TrackConverter.Lib.Mathematic.Astronomy
         /// <param name="rise">азимут восхода</param>
         /// <param name="set">азимут заката</param>
         /// <returns></returns>
-        private int Azimuths(TimeStruct ts, double time_zone, double latA, double lonA, ref double rise, ref double set)
+        private int azimuths(TimeStruct ts, double time_zone, double latA, double lonA, ref double rise, ref double set)
         {
             double t = getJG(ts); //перевод даты в юлианское время
             double e = getE(t); //наклон эклиптики
@@ -213,7 +209,8 @@ namespace TrackConverter.Lib.Mathematic.Astronomy
             //вычисляем местное звездное время
             s0 = star_time(t0) * 15;
             s0 += lonA;//местное звездное время
-            if (s0 < 0) s0 += 360;
+            if (s0 < 0)
+                s0 += 360;
             s0 = (s0 % 360) / 15.0;// перевод в часы
 
             // перевод в радианы
@@ -228,7 +225,8 @@ namespace TrackConverter.Lib.Mathematic.Astronomy
             // смещения времени от истинного полудня
             double dt = Math.Acos(cost);
             dt *= (12.0 / Math.PI);// переводим в часы из радиан
-            if (dt < 0) dt += 24;
+            if (dt < 0)
+                dt += 24;
             if (dt <= 12)
             {
                 s1 = lat - dt;
@@ -243,8 +241,10 @@ namespace TrackConverter.Lib.Mathematic.Astronomy
             rise = (s1 - s0) * v + time_zone;
 
             set = (s2 - s0) * v + time_zone;
-            if ((rise) < 0) (rise) += 24;
-            if ((set) < 0) (set) += 24;
+            if ((rise) < 0)
+                (rise) += 24;
+            if ((set) < 0)
+                (set) += 24;
 
             return 1;
         }
@@ -252,22 +252,25 @@ namespace TrackConverter.Lib.Mathematic.Astronomy
 
         #region вычисления
 
-        const double C_T = 36525.0;
+        private const double C_T = 36525.0;
 
         #region Коэффициенты для определения положения Солнца
 
         // Амплитуды для определения коэффициента SK для Солнца
-        double[] AskS = new double[53];
+        private readonly double[] AskS = new double[53];
+
         // Амплитуды для определения коэффициента CK для Солнца
-        double[] AckS = new double[49];
+        private readonly double[] AckS = new double[49];
+
         // Амплитуды для определения коэффициента SR для Солнца
-        double[] AsrS = new double[49];
+        private readonly double[] AsrS = new double[49];
+
         // Амплитуды для определения коэффициента CR для Солнца
-        double[] AcrS = new double[53];
+        private readonly double[] AcrS = new double[53];
 
 
         // Учёт собственных возмущений
-        double[] sk1 = new double[245] {//4*5  // всего 49*5
+        private readonly double[] sk1 = new double[245] {//4*5  // всего 49*5
 	0, 0, 0, 0, 0,
     1, 0, 0, 0, 0,
     2, 0, 0, 0, 0,
@@ -323,8 +326,9 @@ namespace TrackConverter.Lib.Mathematic.Astronomy
     1, 0, 0, 0,-2,
     1, 0, 0, 0,-1,
     2, 0, 0, 0,-2 };
+
         // Учёт возмущений от Луны
-        double[] sk2 = new double[16] {//4*4
+        private readonly double[] sk2 = new double[16] {//4*4
 	0, 0, 0, 1,
     1, 0, 0, 1,
     1, 0, 0,-1,
@@ -336,7 +340,7 @@ namespace TrackConverter.Lib.Mathematic.Astronomy
         * Получение коэфф. для вычисления координат Солнца
         * t - Юлианское время от J2000
         *********************************************************/
-        void FillAmS(double t)
+        private void fillAmS(double t)
         {
             // Амплитуды для определения коэффициента SK для Солнца
             //double AskS[49];
@@ -347,65 +351,216 @@ namespace TrackConverter.Lib.Mathematic.Astronomy
             // Амплитуды для определения коэффициента CR для Солнца
             //double AсrS[49];
             double T = (t + 36525) / C_T;//+ перевод во время от эпохи 1900 г.
-            AskS[0] = 0; AckS[0] = 0; AcrS[0] = 30570e-9 - 150e-9 * T; AsrS[0] = 0;
-            AskS[1] = 33502e-6 - 83.58e-6 * T - 0.25e-6 * T * T; AckS[1] = 0; AcrS[1] = -7274120e-9 + 18140e-9 * T + 5e-9 * T * T; AsrS[1] = 0;
-            AskS[2] = 351e-6 - 1.75e-6 * T; AckS[2] = 0; AcrS[2] = -91380e-9 + 460e-9 * T; AsrS[2] = 0;
-            AskS[3] = 5e-6; AckS[3] = 0; AcrS[3] = -1450e-9 + 10e-9 * T; AsrS[3] = 0;
+            AskS[0] = 0;
+            AckS[0] = 0;
+            AcrS[0] = 30570e-9 - 150e-9 * T;
+            AsrS[0] = 0;
+            AskS[1] = 33502e-6 - 83.58e-6 * T - 0.25e-6 * T * T;
+            AckS[1] = 0;
+            AcrS[1] = -7274120e-9 + 18140e-9 * T + 5e-9 * T * T;
+            AsrS[1] = 0;
+            AskS[2] = 351e-6 - 1.75e-6 * T;
+            AckS[2] = 0;
+            AcrS[2] = -91380e-9 + 460e-9 * T;
+            AsrS[2] = 0;
+            AskS[3] = 5e-6;
+            AckS[3] = 0;
+            AcrS[3] = -1450e-9 + 10e-9 * T;
+            AsrS[3] = 0;
 
-            AskS[4] = 0; AckS[4] = 0; AsrS[4] = 0; AcrS[4] = 85e-9;
-            AskS[5] = -20e-6; AckS[5] = 11e-6; AsrS[5] = -1146e-9; AcrS[5] = -2062e-9;
-            AskS[6] = 0; AckS[6] = 0; AsrS[6] = 136e-9; AcrS[6] = 84e-9;
-            AskS[7] = 14e-6; AckS[7] = -23e-6; AsrS[7] = 5822e-9; AcrS[7] = 3593e-9;
-            AskS[8] = -8e-6; AckS[7] = 9e-6; AsrS[8] = -632e-9; AcrS[8] = -596e-9;
-            AskS[9] = 0; AckS[8] = -3e-6; AsrS[9] = 1044e-9; AcrS[9] = 0;
-            AskS[10] = -2e-6; AckS[10] = 7e-6; AsrS[10] = -1448e-9; AcrS[10] = -381e-9;
-            AskS[11] = -3e-6; AckS[11] = 4e-6; AsrS[11] = 148e-9; AcrS[11] = 126e-9;
-            AskS[12] = 0; AckS[12] = -1e-6; AsrS[12] = 337e-9; AcrS[12] = -166e-9;
-            AskS[13] = 0; AckS[13] = 0; AsrS[13] = 189e-9; AcrS[13] = 0;
-            AskS[14] = 0; AckS[14] = 1e-6; AsrS[14] = -91e-9; AcrS[14] = 0;
-            AskS[15] = 0; AckS[15] = 0; AsrS[15] = 93e-9; AcrS[15] = -134e-9;
-            AskS[16] = 0; AckS[16] = 0; AsrS[16] = 0e-9; AcrS[16] = -80e-9;
-            AskS[17] = 0; AckS[17] = 0; AsrS[17] = 136e-9; AcrS[17] = 0;
-            AskS[18] = 0; AckS[18] = 1e-6; AsrS[18] = 0; AcrS[18] = 0;
+            AskS[4] = 0;
+            AckS[4] = 0;
+            AsrS[4] = 0;
+            AcrS[4] = 85e-9;
+            AskS[5] = -20e-6;
+            AckS[5] = 11e-6;
+            AsrS[5] = -1146e-9;
+            AcrS[5] = -2062e-9;
+            AskS[6] = 0;
+            AckS[6] = 0;
+            AsrS[6] = 136e-9;
+            AcrS[6] = 84e-9;
+            AskS[7] = 14e-6;
+            AckS[7] = -23e-6;
+            AsrS[7] = 5822e-9;
+            AcrS[7] = 3593e-9;
+            AskS[8] = -8e-6;
+            AckS[7] = 9e-6;
+            AsrS[8] = -632e-9;
+            AcrS[8] = -596e-9;
+            AskS[9] = 0;
+            AckS[8] = -3e-6;
+            AsrS[9] = 1044e-9;
+            AcrS[9] = 0;
+            AskS[10] = -2e-6;
+            AckS[10] = 7e-6;
+            AsrS[10] = -1448e-9;
+            AcrS[10] = -381e-9;
+            AskS[11] = -3e-6;
+            AckS[11] = 4e-6;
+            AsrS[11] = 148e-9;
+            AcrS[11] = 126e-9;
+            AskS[12] = 0;
+            AckS[12] = -1e-6;
+            AsrS[12] = 337e-9;
+            AcrS[12] = -166e-9;
+            AskS[13] = 0;
+            AckS[13] = 0;
+            AsrS[13] = 189e-9;
+            AcrS[13] = 0;
+            AskS[14] = 0;
+            AckS[14] = 1e-6;
+            AsrS[14] = -91e-9;
+            AcrS[14] = 0;
+            AskS[15] = 0;
+            AckS[15] = 0;
+            AsrS[15] = 93e-9;
+            AcrS[15] = -134e-9;
+            AskS[16] = 0;
+            AckS[16] = 0;
+            AsrS[16] = 0e-9;
+            AcrS[16] = -80e-9;
+            AskS[17] = 0;
+            AckS[17] = 0;
+            AsrS[17] = 136e-9;
+            AcrS[17] = 0;
+            AskS[18] = 0;
+            AckS[18] = 1e-6;
+            AsrS[18] = 0;
+            AcrS[18] = 0;
 
-            AskS[19] = 1e-6; AckS[19] = -1e-6; AsrS[19] = -119e-9; AcrS[19] = -92e-9;
-            AskS[20] = 3e-6; AckS[20] = 10e-6; AsrS[20] = 1976e-9; AcrS[20] = -573e-9;
-            AskS[21] = 3e-6; AckS[21] = -8e-6; AsrS[21] = 137e-9; AcrS[21] = 0;
-            AskS[22] = 1e-6; AckS[22] = 2e-6; AsrS[22] = 201e-9; AcrS[22] = -77e-9;
-            AskS[23] = 1e-6; AckS[23] = 3e-6; AsrS[23] = -96e-9; AcrS[23] = 0;
-            AskS[24] = -2e-6; AckS[24] = 0; AsrS[24] = -125e-9; AcrS[24] = 461e-9;
-            AskS[25] = -1e-6; AckS[25] = 0; AsrS[25] = 0; AcrS[25] = 87e-9;
-            AskS[26] = 0; AckS[26] = 0; AsrS[26] = 0; AcrS[26] = -154e-9;
-            AskS[27] = 0; AckS[27] = 0; AsrS[27] = -94e-9; AcrS[27] = -102e-9;
-            AskS[28] = 0; AckS[28] = 0; AsrS[28] = 0; AcrS[28] = 87e-9;
+            AskS[19] = 1e-6;
+            AckS[19] = -1e-6;
+            AsrS[19] = -119e-9;
+            AcrS[19] = -92e-9;
+            AskS[20] = 3e-6;
+            AckS[20] = 10e-6;
+            AsrS[20] = 1976e-9;
+            AcrS[20] = -573e-9;
+            AskS[21] = 3e-6;
+            AckS[21] = -8e-6;
+            AsrS[21] = 137e-9;
+            AcrS[21] = 0;
+            AskS[22] = 1e-6;
+            AckS[22] = 2e-6;
+            AsrS[22] = 201e-9;
+            AcrS[22] = -77e-9;
+            AskS[23] = 1e-6;
+            AckS[23] = 3e-6;
+            AsrS[23] = -96e-9;
+            AcrS[23] = 0;
+            AskS[24] = -2e-6;
+            AckS[24] = 0;
+            AsrS[24] = -125e-9;
+            AcrS[24] = 461e-9;
+            AskS[25] = -1e-6;
+            AckS[25] = 0;
+            AsrS[25] = 0;
+            AcrS[25] = 87e-9;
+            AskS[26] = 0;
+            AckS[26] = 0;
+            AsrS[26] = 0;
+            AcrS[26] = -154e-9;
+            AskS[27] = 0;
+            AckS[27] = 0;
+            AsrS[27] = -94e-9;
+            AcrS[27] = -102e-9;
+            AskS[28] = 0;
+            AckS[28] = 0;
+            AsrS[28] = 0;
+            AcrS[28] = 87e-9;
 
-            AskS[29] = -13e-6; AckS[29] = -1e-6; AsrS[29] = -89e-9; AcrS[29] = 227e-9;
-            AskS[30] = -1e-6; AckS[30] = 0; AsrS[30] = 0; AcrS[30] = 172e-9;
-            AskS[31] = -7e-6; AckS[31] = -3e-6; AsrS[31] = -486e-9; AcrS[31] = 1376e-9;
-            AskS[32] = 0; AckS[32] = -35e-6; AsrS[32] = -7067e-9; AcrS[32] = 0;
-            AskS[33] = 0; AckS[33] = 0; AsrS[33] = 0; AcrS[33] = 79e-9;
-            AskS[34] = 0; AckS[34] = 0; AsrS[34] = 0; AcrS[34] = 110e-9;
-            AskS[35] = -3e-6; AckS[35] = 0; AsrS[35] = 104e-9; AcrS[35] = 796e-9;
-            AskS[36] = -13e-6; AckS[36] = 0; AsrS[36] = 203e-9; AcrS[36] = 4021e-9;
-            AskS[37] = 0; AckS[37] = -1e-6; AsrS[37] = -193e-9; AcrS[37] = -78e-9;
-            AskS[38] = 0; AckS[38] = 0; AsrS[38] = -73e-9; AcrS[38] = 0;
-            AskS[39] = 0; AckS[39] = -1e-6; AsrS[39] = -278e-9; AcrS[39] = 0;
-            AskS[40] = 0; AckS[40] = 0; AsrS[40] = 0; AcrS[40] = 102e-9;
+            AskS[29] = -13e-6;
+            AckS[29] = -1e-6;
+            AsrS[29] = -89e-9;
+            AcrS[29] = 227e-9;
+            AskS[30] = -1e-6;
+            AckS[30] = 0;
+            AsrS[30] = 0;
+            AcrS[30] = 172e-9;
+            AskS[31] = -7e-6;
+            AckS[31] = -3e-6;
+            AsrS[31] = -486e-9;
+            AcrS[31] = 1376e-9;
+            AskS[32] = 0;
+            AckS[32] = -35e-6;
+            AsrS[32] = -7067e-9;
+            AcrS[32] = 0;
+            AskS[33] = 0;
+            AckS[33] = 0;
+            AsrS[33] = 0;
+            AcrS[33] = 79e-9;
+            AskS[34] = 0;
+            AckS[34] = 0;
+            AsrS[34] = 0;
+            AcrS[34] = 110e-9;
+            AskS[35] = -3e-6;
+            AckS[35] = 0;
+            AsrS[35] = 104e-9;
+            AcrS[35] = 796e-9;
+            AskS[36] = -13e-6;
+            AckS[36] = 0;
+            AsrS[36] = 203e-9;
+            AcrS[36] = 4021e-9;
+            AskS[37] = 0;
+            AckS[37] = -1e-6;
+            AsrS[37] = -193e-9;
+            AcrS[37] = -78e-9;
+            AskS[38] = 0;
+            AckS[38] = 0;
+            AsrS[38] = -73e-9;
+            AcrS[38] = 0;
+            AskS[39] = 0;
+            AckS[39] = -1e-6;
+            AsrS[39] = -278e-9;
+            AcrS[39] = 0;
+            AskS[40] = 0;
+            AckS[40] = 0;
+            AsrS[40] = 0;
+            AcrS[40] = 102e-9;
 
-            AskS[41] = -2e-6; AckS[41] = 0; AsrS[41] = 0; AcrS[41] = 0;
-            AskS[42] = 0; AckS[42] = 0; AsrS[42] = 0; AcrS[42] = -103e-9;
-            AskS[43] = -2e-6; AckS[43] = 0; AsrS[43] = -79e-9; AcrS[43] = 422e-9;
-            AskS[44] = 0; AckS[44] = 0; AsrS[44] = 0; AcrS[44] = -152e-9;
+            AskS[41] = -2e-6;
+            AckS[41] = 0;
+            AsrS[41] = 0;
+            AcrS[41] = 0;
+            AskS[42] = 0;
+            AckS[42] = 0;
+            AsrS[42] = 0;
+            AcrS[42] = -103e-9;
+            AskS[43] = -2e-6;
+            AckS[43] = 0;
+            AsrS[43] = -79e-9;
+            AcrS[43] = 422e-9;
+            AskS[44] = 0;
+            AckS[44] = 0;
+            AsrS[44] = 0;
+            AcrS[44] = -152e-9;
 
-            AskS[45] = 0; AckS[45] = 0; AsrS[45] = 0; AcrS[45] = 91e-9;
-            AskS[46] = 25e-6; AckS[46] = 18e-6; AsrS[46] = 0; AcrS[46] = 0;
-            AskS[47] = 0; AckS[47] = 0; AsrS[47] = 0; AcrS[47] = -91e-9;
-            AskS[48] = 0; AckS[48] = -1e-6; AsrS[48] = 0; AcrS[48] = 0;
+            AskS[45] = 0;
+            AckS[45] = 0;
+            AsrS[45] = 0;
+            AcrS[45] = 91e-9;
+            AskS[46] = 25e-6;
+            AckS[46] = 18e-6;
+            AsrS[46] = 0;
+            AcrS[46] = 0;
+            AskS[47] = 0;
+            AckS[47] = 0;
+            AsrS[47] = 0;
+            AcrS[47] = -91e-9;
+            AskS[48] = 0;
+            AckS[48] = -1e-6;
+            AsrS[48] = 0;
+            AcrS[48] = 0;
             // возмущения от луны
-            AskS[49] = 31e-6; AcrS[49] = 13360e-9;
-            AskS[50] = 1e-6; AcrS[50] = 0;
-            AskS[51] = 2e-6; AcrS[51] = -1330e-9;
-            AskS[52] = -1e-6; AcrS[52] = 0;
+            AskS[49] = 31e-6;
+            AcrS[49] = 13360e-9;
+            AskS[50] = 1e-6;
+            AcrS[50] = 0;
+            AskS[51] = 2e-6;
+            AcrS[51] = -1330e-9;
+            AskS[52] = -1e-6;
+            AcrS[52] = 0;
 
         }
 
@@ -416,7 +571,7 @@ namespace TrackConverter.Lib.Mathematic.Astronomy
         * от 2000 года 1го числа 12 часов
         * return: число юлианских дней (от начала 2000г.)
         **************************************************/
-        double getJG(TimeStruct newtime)
+        private double getJG(TimeStruct newtime)
         {
             double km = 12 * (newtime.tm_year + 1900 + 4800) + newtime.tm_mon - 2;// в годах
             double vj = (2 * (km - 12 * Math.Floor(km / 12)) + 7 + 365 * km) / 12;
@@ -434,13 +589,14 @@ namespace TrackConverter.Lib.Mathematic.Astronomy
         * Истинный наклон эклиптики к экватору земли
         * без учета нутации         в градусах
         *********************************************************/
-        double getE(double T)
+        private double getE(double T)
         {
             double ret;
             double T1 = T / C_T;
             ret = (84381.448 - 46.8150 * T1 - 0.00059 * T1 * T1 + 0.008813 * T1 * T1 * T1) / 3600.0;
             ret = ret % 360.0;
-            if (ret < 0) ret += 360.0;
+            if (ret < 0)
+                ret += 360.0;
             return ret;
         }
 
@@ -448,14 +604,15 @@ namespace TrackConverter.Lib.Mathematic.Astronomy
         * Средняя аномалия Луны в градусах
         * эпоха J2000
         *********************************************************/
-        double retlJ(double T)
+        private double retlJ(double T)
         {
             double ret;
             double T1 = T / C_T;
             ret = 485866.733 + (1325 * 1296000 + 715922.633) * T1 + 31.310 * T1 * T1 + 0.064 * T1 * T1 * T1;
             ret /= 3600;//перевод в градусы
             ret = ret % 360.0;
-            if (ret < 0) ret += 360.0;
+            if (ret < 0)
+                ret += 360.0;
             return ret;
         }
 
@@ -463,14 +620,15 @@ namespace TrackConverter.Lib.Mathematic.Astronomy
         * Средняя аномалия Cолнца в градусах
         * эпоха J2000
         *********************************************************/
-        double retl1J(double T)
+        private double retl1J(double T)
         {
             double ret;
             double T1 = T / C_T;
             ret = 1287099.804 + (99 * 1296000 + 1292581.224) * T1 - 0.577 * T1 * T1 - 0.012 * T1 * T1 * T1;
             ret /= 3600;//перевод в градусы
             ret = ret % 360.0;
-            if (ret < 0) ret += 360.0;
+            if (ret < 0)
+                ret += 360.0;
             return ret;
         }
 
@@ -478,14 +636,15 @@ namespace TrackConverter.Lib.Mathematic.Astronomy
         **Венера** - Средняя долгота в градусах
         * эпоха J2000
         *********************************************************/
-        double retl_Wn(double T)
+        private double retl_Wn(double T)
         {
             double ret;
             double T1 = T / C_T;
             ret = 181 * 3600 + 58 * 60 + 47.283 + 210669166.909 * T1 + 1.1182 * T1 * T1 + 0.0001 * T1 * T1 * T1;
             ret /= 3600;// перевод в градусы из секунд
             ret = ret % 360.0;
-            if (ret < 0) ret += 360.0;
+            if (ret < 0)
+                ret += 360.0;
             return ret;
         }
 
@@ -493,14 +652,15 @@ namespace TrackConverter.Lib.Mathematic.Astronomy
         **Венера** - Средняя долгота перигея в градусах
         * эпоха J2000
         *********************************************************/
-        double retp_Wn(double T)
+        private double retp_Wn(double T)
         {
             double ret;
             double T1 = T / C_T;
             ret = 131 * 3600 + 33 * 60 + 49.346 + 5047.994 * T1 - 3.8618 * T1 * T1 - 0.0189 * T1 * T1 * T1;
             ret /= 3600;// перевод в градусы из секунд
             ret = ret % 360.0;
-            if (ret < 0) ret += 360.0;
+            if (ret < 0)
+                ret += 360.0;
             return ret;
         }
 
@@ -508,14 +668,15 @@ namespace TrackConverter.Lib.Mathematic.Astronomy
         **Марс** - Средняя долгота в градусах
         * эпоха J2000
         *********************************************************/
-        double retl_Mar(double T)
+        private double retl_Mar(double T)
         {
             double ret;
             double T1 = T / C_T;
             ret = 355 * 3600 + 25 * 60 + 59.789 + 68910107.309 * T1 + 1.1195 * T1 * T1 + 0.0001 * T1 * T1 * T1;
             ret /= 3600;// перевод в градусы из секунд
             ret = ret % 360.0;
-            if (ret < 0) ret += 360.0;
+            if (ret < 0)
+                ret += 360.0;
             return ret;
         }
 
@@ -523,14 +684,15 @@ namespace TrackConverter.Lib.Mathematic.Astronomy
         **Марс** - Средняя долгота перигея в градусах
         * эпоха J2000
         *********************************************************/
-        double retp_Mar(double T)
+        private double retp_Mar(double T)
         {
             double ret;
             double T1 = T / C_T;
             ret = 336 * 3600 + 3 * 60 + 36.842 + 6627.759 * T1 + 0.4864 * T1 * T1 + 0.0010 * T1 * T1 * T1;
             ret /= 3600;// перевод в градусы из секунд
             ret = ret % 360.0;
-            if (ret < 0) ret += 360.0;
+            if (ret < 0)
+                ret += 360.0;
             return ret;
         }
 
@@ -538,14 +700,15 @@ namespace TrackConverter.Lib.Mathematic.Astronomy
         **Юпитер** - Средняя долгота в градусах
         * эпоха J2000
         *********************************************************/
-        double retl_Jup(double T)
+        private double retl_Jup(double T)
         {
             double ret;
             double T1 = T / C_T;
             ret = 34 * 3600 + 21 * 60 + 5.342 + 10930690.040 * T1 + 0.8055 * T1 * T1 + 0.0001 * T1 * T1 * T1;
             ret /= 3600;// перевод в градусы из секунд
             ret = ret % 360.0;
-            if (ret < 0) ret += 360.0;
+            if (ret < 0)
+                ret += 360.0;
             return ret;
         }
 
@@ -553,14 +716,15 @@ namespace TrackConverter.Lib.Mathematic.Astronomy
         **Юпитер** - Средняя долгота перигея в градусах
         * эпоха J2000
         *********************************************************/
-        double retp_Jup(double T)
+        private double retp_Jup(double T)
         {
             double ret;
             double T1 = T / C_T;
             ret = 14 * 3600 + 19 * 60 + 52.713 + 5805.497 * T1 + 3.7132 * T1 * T1 - 0.0159 * T1 * T1 * T1;
             ret /= 3600;// перевод в градусы из секунд
             ret = ret % 360.0;
-            if (ret < 0) ret += 360.0;
+            if (ret < 0)
+                ret += 360.0;
             return ret;
         }
 
@@ -569,14 +733,15 @@ namespace TrackConverter.Lib.Mathematic.Astronomy
         **Сатурн** - Средняя долгота в градусах
         * эпоха J2000
         *********************************************************/
-        double retl_Sat(double T)
+        private double retl_Sat(double T)
         {
             double ret;
             double T1 = T / C_T;
             ret = 50 * 3600 + 4 * 60 + 38.897 + 4404639.651 * T1 + 1.8703 * T1 * T1;
             ret /= 3600;// перевод в градусы из секунд
             ret = ret % 360.0;
-            if (ret < 0) ret += 360.0;
+            if (ret < 0)
+                ret += 360.0;
             return ret;
         }
 
@@ -584,14 +749,15 @@ namespace TrackConverter.Lib.Mathematic.Astronomy
         **Сатурн** - Средняя долгота перигея в градусах
         * эпоха J2000
         *********************************************************/
-        double retp_Sat(double T)
+        private double retp_Sat(double T)
         {
             double ret;
             double T1 = T / C_T;
             ret = 93 * 3600 + 3 * 60 + 24.434 + 7069.538 * T1 + 3.0150 * T1 * T1 + 0.0181 * T1 * T1 * T1;
             ret /= 3600;// перевод в градусы из секунд
             ret = ret % 360.0;
-            if (ret < 0) ret += 360.0;
+            if (ret < 0)
+                ret += 360.0;
             return ret;
         }
 
@@ -599,14 +765,15 @@ namespace TrackConverter.Lib.Mathematic.Astronomy
         * Средний аргумент широты Луны, в градусах
         * эпоха J2000
         *********************************************************/
-        double retFJ(double T)
+        private double retFJ(double T)
         {
             double ret;
             double T1 = T / C_T;
             ret = 335778.877 + (1342 * 1296000 + 295263.137) * T1 - 13.257 * T1 * T1 + 0.011 * T1 * T1 * T1;
             ret /= 3600;//перевод в градусы
             ret = ret % 360.0;
-            if (ret < 0) ret += 360.0;
+            if (ret < 0)
+                ret += 360.0;
             return ret;
         }
 
@@ -614,14 +781,15 @@ namespace TrackConverter.Lib.Mathematic.Astronomy
         * Разность средних долгот Луны и Солнца (Элонгация)в градусах
         * эпоха J2000
         *********************************************************/
-        double retDJ(double T)
+        private double retDJ(double T)
         {
             double ret;
             double T1 = T / C_T;
             ret = 1072261.307 + (1236 * 1296000 + 1105601.328) * T1 - 6.891 * T1 * T1 + 0.019 * T1 * T1 * T1;
             ret /= 3600;//перевод в градусы
             ret = ret % 360.0;
-            if (ret < 0) ret += 360.0;
+            if (ret < 0)
+                ret += 360.0;
             return ret;
         }
 
@@ -629,14 +797,15 @@ namespace TrackConverter.Lib.Mathematic.Astronomy
         * Средняя долгота солнца - в градусах
         * эпоха J2000
         *********************************************************/
-        double retl_Sl(double T)
+        private double retl_Sl(double T)
         {
             double ret;
             double T1 = T / C_T;
             ret = 1009667.850 + (129600000 + 2771.270) * T1 + 1.089 * T1 * T1;
             ret /= 3600;// перевод в градусы из секунд
             ret = ret % 360.0;
-            if (ret < 0) ret += 360.0;
+            if (ret < 0)
+                ret += 360.0;
             return ret;
         }
 
@@ -645,7 +814,7 @@ namespace TrackConverter.Lib.Mathematic.Astronomy
         * (в градусах) (ошибка до +(2-8) секунд)
         * t - Юлианское время от J2000
         *********************************************************/
-        double get_lon(double t)
+        private double get_lon(double t)
         {
             double T = t / C_T;
             double ret = 0,
@@ -670,7 +839,7 @@ namespace TrackConverter.Lib.Mathematic.Astronomy
             g3 *= Math.PI / 180.0;
             g4 *= Math.PI / 180.0;
             g5 *= Math.PI / 180.0;
-            FillAmS(t);
+            fillAmS(t);
             for (int i = 0; i < 49; i++)
             {
                 vl += AskS[+i] * Math.Sin((sk1[+i * 5 + 0]) * l1 +
@@ -703,7 +872,8 @@ namespace TrackConverter.Lib.Mathematic.Astronomy
             vl *= 180 / Math.PI;
             ret += vl;
             ret = ret % 360;
-            if (ret < 0) ret += 360;
+            if (ret < 0)
+                ret += 360;
             return ret;
 
         }
@@ -714,7 +884,7 @@ namespace TrackConverter.Lib.Mathematic.Astronomy
         * (в астрономических еденицах)
         * t - Юлианское время от J2000
         *********************************************************/
-        double get_ri(double t)
+        private double get_ri(double t)
         {
             double T = t / C_T;
             double ret = 0,
@@ -739,7 +909,7 @@ namespace TrackConverter.Lib.Mathematic.Astronomy
             g3 *= Math.PI / 180.0;
             g4 *= Math.PI / 180.0;
             g5 *= Math.PI / 180.0;
-            FillAmS(t);
+            fillAmS(t);
             for (int i = 0; i < 49; i++)
             {
                 vl += AsrS[+i] * Math.Sin((sk1[+i * 5 + 0]) * l1 +
@@ -768,8 +938,8 @@ namespace TrackConverter.Lib.Mathematic.Astronomy
 
             //ret = ::pow((double)10.0, (double)vl);
             //ret = pow((double)10.0, (double)vl);
-            ret = Math.Pow((double)10.0, (double)vl);
-            ret = Math.Pow((double)10.0, (double)vl);
+            ret = Math.Pow(10.0, vl);
+            ret = Math.Pow(10.0, vl);
             //if (ret<0)	ret+=360;
             return ret;
         }
@@ -781,7 +951,7 @@ namespace TrackConverter.Lib.Mathematic.Astronomy
         * t - Число Юлианских дней от J2000
         * выход: звездное время в часах
         **********************************************/
-        double star_time(double t)
+        private double star_time(double t)
         {
             double t0 = 0, // Число Юлианских дней до гривнической полуночи
                 so, // Гринвическое время от полуночи в часах
@@ -814,7 +984,8 @@ namespace TrackConverter.Lib.Mathematic.Astronomy
             so /= 3600.0; // в часах
             so += M * 1.0027379093;// плюс текущее время от гривнической полуночи
             so = so % 24.0;
-            if (so < 0) so += 24;
+            if (so < 0)
+                so += 24;
             return so;
         }
 
@@ -826,7 +997,7 @@ namespace TrackConverter.Lib.Mathematic.Astronomy
         * //t - юлианское время J2000
         * e - угол поворота( наклон эклиптики) - в градусах
         *********************************************************/
-        void get_LaLo(ref double La, ref double Lo, double e)
+        private void get_LaLo(ref double La, ref double Lo, double e)
         {
             double z;
             double f,// широта
@@ -850,13 +1021,15 @@ namespace TrackConverter.Lib.Mathematic.Astronomy
             z1 = z1 * (180.0 / Math.PI);
             Lo = 90 - z1;// склонение
             Lo = Lo % 360;
-            if (Lo < 0) Lo += 360;
+            if (Lo < 0)
+                Lo += 360;
 
             A = Math.Atan2((Math.Cos(l) * Math.Sin(t)), (-Math.Sin(l) * Math.Cos(f) + Math.Cos(l) * Math.Sin(f) * Math.Cos(t)));
             A *= (180.0 / Math.PI);
             La = 90 - A;
             La = La % 360;
-            if (La < 0) La += 360;
+            if (La < 0)
+                La += 360;
         }
 
         #endregion 

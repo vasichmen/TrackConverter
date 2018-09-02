@@ -1,12 +1,9 @@
-﻿using GMap.NET;
-using GMap.NET.WindowsForms;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using GMap.NET;
+using GMap.NET.WindowsForms;
 using TrackConverter.Lib.Data;
 using TrackConverter.Lib.Mathematic.Routing;
 using TrackConverter.Lib.Tracking;
@@ -17,7 +14,7 @@ using TrackConverter.UI.Tools;
 
 namespace TrackConverter.UI.Shell
 {
-    class MainHelper
+    internal class MainHelper
     {
         private FormMain formMain;
 
@@ -60,7 +57,7 @@ namespace TrackConverter.UI.Shell
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void nm_Click(object sender, EventArgs e)
+        private void nm_Click(object sender, EventArgs e)
         {
             ToolStripMenuItem item = (ToolStripMenuItem)sender;
             try
@@ -84,10 +81,12 @@ namespace TrackConverter.UI.Shell
             this.formMain = formMain;
         }
 
-        internal void toolStripSaveFileWaypoints(object sender, EventArgs e)
+        internal void ToolStripSaveFileWaypoints(object sender, EventArgs e)
         {
-            SaveFileDialog sf = new SaveFileDialog();
-            sf.Filter = "Файл маршрута Androzic (*.rt2)|*.rt2";
+            SaveFileDialog sf = new SaveFileDialog
+            {
+                Filter = "Файл маршрута Androzic (*.rt2)|*.rt2"
+            };
             sf.Filter += "|Треки Androzic (*.plt)|*.plt";
             sf.Filter += "|Путевые точки Ozi(*.wpt)|*.wpt";
             sf.Filter += "|Файл координат(*.crd)|*.crd";
@@ -115,7 +114,7 @@ namespace TrackConverter.UI.Shell
                 switch (Path.GetExtension(sf.FileName).ToLower())
                 {
                     case ".rt2":
-                        Serializer.Serialize(sf.FileName,formMain.waypoints, FileFormats.Rt2File);
+                        Serializer.Serialize(sf.FileName, formMain.waypoints, FileFormats.Rt2File);
                         break;
                     case ".plt":
                         Serializer.Serialize(sf.FileName, formMain.waypoints, FileFormats.PltFile);
@@ -151,7 +150,7 @@ namespace TrackConverter.UI.Shell
                         Program.winMain.BeginOperation();
                         Action act = new Action(() =>
                         {
-                            Serializer.Serialize(sf.FileName, formMain.waypoints, FileFormats.AddressList, Program.winMain.setCurrentOperation);
+                            Serializer.Serialize(sf.FileName, formMain.waypoints, FileFormats.AddressList, Program.winMain.SetCurrentOperation);
                             Program.winMain.EndOperation();
                         });
                         new Task(act).Start();
@@ -162,12 +161,14 @@ namespace TrackConverter.UI.Shell
             }
         }
 
-        internal void toolStripOpen(object sender, EventArgs e)
+        internal void ToolStripOpen(object sender, EventArgs e)
         {
             try
             {
-                OpenFileDialog of = new OpenFileDialog();
-                of.Filter = "Все поддерживаемые форматы(*.trr, *.crd, *.wpt, *.plt, *.rt2, *.kml, *.kmz, *.gpx, *.rte, *.osm, *.nmea, *.csv, *.txt)| *.trr; *.crd; *.wpt; *.plt; *rt2; *.kml; *.kmz; *.gpx; *.rte; *.osm; *.nmea; *.csv; *.txt";
+                OpenFileDialog of = new OpenFileDialog
+                {
+                    Filter = "Все поддерживаемые форматы(*.trr, *.crd, *.wpt, *.plt, *.rt2, *.kml, *.kmz, *.gpx, *.rte, *.osm, *.nmea, *.csv, *.txt)| *.trr; *.crd; *.wpt; *.plt; *rt2; *.kml; *.kmz; *.gpx; *.rte; *.osm; *.nmea; *.csv; *.txt"
+                };
                 of.Filter += "|Треки Androzic (*.plt)|*.plt";
                 of.Filter += "|Маршрут Androzic (*.rt2)|*.rt2";
                 of.Filter += "|Путевые точки Ozi(*.wpt)|*.wpt";
@@ -194,7 +195,7 @@ namespace TrackConverter.UI.Shell
             catch (Exception ex) { MessageBox.Show(formMain, ex.Message, "Ошибка!", MessageBoxButtons.OK, MessageBoxIcon.Error); }
         }
 
-        internal void toolStripSaveFileWaypointsRoutes(object sender, EventArgs e)
+        internal void ToolStripSaveFileWaypointsRoutes(object sender, EventArgs e)
         {
             SaveFileDialog sf = new SaveFileDialog();
             sf.Filter += "Файл координат(*.kml)|*.kml";
@@ -223,14 +224,14 @@ namespace TrackConverter.UI.Shell
             }
         }
 
-        internal void toolStripCreateRoute(object sender, EventArgs e)
+        internal void ToolStripCreateRoute(object sender, EventArgs e)
         {
             formMain.creatingRoute = new TrackFile();
 
             Action<BaseTrack> after = new Action<BaseTrack>((tf) =>
             {
-            //ввод названия марщрута
-            readName:
+//ввод названия марщрута
+readName:
                 FormReadText fr = new FormReadText(DialogType.ReadText, "Введите название маршрута", "", false, false, false, false);
                 if (fr.ShowDialog(formMain) == DialogResult.OK)
                 {
@@ -261,10 +262,12 @@ namespace TrackConverter.UI.Shell
             formMain.mapHelper.BeginEditRoute(formMain.creatingRoute, after);
         }
 
-        internal void toolStripCreateTrip(object sender, EventArgs e)
+        internal void ToolStripCreateTrip(object sender, EventArgs e)
         {
-            TripRouteFile trip = new TripRouteFile();
-            trip.Name = "Новое путешествие";
+            TripRouteFile trip = new TripRouteFile
+            {
+                Name = "Новое путешествие"
+            };
 
             Action<TripRouteFile> after = new Action<TripRouteFile>((newTrip) =>
             {
@@ -286,12 +289,12 @@ namespace TrackConverter.UI.Shell
             formMain.mapHelper.BeginEditTrip(trip, after, canc);
         }
 
-        internal void toolStripExit(object sender, EventArgs e)
+        internal void ToolStripExit(object sender, EventArgs e)
         {
             formMain.Close();
         }
 
-        internal void toolStripSourceInternet(object sender, EventArgs e)
+        internal void ToolStripSourceInternet(object sender, EventArgs e)
         {
             //порядок получения данных 
             GMaps.Instance.Mode = AccessMode.ServerOnly;
@@ -301,7 +304,7 @@ namespace TrackConverter.UI.Shell
             formMain.tmInternetToolStripMenuItem.Checked = Vars.Options.Map.AccessMode == AccessMode.ServerOnly;
         }
 
-        internal void toolStripSourceCache(object sender, EventArgs e)
+        internal void ToolStripSourceCache(object sender, EventArgs e)
         {
             GMaps.Instance.Mode = AccessMode.CacheOnly;
             Vars.Options.Map.AccessMode = AccessMode.CacheOnly;
@@ -310,7 +313,7 @@ namespace TrackConverter.UI.Shell
             formMain.tmInternetToolStripMenuItem.Checked = Vars.Options.Map.AccessMode == AccessMode.ServerOnly;
         }
 
-        internal void toolStripSourceInternetCache(object sender, EventArgs e)
+        internal void ToolStripSourceInternetCache(object sender, EventArgs e)
         {
             GMaps.Instance.Mode = AccessMode.ServerAndCache;
             Vars.Options.Map.AccessMode = AccessMode.ServerAndCache;
@@ -319,7 +322,7 @@ namespace TrackConverter.UI.Shell
             formMain.tmInternetToolStripMenuItem.Checked = Vars.Options.Map.AccessMode == AccessMode.ServerOnly;
         }
 
-        internal void toolStripSelectMap(object sender, EventArgs e)
+        internal void ToolStripSelectMap(object sender, EventArgs e)
         {
             if (Program.winSaveMapNullOrDisposed)
             {
@@ -329,13 +332,13 @@ namespace TrackConverter.UI.Shell
             Program.winSaveMap.Activate();
         }
 
-        internal void toolStripClearRoutes(object sender, EventArgs e)
+        internal void ToolStripClearRoutes(object sender, EventArgs e)
         {
             foreach (GMapOverlay ov in formMain.gmapControlMap.Overlays)
                 ov.Routes.Clear();
         }
 
-        internal void toolStripClearMarkers(object sender, EventArgs e)
+        internal void ToolStripClearMarkers(object sender, EventArgs e)
         {
             if (formMain.waypoints != null)
                 formMain.waypoints.Clear();
@@ -346,33 +349,33 @@ namespace TrackConverter.UI.Shell
             formMain.IntermediatePoints = null;
         }
 
-        internal void toolStripClearAll(object sender, EventArgs e)
+        internal void ToolStripClearAll(object sender, EventArgs e)
         {
-            toolStripClearRoutes(sender, e);
-            toolStripClearMarkers(sender, e);
+            ToolStripClearRoutes(sender, e);
+            ToolStripClearMarkers(sender, e);
         }
 
-        internal void toolStripEditPointFile(object sender, EventArgs e)
+        internal void ToolStripEditPointFile(object sender, EventArgs e)
         {
             new FormPoints(formMain.waypoints, (tt) => { formMain.mapHelper.EndEditWaypoints(tt); }) { FormBorderStyle = FormBorderStyle.Sizable }.Show(Program.winMain);
         }
 
-        internal void toolStripCalculateDistance(object sender, EventArgs e)
+        internal void ToolStripCalculateDistance(object sender, EventArgs e)
         {
             new FormCalculateDistance().Show(formMain);
         }
 
-        internal void toolStripTransformCoordinate(object sender, EventArgs e)
+        internal void ToolStripTransformCoordinate(object sender, EventArgs e)
         {
             new FormTransformCoordinate().Show(formMain);
         }
 
-        internal void toolStripConsole(object sender, EventArgs e)
+        internal void ToolStripConsole(object sender, EventArgs e)
         {
             new FormConsole().Show(formMain);
         }
 
-        internal void toolStripOptions(object sender, EventArgs e)
+        internal void ToolStripOptions(object sender, EventArgs e)
         {
             if (Program.winOptionsNullOrDisposed)
                 Program.winOptions = new FormOptions();
@@ -381,7 +384,7 @@ namespace TrackConverter.UI.Shell
             Program.winOptions.Activate();
         }
 
-        internal void toolStripShowNavigator(object sender, EventArgs e)
+        internal void ToolStripShowNavigator(object sender, EventArgs e)
         {
             if (Program.winNavigatorNullOrDisposed)
                 Program.winNavigator = new FormMapNavigator();
@@ -390,24 +393,26 @@ namespace TrackConverter.UI.Shell
             Program.winNavigator.Activate();
         }
 
-        internal void toolStripHelp(object sender, EventArgs e)
+        internal void ToolStripHelp(object sender, EventArgs e)
         {
             new FormBrowser().Show(Program.winMain);
         }
 
-        internal void toolStripAbout(object sender, EventArgs e)
+        internal void ToolStripAbout(object sender, EventArgs e)
         {
             new FormAbout().ShowDialog(formMain);
         }
 
-        internal void toolStripEditWaypoints(object sender, EventArgs e)
+        internal void ToolStripEditWaypoints(object sender, EventArgs e)
         {
-            FormPoints fp = new FormPoints();
-            fp.FormBorderStyle = FormBorderStyle.Sizable;
+            FormPoints fp = new FormPoints
+            {
+                FormBorderStyle = FormBorderStyle.Sizable
+            };
             fp.Show(formMain);
         }
 
-        internal void toolStripShowElevGraphOnRoute(object sender, EventArgs e)
+        internal void ToolStripShowElevGraphOnRoute(object sender, EventArgs e)
         {
             try
             {
@@ -421,9 +426,10 @@ namespace TrackConverter.UI.Shell
                     Task pr = new Task(new Action(() =>
                     {
                         Program.winMain.BeginOperation();
-                        added = new GeoInfo(Vars.Options.DataSources.GeoInfoProvider).GetElevation(added, Program.winMain.setCurrentOperation);
+                        added = new GeoInfo(Vars.Options.DataSources.GeoInfoProvider).GetElevation(added, Program.winMain.SetCurrentOperation);
                         added.CalculateAll();
-                        formMain.Invoke(new Action(() => new FormElevVisual(new TrackFileList() { added }) { FormBorderStyle = FormBorderStyle.Sizable }.Show(Program.winMain))); ;
+                        formMain.Invoke(new Action(() => new FormElevVisual(new TrackFileList() { added }) { FormBorderStyle = FormBorderStyle.Sizable }.Show(Program.winMain)));
+                        ;
                         Program.winMain.EndOperation();
                     }));
                     pr.Start();
@@ -435,12 +441,12 @@ namespace TrackConverter.UI.Shell
             }
         }
 
-        internal void toolStripShowElevGraphOnRoute_Paint(object sender, EventArgs e)
+        internal void ToolStripShowElevGraphOnRoute_Paint(object sender, EventArgs e)
         {
             formMain.toolStripMenuItemShowElevGraphOnRoute.ToolTipText = " Будут добавлены дополнительные точки через каждые " + Vars.Options.Graphs.IntermediateDistance + " м. Это значение можно изменить в настройках";
         }
 
-        internal void toolStripCreateOptimalRoute(object sender, EventArgs e)
+        internal void ToolStripCreateOptimalRoute(object sender, EventArgs e)
         {
             if (formMain.waypoints.Count < 3)
             {
@@ -455,7 +461,8 @@ namespace TrackConverter.UI.Shell
             FormSelectPoint fsp = new FormSelectPoint(formMain.waypoints, true, "Выберите начальную точку");
             if (fsp.ShowDialog(Program.winMain) == DialogResult.OK)
                 startPoint = fsp.Result;
-            else return;
+            else
+                return;
 
             bool isCycled = startPoint == null;
 
@@ -464,7 +471,8 @@ namespace TrackConverter.UI.Shell
                 FormSelectPoint fsp1 = new FormSelectPoint(formMain.waypoints, startPoint, false, "Выберите конечную точку");
                 if (fsp1.ShowDialog(Program.winMain) == DialogResult.OK)
                     endPoint = fsp1.Result;
-                else return;
+                else
+                    return;
             }
 
             Program.winMain.BeginOperation();
@@ -479,19 +487,19 @@ namespace TrackConverter.UI.Shell
                     switch (Vars.Options.Map.OptimalRouteMethod)
                     {
                         case OptimalMethodType.BranchBounds:
-                            route = new BranchBounds(Program.winMain.setCurrentOperation).Make(formMain.waypoints, startPoint, isCycled);
+                            route = new BranchBounds(Program.winMain.SetCurrentOperation).Make(formMain.waypoints, startPoint, isCycled);
                             break;
                         case OptimalMethodType.Greedy:
-                            route = new Greedy(Program.winMain.setCurrentOperation).Make(formMain.waypoints, startPoint, isCycled);
+                            route = new Greedy(Program.winMain.SetCurrentOperation).Make(formMain.waypoints, startPoint, isCycled);
                             break;
                         case OptimalMethodType.FullSearch:
-                            route = new FullSearch(Program.winMain.setCurrentOperation).Make(formMain.waypoints, startPoint, isCycled);
+                            route = new FullSearch(Program.winMain.SetCurrentOperation).Make(formMain.waypoints, startPoint, isCycled);
                             break;
                         case OptimalMethodType.PolarSearch:
-                            route = new PolarSearch(Program.winMain.setCurrentOperation).Make(formMain.waypoints, startPoint, endPoint, isCycled);
+                            route = new PolarSearch(Program.winMain.SetCurrentOperation).Make(formMain.waypoints, startPoint, endPoint, isCycled);
                             break;
                         default:
-                            route = new Greedy(Program.winMain.setCurrentOperation).Make(formMain.waypoints, startPoint, isCycled);
+                            route = new Greedy(Program.winMain.SetCurrentOperation).Make(formMain.waypoints, startPoint, isCycled);
                             break;
                     }
 
@@ -507,8 +515,8 @@ namespace TrackConverter.UI.Shell
                             //если надо открыть маршрут для редактирования
                             formMain.mapHelper.BeginEditRoute(route, (tf) =>
                             {
-                            //ввод названия марщрута
-                            readName:
+//ввод названия марщрута
+readName:
                                 FormReadText fr = new FormReadText(DialogType.ReadText, "Введите название маршрута", "", false, false, false, false);
                                 if (fr.ShowDialog(formMain) == DialogResult.OK)
                                 {
@@ -556,7 +564,7 @@ namespace TrackConverter.UI.Shell
             ts.Start();
         }
 
-        internal void toolStripPointsToRoute(object sender, EventArgs e)
+        internal void ToolStripPointsToRoute(object sender, EventArgs e)
         {
             if (formMain.waypoints == null)
                 formMain.waypoints = new TrackFile();
@@ -575,7 +583,7 @@ namespace TrackConverter.UI.Shell
             formMain.graphHelper.RefreshData();
         }
 
-        internal void toolStripRouteToPoints(object sender, EventArgs e)
+        internal void ToolStripRouteToPoints(object sender, EventArgs e)
         {
             if (formMain.Tracks.GetMaxTrack() > 1000)
             {
@@ -589,7 +597,7 @@ namespace TrackConverter.UI.Shell
             formMain.mapHelper.ShowWaypoints(formMain.waypoints, formMain.baseOverlay, false);
         }
 
-    
+
 
         #endregion
     }

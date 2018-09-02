@@ -1,22 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GMap.NET;
 using GMap.NET.MapProviders;
 using GMap.NET.WindowsForms;
 using TrackConverter.Lib.Classes;
-using TrackConverter.Lib.Mathematic.Geodesy.MapCalibrations;
 using TrackConverter.Lib.Data.Providers.InternetServices;
+using TrackConverter.Lib.Mathematic.Geodesy.MapCalibrations;
 
 namespace TrackConverter.UI.Tools
 {
@@ -24,7 +19,7 @@ namespace TrackConverter.UI.Tools
     /// <summary>
     /// окно выбора действий с выделенной областью карты
     /// </summary>
-    public partial class FormSaveMap : Form
+    public partial class FormSaveMap: Form
     {
         private Task worker;
         private bool isCancel = false;
@@ -53,10 +48,12 @@ namespace TrackConverter.UI.Tools
         /// <param name="e"></param>
         private void buttonSelectSaveFile_Click(object sender, EventArgs e)
         {
-            SaveFileDialog sf = new SaveFileDialog();
-            sf.InitialDirectory = Vars.Options.Common.LastFileSaveDirectory;
-            sf.AddExtension = true;
-            sf.Filter = "Файл JPEG (*.jpg)|*.jpg";
+            SaveFileDialog sf = new SaveFileDialog
+            {
+                InitialDirectory = Vars.Options.Common.LastFileSaveDirectory,
+                AddExtension = true,
+                Filter = "Файл JPEG (*.jpg)|*.jpg"
+            };
             sf.Filter += "|Точечный рисунок BMP (*.bmp)|*.bmp";
             sf.Filter += "|Рисунок TIFF (*.tiff)|*.tiff";
             if (sf.ShowDialog(this) == DialogResult.OK)
@@ -128,11 +125,13 @@ namespace TrackConverter.UI.Tools
             }
 
             GMapControl parent = Program.winMain.gmapControlMap;
-            gmc = new GMapControl();
-            gmc.CacheLocation = parent.CacheLocation;
-            gmc.SelectedArea = parent.SelectedArea;
-            gmc.MapProvider = provider;
-            gmc.Zoom = (int)this.numericUpDownZoom.Value;
+            gmc = new GMapControl
+            {
+                CacheLocation = parent.CacheLocation,
+                SelectedArea = parent.SelectedArea,
+                MapProvider = provider,
+                Zoom = (int)this.numericUpDownZoom.Value
+            };
             foreach (GMapOverlay ov in parent.Overlays)
                 gmc.Overlays.Add(ov);
 
@@ -181,7 +180,8 @@ namespace TrackConverter.UI.Tools
                 case ".tiff":
                     format = ImageFormat.Tiff;
                     break;
-                default: throw new ApplicationException("Формат не поддерживатся");
+                default:
+                    throw new ApplicationException("Формат не поддерживатся");
             }
 
 

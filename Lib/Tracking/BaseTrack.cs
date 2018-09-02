@@ -6,6 +6,7 @@ using System.Drawing;
 using System.IO;
 using GMap.NET;
 using Newtonsoft.Json;
+using TrackConverter.Lib.Exceptions;
 using TrackConverter.Lib.Mathematic.Geodesy;
 
 namespace TrackConverter.Lib.Tracking
@@ -64,6 +65,7 @@ namespace TrackConverter.Lib.Tracking
         /// <summary>
         /// формат
         /// </summary>
+        /// <exception cref="TrackConverterException"></exception>
         public FileFormats Format
         {
             get
@@ -100,7 +102,7 @@ namespace TrackConverter.Lib.Tracking
                     case ".trr":
                         return FileFormats.TrrFile;
                     default:
-                        throw new Exception("Данный файл не поддерживается: " + ext);
+                        throw new TrackConverterException("Данный файл не поддерживается: " + ext);
                 }
             }
         }

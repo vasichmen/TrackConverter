@@ -411,8 +411,8 @@
             this.MinimumSize = new System.Drawing.Size(354, 381);
             this.Name = "FormWhatsthere";
             this.Text = "FormWhatsthere";
-            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.FormWhatsthere_FormClosed);
-            this.Load += new System.EventHandler(this.FormWhatsthere_Load);
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.formWhatsthere_FormClosed);
+            this.Load += new System.EventHandler(this.formWhatsthere_Load);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel3.ResumeLayout(false);
             this.tableLayoutPanel3.PerformLayout();
