@@ -562,6 +562,7 @@ namespace TrackConverter.UI.Ext
                     pol.Fill = this.polygonBrush;
                     break;
                 }
+            this.Refresh();
         }
 
         #endregion

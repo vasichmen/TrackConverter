@@ -5,6 +5,7 @@ using System.Drawing;
 using System.IO;
 using System.Text;
 using TrackConverter.Lib.Data.Interfaces;
+using TrackConverter.Lib.Exceptions;
 
 namespace TrackConverter.Lib.Data.Providers.Local.OS
 {
@@ -40,6 +41,11 @@ namespace TrackConverter.Lib.Data.Providers.Local.OS
         private readonly string dataFileName = "data.txt";
 
         /// <summary>
+        /// если истина, то файл загружен
+        /// </summary>
+        private bool isFileLoaded = false;
+
+        /// <summary>
         /// базовая папка с кэшем
         /// </summary>
         private readonly string directory;
@@ -69,7 +75,11 @@ namespace TrackConverter.Lib.Data.Providers.Local.OS
 
             //удаление устаревших объектов
             deleteObjectsBefore(DateTime.Now - duration);
+
+            //удаление файлов, которых нет в файле записей
+            deleteMissedFiles();
         }
+
 
 
         #region IImagesCache
@@ -283,17 +293,18 @@ namespace TrackConverter.Lib.Data.Providers.Local.OS
         }
 
         /// <summary>
-        /// удалить файлы в кэше, созданные раньше заданной даты
+        /// удалить файлы в кэше, созданные раньше заданной даты и записей, для которых отсутствуют файлы
         /// </summary>
         /// <param name="dateTime">файлы, созданные ранее, будут удалены</param>
         private void deleteObjectsBefore(DateTime dateTime)
         {
+            //список ключей, которые будут удалены из словаря информации
             List<string> urls = new List<string>();
 
             //удаление файлов
             foreach (var kv in files_data)
             {
-                if (kv.Value.date < dateTime) //если файл старше, то удаляем
+                if (kv.Value.date < dateTime || !File.Exists(directory + "\\" + kv.Value.path)) //если файл старше или отсутствует на диске, то удаляем
                 {
                     File.Delete(directory + "\\" + kv.Value.path);
                     urls.Add(kv.Value.url);
@@ -306,6 +317,30 @@ namespace TrackConverter.Lib.Data.Providers.Local.OS
 
             //перезапись файла информации
             exportDataFile(directory + "\\" + dataFileName);
+        }
+
+        /// <summary>
+        /// удаление файлов, которых нет в файле кэша и записей из файла, для которых нет файлов
+        /// </summary>
+        private void deleteMissedFiles()
+        {
+            if (!isFileLoaded)
+                throw new TrackConverterException("Перед удалением отсутствующих файлов необходимо загрузить файл данных");
+
+            foreach (var file in Directory.EnumerateFiles(directory))
+            {
+                bool f = false;
+                foreach (FileInfo fi in files_data.Values)
+                    if (fi.path == Path.GetFileName(file))
+                    {
+                        f = true;
+                        break;
+                    }
+                if (!f && Path.GetFileName(file) != dataFileName)
+                    try
+                    { File.Delete(file); }
+                    catch (Exception) { }
+            }
         }
 
         /// <summary>
@@ -349,6 +384,7 @@ namespace TrackConverter.Lib.Data.Providers.Local.OS
                 fi.date = DateTime.Parse(fields[2]);
                 files_data.TryAdd(fi.url, fi);
             }
+            isFileLoaded = true;
         }
 
         #endregion
