@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using GMap.NET;
 using TrackConverter.Lib.Data.Interfaces;
 using TrackConverter.Lib.Data.Providers.InternetServices;
 
@@ -34,6 +35,9 @@ namespace TrackConverter.Lib.Data
                 case MapLayerProviders.OSMRoadSurface:
                     engine = new OSM.RoadSurface(null);
                     break;
+                case MapLayerProviders.RosreestrCadaster:
+                    engine = new RosreestrCadaster();
+                    break;
                 case MapLayerProviders.None:
                     throw new Exception("Нельзя создать поставщика слоя None");
                 default:
@@ -51,6 +55,18 @@ namespace TrackConverter.Lib.Data
         public Image GetRastrTile(long x, long y, int z)
         {
             return engine.GetRastrTile(x, y, z);
+        }
+
+       /// <summary>
+       /// получить картинку слоя в заданном прямоугольнике координат. Если этот поставщик слоя не поддерживает такой способ задания области, то вызовется  NotImplementedException
+       /// </summary>
+       /// <param name="tile">координатный прямоугольник тайла</param>
+       /// <param name="projection">проекция карты</param>
+       /// <exception cref="NotImplementedException"></exception>
+       /// <returns></returns>
+        public Image GetRastrTile(RectLatLng tile, PureProjection projection)
+        {
+            return engine.GetRastrTile(tile, projection);
         }
     }
 }

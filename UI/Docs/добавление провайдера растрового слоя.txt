@@ -1,10 +1,10 @@
 ﻿1. реализовать интерфейс IRastrMapLayerProvider для класса связи с сервисом
 2. добавить элемент в Enums.MapLayerProviders
 3. изменить switch в свойстве TrackConverter.UI.Ext.GMapControlExt.LayerProvider
-4. изменить switch в методе TrackConverter.UI.Ext.GMapControlExt.GMapControlExt_Paint()
+4. изменить switch в методе   TrackConverter.UI.Ext.GMapControlExt.GMapControlExt_Paint()
 5. изменить switch в свойстве TrackConverter.UI.Ext.GMapControlExt.LayerProjection и подобрать подходящую проекцию для слоя
-6. изменить switch в методе TrackConverter.UI.Ext.GMapControlExt.RefreshLayers()
-7. изменить switch в методе TrackConverter.UI.Shell.MapHelper.lrProvider_Click()
+6. изменить switch в методе   TrackConverter.UI.Ext.GMapControlExt.RefreshLayers()
+7. изменить switch в методе   TrackConverter.UI.Shell.MapHelper.lrProvider_Click()
 7. изменить switch в конструкторе TrackConverter.Lib.Data.RastrMapLayer
 8. добавить элемент  в TrackConverter.Lib.Classes.Options.Map.AllLayerProviders
 9. добавить картинку слоя 24x24px в папку /Images/layers, добавить в проект, поставить "Копировать более новую версию"

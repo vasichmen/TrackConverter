@@ -561,7 +561,28 @@ namespace TrackConverter
         YandexTraffic,
 
         /// <summary>
+        /// кадастровые границы росреестра
+        /// </summary>
+        RosreestrCadaster,
+
+        /// <summary>
         /// отсутствует слой
+        /// </summary>
+        None
+    }
+
+    /// <summary>
+    /// группы слоёв карты
+    /// </summary>
+    public enum MapLayerProvidersClasses
+    {
+        /// <summary>
+        /// слои OSM
+        /// </summary>
+        OSM,
+
+        /// <summary>
+        /// слои без группировки
         /// </summary>
         None
     }

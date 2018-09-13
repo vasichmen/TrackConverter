@@ -526,7 +526,7 @@
             this.optimalNewRouteToolStripMenuItem.Name = "optimalNewRouteToolStripMenuItem";
             this.optimalNewRouteToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
             this.optimalNewRouteToolStripMenuItem.Text = "Построить оптимальный";
-            this.optimalNewRouteToolStripMenuItem.ToolTipText = "Построить оптимальный маршрут через путевын точки этого путешествия";
+            this.optimalNewRouteToolStripMenuItem.ToolTipText = "Построить оптимальный маршрут через путевые точки этого путешествия";
             this.optimalNewRouteToolStripMenuItem.Click += new System.EventHandler(this.optimalNewRouteToolStripMenuItem_Click);
             // 
             // FormEditTrip

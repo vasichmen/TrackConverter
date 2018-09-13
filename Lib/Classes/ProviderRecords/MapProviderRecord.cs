@@ -4,36 +4,22 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using GMap.NET.MapProviders;
+using TrackConverter.Lib.Exceptions;
 
-namespace TrackConverter.Lib.Classes
+namespace TrackConverter.Lib.Classes.ProviderRecords
 {
 
     /// <summary>
     /// структура поставщика карты для настроек и тега в кнопке выбора источника карты
     /// </summary>
-    public class MapProviderRecord
+    public class MapProviderRecord: BaseProviderRecord
     {
 
         /// <summary>
         /// поставщик
         /// </summary>
         public MapProviders Enum { get; set; }
-
-        /// <summary>
-        /// заголовок
-        /// </summary>
-        public string Title { get; set; }
-
-        /// <summary>
-        /// идентификатор
-        /// </summary>
-        public int ID { get; set; }
-
-        /// <summary>
-        /// Изображение карты
-        /// </summary>
-        public string IconName { get; set; }
-
+        
         /// <summary>
         /// класс поставщика карты
         /// </summary>
@@ -66,7 +52,7 @@ namespace TrackConverter.Lib.Classes
                 case MapProviderClasses.OSM: return "OpenStreetMaps";
                 case MapProviderClasses.Yandex: return "Яндекс";
                 case MapProviderClasses.None: throw new Exception("У этого класса поставщика не имени!");
-                default: throw new Exception("Этот класс поставщика не реализован!");
+                default: throw new TrackConverterException("Этот класс поставщика не реализован!");
             }
         }
     }

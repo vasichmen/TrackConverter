@@ -1,34 +1,51 @@
-﻿using System;
-using System.IO;
-using System.Net;
-using GMap.NET;
+﻿using GMap.NET;
 using GMap.NET.MapProviders;
 using GMap.NET.Projections;
+using System;
+using System.IO;
+using System.Net;
 
 namespace TrackConverter.Lib.Data.Providers.InternetServices
 {
-    //TODO: комментарии, доделать связь с сервисом
+    /// <summary>
+    /// карты генштаба и ГГЦ
+    /// </summary>
     public static class GenshtabGGC
     {
         /// <summary>
         /// основные методы для получения карт ГГЦ
         /// </summary>
-        public abstract class BaseGenshtab: BaseMapProvider
+        public abstract class BaseGenshtab : BaseMapProvider
         {
+            /// <summary>
+            /// проекция карты
+            /// </summary>
             public override PureProjection Projection
             {
                 get
                 {
-                    return new MercatorProjection();
+                    return MercatorProjection.Instance;
                 }
             }
 
+            /// <summary>
+            /// зеркала сервиса карт (для распределения нагрузки)
+            /// </summary>
             public abstract string[] Mirrors { get; }
+
+            /// <summary>
+            /// расширение файла тайла
+            /// </summary>
             public abstract string Extension { get; }
 
             private int buf_ok = int.MinValue;
             private int buf_no = int.MinValue;
 
+            /// <summary>
+            /// проверить существование масштаба на сервере
+            /// </summary>
+            /// <param name="url"></param>
+            /// <returns></returns>
             private int getCode(string url)
             {
                 WebClient wc = new WebClient();
@@ -49,6 +66,12 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                 }
             }
 
+            /// <summary>
+            /// создать URL для запроса тайла
+            /// </summary>
+            /// <param name="pos"></param>
+            /// <param name="zoom"></param>
+            /// <returns></returns>
             protected string CombineURL(GPoint pos, int zoom)
             {
                 //выбор масштаба, которые есть в карте
@@ -97,7 +120,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         /// <summary>
         /// километровка 
         /// </summary>
-        public class KM1: BaseGenshtab
+        public class KM1 : BaseGenshtab
         {
             public static KM1 Instance;
 
@@ -106,6 +129,9 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                 Instance = new KM1();
             }
 
+            /// <summary>
+            /// зеркала сервиса карт (для распределения нагрузки)
+            /// </summary>
             public override string[] Mirrors
             {
                 get
@@ -117,6 +143,9 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                 }
             }
 
+            /// <summary>
+            /// GUID карты (придуман рандомно, но постоянный)
+            /// </summary>
             public override Guid Id
             {
                 get
@@ -125,6 +154,9 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                 }
             }
 
+            /// <summary>
+            /// название карты
+            /// </summary>
             public override string Name
             {
                 get
@@ -133,6 +165,9 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                 }
             }
 
+            /// <summary>
+            /// слои карты (если она состоит из нескольких слоёв, как гибриды)
+            /// </summary>
             public override GMapProvider[] Overlays
             {
                 get
@@ -141,6 +176,9 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                 }
             }
 
+            /// <summary>
+            /// расширение файла тайла
+            /// </summary>
             public override string Extension
             {
                 get
@@ -149,6 +187,12 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                 }
             }
 
+            /// <summary>
+            /// получить тайл карты по координатам
+            /// </summary>
+            /// <param name="pos">координаты тайла карты</param>
+            /// <param name="zoom">масштаб</param>
+            /// <returns></returns>
             public override PureImage GetTileImage(GPoint pos, int zoom)
             {
                 string url = CombineURL(pos, zoom);
@@ -161,7 +205,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         /// <summary>
         /// 250 метров 
         /// </summary>
-        public class M250: BaseGenshtab
+        public class M250 : BaseGenshtab
         {
             public static M250 Instance;
 
@@ -170,6 +214,9 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                 Instance = new M250();
             }
 
+            /// <summary>
+            /// зеркала сервиса карт (для распределения нагрузки)
+            /// </summary>
             public override string[] Mirrors
             {
                 get
@@ -181,6 +228,9 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                 }
             }
 
+            /// <summary>
+            /// GUID карты (придуман рандомно, но постоянный)
+            /// </summary>
             public override Guid Id
             {
                 get
@@ -189,6 +239,9 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                 }
             }
 
+            /// <summary>
+            /// название карты
+            /// </summary>
             public override string Name
             {
                 get
@@ -197,6 +250,9 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                 }
             }
 
+            /// <summary>
+            /// слои карты (если она состоит из нескольких слоёв, как гибриды)
+            /// </summary>
             public override GMapProvider[] Overlays
             {
                 get
@@ -205,6 +261,9 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                 }
             }
 
+            /// <summary>
+            /// расширение файла тайла
+            /// </summary>
             public override string Extension
             {
                 get
@@ -213,6 +272,12 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                 }
             }
 
+            /// <summary>
+            /// получить тайл карты по координатам
+            /// </summary>
+            /// <param name="pos">координаты тайла карты</param>
+            /// <param name="zoom">масштаб</param>
+            /// <returns></returns>
             public override PureImage GetTileImage(GPoint pos, int zoom)
             {
                 string url = CombineURL(pos, zoom);
@@ -226,7 +291,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         /// <summary>
         /// 250 метров 
         /// </summary>
-        public class M500: BaseGenshtab
+        public class M500 : BaseGenshtab
         {
             public static M500 Instance;
 
@@ -235,6 +300,9 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                 Instance = new M500();
             }
 
+            /// <summary>
+            /// зеркала сервиса карт (для распределения нагрузки)
+            /// </summary>
             public override string[] Mirrors
             {
                 get
@@ -246,6 +314,9 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                 }
             }
 
+            /// <summary>
+            /// GUID карты (придуман рандомно, но постоянный)
+            /// </summary>
             public override Guid Id
             {
                 get
@@ -254,6 +325,9 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                 }
             }
 
+            /// <summary>
+            /// название карты
+            /// </summary>
             public override string Name
             {
                 get
@@ -262,6 +336,9 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                 }
             }
 
+            /// <summary>
+            /// слои карты (если она состоит из нескольких слоёв, как гибриды)
+            /// </summary>
             public override GMapProvider[] Overlays
             {
                 get
@@ -270,6 +347,9 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                 }
             }
 
+            /// <summary>
+            /// расширение файла тайла
+            /// </summary>
             public override string Extension
             {
                 get
@@ -278,6 +358,12 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                 }
             }
 
+            /// <summary>
+            /// получить тайл карты по координатам
+            /// </summary>
+            /// <param name="pos">координаты тайла карты</param>
+            /// <param name="zoom">масштаб</param>
+            /// <returns></returns>
             public override PureImage GetTileImage(GPoint pos, int zoom)
             {
                 string url = CombineURL(pos, zoom);
@@ -291,7 +377,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         /// <summary>
         /// 250 метров 
         /// </summary>
-        public class KM5: BaseGenshtab
+        public class KM5 : BaseGenshtab
         {
             public static KM5 Instance;
 
@@ -300,6 +386,9 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                 Instance = new KM5();
             }
 
+            /// <summary>
+            /// зеркала сервиса карт (для распределения нагрузки)
+            /// </summary>
             public override string[] Mirrors
             {
                 get
@@ -311,6 +400,9 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                 }
             }
 
+            /// <summary>
+            /// GUID карты (придуман рандомно, но постоянный)
+            /// </summary>
             public override Guid Id
             {
                 get
@@ -319,6 +411,9 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                 }
             }
 
+            /// <summary>
+            /// название карты
+            /// </summary>
             public override string Name
             {
                 get
@@ -327,6 +422,9 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                 }
             }
 
+            /// <summary>
+            /// слои карты (если она состоит из нескольких слоёв, как гибриды)
+            /// </summary>
             public override GMapProvider[] Overlays
             {
                 get
@@ -335,6 +433,9 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                 }
             }
 
+            /// <summary>
+            /// расширение файла тайла
+            /// </summary>
             public override string Extension
             {
                 get
@@ -343,6 +444,12 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                 }
             }
 
+            /// <summary>
+            /// получить тайл карты по координатам
+            /// </summary>
+            /// <param name="pos">координаты тайла карты</param>
+            /// <param name="zoom">масштаб</param>
+            /// <returns></returns>
             public override PureImage GetTileImage(GPoint pos, int zoom)
             {
                 string url = CombineURL(pos, zoom);
@@ -356,7 +463,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         /// <summary>
         /// 250 метров 
         /// </summary>
-        public class KM10: BaseGenshtab
+        public class KM10 : BaseGenshtab
         {
             public static KM10 Instance;
 
@@ -365,6 +472,9 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                 Instance = new KM10();
             }
 
+            /// <summary>
+            /// зеркала сервиса карт (для распределения нагрузки)
+            /// </summary>
             public override string[] Mirrors
             {
                 get
@@ -376,6 +486,9 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                 }
             }
 
+            /// <summary>
+            /// GUID карты (придуман рандомно, но постоянный)
+            /// </summary>
             public override Guid Id
             {
                 get
@@ -384,6 +497,9 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                 }
             }
 
+            /// <summary>
+            /// название карты
+            /// </summary>
             public override string Name
             {
                 get
@@ -392,6 +508,9 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                 }
             }
 
+            /// <summary>
+            /// слои карты (если она состоит из нескольких слоёв, как гибриды)
+            /// </summary>
             public override GMapProvider[] Overlays
             {
                 get
@@ -400,6 +519,9 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                 }
             }
 
+            /// <summary>
+            /// расширение файла тайла
+            /// </summary>
             public override string Extension
             {
                 get
@@ -408,6 +530,12 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                 }
             }
 
+            /// <summary>
+            /// получить тайл карты по координатам
+            /// </summary>
+            /// <param name="pos">координаты тайла карты</param>
+            /// <param name="zoom">масштаб</param>
+            /// <returns></returns>
             public override PureImage GetTileImage(GPoint pos, int zoom)
             {
                 string url = CombineURL(pos, zoom);

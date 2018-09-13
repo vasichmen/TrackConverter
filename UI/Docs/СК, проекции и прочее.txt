@@ -6,4 +6,4 @@ https://habrahabr.ru/post/239251/
 
 Системы координат:
 1. EPSG:3395 - эллипсоид, используемый Яндекс картами и Космоснимками он же "чистый" WGS84
-2. EPSG:3785 - сфероид, используется Google, Bing, Yahoo и прочими он же Web Mercator
+2. EPSG:3857 - сфероид, используется Google, Bing, Yahoo и прочими он же Web Mercator

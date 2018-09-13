@@ -843,10 +843,11 @@ readLength:
                     this.trip.Waypoints.Add(newPoint);
                     fillDGV(trip);
                 }
-                Program.winMain.isSelectingPoint = false;
                 Program.winMain.gmapControlMap.DragButton = MouseButtons.Left;
                 this.WindowState = FormWindowState.Normal;
                 Program.winMain.gmapControlMap.Cursor = Cursors.Arrow;
+                Program.winMain.isSelectingPoint = false;
+                Program.winMain.gmapControlMap.vectorLayersOverlay.IsVisibile = true;
             });
             Program.winMain.mapHelper.BeginSelectPoint(after);
         }

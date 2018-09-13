@@ -9,6 +9,7 @@ using GMap.NET;
 using GMap.NET.MapProviders;
 using GMap.NET.WindowsForms;
 using TrackConverter.Lib.Classes;
+using TrackConverter.Lib.Classes.ProviderRecords;
 using TrackConverter.Lib.Classes.StackEdits;
 using TrackConverter.Lib.Data;
 using TrackConverter.Lib.Maping.GMap;
@@ -205,6 +206,11 @@ namespace TrackConverter.UI.Shell
         /// Используется при создании маршрута при выделении маркера
         /// </summary>
         public bool isMarkerClicked;
+
+        /// <summary>
+        /// если истина, то последнее нажатие на карту было при выборе точки. Используется, чтобы при выборе точки не возникало собитие нажатия на полигон
+        /// </summary>
+        internal bool isPointSelected = false;
 
         #endregion
 
@@ -408,6 +414,8 @@ namespace TrackConverter.UI.Shell
             //для работы кнопок навигации
             this.KeyPreview = true;
 
+            #region добавление поставщиков карт
+
             //добавление поставщиков карты в основное меню
             //добавление поставщиков карты в меню инструментов
             toolStripDropDownButtonMapProvider.DropDownItems.Clear();
@@ -480,22 +488,62 @@ namespace TrackConverter.UI.Shell
                 (c2.OwnerItem as ToolStripMenuItem).Checked = true;
             }
 
-            //добавление поставщиков слоёв в основное меню
+            #endregion
+
+            #region добавление поставщиков слоёв
+
+            //добавление поставщиков карты в основное меню
+            //добавление поставщиков карты в меню инструментов
             layerProviderToolStripMenuItem.DropDownItems.Clear();
-            foreach (MapLayerProviderRecord lpr in Vars.Options.Map.AllLayerProviders)
+            Dictionary<MapLayerProvidersClasses, ToolStripMenuItem> classes3 = new Dictionary<MapLayerProvidersClasses, ToolStripMenuItem>();
+            ToolStripMenuItem c3 = null;
+            foreach (MapLayerProviderRecord mpr in Vars.Options.Map.AllLayerProviders)
             {
                 ToolStripMenuItem it1 = new ToolStripMenuItem
                 {
-                    Text = lpr.Title
+                    Text = mpr.Title
                 };
                 it1.Click += mapHelper.LrProvider_Click;
-                it1.Tag = lpr;
-                it1.Image = new Bitmap(Application.StartupPath + lpr.IconName);
-                if (lpr.Enum == Vars.Options.Map.LayerProvider.Enum)
+                it1.Tag = mpr;
+                it1.Image = new Bitmap(Application.StartupPath + mpr.IconName);
+                if (mpr.Enum == Vars.Options.Map.LayerProvider.Enum)
+                {
                     it1.Checked = true;
+                    if (mpr.MapLayerProviderClass != MapLayerProvidersClasses.None)
+                        c3 = it1;
+                }
 
-                layerProviderToolStripMenuItem.DropDownItems.Add(it1);
+                
+
+                if (classes3.ContainsKey(mpr.MapLayerProviderClass))
+                {
+                    var button1 = classes3[mpr.MapLayerProviderClass];
+                    button1.DropDownItems.Add(it1);
+                }
+                else
+                {
+                    if (mpr.MapLayerProviderClass == MapLayerProvidersClasses.None)
+                    {
+                        layerProviderToolStripMenuItem.DropDownItems.Add(it1);
+                    }
+                    else
+                    {
+                        ToolStripMenuItem button1 = new ToolStripMenuItem(MapLayerProviderRecord.GetMapLayerProviderClassName(mpr.MapLayerProviderClass));
+                        button1.DropDownItems.Add(it1);
+                        classes3.Add(mpr.MapLayerProviderClass, button1);
+                        layerProviderToolStripMenuItem.DropDownItems.Add(button1);
+                    }
+                }
+
             }
+            //выделяем родительские кнопки выбранных слоёв
+            if (c3 != null)
+            {
+                (c3.OwnerItem as ToolStripMenuItem).Checked = true;
+            }
+
+            #endregion
+            
 
             #endregion
 
@@ -1417,6 +1465,10 @@ namespace TrackConverter.UI.Shell
 
         private void button1_Click(object sender, EventArgs e)
         {
+            PointLatLng pt = this.gmapControlMap.Position;
+            this.gmapControlMap.MapProvider.Projection.FromGeodeticToCartesian(pt.Lat,pt.Lng, 0, out double x, out double y, out double z);
+
+
         }
 
 

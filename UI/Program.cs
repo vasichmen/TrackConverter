@@ -39,6 +39,7 @@ using TrackConverter.UI.Converter;
 using TrackConverter.UI.Map;
 using TrackConverter.UI.Tools;
 using TrackConverter.UI.Shell;
+using TrackConverter.Lib.Classes.ProviderRecords;
 
 namespace TrackConverter.UI
 {

@@ -1,4 +1,7 @@
-﻿using System;
+﻿using GMap.NET;
+using GMap.NET.Projections;
+using GMap.NET.WindowsForms;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -6,9 +9,6 @@ using System.Drawing;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using GMap.NET;
-using GMap.NET.Projections;
-using GMap.NET.WindowsForms;
 using TrackConverter.Lib.Classes;
 using TrackConverter.Lib.Data;
 using TrackConverter.Lib.Exceptions;
@@ -19,7 +19,7 @@ namespace TrackConverter.UI.Ext
     /// <summary>
     /// область карты с возможностью отображения слоёв
     /// </summary>
-    public class GMapControlExt: GMapControl
+    public class GMapControlExt : GMapControl
     {
         #region поля
 
@@ -31,7 +31,7 @@ namespace TrackConverter.UI.Ext
         /// <summary>
         /// слой на карте для доп. слоя
         /// </summary>
-        private GMapOverlay vectorLayersOverlay;
+        public GMapOverlay vectorLayersOverlay;
 
         /// <summary>
         /// загруженные объекты (для проверки существования этого объекта на экране)
@@ -139,6 +139,7 @@ namespace TrackConverter.UI.Ext
                         case MapLayerProviders.OSMGPSTracks:
                         case MapLayerProviders.OSMRailways:
                         case MapLayerProviders.OSMRoadSurface:
+                        case MapLayerProviders.RosreestrCadaster:
                             rastrLayerProviderEngine = new RastrMapLayer(value);
                             break;
                     }
@@ -166,6 +167,7 @@ namespace TrackConverter.UI.Ext
                     case MapLayerProviders.OSMGPSTracks:
                     case MapLayerProviders.OSMRailways:
                     case MapLayerProviders.OSMRoadSurface:
+                    case MapLayerProviders.RosreestrCadaster: //TODO: проверить проекцию (Spatial Reference: 102100  (3857) )
                         proj = new MercatorProjection();
                         break;
                     case MapLayerProviders.Wikimapia:
@@ -220,6 +222,7 @@ namespace TrackConverter.UI.Ext
                     case MapLayerProviders.OSMGPSTracks:
                     case MapLayerProviders.OSMRailways:
                     case MapLayerProviders.OSMRoadSurface:
+                    case MapLayerProviders.RosreestrCadaster:
                         foreach (var kv in this.loadedRastrAreas)
                         {
                             showRastrLayerTile(kv.Value, kv.Key, e.Graphics);
@@ -343,7 +346,7 @@ namespace TrackConverter.UI.Ext
         /// возвращает координаты верхних левых углов тайлов, которые сейчас виды на экране, исключая уже загруженные
         /// </summary>
         /// <returns></returns>
-        public List<GPoint> GetVisiblePixelTiles(PureProjection proj = null)
+        private List<GPoint> getVisiblePixelTiles(PureProjection proj = null)
         {
             int zoom = (int)Zoom;
             RectLatLng viewArea = GetViewArea();
@@ -395,6 +398,8 @@ namespace TrackConverter.UI.Ext
                 Thread.Sleep(30);
 
             RectLatLng viewArea = GetViewArea();
+            //if (projection == null) projection = LayerProjection;
+
             GPoint va_lt_pix = LayerProjection.FromLatLngToPixel(viewArea.LocationTopLeft, (int)Zoom);
 
 
@@ -648,11 +653,11 @@ namespace TrackConverter.UI.Ext
                         case MapLayerProviders.OSMRailways:
                         case MapLayerProviders.OSMRoadSurface:
 
-                            #region ДЛЯ РАСТРОВЫХ СЛОЁВ
+                            #region ДЛЯ РАСТРОВЫХ СЛОЁВ ПО ТАЙЛОВЫМ КООРДИНАТАМ
 
                             //области, которые необходимо загрузить
 
-                            List<GPoint> tilesR = this.GetVisiblePixelTiles(LayerProjection);
+                            List<GPoint> tilesR = this.getVisiblePixelTiles(LayerProjection);
 
                             int iR = 0; //количество загруженных тайлов
                             Parallel.ForEach(tilesR, new ParallelOptions() { MaxDegreeOfParallelism = 4 }, (tile) =>
@@ -673,6 +678,42 @@ namespace TrackConverter.UI.Ext
                                         loadedRastrAreas.TryAdd(tile, tl);
                                         showRastrLayerTile(tl, tile);
                                         string prc = (((double)iR++ / tilesR.Count) * 100d).ToString("0");
+                                        Program.winMain.SetCurrentOperation("Загрузка слоёв " + LayerProvider.ToString() + ", завершено " + prc + "%");
+                                    }
+                                }
+                                catch (Exception e) //ловим ошибки при отсутствии интернета
+                                { }
+                            });
+                            break;
+                        #endregion
+
+                        case MapLayerProviders.RosreestrCadaster:
+
+                            #region ДЛЯ РАСТРОВЫХ СЛОЁВ ПО МЕТРИЧЕСКИМ КООРДИНАТАМ
+
+                            //области, которые необходимо загрузить
+                            List<RectLatLng> llTiles = this.getVisibleLatLngTiles();
+
+                            int im = 0; //количество загруженных тайлов
+                            Parallel.ForEach(llTiles, new ParallelOptions() { MaxDegreeOfParallelism = 6 }, (tile) =>
+                            {
+                                try
+                                {
+                                    //если во время выполнения операции изменились параметры отображения, то выходим
+                                    if (zoom != (int)Zoom || //масштаб карты
+                                             this.LayerProvider != provider || //источник данных
+                                             position != this.Position || //центр карты
+                                             height != this.Height || //высота элемента
+                                             width != this.Width) //ширина элемента
+                                        return;
+
+                                    Image tl = rastrLayerProviderEngine.GetRastrTile(tile, LayerProjection);
+                                    if (!this.IsDisposed)
+                                    {
+                                        GPoint tileXY = LayerProjection.FromPixelToTileXY(LayerProjection.FromLatLngToPixel(tile.LocationTopLeft, zoom));
+                                        loadedRastrAreas.TryAdd(tileXY, tl);
+                                        showRastrLayerTile(tl, tileXY);
+                                        string prc = (((double)im++ / llTiles.Count) * 100d).ToString("0");
                                         Program.winMain.SetCurrentOperation("Загрузка слоёв " + LayerProvider.ToString() + ", завершено " + prc + "%");
                                     }
                                 }
@@ -745,7 +786,11 @@ namespace TrackConverter.UI.Ext
             loadedVectorAreas = new ConcurrentBag<PointLatLng>(); //очистка коллекции загруженных векторных областей
             loadedRastrAreas.Clear(); //очистка растрового слоя
             if (rastrLayersGraphics != null)
-                rastrLayersGraphics.Clear(Color.Transparent); //очистка слоя рисования растровых слоёв
+                try
+                {
+                    rastrLayersGraphics.Clear(Color.Transparent); //очистка слоя рисования растровых слоёв
+                }
+                catch (Exception) { }
         }
 
         #endregion

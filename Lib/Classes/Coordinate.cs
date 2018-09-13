@@ -194,8 +194,6 @@ namespace TrackConverter.Lib.Classes
             /// <returns></returns>
             public static CoordinateRecord Parse(string source, string format)
             {
-
-
                 double Min = 0;
                 double Deg = 0;
                 double Sec = 0;

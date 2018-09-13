@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using GMap.NET;
 using TrackConverter.Lib.Data.Interfaces;
 
 namespace TrackConverter.Lib.Data.Providers.InternetServices
@@ -71,6 +72,11 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                 return res;
             }
 
+            public Image GetRastrTile(RectLatLng tile, PureProjection projection)
+            {
+                throw new NotImplementedException("Для этого поставщика слоя надо использовать метод GetRastrTile(long x, long y, int z)");
+            }
+
             #endregion
 
         }
@@ -126,12 +132,16 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                 //http://t2.beta.itoworld.com/25/136bdef4afc8d6e92586bc38e7b843c1/13/4954/2570.png
                 //http://t3.beta.itoworld.com/25/136bdef4afc8d6e92586bc38e7b843c1/13/4954/2570.png
 
-                // int server = new Random(234).Next(3);
-                int server = 0;
+                 int server = new Random().Next(3);
                 string url = @"http://t{3}.beta.itoworld.com/25/136bdef4afc8d6e92586bc38e7b843c1/{0}/{1}/{2}.png";
                 url = string.Format(url, z, x, y, server);
                 Image res = GetImage(url);
                 return res;
+            }
+
+            public Image GetRastrTile(RectLatLng tile, PureProjection projection)
+            {
+                throw new NotImplementedException("Для этого поставщика слоя надо использовать метод GetRastrTile(long x, long y, int z)");
             }
 
             #endregion
@@ -189,12 +199,17 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                 //http://t2.beta.itoworld.com/15/136bdef4afc8d6e92586bc38e7b843c1/13/4954/2570.png
                 //http://t3.beta.itoworld.com/15/136bdef4afc8d6e92586bc38e7b843c1/13/4954/2570.png
 
-                //int server = new Random(234).Next(3);
-                int server = 0;
+                int server = new Random().Next(3);
+                //int server = 0;
                 string url = @"http://t{3}.beta.itoworld.com/15/136bdef4afc8d6e92586bc38e7b843c1/{0}/{1}/{2}.png";
                 url = string.Format(url, z, x, y, server);
                 Image res = GetImage(url);
                 return res;
+            }
+
+            public Image GetRastrTile(RectLatLng tile, PureProjection projection)
+            {
+                throw new NotImplementedException("Для этого поставщика слоя надо использовать метод GetRastrTile(long x, long y, int z)");
             }
 
             #endregion

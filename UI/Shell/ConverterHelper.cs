@@ -1126,6 +1126,10 @@ readLength:
 
         }
 
+        /// <summary>
+        /// Редактировать маршрут на карте
+        /// </summary>
+        /// <param name="e"></param>
         internal void ToolStripEditRoute(EventArgs e)
         {
             if (formMain.dataGridViewConverter.SelectedRows.Count > 1)
@@ -1134,6 +1138,12 @@ readLength:
                 return;
             }
             BaseTrack bt = formMain.Tracks[formMain.dataGridViewConverter.SelectedRows[0].Index];
+
+            //если в маршруте больше 1000 точек, то предлагаем отменить редактирование
+            if (bt.Count > 1000)
+                if (MessageBox.Show("В маршруте больше 1000 точек, вы уверены, что хотите продолжить?\r\nМаршруты с большим количеством точек могут вызвать ошибки при редактировании, рекомендуется разделить маршрут на несколько отдельных частей.\r\nПродолжить редактирование?", "Редактирование маршрута", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) != DialogResult.Yes)
+                    return;
+                
             if (bt is TrackFile)
                 BeginEditRoute(bt as TrackFile);
             else

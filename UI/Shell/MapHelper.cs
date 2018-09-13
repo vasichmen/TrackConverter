@@ -1,4 +1,7 @@
-﻿using System;
+﻿using GMap.NET;
+using GMap.NET.MapProviders;
+using GMap.NET.WindowsForms;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
@@ -6,10 +9,8 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Windows.Forms;
-using GMap.NET;
-using GMap.NET.MapProviders;
-using GMap.NET.WindowsForms;
 using TrackConverter.Lib.Classes;
+using TrackConverter.Lib.Classes.ProviderRecords;
 using TrackConverter.Lib.Classes.StackEdits;
 using TrackConverter.Lib.Data;
 using TrackConverter.Lib.Data.Providers.InternetServices;
@@ -28,7 +29,7 @@ namespace TrackConverter.UI.Shell
     /// <summary>
     /// вспомогательные функции для работы интерфейса карты
     /// </summary>
-    internal partial class MapHelper: MapHelperBase
+    internal partial class MapHelper : MapHelperBase
     {
 
         /// <summary>
@@ -266,12 +267,16 @@ namespace TrackConverter.UI.Shell
             #endregion
 
             #region выбор точки при редактировании путешествия
+
             //если идёт выбор точки, не идёт создание маршрута и не линейка и клик не на маркере
             if (formMain.isSelectingPoint && !(formMain.isCreatingRoute || formMain.isRuling) && !formMain.isMarkerClicked && !formMain.gmapControlMap.IsDragging)
             {
+                formMain.isPointSelected = true;
                 PointLatLng pt = formMain.gmapControlMap.FromLocalToLatLng(e.X, e.Y);
                 TrackPoint newpt = new TrackPoint(pt);
-                formMain.AfterSelectPointAction.Invoke(newpt);
+                formMain.isPointSelected = true;
+                if (formMain.AfterSelectPointAction != null)
+                    formMain.AfterSelectPointAction.Invoke(newpt);
             }
 
             #endregion
@@ -369,6 +374,12 @@ namespace TrackConverter.UI.Shell
             //если не идёт создание маршрута, не выбор точки, не линейка, не перемещение маркера, не перемещение карты, ЛКМ, то обрабатываем нажатие
             if (!formMain.isCreatingRoute && !formMain.isSelectingPoint && !formMain.isRuling && !formMain.isMarkerMoving && !formMain.gmapControlMap.IsDragging && e.Button == MouseButtons.Left)
             {
+                if (formMain.isPointSelected) //если при последнем нажатии была выбрана точка, то вызывать собитие нажатия на полигон не надо
+                {
+                    formMain.isPointSelected = false;
+                    return;
+                }
+
                 List<VectorMapLayerObject> objs = formMain.gmapControlMap.GetVectorObjectsUnderCursor();
                 VectorMapLayerObject obj;
                 if (objs.Count == 1)
@@ -800,16 +811,18 @@ namespace TrackConverter.UI.Shell
 
             Vars.Options.Map.MapProvider = mpr;
 
-            selectDropDownMapItems(formMain.toolStripDropDownButtonMapProvider, mpr.ID);
-            selectDropDownMapItems(formMain.mapProviderToolStripMenuItem, mpr.ID);
+            selectDropDownItems<MapProviderRecord>(formMain.toolStripDropDownButtonMapProvider, mpr.ID);
+            selectDropDownItems<MapProviderRecord>(formMain.mapProviderToolStripMenuItem, mpr.ID);
         }
 
         /// <summary>
-        /// выделяет пункты меню, карта которого выбрана
+        /// выделяет пункты меню, карта или слой которого выбран
         /// </summary>
         /// <param name="menu">пункт мен с кнопками карт</param>
         /// <param name="id">id карты, которая сейчас открыта</param>
-        private void selectDropDownMapItems(ToolStripDropDownItem menu, int id)
+        /// <typeparam name="T">тип (MapLayerProviderRecord или MapProviderRecord)</typeparam>
+        private void selectDropDownItems<T>(ToolStripDropDownItem menu, int id)
+            where T: BaseProviderRecord
         {
             ToolStripMenuItem item = null;
             foreach (ToolStripMenuItem ti in menu.DropDownItems)
@@ -818,14 +831,14 @@ namespace TrackConverter.UI.Shell
                     ti.Checked = false;
                     foreach (ToolStripMenuItem ti2 in ti.DropDownItems)
                     {
-                        bool check = (((MapProviderRecord)(ti2.Tag)).ID == id);
+                        bool check = (((T)(ti2.Tag)).ID == id);
                         if (check)
                             item = ti2;
                         ti2.Checked = false; //сама кнопка карты                        
                     }
                 }
                 else
-                    ti.Checked = (((MapProviderRecord)(ti.Tag)).ID == id);
+                    ti.Checked = (((T)(ti.Tag)).ID == id);
             if (item != null)
             {
                 item.Checked = true;
@@ -849,17 +862,14 @@ namespace TrackConverter.UI.Shell
                 case MapLayerProviders.OSMGPSTracks:
                 case MapLayerProviders.OSMRailways:
                 case MapLayerProviders.OSMRoadSurface:
+                case MapLayerProviders.RosreestrCadaster:
                     formMain.gmapControlMap.LayerProvider = lpr.Enum;
                     break;
                 default:
                     throw new NotSupportedException("Этот поставщик слоя не поддерживается " + lpr.Enum);
             }
             Vars.Options.Map.LayerProvider = lpr;
-            foreach (ToolStripMenuItem ti in formMain.layerProviderToolStripMenuItem.DropDownItems)
-                if (((MapLayerProviderRecord)(ti.Tag)).ID == lpr.ID)
-                    ti.Checked = true;
-                else
-                    ti.Checked = false;
+            selectDropDownItems<MapLayerProviderRecord>(formMain.layerProviderToolStripMenuItem, lpr.ID);
         }
 
         #endregion
@@ -1349,6 +1359,7 @@ namespace TrackConverter.UI.Shell
             formMain.isSelectingPoint = true;
             formMain.gmapControlMap.DragButton = MouseButtons.Right;
             formMain.gmapControlMap.Cursor = Cursors.Cross;
+            formMain.gmapControlMap.vectorLayersOverlay.IsVisibile = false;
             if (formMain.isCreatingRoute)
                 Program.winRouteEditor.Close();
             formMain.AfterSelectPointAction = after;

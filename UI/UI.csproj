@@ -335,15 +335,12 @@
     </Content>
     <Content Include="Docs\добавление действия для отмены.txt" />
     <Content Include="Docs\добавление иконки маркера.txt" />
-    <Content Include="Docs\добавление провайдера растровогослоя.txt" />
+    <Content Include="Docs\добавление провайдера растрового слоя.txt" />
     <Content Include="Docs\добавление провайдера карты.txt" />
     <Content Include="Docs\добавление типа путевой точки.txt" />
     <Content Include="Docs\добавление формата файла.txt" />
     <Content Include="Docs\СК, проекции и прочее.txt" />
     <Content Include="Docs\стандарты.txt" />
-    <Content Include="f.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="Images\icons\001.ico">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -420,6 +417,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Images\layers\osm_gps_tracks.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\layers\rosreestr_cadaster.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Images\layers\wikimapia.png">

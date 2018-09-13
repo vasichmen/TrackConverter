@@ -130,6 +130,7 @@ namespace TrackConverter.UI.Map
             }
             if (Program.winMain.isRuling)
                 Program.winMain.isRuling = false;
+            Program.winMain.toolStripLabelFromStart.Text = "";
             Program.winMain.toolStripLabelInfo.Text = "";
             this.overlay.Clear();
             Program.winMain.selectedPointIndex = 0;

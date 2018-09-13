@@ -1039,6 +1039,12 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
             throw new TrackConverterException("Превышено количество попыток подключения");
         }
 
+
+        public Image GetRastrTile(RectLatLng tile, PureProjection projection)
+        {
+            throw new NotImplementedException("Для этого поставщика слоя надо использовать метод GetRastrTile(long x, long y, int z)");
+        }
+
         /// <summary>
         /// получить параметр tm для запроса пробок
         /// </summary>
@@ -1079,6 +1085,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
             }
             throw new TrackConverterException("Превышено количество попыток подключения");
         }
+
 
         #endregion
     }

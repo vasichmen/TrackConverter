@@ -10,6 +10,7 @@ using GMap.NET;
 using GMap.NET.MapProviders;
 using GMap.NET.WindowsForms;
 using TrackConverter.Lib.Classes;
+using TrackConverter.Lib.Classes.ProviderRecords;
 using TrackConverter.Lib.Data.Providers.InternetServices;
 using TrackConverter.Lib.Mathematic.Geodesy.MapCalibrations;
 

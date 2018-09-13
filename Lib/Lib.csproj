@@ -117,9 +117,10 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Classes\ProviderRecords\BaseProviderRecord.cs" />
     <Compile Include="Classes\VectorMapLayerObject.cs" />
-    <Compile Include="Classes\MapLayerProviderRecord.cs" />
-    <Compile Include="Classes\MapProviderRecord.cs" />
+    <Compile Include="Classes\ProviderRecords\MapLayerProviderRecord.cs" />
+    <Compile Include="Classes\ProviderRecords\MapProviderRecord.cs" />
     <Compile Include="Classes\MarkerTag.cs" />
     <Compile Include="Classes\Options\Common.cs" />
     <Compile Include="Classes\Options\Container.cs" />
@@ -149,6 +150,7 @@
     <Compile Include="Data\Providers\InternetServices\Nominatim.cs" />
     <Compile Include="Data\Providers\InternetServices\OSM.cs" />
     <Compile Include="Data\Providers\InternetServices\Qps.cs" />
+    <Compile Include="Data\Providers\InternetServices\RosreestrCadaster.cs" />
     <Compile Include="Data\Providers\InternetServices\Velomapa.cs" />
     <Compile Include="Data\Providers\InternetServices\VK.cs" />
     <Compile Include="Data\Providers\InternetServices\Wikimapia.cs" />
