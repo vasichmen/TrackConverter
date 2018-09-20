@@ -201,7 +201,7 @@ namespace TrackConverter.Res.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на \TrackConverter.resources.dll.
+        ///   Ищет локализованную строку, похожую на \ru\TrackConverter.resources.dll.
         /// </summary>
         public static string dll_res_trackconverter {
             get {
@@ -210,7 +210,7 @@ namespace TrackConverter.Res.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на \ZedGraph.resources.dll.
+        ///   Ищет локализованную строку, похожую на \ru\ZedGraph.resources.dll.
         /// </summary>
         public static string dll_res_zedgraph {
             get {

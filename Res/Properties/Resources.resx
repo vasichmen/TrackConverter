@@ -333,9 +333,9 @@
     <value>\x86\SQLite.Interop.dll</value>
   </data>
   <data name="dll_res_trackconverter" xml:space="preserve">
-    <value>\TrackConverter.resources.dll</value>
+    <value>\ru\TrackConverter.resources.dll</value>
   </data>
   <data name="dll_res_zedgraph" xml:space="preserve">
-    <value>\ZedGraph.resources.dll</value>
+    <value>\ru\ZedGraph.resources.dll</value>
   </data>
 </root>

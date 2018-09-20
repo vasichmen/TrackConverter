@@ -63,6 +63,9 @@ namespace TrackConverter.UI.Common.Dialogs
             {
                 Action act = new Action(() =>
                 {
+                    if (originalImage == null)
+                        return;
+
                     zoom = value;
                     int nw = originalImage.Size.Width * value;
                     int nh = originalImage.Size.Height * value;
@@ -211,6 +214,7 @@ namespace TrackConverter.UI.Common.Dialogs
                     {
                         Image img = Vars.dataCache.GetImage(cur_url);
                         originalImage = img;
+                        Zoom = 1; //изменение зума должн быть только после установки originalImage
                     }
                     else
                     {
@@ -219,6 +223,7 @@ namespace TrackConverter.UI.Common.Dialogs
                             Image imag = Image.FromFile(file);
                             Vars.dataCache.PutImage(cur_url, imag); //добавлять в кэш можно только ДО использования объекта, иначе - InvalidOperationException
                             originalImage = imag;
+                            Zoom = 1; //изменение зума должн быть только после установки originalImage
                             setOperation.Invoke("Изображение " + (cur_ind + 1) + "/" + photos.Count + ", загружено " + photos[cur_ind].TimeString);
                         }));
                     }
@@ -227,7 +232,6 @@ namespace TrackConverter.UI.Common.Dialogs
                 });
                 load.Start();
                 load.Wait();
-                Zoom = 1;
                 tooltip.SetToolTip(pictureBoxImage, cur_url);
             }
             catch (Exception ex)

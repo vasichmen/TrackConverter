@@ -332,6 +332,7 @@ namespace TrackConverter.UI
                 {
                     MessageBox.Show(null, "Библиотека " + n + " не была найдена в папке программы!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     Application.Exit();
+                    return;
                 }
 
             foreach (MapProviderRecord mpr in Vars.Options.Map.AllMapProviders)
@@ -339,12 +340,14 @@ namespace TrackConverter.UI
                 {
                     MessageBox.Show(null, "Файл карты " + mpr.IconName + " не был найден в папке " + Application.StartupPath, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     Application.Exit();
+                    return;
                 }
             foreach (MapLayerProviderRecord lpr in Vars.Options.Map.AllLayerProviders)
                 if (!File.Exists(Application.StartupPath + lpr.IconName))
                 {
                     MessageBox.Show(null, "Файл слоя " + lpr.IconName + " не был найден в папке " + Application.StartupPath, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     Application.Exit();
+                    return;
                 }
         }
 
