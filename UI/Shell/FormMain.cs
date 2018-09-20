@@ -207,11 +207,6 @@ namespace TrackConverter.UI.Shell
         /// </summary>
         public bool isMarkerClicked;
 
-        /// <summary>
-        /// если истина, то последнее нажатие на карту было при выборе точки. Используется, чтобы при выборе точки не возникало собитие нажатия на полигон
-        /// </summary>
-        internal bool isPointSelected = false;
-
         #endregion
 
         #region идентификаторы
@@ -840,16 +835,6 @@ namespace TrackConverter.UI.Shell
         private void gmapControlMap_OnMarkerClick(GMapMarker item, MouseEventArgs e)
         {
             mapHelper.OnMarkerClick(item, e);
-        }
-
-        /// <summary>
-        /// нажатие на полигон на карте
-        /// </summary>
-        /// <param name="item"></param>
-        /// <param name="e"></param>
-        private void gmapControlMap_OnPolygonClick(GMapPolygon item, MouseEventArgs e)
-        {
-            mapHelper.OnPolygonClick(item, e);
         }
 
         private void gmapControlMap_OnMapZoomChanged()

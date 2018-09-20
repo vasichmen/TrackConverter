@@ -1340,7 +1340,7 @@ namespace TrackConverter.Lib.Tracking
                 string ndata = "";
                 double dlon = Math.Round(Track[i].Coordinates.Longitude.TotalDegrees - Track[i - 1].Coordinates.Longitude.TotalDegrees, 8);
                 double dlat = Math.Round(Track[i].Coordinates.Latitude.TotalDegrees - Track[i - 1].Coordinates.Latitude.TotalDegrees, 8);
-                ndata += "~" + dlon.ToString("0.00000000").Replace(Vars.DecimalSeparator, '.') + "%2C" + dlat.ToString("#0.00000000").Replace(Vars.DecimalSeparator, '.');
+                ndata += "~" + dlon.ToString("0.00000000").Replace(Vars.DecimalSeparator, '.') + "%2C" + dlat.ToString("0.00000000").Replace(Vars.DecimalSeparator, '.');
                 res += ndata;
             }
             return res;

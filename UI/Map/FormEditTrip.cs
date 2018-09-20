@@ -847,7 +847,6 @@ readLength:
                 this.WindowState = FormWindowState.Normal;
                 Program.winMain.gmapControlMap.Cursor = Cursors.Arrow;
                 Program.winMain.isSelectingPoint = false;
-                Program.winMain.gmapControlMap.vectorLayersOverlay.IsVisibile = true;
             });
             Program.winMain.mapHelper.BeginSelectPoint(after);
         }

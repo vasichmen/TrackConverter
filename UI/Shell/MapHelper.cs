@@ -266,15 +266,23 @@ namespace TrackConverter.UI.Shell
             }
             #endregion
 
+            #region нажатие на полигон при выборе векторного объекта
+
+            //если не идёт создание маршрута, не выбор точки, не линейка, не перемещение маркера, не перемещение карты, ЛКМ, то обрабатываем нажатие
+            if (!formMain.isCreatingRoute && !formMain.isSelectingPoint && !formMain.isRuling && !formMain.isMarkerMoving && !formMain.gmapControlMap.IsDragging && e.Button == MouseButtons.Left)
+            {
+                OnPolygonClick(e);
+            }
+
+            #endregion
+
             #region выбор точки при редактировании путешествия
 
             //если идёт выбор точки, не идёт создание маршрута и не линейка и клик не на маркере
             if (formMain.isSelectingPoint && !(formMain.isCreatingRoute || formMain.isRuling) && !formMain.isMarkerClicked && !formMain.gmapControlMap.IsDragging)
             {
-                formMain.isPointSelected = true;
                 PointLatLng pt = formMain.gmapControlMap.FromLocalToLatLng(e.X, e.Y);
                 TrackPoint newpt = new TrackPoint(pt);
-                formMain.isPointSelected = true;
                 if (formMain.AfterSelectPointAction != null)
                     formMain.AfterSelectPointAction.Invoke(newpt);
             }
@@ -365,39 +373,28 @@ namespace TrackConverter.UI.Shell
         }
 
         /// <summary>
-        /// нажатие на полигон на карте
+        /// нажатие на полигон на карте. Этот метод нельзя подписывать на событие OnPolygonClick, иначе будут проблемы при выборе точки на карте
         /// </summary>
-        /// <param name="item"></param>
         /// <param name="e"></param>
-        internal void OnPolygonClick(GMapPolygon item, MouseEventArgs e)
+        internal void OnPolygonClick(MouseEventArgs e)
         {
-            //если не идёт создание маршрута, не выбор точки, не линейка, не перемещение маркера, не перемещение карты, ЛКМ, то обрабатываем нажатие
-            if (!formMain.isCreatingRoute && !formMain.isSelectingPoint && !formMain.isRuling && !formMain.isMarkerMoving && !formMain.gmapControlMap.IsDragging && e.Button == MouseButtons.Left)
+            List<VectorMapLayerObject> objs = formMain.gmapControlMap.GetVectorObjectsUnderCursor();
+            VectorMapLayerObject obj;
+            if (objs.Count == 1)
+                obj = objs[0];
+            else
             {
-                if (formMain.isPointSelected) //если при последнем нажатии была выбрана точка, то вызывать собитие нажатия на полигон не надо
+                FormChooseVariant fcv = new FormChooseVariant(objs, "Выбор объекта", SelectionMode.One);
+                if (fcv.ShowDialog(Program.winMain) == DialogResult.OK)
                 {
-                    formMain.isPointSelected = false;
-                    return;
-                }
-
-                List<VectorMapLayerObject> objs = formMain.gmapControlMap.GetVectorObjectsUnderCursor();
-                VectorMapLayerObject obj;
-                if (objs.Count == 1)
-                    obj = objs[0];
-                else
-                {
-                    FormChooseVariant fcv = new FormChooseVariant(objs, "Выбор объекта", SelectionMode.One);
-                    if (fcv.ShowDialog(Program.winMain) == DialogResult.OK)
-                    {
-                        if (fcv.Result.Count != 1) //выход, если выбрано более одного объекта
-                            return;
-                        obj = objs[fcv.Result[0]];
-                    }
-                    else //выход, если выбор объекта отменён
+                    if (fcv.Result.Count != 1) //выход, если выбрано более одного объекта
                         return;
+                    obj = objs[fcv.Result[0]];
                 }
-                new FormShowObjectInfo(obj).Show();
+                else //выход, если выбор объекта отменён
+                    return;
             }
+            new FormShowObjectInfo(obj).Show();
         }
 
         internal void OnMarkerEnter(GMapMarker itm)
@@ -1359,7 +1356,6 @@ namespace TrackConverter.UI.Shell
             formMain.isSelectingPoint = true;
             formMain.gmapControlMap.DragButton = MouseButtons.Right;
             formMain.gmapControlMap.Cursor = Cursors.Cross;
-            formMain.gmapControlMap.vectorLayersOverlay.IsVisibile = false;
             if (formMain.isCreatingRoute)
                 Program.winRouteEditor.Close();
             formMain.AfterSelectPointAction = after;

@@ -140,5 +140,14 @@ namespace TrackConverter.Lib.Classes.Options
             }
         }
 
+        /// <summary>
+        /// адрес для связи в Telegram
+        /// </summary>
+        public string TelegramAddress { get { return "tg://resolve?domain=vasichmen"; } }
+
+        /// <summary>
+        /// адрес репозитория гитхаб
+        /// </summary>
+        public string GitHubRepository { get { return "https://github.com/vasichmen/TrackConverter"; } }
     }
 }

@@ -1,0 +1,9 @@
+Params{
+	"ID"="117",
+	"GUID"="55e0396e-3d80-4440-8fcb-812bcd3f039c",
+	"name"="Пешеходные дороги (ITO Map)",
+	"URLBase"="http://t.beta.itoworld.com/126/136bdef4afc8d6e92586bc38e7b843c1/",
+	"Ext"=".png",
+	"projection"="ProjectionMercator",
+	"ParentSubMenu"="OSM"
+}

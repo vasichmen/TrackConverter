@@ -19,7 +19,7 @@ namespace TrackConverter.Res.Properties {
     // с помощью такого средства, как ResGen или Visual Studio.
     // Чтобы добавить или удалить член, измените файл .ResX и снова запустите ResGen
     // с параметром /str или перестройте свой проект VS.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resources {
@@ -149,18 +149,126 @@ namespace TrackConverter.Res.Properties {
         /// <summary>
         ///   Ищет локализованную строку, похожую на \GMap.NET.Core.dll.
         /// </summary>
-        public static string gmapcore_dll_file {
+        public static string dll_gmapcore {
             get {
-                return ResourceManager.GetString("gmapcore_dll_file", resourceCulture);
+                return ResourceManager.GetString("dll_gmapcore", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Ищет локализованную строку, похожую на \GMap.NET.WindowsForms.dll.
         /// </summary>
-        public static string gmapwf_dll_file {
+        public static string dll_gmapwf {
             get {
-                return ResourceManager.GetString("gmapwf_dll_file", resourceCulture);
+                return ResourceManager.GetString("dll_gmapwf", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на \HtmlAgilityPack.dll.
+        /// </summary>
+        public static string dll_html_agility_pack {
+            get {
+                return ResourceManager.GetString("dll_html_agility_pack", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на \Lib.dll.
+        /// </summary>
+        public static string dll_lib {
+            get {
+                return ResourceManager.GetString("dll_lib", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на \Newtonsoft.Json.dll.
+        /// </summary>
+        public static string dll_newtonsoft_json {
+            get {
+                return ResourceManager.GetString("dll_newtonsoft_json", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на \Res.dll.
+        /// </summary>
+        public static string dll_res {
+            get {
+                return ResourceManager.GetString("dll_res", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на \TrackConverter.resources.dll.
+        /// </summary>
+        public static string dll_res_trackconverter {
+            get {
+                return ResourceManager.GetString("dll_res_trackconverter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на \ZedGraph.resources.dll.
+        /// </summary>
+        public static string dll_res_zedgraph {
+            get {
+                return ResourceManager.GetString("dll_res_zedgraph", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на \System.Runtime.dll.
+        /// </summary>
+        public static string dll_runtime {
+            get {
+                return ResourceManager.GetString("dll_runtime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на \System.Data.SQLite.dll.
+        /// </summary>
+        public static string dll_SQLite {
+            get {
+                return ResourceManager.GetString("dll_SQLite", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на \x64\SQLite.Interop.dll.
+        /// </summary>
+        public static string dll_sqliteInterop64 {
+            get {
+                return ResourceManager.GetString("dll_sqliteInterop64", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на \x86\SQLite.Interop.dll.
+        /// </summary>
+        public static string dll_sqliteInterop86 {
+            get {
+                return ResourceManager.GetString("dll_sqliteInterop86", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на \ZedGraph.dll.
+        /// </summary>
+        public static string dll_zed_graph {
+            get {
+                return ResourceManager.GetString("dll_zed_graph", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на \ICSharpCode.SharpZipLib.dll.
+        /// </summary>
+        public static string dll_ziplib {
+            get {
+                return ResourceManager.GetString("dll_ziplib", resourceCulture);
             }
         }
         
@@ -252,15 +360,6 @@ namespace TrackConverter.Res.Properties {
         public static string kmlschema_scheme_file {
             get {
                 return ResourceManager.GetString("kmlschema_scheme_file", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на \Lib.dll.
-        /// </summary>
-        public static string lib_dll_file {
-            get {
-                return ResourceManager.GetString("lib_dll_file", resourceCulture);
             }
         }
         
@@ -417,15 +516,6 @@ namespace TrackConverter.Res.Properties {
         public static string word_template {
             get {
                 return ResourceManager.GetString("word_template", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на \ICSharpCode.SharpZipLib.dll.
-        /// </summary>
-        public static string ziplib_dll_file {
-            get {
-                return ResourceManager.GetString("ziplib_dll_file", resourceCulture);
             }
         }
     }

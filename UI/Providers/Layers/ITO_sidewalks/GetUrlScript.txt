@@ -1,0 +1,6 @@
+string GetURL(string URLBase, int GetX, int GetY, int GetZ, string Ext)
+{
+	int server = new Random().Next(4);	
+	string ts := URLBase.Replace('t.beta.itoworld.com', 't'+server+'.beta.itoworld.com');
+	return ts + (GetZ-1)+"/"+GetX+"/"+GetY+Ext;
+}

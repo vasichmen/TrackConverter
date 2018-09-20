@@ -34,7 +34,6 @@ namespace TrackConverter.Lib.Data.Providers.Local.OS
         private readonly string cache_file;
         private readonly string cache_connectionString;
         private readonly string geocoder_table = "tb_geocoder";
-        private readonly string wikimapia_objects_table = "tb_wikimapia_objects";
 
         /// <summary>
         /// округление в таблице геокодера
@@ -89,24 +88,7 @@ namespace TrackConverter.Lib.Data.Providers.Local.OS
                 );",
                 con);
             commCreate.ExecuteNonQuery();
-
-            //таблица расположения векторных объектов
-            commCreate = new SQLiteCommand(
-               @"CREATE TABLE " + wikimapia_objects_table + @"
-                (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, 
-                object_id INTEGER NOT NULL,
-                center_lat double NOT NULL,
-                center_lon double NOT NULL,
-                lat_min double NOT NULL,
-                lat_max double NOT NULL,
-                lon_min double NOT NULL,
-                lon_max double NOT NULL,
-                ins_date DATE NOT NULL,
-                perimeter double NOT NULL,
-                layer_provider TEXT NOT NULL
-                );",
-               con);
-            commCreate.ExecuteNonQuery();
+            
 
             SQLiteCommand commAddFirst = new SQLiteCommand(
                 @"INSERT INTO '" + geocoder_table + @"' 

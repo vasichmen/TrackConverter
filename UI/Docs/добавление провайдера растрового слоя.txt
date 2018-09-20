@@ -6,5 +6,6 @@
 6. изменить switch в методе   TrackConverter.UI.Ext.GMapControlExt.RefreshLayers()
 7. изменить switch в методе   TrackConverter.UI.Shell.MapHelper.lrProvider_Click()
 7. изменить switch в конструкторе TrackConverter.Lib.Data.RastrMapLayer
+7. изменить switch в методе TrackConverter.Lib.Data.MapLayerProviderRecord.GetMapLayerProviderClassName()
 8. добавить элемент  в TrackConverter.Lib.Classes.Options.Map.AllLayerProviders
 9. добавить картинку слоя 24x24px в папку /Images/layers, добавить в проект, поставить "Копировать более новую версию"

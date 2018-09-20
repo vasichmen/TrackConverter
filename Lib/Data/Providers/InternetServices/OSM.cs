@@ -24,7 +24,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
             /// </summary>
             /// <param name="cacheDirectory">папка с кэшем или null, если не надо использовать кэш</param>
             /// <param name="duration">время хранения кэша в часах. По умолчанию - неделя</param>
-            public GpsTracks(string cacheDirectory, int duration = 24 * 7) : base(cacheDirectory, duration) { }
+            public GpsTracks() : base(null) { }
 
             /// <summary>
             /// максимальное число попыток подключения
@@ -91,7 +91,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
             /// </summary>
             /// <param name="cacheDirectory">папка с кэшем или null, если не надо использовать кэш</param>
             /// <param name="duration">время хранения кэша в часах. По умолчанию - неделя</param>
-            public RoadSurface(string cacheDirectory, int duration = 24 * 7) : base(cacheDirectory, duration) { }
+            public RoadSurface() : base(null) { }
 
             /// <summary>
             /// максимальное число попыток подключения
@@ -158,7 +158,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
             /// </summary>
             /// <param name="cacheDirectory">папка с кэшем или null, если не надо использовать кэш</param>
             /// <param name="duration">время хранения кэша в часах. По умолчанию - неделя</param>
-            public Railways(string cacheDirectory, int duration = 24 * 7) : base(cacheDirectory, duration) { }
+            public Railways() : base(null) { }
 
             /// <summary>
             /// максимальное число попыток подключения

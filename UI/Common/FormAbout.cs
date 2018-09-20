@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
-using System.Drawing;
-using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Windows.Forms;
@@ -16,7 +12,7 @@ namespace TrackConverter.UI.Common
     /// <summary>
     /// окно о программе
     /// </summary>
-    partial class FormAbout : Form
+    internal partial class FormAbout : Form
     {
         /// <summary>
         /// создает новое окно
@@ -24,11 +20,13 @@ namespace TrackConverter.UI.Common
         public FormAbout()
         {
             InitializeComponent();
-            this.Text = String.Format("О программе {0}", AssemblyTitle);
+            this.Text = string.Format("О программе {0}", AssemblyTitle);
             this.labelProductName.Text = AssemblyProduct;
-            this.labelVersion.Text = String.Format("Версия {0}", AssemblyVersion);
+            this.labelVersion.Text = string.Format("Версия {0}", AssemblyVersion);
             this.labelCopyright.Text = AssemblyCopyright;
             this.linkLabelSite.Text = Vars.Options.Common.SiteAddress;
+            this.linkLabelTlg.Text = "Telegram: @vasichmen";
+            this.linkLabelGithub.Text = "Репозиторий GitHub";
             this.textBoxDescription.Text = AssemblyDescription;
         }
 
@@ -160,5 +158,25 @@ namespace TrackConverter.UI.Common
             }
         }
 
+        /// <summary>
+        /// нажатие на ссылку связи в телеграме
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void linkLabelTlg_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+
+            Process.Start(Vars.Options.Common.TelegramAddress);
+        }
+
+        /// <summary>
+        /// нажатие ссылки на гитхаб
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void linkLabelGithub_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            Process.Start(Vars.Options.Common.GitHubRepository);
+        }
     }
 }

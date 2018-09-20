@@ -148,11 +148,11 @@
   <data name="marker_finish" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\finish.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="gmapcore_dll_file" xml:space="preserve">
+  <data name="dll_gmapcore" xml:space="preserve">
     <value>\GMap.NET.Core.dll</value>
     <comment>библиотека ядра GMap</comment>
   </data>
-  <data name="gmapwf_dll_file" xml:space="preserve">
+  <data name="dll_gmapwf" xml:space="preserve">
     <value>\GMap.NET.WindowsForms.dll</value>
     <comment>библиотека компонентов GMap</comment>
   </data>
@@ -213,7 +213,7 @@
 &lt;/kml&gt;</value>
     <comment>схема файла KML</comment>
   </data>
-  <data name="lib_dll_file" xml:space="preserve">
+  <data name="dll_lib" xml:space="preserve">
     <value>\Lib.dll</value>
     <comment>основная библиотека программы</comment>
   </data>
@@ -245,7 +245,7 @@
     <value>\tmp</value>
     <comment>временная папка</comment>
   </data>
-  <data name="ziplib_dll_file" xml:space="preserve">
+  <data name="dll_ziplib" xml:space="preserve">
     <value>\ICSharpCode.SharpZipLib.dll</value>
     <comment>библиотека работы с zip архивами</comment>
   </data>
@@ -307,5 +307,35 @@
   <data name="wikimapia_key" xml:space="preserve">
     <value>087ECBE0-7869F692-405FA237-852AD116-23CA037A-A588C4C0-2000C58D-5A0D8212</value>
     <comment>Ключ доступа к API викимапии</comment>
+  </data>
+  <data name="dll_html_agility_pack" xml:space="preserve">
+    <value>\HtmlAgilityPack.dll</value>
+  </data>
+  <data name="dll_newtonsoft_json" xml:space="preserve">
+    <value>\Newtonsoft.Json.dll</value>
+  </data>
+  <data name="dll_zed_graph" xml:space="preserve">
+    <value>\ZedGraph.dll</value>
+  </data>
+  <data name="dll_res" xml:space="preserve">
+    <value>\Res.dll</value>
+  </data>
+  <data name="dll_runtime" xml:space="preserve">
+    <value>\System.Runtime.dll</value>
+  </data>
+  <data name="dll_SQLite" xml:space="preserve">
+    <value>\System.Data.SQLite.dll</value>
+  </data>
+  <data name="dll_sqliteInterop64" xml:space="preserve">
+    <value>\x64\SQLite.Interop.dll</value>
+  </data>
+  <data name="dll_sqliteInterop86" xml:space="preserve">
+    <value>\x86\SQLite.Interop.dll</value>
+  </data>
+  <data name="dll_res_trackconverter" xml:space="preserve">
+    <value>\TrackConverter.resources.dll</value>
+  </data>
+  <data name="dll_res_zedgraph" xml:space="preserve">
+    <value>\ZedGraph.resources.dll</value>
   </data>
 </root>

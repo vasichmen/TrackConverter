@@ -11,7 +11,7 @@ namespace TrackConverter.UI.Common.Dialogs
     /// <summary>
     /// окно вывода изображения
     /// </summary>
-    public partial class FormShowPicture: Form
+    public partial class FormShowPicture : Form
     {
         /// <summary>
         /// адрес изображения
@@ -44,6 +44,56 @@ namespace TrackConverter.UI.Common.Dialogs
         private Action<string> setOperation;
 
         /// <summary>
+        /// начальный размер изображения
+        /// </summary>
+        private Image originalImage = null;
+
+        /// <summary>
+        /// масштаб изображения
+        /// </summary>
+        private int zoom;
+
+        /// <summary>
+        /// масштаб изображения
+        /// </summary>
+        public int Zoom
+        {
+            get { return zoom; }
+            set
+            {
+                Action act = new Action(() =>
+                {
+                    zoom = value;
+                    int nw = originalImage.Size.Width * value;
+                    int nh = originalImage.Size.Height * value;
+                    pictureBoxImage.Image?.Dispose();
+                    pictureBoxImage.Image = resizeBitmap(originalImage, nw, nh);
+                    pictureBoxImage.Height = nh;
+                    pictureBoxImage.Width = nw;
+                });
+                if (pictureBoxImage.InvokeRequired)
+                    pictureBoxImage.Invoke(act);
+                else
+                    act.Invoke();
+            }
+        }
+
+        /// <summary>
+        /// изменение размера изображения
+        /// </summary>
+        /// <param name="sourceBMP">исходное изображение</param>
+        /// <param name="width">новая ширина</param>
+        /// <param name="height">новая высота</param>
+        /// <returns></returns>
+        private Bitmap resizeBitmap(Image sourceBMP, int width, int height)
+        {
+            Bitmap result = new Bitmap(width, height);
+            using (Graphics g = Graphics.FromImage(result))
+                g.DrawImage(sourceBMP, 0, 0, width, height);
+            return result;
+        }
+
+        /// <summary>
         /// создаёт окно вывода изображения
         /// </summary>
         /// <param name="url"></param>
@@ -52,8 +102,9 @@ namespace TrackConverter.UI.Common.Dialogs
             InitializeComponent();
             this.photos = photos;
             this.start = start;
-
-            pictureBoxImage.SizeMode = PictureBoxSizeMode.Zoom;
+            this.MouseWheel += FormShowPicture_MouseWheel;
+            this.zoom = 1;
+            pictureBoxImage.SizeMode = PictureBoxSizeMode.CenterImage;
 
             setOperation = new Action<string>((obj) =>
             {
@@ -79,6 +130,25 @@ namespace TrackConverter.UI.Common.Dialogs
                 catch (Exception) { }
             });
 
+        }
+
+        /// <summary>
+        /// событие приближения или удаления картинки
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void FormShowPicture_MouseWheel(object sender, MouseEventArgs e)
+        {
+            if (e.Delta > 0)
+                if (Zoom == 5)
+                    return;
+                else
+                    Zoom++;
+            if (e.Delta < 0)
+                if (Zoom == 1)
+                    return;
+                else
+                    Zoom--;
         }
 
         private void formShowPicture_Shown(object sender, EventArgs e)
@@ -137,11 +207,10 @@ namespace TrackConverter.UI.Common.Dialogs
             {
                 load = new Task(() =>
                 {
-
                     if (Vars.dataCache.CheckImage(cur_url))
                     {
                         Image img = Vars.dataCache.GetImage(cur_url);
-                        pictureBoxImage.Image = img;
+                        originalImage = img;
                     }
                     else
                     {
@@ -149,7 +218,7 @@ namespace TrackConverter.UI.Common.Dialogs
                         {
                             Image imag = Image.FromFile(file);
                             Vars.dataCache.PutImage(cur_url, imag); //добавлять в кэш можно только ДО использования объекта, иначе - InvalidOperationException
-                            pictureBoxImage.Image = imag;
+                            originalImage = imag;
                             setOperation.Invoke("Изображение " + (cur_ind + 1) + "/" + photos.Count + ", загружено " + photos[cur_ind].TimeString);
                         }));
                     }
@@ -158,6 +227,7 @@ namespace TrackConverter.UI.Common.Dialogs
                 });
                 load.Start();
                 load.Wait();
+                Zoom = 1;
                 tooltip.SetToolTip(pictureBoxImage, cur_url);
             }
             catch (Exception ex)

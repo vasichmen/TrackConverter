@@ -15,38 +15,35 @@
 
 #define Debug
 
+using GMap.NET;
+using GMap.NET.MapProviders;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using GMap.NET;
-using GMap.NET.MapProviders;
 using TrackConverter.Lib.Classes;
 using TrackConverter.Lib.Classes.Options;
+using TrackConverter.Lib.Classes.ProviderRecords;
 using TrackConverter.Lib.Data;
 using TrackConverter.Lib.Data.Providers.InternetServices;
 using TrackConverter.Lib.Data.Providers.Local.ETOPO;
 using TrackConverter.Lib.Mathematic.Geodesy.Models;
-using TrackConverter.Lib.Tracking;
 using TrackConverter.Res.Properties;
 using TrackConverter.UI.Common;
 using TrackConverter.UI.Common.Dialogs;
 using TrackConverter.UI.Converter;
 using TrackConverter.UI.Map;
-using TrackConverter.UI.Tools;
 using TrackConverter.UI.Shell;
-using TrackConverter.Lib.Classes.ProviderRecords;
+using TrackConverter.UI.Tools;
 
 namespace TrackConverter.UI
 {
     /// <summary>
     /// основной класс программы
     /// </summary>
-    static class Program
+    internal static class Program
     {
         #region Окна
 
@@ -102,7 +99,7 @@ namespace TrackConverter.UI
         /// <summary>
         /// иконка в панели задач
         /// </summary>
-        static TrayIcon trayIcon = null;
+        private static TrayIcon trayIcon = null;
 
 
         internal static bool winNavigatorNullOrDisposed { get { return winNavigator == null || winNavigator.IsDisposed; } }
@@ -117,7 +114,7 @@ namespace TrackConverter.UI
         /// Главная точка входа для приложения.
         /// </summary>
         [STAThread]
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
 #if (!DEBUG)
             try
@@ -153,20 +150,20 @@ namespace TrackConverter.UI
             trayIcon.Show();
 
             //обработчик выхода из приложения
-            Application.ApplicationExit += Application_ApplicationExit;
+            Application.ApplicationExit += application_ApplicationExit;
 
             //настройки программы
             Vars.Options = Options.Load(Application.StartupPath + Resources.options_folder);
 
             //проверка файлов программы
-            CheckFiles();
+            checkFiles();
 
             //открытие БД кэша геокодера
             new Task(new Action(() => { Vars.dataCache = new Cache(Application.StartupPath + Resources.cache_directory); })).Start();
 
 
             //метод загрузки базы данных ETOPO
-            Vars.TaskLoadingETOPO = GetETOPOLoadingTask();
+            Vars.TaskLoadingETOPO = getETOPOLoadingTask();
 
 
 
@@ -266,7 +263,7 @@ namespace TrackConverter.UI
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private static void Application_ApplicationExit(object sender, EventArgs e)
+        private static void application_ApplicationExit(object sender, EventArgs e)
         {
             GMaps.Instance.CancelTileCaching();
             Debug.Print("Application_ApplicationExit");
@@ -304,25 +301,25 @@ namespace TrackConverter.UI
         /// <summary>
         /// проверка файлов программы
         /// </summary>
-        private static void CheckFiles()
+        private static void checkFiles()
         {
-            if (!File.Exists(Application.StartupPath + Resources.lib_dll_file))
-            {
-                MessageBox.Show(null, "Библиотека " + Resources.lib_dll_file + " не была найдена в папке программы!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                Application.Exit();
-            }
+            List<string> dlls = new List<string>() {
+                Resources.dll_lib,
+                Resources.dll_gmapcore,
+                Resources.dll_gmapwf,
+                Resources.dll_html_agility_pack,
+                Resources.dll_newtonsoft_json,
+                Resources.dll_res,
+                Resources.dll_runtime,
+                Resources.dll_SQLite,
+                Resources.dll_zed_graph,
+                Resources.dll_sqliteInterop64,
+                Resources.dll_sqliteInterop86,
+                Resources.dll_res_trackconverter,
+                Resources.dll_res_zedgraph
+            };
 
-            if (!File.Exists(Application.StartupPath + Resources.gmapcore_dll_file))
-            {
-                MessageBox.Show(null, "Библиотека " + Resources.gmapcore_dll_file + " не была найдена в папке программы!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                Application.Exit();
-            }
 
-            if (!File.Exists(Application.StartupPath + Resources.gmapwf_dll_file))
-            {
-                MessageBox.Show(null, "Библиотека " + Resources.gmapwf_dll_file + " не была найдена в папке программы!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                Application.Exit();
-            }
 
             if (!File.Exists(Application.StartupPath + Resources.help_doc_file))
             {
@@ -330,16 +327,23 @@ namespace TrackConverter.UI
                 Application.Exit();
             }
 
-            if (!File.Exists(Application.StartupPath + Resources.ziplib_dll_file))
-            {
-                MessageBox.Show(null, "Библиотека " + Resources.ziplib_dll_file + " не была найдена в папке программы!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                Application.Exit();
-            }
+            foreach (var n in dlls)
+                if (!File.Exists(Application.StartupPath + n))
+                {
+                    MessageBox.Show(null, "Библиотека " + n + " не была найдена в папке программы!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    Application.Exit();
+                }
 
             foreach (MapProviderRecord mpr in Vars.Options.Map.AllMapProviders)
                 if (!File.Exists(Application.StartupPath + mpr.IconName))
                 {
                     MessageBox.Show(null, "Файл карты " + mpr.IconName + " не был найден в папке " + Application.StartupPath, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    Application.Exit();
+                }
+            foreach (MapLayerProviderRecord lpr in Vars.Options.Map.AllLayerProviders)
+                if (!File.Exists(Application.StartupPath + lpr.IconName))
+                {
+                    MessageBox.Show(null, "Файл слоя " + lpr.IconName + " не был найден в папке " + Application.StartupPath, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     Application.Exit();
                 }
         }
@@ -368,7 +372,7 @@ namespace TrackConverter.UI
             if (Vars.Options.DataSources.GeoInfoProvider == GeoInfoProvider.ETOPO)
             {
                 if (Vars.TaskLoadingETOPO.Status == TaskStatus.RanToCompletion || Vars.TaskLoadingETOPO.IsCompleted)
-                    Vars.TaskLoadingETOPO = GetETOPOLoadingTask();
+                    Vars.TaskLoadingETOPO = getETOPOLoadingTask();
                 winMain.BeginOperation();
                 Vars.TaskLoadingETOPO.Start();
             }
@@ -382,7 +386,7 @@ namespace TrackConverter.UI
         /// получить задачу загрузки БД ЕТОРО2
         /// </summary>
         /// <returns></returns>
-        private static Task GetETOPOLoadingTask()
+        private static Task getETOPOLoadingTask()
         {
             return new Task(new Action(() =>
              {

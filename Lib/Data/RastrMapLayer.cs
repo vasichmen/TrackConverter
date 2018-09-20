@@ -3,6 +3,7 @@ using System.Drawing;
 using GMap.NET;
 using TrackConverter.Lib.Data.Interfaces;
 using TrackConverter.Lib.Data.Providers.InternetServices;
+using TrackConverter.Lib.Exceptions;
 
 namespace TrackConverter.Lib.Data
 {
@@ -27,21 +28,21 @@ namespace TrackConverter.Lib.Data
                     engine = new Yandex(null);
                     break;
                 case MapLayerProviders.OSMGPSTracks:
-                    engine = new OSM.GpsTracks(null);
+                    engine = new OSM.GpsTracks();
                     break;
                 case MapLayerProviders.OSMRailways:
-                    engine = new OSM.Railways(null);
+                    engine = new OSM.Railways();
                     break;
                 case MapLayerProviders.OSMRoadSurface:
-                    engine = new OSM.RoadSurface(null);
+                    engine = new OSM.RoadSurface();
                     break;
                 case MapLayerProviders.RosreestrCadaster:
                     engine = new RosreestrCadaster();
                     break;
                 case MapLayerProviders.None:
-                    throw new Exception("Нельзя создать поставщика слоя None");
+                    throw new TrackConverterException("Нельзя создать поставщика слоя None");
                 default:
-                    throw new Exception("Данный поставщик слоя нельзя использовать в этом классе");
+                    throw new TrackConverterException("Данного поставщика слоя нельзя использовать в этом классе");
             }
         }
 

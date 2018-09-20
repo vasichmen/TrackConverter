@@ -11,7 +11,7 @@ using System.Resources;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("TrackConverter")]
-[assembly: AssemblyCopyright("Copyright © vasich,  2018")]
+[assembly: AssemblyCopyright("Copyright © vasichmen,  2018")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -33,6 +33,6 @@ using System.Resources;
 // Можно задать все значения или принять номер построения и номер редакции по умолчанию, 
 // используя "*", как показано ниже:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("4.2.2.0")]
-[assembly: AssemblyFileVersion("4.2.2.0")]
+[assembly: AssemblyVersion("4.2.3.0")]
+[assembly: AssemblyFileVersion("4.2.3.0")]
 [assembly: NeutralResourcesLanguageAttribute("ru")]
