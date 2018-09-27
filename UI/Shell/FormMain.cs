@@ -386,7 +386,7 @@ namespace TrackConverter.UI.Shell
         public FormMain(string[] args)
             : this()
         {
-
+            this.SuspendLayout();
             #region СПИСОК МАРШРУТОВ
 
             Tracks = new TrackFileList();
@@ -574,10 +574,12 @@ namespace TrackConverter.UI.Shell
                     converterHelper.OpenFile(arg);
                 }
             }
+            this.ResumeLayout();
         }
 
         private void formMain_Shown(object sender, EventArgs e)
         {
+            this.SuspendLayout();
             #region ВНЕШНИЙ ВИД ОКНА
 
             splitContainerHorizontalLeft.SplitterDistance = Vars.Options.Container.HorizontalLeftSplitter;
@@ -690,6 +692,7 @@ namespace TrackConverter.UI.Shell
                     BeginOperation();
                     Vars.TaskLoadingETOPO.Start();
                 }
+            this.ResumeLayout(true);
         }
 
 

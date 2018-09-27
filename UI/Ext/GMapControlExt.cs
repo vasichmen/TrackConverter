@@ -43,15 +43,11 @@ namespace TrackConverter.UI.Ext
         /// </summary>
         private List<int> SelectedPolygons = new List<int>();
 
-        /// <summary>
-        /// загруженные области с векторными объектами
-        /// </summary>
-        private ConcurrentBag<PointLatLng> loadedVectorAreas;
 
         /// <summary>
-        /// загруженные области с растровыми тайлами
+        /// загруженные области слоя карты (координаты в тайловых координатах)
         /// </summary>
-        private ConcurrentDictionary<GPoint, Image> loadedRastrAreas;
+        private ConcurrentDictionary<object, Image> loadedAreas;
 
         /// <summary>
         /// ID слоя с объектами
@@ -190,8 +186,7 @@ namespace TrackConverter.UI.Ext
         public GMapControlExt() : base()
         {
             vectorLayersOverlay = new GMapOverlay(vectorLayersOverlayID);
-            loadedVectorAreas = new ConcurrentBag<PointLatLng>();
-            loadedRastrAreas = new ConcurrentDictionary<GPoint, Image>();
+            loadedAreas = new ConcurrentDictionary<object, Image>();
             this.Overlays.Add(vectorLayersOverlay);
 
             //добавляем событие обновления слоёв карты
@@ -214,7 +209,7 @@ namespace TrackConverter.UI.Ext
         /// <param name="e"></param>
         private void gMapControlExt_Paint(object sender, PaintEventArgs e)
         {
-            lock (loadedRastrAreas)
+            lock (loadedAreas)
             {
                 switch (LayerProvider)
                 {
@@ -223,9 +218,9 @@ namespace TrackConverter.UI.Ext
                     case MapLayerProviders.OSMRailways:
                     case MapLayerProviders.OSMRoadSurface:
                     case MapLayerProviders.RosreestrCadaster:
-                        foreach (var kv in this.loadedRastrAreas)
+                        foreach (var kv in this.loadedAreas)
                         {
-                            showRastrLayerTile(kv.Value, kv.Key, e.Graphics);
+                            showRastrLayerTile(kv.Value, (GPoint)kv.Key, e.Graphics);
                         }
                         break;
                 }
@@ -342,48 +337,7 @@ namespace TrackConverter.UI.Ext
 
         #region растровые слои
 
-        /// <summary>
-        /// возвращает координаты верхних левых углов тайлов, которые сейчас виды на экране, исключая уже загруженные
-        /// </summary>
-        /// <returns></returns>
-        private List<GPoint> getVisiblePixelTiles(PureProjection proj = null)
-        {
-            int zoom = (int)Zoom;
-            RectLatLng viewArea = GetViewArea();
-            if (proj == null)
-                proj = this.MapProvider.Projection;
 
-            GPoint lt_pix = proj.FromLatLngToPixel(viewArea.LocationTopLeft, zoom);
-            GPoint rb_pix = proj.FromLatLngToPixel(viewArea.LocationRightBottom, zoom);
-
-            long x_from = ((int)(lt_pix.X / 256)); //верхние границы с округлнием в меньшую сторону
-            long y_from = ((int)(lt_pix.Y / 256));
-            long x_step = 1;
-            long y_step = 1;
-            long y_to = (long)Math.Ceiling(rb_pix.Y / 256d); //нижние границы с округлением в большую сторону
-            long x_to = (long)Math.Ceiling(rb_pix.X / 256d);
-
-            List<GPoint> result = new List<GPoint>();
-            for (long y = y_from; y <= y_to; y += y_step)
-                for (long x = x_from; x <= x_to; x += x_step)
-                {
-                    GPoint rll = new GPoint(x, y);
-                    if (!isRastrAreaLoaded(rll))
-                        result.Add(rll);
-                }
-
-            return result;
-        }
-
-        /// <summary>
-        /// возвращает истину, если заданная область nar полностью покрывается областями из списка this.loadedRastrAreas
-        /// </summary>
-        /// <param name="nar">проверяемая область</param>
-        /// <returns></returns>
-        private bool isRastrAreaLoaded(GPoint nar)
-        {
-            return loadedRastrAreas.ContainsKey(nar);
-        }
 
         /// <summary>
         /// добавление на карту тайла растрового слоя 
@@ -424,62 +378,6 @@ namespace TrackConverter.UI.Ext
 
         #region векторные слои
 
-        /// <summary>
-        /// возвращает области-тайлы, которые сейчас выдны на экране. При этом исключаются области, загруженные ранее.
-        /// </summary>
-        /// <returns></returns>
-        private List<RectLatLng> getVisibleLatLngTiles()
-        {
-            //тайловый способ
-            //https://tech.yandex.ru/maps/doc/jsapi/2.1/theory/index-docpage/#tile_coordinates
-            int zoom = (int)Zoom;
-            RectLatLng viewArea = GetViewArea();
-            PureProjection proj = this.MapProvider.Projection;
-
-            GPoint lt_pix = proj.FromLatLngToPixel(viewArea.LocationTopLeft, zoom);
-            GPoint rb_pix = proj.FromLatLngToPixel(viewArea.LocationRightBottom, zoom);
-
-            GSize tile_size = proj.TileSize;
-
-            long x_from = ((int)(lt_pix.X / 256)) * 256; //верхние границы с округлнием в меньшую сторону
-            long y_from = ((int)(lt_pix.Y / 256)) * 256;
-            long x_step = tile_size.Width;
-            long y_step = tile_size.Height;
-            long y_to = (long)Math.Ceiling(rb_pix.Y / 256d) * 256; //нижние границы с округлением в большую сторону
-            long x_to = (long)Math.Ceiling(rb_pix.X / 256d) * 256;
-
-
-            List<RectLatLng> result = new List<RectLatLng>();
-            for (long y = y_from + y_step; y <= y_to; y += y_step)
-                for (long x = x_from; x < x_to; x += x_step)
-                {
-                    PointLatLng lt = proj.FromPixelToLatLng(x, y, zoom);
-                    PointLatLng rb = proj.FromPixelToLatLng(x + x_step, y + y_step, zoom);
-
-                    SizeLatLng sz = new SizeLatLng(rb.Lat - lt.Lat, rb.Lng - lt.Lng);
-
-                    RectLatLng rll = new RectLatLng(lt, sz);
-                    if (!isVectorAreaLoaded(rll))
-                        result.Add(rll);
-                }
-
-            return result;
-        }
-
-        /// <summary>
-        /// возвращает истину, если заданная область nar есть в списке this.loadedVectorAreas
-        /// </summary>
-        /// <param name="nar">проверяемая область</param>
-        /// <returns></returns>
-        private bool isVectorAreaLoaded(RectLatLng nar)
-        {
-            foreach (var area in loadedVectorAreas)
-            {
-                if (area == nar.LocationMiddle)
-                    return true;
-            }
-            return false;
-        }
 
         /// <summary>
         /// прорисовка объекта слоя на карте (потокобезопасный)
@@ -494,14 +392,14 @@ namespace TrackConverter.UI.Ext
 
             bool selected = SelectedPolygons.Contains(obj.ID);
 
+            if (LayerProvider == MapLayerProviders.None)
+                return;
+            obj.Geometry.Fill = selected ? selectedPolygonBrush : polygonBrush;
+            obj.Geometry.Stroke = obj.Invisible ? invisPolygonStroke : polygonStroke;
+            obj.Geometry.Tag = obj;
+            obj.Geometry.IsHitTestVisible = true;
             Action act = new Action(() =>
                 {
-                    if (LayerProvider == MapLayerProviders.None)
-                        return;
-                    obj.Geometry.Fill = selected ? selectedPolygonBrush : polygonBrush;
-                    obj.Geometry.Stroke = obj.Invisible ? invisPolygonStroke : polygonStroke;
-                    obj.Geometry.Tag = obj;
-                    obj.Geometry.IsHitTestVisible = true;
                     vectorLayersOverlay.Polygons.Add(obj.Geometry);
                 });
 
@@ -520,10 +418,8 @@ namespace TrackConverter.UI.Ext
         /// <param name="list">коллекция объектов</param>
         private void showVectorLayerObjects(List<VectorMapLayerObject> list)
         {
-            this.SuspendLayout();
             foreach (VectorMapLayerObject obj in list)
                 showVectorLayerObject(obj);
-            this.ResumeLayout(false);
         }
 
         /// <summary>
@@ -615,6 +511,7 @@ namespace TrackConverter.UI.Ext
                     switch (this.LayerProvider)
                     {
                         case MapLayerProviders.Wikimapia:
+
                             #region ДЛЯ ВЕКТОРНЫХ СЛОЁВ
 
                             //области, которые необходимо загрузить
@@ -636,7 +533,7 @@ namespace TrackConverter.UI.Ext
                                        List<VectorMapLayerObject> nobj = this.vectorLayerProviderEngine.GetObjects(tile, minPerimeter, (int)Zoom);
                                        if (!this.IsDisposed)
                                        {
-                                           loadedVectorAreas.Add(tile.LocationMiddle);
+                                           loadedAreas.TryAdd(tile.LocationMiddle, null);
                                            showVectorLayerObjects(nobj);
                                            string prc = (((double)i++ / tiles.Count) * 100d).ToString("0");
                                            Program.winMain.SetCurrentOperation("Загрузка слоёв " + provider.ToString() + ", завершено " + prc + "%");
@@ -675,7 +572,7 @@ namespace TrackConverter.UI.Ext
                                     Image tl = rastrLayerProviderEngine.GetRastrTile(tile.X, tile.Y, (int)Zoom);
                                     if (!this.IsDisposed)
                                     {
-                                        loadedRastrAreas.TryAdd(tile, tl);
+                                        loadedAreas.TryAdd(tile, tl);
                                         showRastrLayerTile(tl, tile);
                                         string prc = (((double)iR++ / tilesR.Count) * 100d).ToString("0");
                                         Program.winMain.SetCurrentOperation("Загрузка слоёв " + LayerProvider.ToString() + ", завершено " + prc + "%");
@@ -695,7 +592,7 @@ namespace TrackConverter.UI.Ext
                             List<RectLatLng> llTiles = this.getVisibleLatLngTiles();
 
                             int im = 0; //количество загруженных тайлов
-                            Parallel.ForEach(llTiles, new ParallelOptions() { MaxDegreeOfParallelism = 6 }, (tile) =>
+                            Parallel.ForEach(llTiles, new ParallelOptions() { MaxDegreeOfParallelism = 4 }, (tile) =>
                             {
                                 try
                                 {
@@ -711,7 +608,7 @@ namespace TrackConverter.UI.Ext
                                     if (!this.IsDisposed)
                                     {
                                         GPoint tileXY = LayerProjection.FromPixelToTileXY(LayerProjection.FromLatLngToPixel(tile.LocationTopLeft, zoom));
-                                        loadedRastrAreas.TryAdd(tileXY, tl);
+                                        bool f = loadedAreas.TryAdd(tileXY, tl);
                                         showRastrLayerTile(tl, tileXY);
                                         string prc = (((double)im++ / llTiles.Count) * 100d).ToString("0");
                                         Program.winMain.SetCurrentOperation("Загрузка слоёв " + LayerProvider.ToString() + ", завершено " + prc + "%");
@@ -776,6 +673,83 @@ namespace TrackConverter.UI.Ext
         }
 
         /// <summary>
+        /// возвращает координаты верхних левых углов тайлов, которые сейчас видны на экране, исключая уже загруженные
+        /// </summary>
+        /// <returns></returns>
+        private List<GPoint> getVisiblePixelTiles(PureProjection proj = null)
+        {
+            int zoom = (int)Zoom;
+            RectLatLng viewArea = GetViewArea();
+            if (proj == null)
+                proj = this.MapProvider.Projection;
+
+            GPoint lt_pix = proj.FromLatLngToPixel(viewArea.LocationTopLeft, zoom);
+            GPoint rb_pix = proj.FromLatLngToPixel(viewArea.LocationRightBottom, zoom);
+
+            long x_from = ((int)(lt_pix.X / 256)); //верхние границы с округлнием в меньшую сторону
+            long y_from = ((int)(lt_pix.Y / 256));
+            long x_step = 1;
+            long y_step = 1;
+            long y_to = (long)Math.Ceiling(rb_pix.Y / 256d); //нижние границы с округлением в большую сторону
+            long x_to = (long)Math.Ceiling(rb_pix.X / 256d);
+
+            List<GPoint> result = new List<GPoint>();
+            for (long y = y_from; y <= y_to; y += y_step)
+                for (long x = x_from; x <= x_to; x += x_step)
+                {
+                    GPoint rll = new GPoint(x, y);
+                    if (!loadedAreas.ContainsKey(rll))
+                        result.Add(rll);
+                }
+
+            return result;
+        }
+
+
+        /// <summary>
+        /// возвращает области-тайлы, которые сейчас выдны на экране. При этом исключаются области, загруженные ранее.
+        /// </summary>
+        /// <returns></returns>
+        private List<RectLatLng> getVisibleLatLngTiles()
+        {
+            //тайловый способ
+            //https://tech.yandex.ru/maps/doc/jsapi/2.1/theory/index-docpage/#tile_coordinates
+            int zoom = (int)Zoom;
+            RectLatLng viewArea = GetViewArea();
+            PureProjection proj = this.MapProvider.Projection;
+
+            GPoint lt_pix = proj.FromLatLngToPixel(viewArea.LocationTopLeft, zoom);
+            GPoint rb_pix = proj.FromLatLngToPixel(viewArea.LocationRightBottom, zoom);
+
+            GSize tile_size = proj.TileSize;
+
+            long x_from = ((int)(lt_pix.X / 256)) * 256; //верхние границы с округлением в меньшую сторону
+            long y_from = ((int)(lt_pix.Y / 256)) * 256;
+            long x_step = tile_size.Width;
+            long y_step = tile_size.Height;
+            long y_to = (long)Math.Ceiling(rb_pix.Y / 256d) * 256; //нижние границы с округлением в большую сторону
+            long x_to = (long)Math.Ceiling(rb_pix.X / 256d) * 256;
+
+
+            List<RectLatLng> result = new List<RectLatLng>();
+            for (long y = y_from + y_step; y <= y_to; y += y_step)
+                for (long x = x_from; x < x_to; x += x_step)
+                {
+                    PointLatLng lt = proj.FromPixelToLatLng(x, y, zoom);
+                    PointLatLng rb = proj.FromPixelToLatLng(x + x_step, y + y_step, zoom);
+
+                    SizeLatLng sz = new SizeLatLng(rb.Lat - lt.Lat, rb.Lng - lt.Lng);
+
+                    RectLatLng rll = new RectLatLng(lt, sz);
+                    GPoint tileXY = LayerProjection.FromPixelToTileXY(LayerProjection.FromLatLngToPixel(rll.LocationTopLeft, zoom));
+                    if (!loadedAreas.ContainsKey(tileXY))
+                        result.Add(rll);
+                }
+
+            return result;
+        }
+
+        /// <summary>
         /// очичтить слои карты
         /// </summary>
         private void clearLayers()
@@ -783,8 +757,7 @@ namespace TrackConverter.UI.Ext
             ToolTipPolygonTitles.RemoveAll(); //удаление подсказок на объектах
             vectorLayersOverlay.Polygons.Clear(); //очистка карты
             VectorLayerObjects.Clear(); //удаляем векторные объекты на экране
-            loadedVectorAreas = new ConcurrentBag<PointLatLng>(); //очистка коллекции загруженных векторных областей
-            loadedRastrAreas.Clear(); //очистка растрового слоя
+            loadedAreas.Clear(); //очистка растрового слоя
             if (rastrLayersGraphics != null)
                 try
                 {
