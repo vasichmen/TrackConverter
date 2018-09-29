@@ -12,7 +12,7 @@ namespace TrackConverter.Lib.Data.Providers.Local.OS
     /// <summary>
     /// кэш в файловой системе
     /// </summary>
-    public class FileSystemCache: IImagesCache, IWebCache
+    public class FileSystemCache : IImagesCache, IWebCache
     {
         /// <summary>
         /// информация о файле в кэше
@@ -54,6 +54,11 @@ namespace TrackConverter.Lib.Data.Providers.Local.OS
         /// блокировка многопоточного доступа к файлу информации о кэше
         /// </summary>
         private static readonly object locker = new object();
+
+        /// <summary>
+        /// блокировка многопоточного доступа к файлам данных
+        /// </summary>
+        private readonly object lockerName = new object();
 
         /// <summary>
         /// информация о файлах в кэше
@@ -169,10 +174,19 @@ namespace TrackConverter.Lib.Data.Providers.Local.OS
             if (!ContainsWebUrl(url))
             {
                 //сохраняем файл с данными
-                string fname = getFileNameFromUrl(url);
-                StreamWriter sw = new StreamWriter(directory + "\\" + fname, false, Encoding.UTF8);
-                sw.Write(data);
-                sw.Close();
+
+                string fname;
+                StreamWriter sw;
+                lock (lockerName)
+                {
+                    fname = getFileNameFromUrl(url);
+                    sw = new StreamWriter(directory + "\\" + fname, false, Encoding.UTF8);
+                    sw.Write(data);
+                    sw.Close();
+
+                }
+                //while (File.Exists(fname))
+                //  fname = getFileNameFromUrl(url);
 
                 //сохраняем информацию для проверки
                 FileInfo info = new FileInfo() { date = DateTime.Now, url = url, path = fname };

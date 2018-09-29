@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Drawing;
 using System.IO;
+using System.IO.Compression;
 using System.Net;
 using System.Text;
 using System.Threading;
@@ -201,18 +202,19 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                 request.UserAgent = "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.71 Safari/537.36";
                 request.ContentType = "application/xml";
                 request.Headers[HttpRequestHeader.AcceptLanguage] = "ru - RU,ru; q = 0.8,en - US; q = 0.6,en; q = 0.4";
+                request.Headers[HttpRequestHeader.AcceptEncoding] = "gzip";
 
                 //Получаем ответ от интернет-ресурса.
                 HttpWebResponse response = (HttpWebResponse)request.GetResponse();
                 //string lng = response.Headers[HttpRequestHeader.var];
-
                 //Экземпляр класса System.IO.Stream 
                 //для чтения данных из интернет-ресурса.
                 Stream dataStream = response.GetResponseStream();
 
+                GZipStream gstream = new GZipStream(dataStream, CompressionMode.Decompress);
                 //Инициализируем новый экземпляр класса 
                 //System.IO.StreamReader для указанного потока.
-                StreamReader sreader = new StreamReader(dataStream);
+                StreamReader sreader = new StreamReader(gstream);
                 code = response.StatusCode;
 
                 //Считывает поток от текущего положения до конца.            

@@ -407,7 +407,7 @@ namespace TrackConverter.Lib.Tracking
                 };
                 TimeSpan tod = TimeSpan.Parse(line[5]);
                 pt.Time = pt.Time.Add(tod);
-                pt.Icon = IconOffsets.creating_route_marker;
+                pt.Icon = IconOffsets.CREATING_ROUTE_MARKER;
                 res.Add(pt);
             }
 
@@ -472,7 +472,7 @@ namespace TrackConverter.Lib.Tracking
                             pt = new TrackPoint(Coordinate.CoordinateRecord.Parse(lat, "ddmm.mmm,H"),
                                Coordinate.CoordinateRecord.Parse(lon.TrimStart(new char[] { '0' }), "ddmm.mmm,H"))
                             {
-                                Icon = IconOffsets.creating_route_marker
+                                Icon = IconOffsets.CREATING_ROUTE_MARKER
                             };
                             res.Add(pt);
                             break;
@@ -518,7 +518,7 @@ namespace TrackConverter.Lib.Tracking
                 TrackPoint pt = new TrackPoint(cd)
                 {
                     Name = name,
-                    Icon = IconOffsets.creating_route_marker
+                    Icon = IconOffsets.CREATING_ROUTE_MARKER
                 };
                 res.Add(pt);
             }
@@ -549,7 +549,7 @@ namespace TrackConverter.Lib.Tracking
                     {
                         MetrAltitude = Alt,
                     };
-                    tp.Icon = IconOffsets.creating_route_marker;
+                    tp.Icon = IconOffsets.CREATING_ROUTE_MARKER;
                     res.Add(tp);
                 }
                 if (nd.LocalName.ToLower() == "way")
@@ -613,7 +613,7 @@ namespace TrackConverter.Lib.Tracking
                                 MetrAltitude = altD, //высота в метрах
                                 Time = dt//время установки точки
                             };
-                            nv.Icon = IconOffsets.creating_route_marker;
+                            nv.Icon = IconOffsets.CREATING_ROUTE_MARKER;
                             res.Add(nv);
                         }
 
@@ -657,7 +657,7 @@ namespace TrackConverter.Lib.Tracking
                 double f = double.NaN;
                 bool ff = double.TryParse(arr[4].Replace('.', Vars.DecimalSeparator), out f);
                 nv.FeetAltitude = ff ? f : double.NaN;
-                nv.Icon = IconOffsets.creating_route_marker;
+                nv.Icon = IconOffsets.CREATING_ROUTE_MARKER;
 
                 res.Add(nv);
             }
@@ -722,7 +722,7 @@ namespace TrackConverter.Lib.Tracking
                 double f = double.NaN;
                 bool ff = double.TryParse(arr[3].Replace('.', Vars.DecimalSeparator), out f);
                 nv.FeetAltitude = ff ? f : double.NaN;
-                nv.Icon = IconOffsets.creating_route_marker;
+                nv.Icon = IconOffsets.CREATING_ROUTE_MARKER;
                 res.Add(nv);
             }
             sr.Close();
@@ -817,7 +817,7 @@ namespace TrackConverter.Lib.Tracking
                 pt.Time = DateTime.Parse(line[3]) + Vars.Options.Converter.UTCDifferrent;
                 pt.Name = line[4];
                 pt.Description = line[5];
-                pt.Icon = IconOffsets.creating_route_marker;
+                pt.Icon = IconOffsets.CREATING_ROUTE_MARKER;
                 res.Add(pt);
             }
 
@@ -875,7 +875,7 @@ namespace TrackConverter.Lib.Tracking
                     double nlat = Convert.ToDouble(pair[1].Replace('.', Vars.DecimalSeparator));
                     npt = new TrackPoint(nlat + res[res.Count - 1].Coordinates.Latitude.TotalDegrees, nlon + res[res.Count - 1].Coordinates.Longitude.TotalDegrees);
                 }
-                npt.Icon = IconOffsets.creating_route_marker;
+                npt.Icon = IconOffsets.CREATING_ROUTE_MARKER;
                 res.Add(npt);
             }
             res.Name = "Yandex";
@@ -925,7 +925,7 @@ namespace TrackConverter.Lib.Tracking
                 int lat = points[i][1];
                 TrackPoint npt = new TrackPoint((latBase + lat) / 10000000.0000000, (lonBase + lon) / 10000000.0000000)
                 {
-                    Icon = IconOffsets.creating_route_marker
+                    Icon = IconOffsets.CREATING_ROUTE_MARKER
                 };
                 res.Add(npt);
             }

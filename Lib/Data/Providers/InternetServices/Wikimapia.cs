@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Net;
-using GMap.NET;
+﻿using GMap.NET;
 using GMap.NET.WindowsForms;
 using HtmlAgilityPack;
 using Newtonsoft.Json.Linq;
+using System;
+using System.Collections.Generic;
+using System.Net;
 using TrackConverter.Lib.Classes;
 using TrackConverter.Lib.Data.Interfaces;
 using TrackConverter.Lib.Tracking.Helpers;
@@ -15,7 +15,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
     /// <summary>
     /// Класс взаимодействия с API Wikimapia.org
     /// </summary>
-    public class Wikimapia: BaseConnection, IVectorMapLayerProvider
+    public class Wikimapia : BaseConnection, IVectorMapLayerProvider
     {
         /// <summary>
         /// расширенная инфорация об объекте (фотографии, комментарии итд)
@@ -154,6 +154,103 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
             /// список комментариев к объекту
             /// </summary>
             public List<CommentInfo> Comments { get; private set; }
+        }
+
+        /// <summary>
+        /// информация о категории
+        /// </summary>
+        public class CategoryInfo
+        {
+            /// <summary>
+            /// ID категории для запросов к серверу
+            /// </summary>
+            public int ID { get; set; }
+
+            /// <summary>
+            /// Название категории 
+            /// </summary>
+            public string Name { get; set; }
+
+            /// <summary>
+            /// показывает, надо ли отображать категорию в основном списке
+            /// </summary>
+            public bool isBase { get; set; }
+
+            /// <summary>
+            /// Количество объектов в категории
+            /// </summary>
+            public int Amount { get; set; }
+
+            /// <summary>
+            /// имя категории + количество элементов
+            /// </summary>
+            /// <returns></returns>
+            public override string ToString()
+            {
+                return Name + " " + Amount;
+            }
+
+            public override bool Equals(object obj)
+            {
+                if (obj == null)
+                    return false;
+                if (!(obj is CategoryInfo))
+                    return false;
+                return this.ID == ((CategoryInfo)obj).ID;
+            }
+
+            public static bool operator !=(CategoryInfo obj1, CategoryInfo obj2)
+            {
+                    return !Equals(obj1,obj2);
+            }
+
+            public static bool operator ==(CategoryInfo obj1, CategoryInfo obj2)
+            {
+                    return Equals(obj1,obj2);
+            }
+        }
+
+
+        /// <summary>
+        /// список основных категорий
+        /// </summary>
+        private static List<CategoryInfo> basicCategories = null;
+
+        /// <summary>
+        /// список основных категорий объектов 
+        /// </summary>
+        public List<CategoryInfo> BasicCategories
+        {
+            get
+            {
+                if (basicCategories == null)
+                    basicCategories = getCategories(true);
+                return basicCategories;
+            }
+        }
+
+        /// <summary>
+        /// получение основных категорий
+        /// </summary>
+        /// <returns></returns>
+        private List<CategoryInfo> getCategories(bool isBasic)
+        {
+            //http://wikimapia.org/localization/tags/ru.json
+            string url = "http://wikimapia.org/localization/tags/ru.json";
+            JObject jo = SendJsonGetRequest(url);
+            JToken cats = jo["categories"];
+            List<CategoryInfo> res = new List<CategoryInfo>();
+            foreach (var cat in cats)
+                foreach (var catt in cat)
+                {
+                    CategoryInfo i = new CategoryInfo();
+                    i.Amount = int.Parse(catt["count"].ToString());
+                    i.ID = int.Parse(catt["category_id"].ToString());
+                    string n = catt["name"].ToString();
+                    i.Name = n;
+                    res.Add(i);
+                }
+            return res;
         }
 
         /// <summary>
@@ -541,6 +638,150 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
             return new GMapPolygon(points, "noname");
         }
 
+        /// <summary>
+        /// декодирование периметра объекта из MK2. 
+        /// Источник: http://wikimapia.org/js/application.js#Wikimapia.Parser.Itiles.prototype.decodePolygonMK2 = function(..
+        /// </summary>
+        /// <param name="base64code">кодированный периметр</param>
+        /// <param name="name">название объекта</param>
+        /// <returns></returns>
+        private GMapPolygon getPolygon(string base64code, string name)
+        {
+            //name=wdfjgAshxoiBaSa{P~_SwBjLhzParNxB{NoImXnI;
+
+            var e = base64code.Length;
+            int i = 0, n = 0;
+            double o = 0;
+            bool s = false;
+            var a = new List<PointLatLng>();
+
+            while (i < e)
+            {
+                int p = 0, l = 0, c = 0;
+                do
+                {
+                    p = base64code[i++] - 63;
+                    c |= (p & 31) << l;
+                    l += 5;
+                } while (p >= 32);
+                n += ((c & 1) != 0) ? ~(c >> 1) : c >> 1;
+                if (n > 180 * 1e6 || n < -(180 * 1e6))
+                {
+                    s = true;
+                }
+                l = 0;
+                c = 0;
+                do
+                {
+                    p = base64code[i++] - 63;
+                    c |= (p & 31) << l;
+                    l += 5;
+                } while (p >= 32);
+                o += ((c & 1) != 0) ? ~(c >> 1) : c >> 1;
+                double m = (o > 90 * 1e6 || o < -(90 * 1e6) ? 1e7 : 1e6);
+                a.Add(new PointLatLng(o / m, n / m));
+            }
+            GMapPolygon res = new GMapPolygon(a, name);
+            return res;
+        }
+
+        /// <summary>
+        /// получить список точек категории в заданном тайле карты
+        /// </summary>
+        /// <param name="catID">ID  категории</param>
+        /// <param name="x">координата x тайла</param>
+        /// <param name="y">координата у тайла</param>
+        /// <param name="zoom">масштаб</param>
+        /// <returns></returns>
+        public List<VectorMapLayerObject> GetCategoryTile(int catID, int x, int y, int zoom)
+        {
+            //"wikimapia.org/z1/cat/000/000/{category}/{tileID}.xy"
+
+            //получение quad кода
+            //при x=2474, y=1278, zoom=14, factor=10 => quadCode = 0302310101113
+            //после этого после каждого третьего символа ставится \ и отправляется на сервер. хэш сумма в конце не имеет значения
+
+            string quadKey = getQuadKey(x, y, zoom);
+            for (int i = 0; i < quadKey.Length; i += 4)
+                quadKey = quadKey.Insert(i, "/");
+            string baseUrl = "http://wikimapia.org/z1/cat{0}/{1}.xy?{2}";
+
+            string hash = new Random().Next(9999999).ToString();
+
+            string catid = catID.ToString("000000000");
+            for (int i = 0; i < catid.Length; i += 4)
+                catid = catid.Insert(i, "/");
+
+            string url = string.Format(baseUrl, catid, quadKey, hash);
+            string ans = SendStringGetRequest(url, out HttpStatusCode code);
+
+            /* разбор ответа сервера.
+             * 
+             * первая строка - базовые параметры запроса(через | : quadKey|первичный масштаб|остальное - обычные базовые координаты bbox)
+             * третья строка - номер категории
+             * список объектов: 
+             * 1640327|3052997|822667|104713|92138|15|!Войсковая часть 63553 Radiocentr CUP<Centrum Łączności|1|wdfjgAshxoiBaSa{P~_SwBjLhzParNxB{NoImXnI
+             * 
+             *      id
+             *      | приращение долготы для LeftTop относительно базовых 
+             *      | приращ. широты для LeftTop 
+             *      | приращение долготы для RightBottom 
+             *      | отрицатлеьное приращение широты для RightBottom 
+             *      | масштаб карты для вывода объекта 
+             *      | название объекта 
+             *      | кодированный периметр объекта
+             */
+
+            List<VectorMapLayerObject> res = new List<VectorMapLayerObject>();
+            string[] arr = ans.Split('\n');
+            string[] ar = arr[0].Split('|');
+            double minLat = double.Parse(ar[3]) / 1e7;
+            double minLon = double.Parse(ar[4]) / 1e7;
+            double maxLat = double.Parse(ar[5]) / 1e7;
+            double maxLon = double.Parse(ar[6]) / 1e7;
+
+            for (int i = 4; i < arr.Length - 1; i++) // (-1 потому что последняя строка пустая)
+            {
+                string[] obj = arr[i].Split(new char[] { '|' }, 9, StringSplitOptions.None);
+                int id = int.Parse(obj[0]);
+                string name = obj[6].TrimStart('!');
+                int start = arr[i].IndexOf("|1|");
+                string str1 = arr[i].Substring(start + 3);
+                string str2 = obj[8];
+                bool flag = str1.Length == str2.Length; //проверка параметров сплиттера. Потом можно удалить
+                GMapPolygon geom = getPolygon(str2, name);
+                VectorMapLayerObject item = new VectorMapLayerObject(geom) { ID = id, LayerProvider = MapLayerProviders.Wikimapia };
+                res.Add(item);
+            }
+            return res;
+        }
+
+        /// <summary>
+        /// получить код тайла. Источник: http://wikimapia.org/js/application.js#getQuadKey:function(..
+        /// </summary>
+        /// <param name="x">тайловая координата х</param>
+        /// <param name="y">тайловая координата у</param>
+        /// <param name="zoom">масштаб</param>
+        /// <returns></returns>
+        private string getQuadKey(int x, int y, int zoom)
+        {
+            int tileWidth = 1024;
+            int tileFactor = (int)(Math.Log(tileWidth) / Math.Log(2));
+
+            var ob = new int[][] { new int[] { -2, 1 }, new int[] { 0, 2 }, new int[] { 2, 3 } };
+            var o = ob[tileFactor - 8];
+            string n = "0";
+            int s;
+            y = ((1 << zoom - o[0]) - y - 1); //????
+            zoom -= o[1];
+            while (zoom >= 0)
+            {
+                s = 1 << zoom;
+                n += ((x & s) > 0 ? 1 : 0) + ((y & s) > 0 ? 2 : 0);
+                zoom--;
+            }
+            return n;
+        }
 
     }
 }

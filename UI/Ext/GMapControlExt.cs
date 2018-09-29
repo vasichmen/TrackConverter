@@ -13,6 +13,7 @@ using TrackConverter.Lib.Classes;
 using TrackConverter.Lib.Data;
 using TrackConverter.Lib.Exceptions;
 using TrackConverter.Lib.Mathematic.Geodesy.Projections.GMapImported;
+using TrackConverter.UI.Map;
 
 namespace TrackConverter.UI.Ext
 {
@@ -124,6 +125,22 @@ namespace TrackConverter.UI.Ext
             {
                 layerProvider = value;
                 clearLayers();
+
+                if (value == MapLayerProviders.Wikimapia)
+                {
+                    if (Vars.Options.Map.IsFormWikimpiaToolbarShow)
+                    {
+                        if (Program.winWikimapiaToolbarNullOrDisposed)
+                            Program.winWikimapiaToolbar = new FormWikimapiaToolbar(Program.winMain);
+                        Program.winWikimapiaToolbar.Show(Program.winMain);
+                    }
+                }
+                else
+                {
+                    if (!Program.winWikimapiaToolbarNullOrDisposed)
+                        Program.winWikimapiaToolbar.Close();
+                }
+
                 if (value != MapLayerProviders.None)
                 {
                     switch (value)
@@ -139,6 +156,7 @@ namespace TrackConverter.UI.Ext
                             rastrLayerProviderEngine = new RastrMapLayer(value);
                             break;
                     }
+
                 }
                 RefreshLayers();
             }
@@ -398,10 +416,7 @@ namespace TrackConverter.UI.Ext
             obj.Geometry.Stroke = obj.Invisible ? invisPolygonStroke : polygonStroke;
             obj.Geometry.Tag = obj;
             obj.Geometry.IsHitTestVisible = true;
-            Action act = new Action(() =>
-                {
-                    vectorLayersOverlay.Polygons.Add(obj.Geometry);
-                });
+            Action act = new Action(() => { vectorLayersOverlay.Polygons.Add(obj.Geometry); });
 
             if (!this.IsDisposed)
             {
@@ -554,7 +569,7 @@ namespace TrackConverter.UI.Ext
 
                             //области, которые необходимо загрузить
 
-                            List<GPoint> tilesR = this.getVisiblePixelTiles(LayerProjection);
+                            List<GPoint> tilesR = this.GetVisiblePixelTiles(LayerProjection);
 
                             int iR = 0; //количество загруженных тайлов
                             Parallel.ForEach(tilesR, new ParallelOptions() { MaxDegreeOfParallelism = 4 }, (tile) =>
@@ -676,7 +691,7 @@ namespace TrackConverter.UI.Ext
         /// возвращает координаты верхних левых углов тайлов, которые сейчас видны на экране, исключая уже загруженные
         /// </summary>
         /// <returns></returns>
-        private List<GPoint> getVisiblePixelTiles(PureProjection proj = null)
+        public List<GPoint> GetVisiblePixelTiles(PureProjection proj = null, int tileSize = 256)
         {
             int zoom = (int)Zoom;
             RectLatLng viewArea = GetViewArea();
@@ -686,12 +701,12 @@ namespace TrackConverter.UI.Ext
             GPoint lt_pix = proj.FromLatLngToPixel(viewArea.LocationTopLeft, zoom);
             GPoint rb_pix = proj.FromLatLngToPixel(viewArea.LocationRightBottom, zoom);
 
-            long x_from = ((int)(lt_pix.X / 256)); //верхние границы с округлнием в меньшую сторону
-            long y_from = ((int)(lt_pix.Y / 256));
+            long x_from = ((int)(lt_pix.X / tileSize)); //верхние границы с округлнием в меньшую сторону
+            long y_from = ((int)(lt_pix.Y / tileSize));
             long x_step = 1;
             long y_step = 1;
-            long y_to = (long)Math.Ceiling(rb_pix.Y / 256d); //нижние границы с округлением в большую сторону
-            long x_to = (long)Math.Ceiling(rb_pix.X / 256d);
+            long y_to = (long)Math.Ceiling(rb_pix.Y / (double)tileSize); //нижние границы с округлением в большую сторону
+            long x_to = (long)Math.Ceiling(rb_pix.X / (double)tileSize);
 
             List<GPoint> result = new List<GPoint>();
             for (long y = y_from; y <= y_to; y += y_step)

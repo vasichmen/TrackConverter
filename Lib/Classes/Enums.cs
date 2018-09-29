@@ -173,7 +173,12 @@ namespace TrackConverter
         /// <summary>
         /// Результат поиска
         /// </summary>
-        SearchResult
+        SearchResult,
+
+        /// <summary>
+        /// маркер фильтра викимапии по категориям
+        /// </summary>
+        WikimpiaCategoryItem
     }
 
     /// <summary>

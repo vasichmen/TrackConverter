@@ -55,7 +55,7 @@ namespace TrackConverter.UI.Shell
             GMaps.Instance.Mode = Vars.Options.Map.AccessMode;
             GMaps.Instance.CacheOnIdleRead = true;
             GMaps.Instance.BoostCacheEngine = true;
-            GMaps.Instance.MemoryCache.Capacity = 100; //максимальный размер кэша в МБ
+            GMaps.Instance.MemoryCache.Capacity = 200; //максимальный размер кэша в МБ
 
             //zoom
             formMain.gmapControlMap.MaxZoom = Vars.Options.Map.MaximalZoom;
@@ -229,13 +229,13 @@ namespace TrackConverter.UI.Shell
                     //если выделена последняя точка, то добавляем
                     if (formMain.selectedPointIndex == formMain.creatingRoute.Count)
                     {
-                        formMain.creatingRoute.Add(new TrackPoint(pt) { Icon = IconOffsets.creating_route_marker });
+                        formMain.creatingRoute.Add(new TrackPoint(pt) { Icon = IconOffsets.CREATING_ROUTE_MARKER });
                         formMain.selectedPointIndex = formMain.creatingRoute.Count - 1;
                     }
                     //если выделена точка в середине маршрута, то вставляем после нее
                     else
                     {
-                        formMain.creatingRoute.Insert(formMain.selectedPointIndex + 1, new TrackPoint(pt) { Icon = IconOffsets.creating_route_marker });
+                        formMain.creatingRoute.Insert(formMain.selectedPointIndex + 1, new TrackPoint(pt) { Icon = IconOffsets.CREATING_ROUTE_MARKER });
                         formMain.selectedPointIndex++;
                     }
 
@@ -249,13 +249,13 @@ namespace TrackConverter.UI.Shell
                     //если выделена последняя точка, то добавляем
                     if (formMain.selectedPointIndex == formMain.rulerRoute.Count)
                     {
-                        formMain.rulerRoute.Add(new TrackPoint(pt) { Icon = IconOffsets.creating_route_marker });
+                        formMain.rulerRoute.Add(new TrackPoint(pt) { Icon = IconOffsets.CREATING_ROUTE_MARKER });
                         formMain.selectedPointIndex = formMain.rulerRoute.Count - 1;
                     }
                     //если выделена точка в середине маршрута, то вставляем после нее
                     else
                     {
-                        formMain.rulerRoute.Insert(formMain.selectedPointIndex + 1, new TrackPoint(pt) { Icon = IconOffsets.creating_route_marker });
+                        formMain.rulerRoute.Insert(formMain.selectedPointIndex + 1, new TrackPoint(pt) { Icon = IconOffsets.CREATING_ROUTE_MARKER });
                         formMain.selectedPointIndex++;
                     }
 
@@ -269,7 +269,14 @@ namespace TrackConverter.UI.Shell
             #region нажатие на полигон при выборе векторного объекта
 
             //если не идёт создание маршрута, не выбор точки, не линейка, не перемещение маркера, не перемещение карты, ЛКМ, то обрабатываем нажатие
-            if (!formMain.isCreatingRoute && !formMain.isSelectingPoint && !formMain.isRuling && !formMain.isMarkerMoving && !formMain.gmapControlMap.IsDragging && e.Button == MouseButtons.Left)
+            if (!formMain.isCreatingRoute && //не создание маршрута
+                !formMain.isSelectingPoint &&  //не выбор точки
+                !formMain.isRuling && //не линейка
+                !formMain.isMarkerMoving && //не перемещение маркера
+                !formMain.gmapControlMap.IsDragging && //если не перемещение карты
+                e.Button == MouseButtons.Left && //левая кнопка мыши
+                !formMain.gmapControlMap.IsMouseOverMarker //если курсор не на маркере
+                )
             {
                 OnPolygonClick(e);
             }
@@ -310,9 +317,21 @@ namespace TrackConverter.UI.Shell
             //если не происходило перемещение маркера и не "что здесь"  и не происходит создание маршрута и не линейка
             if (!formMain.isMarkerMoving && !formMain.isCreatingRoute && !formMain.isRuling && item.Tag.Type != MarkerTypes.WhatThere && e.Button == MouseButtons.Left)
             {
-                formMain.markerClicked = item;
+                if (item.Clickable) //если на маркер можно нажимать, то обработка нажатия
+                {
+                    formMain.markerClicked = item;
+                    formMain.isMarkerClicked = true; //для того,чтобы при активных слоях викимапии не открывалось окно инфо. об объекте
+                    ToolStripEditMarker(e);
+                    return;
+                }
+            }
+
+            //открытие информации об объекте при нажатии на маркере категории Wikimapia
+            if (!formMain.isMarkerMoving && !formMain.isCreatingRoute && !formMain.isRuling && item.Tag.Type == MarkerTypes.WikimpiaCategoryItem && e.Button == MouseButtons.Left)
+            {
                 formMain.isMarkerClicked = true;
-                ToolStripEditMarker(e);
+                FormShowObjectInfo fsoi = new FormShowObjectInfo((VectorMapLayerObject)item.Tag.Tag);
+                fsoi.Show(this.formMain);
                 return;
             }
 
@@ -373,12 +392,15 @@ namespace TrackConverter.UI.Shell
         }
 
         /// <summary>
-        /// нажатие на полигон на карте. Этот метод нельзя подписывать на событие OnPolygonClick, иначе будут проблемы при выборе точки на карте
+        /// нажатие на полигон на карте. Этот метод нельзя подписывать напрямую на событие OnPolygonClick, иначе будут проблемы при выборе точки на карте
         /// </summary>
         /// <param name="e"></param>
         internal void OnPolygonClick(MouseEventArgs e)
         {
+            formMain.currentMarker = null;
             List<VectorMapLayerObject> objs = formMain.gmapControlMap.GetVectorObjectsUnderCursor();
+            if (objs.Count == 0)
+                return;
             VectorMapLayerObject obj;
             if (objs.Count == 1)
                 obj = objs[0];
@@ -540,7 +562,8 @@ namespace TrackConverter.UI.Shell
             if (formMain.currentMarker != null && //маркер выбран
                 e.Button == MouseButtons.Left && formMain.isLeftButtonDown && //левая кнопка мыши нажата
                 formMain.currentMarker.Tag.Type != MarkerTypes.WhatThere && //маркер не "что здесь"
-                formMain.currentMarker.Tag.Type != MarkerTypes.SearchResult // маркер не результат поиска
+                formMain.currentMarker.Tag.Type != MarkerTypes.SearchResult && // маркер не результат поиска
+                formMain.currentMarker.Tag.Type != MarkerTypes.WikimpiaCategoryItem //маркер - не категория викимапии
                 )
             {
 
@@ -632,9 +655,9 @@ namespace TrackConverter.UI.Shell
                     TrackPoint t = new TrackPoint(kv.Value)
                     {
                         Name = kv.Key,
-                        Icon = IconOffsets.search_result_icon
+                        Icon = IconOffsets.SEARCH_RESULT_ICON
                     };
-                    this.ShowWaypoint(t, formMain.searchOverlay, Resources.search_result_icon, MarkerTypes.SearchResult, MarkerTooltipMode.OnMouseOver);
+                    this.ShowWaypoint(t, formMain.searchOverlay, Resources.search_result_icon, MarkerTypes.SearchResult, MarkerTooltipMode.OnMouseOver, false);
                 }
             }
             formMain.gmapControlMap.ZoomAndCenterMarkers(formMain.searchOverlayID);
@@ -819,7 +842,7 @@ namespace TrackConverter.UI.Shell
         /// <param name="id">id карты, которая сейчас открыта</param>
         /// <typeparam name="T">тип (MapLayerProviderRecord или MapProviderRecord)</typeparam>
         private void selectDropDownItems<T>(ToolStripDropDownItem menu, int id)
-            where T: BaseProviderRecord
+            where T : BaseProviderRecord
         {
             ToolStripMenuItem item = null;
             foreach (ToolStripMenuItem ti in menu.DropDownItems)
@@ -995,7 +1018,7 @@ namespace TrackConverter.UI.Shell
         {
             TrackPoint point = new TrackPoint(formMain.pointClicked)
             {
-                Icon = IconOffsets.what_there
+                Icon = IconOffsets.WHAT_THERE
             };
             try
             {
@@ -1008,7 +1031,7 @@ namespace TrackConverter.UI.Shell
                 formMain.ActiveWhatThereForms.Add(point, wt);
 
                 //вывод значка на экран
-                ShowWaypoint(point, formMain.whatThereOverlay, Resources.what_there, MarkerTypes.WhatThere, MarkerTooltipMode.OnMouseOver);
+                ShowWaypoint(point, formMain.whatThereOverlay, Resources.what_there, MarkerTypes.WhatThere, MarkerTooltipMode.OnMouseOver, true);
             }
             catch (Exception we)
             {
@@ -1097,7 +1120,7 @@ namespace TrackConverter.UI.Shell
                     ic = Resources.route_point_selected;
                 else
                     ic = Resources.route_point;
-                ShowWaypoint(tt, overlay, ic, MarkerTypes.CreatingRoute, MarkerTooltipMode.OnMouseOver);
+                ShowWaypoint(tt, overlay, ic, MarkerTypes.CreatingRoute, MarkerTooltipMode.OnMouseOver, false);
                 i++;
             }
             track.Color = Color.DarkBlue;
@@ -1136,24 +1159,24 @@ namespace TrackConverter.UI.Shell
 
                 if (tag == "from")
                 {
-                    tt.Icon = IconOffsets.marker_start;
+                    tt.Icon = IconOffsets.MARKER_START;
                     DeleteWaypoint(formMain.fromPoint, formMain.fromToOverlay);
-                    ShowWaypoint(tt, formMain.fromToOverlay, Resources.marker_start, MarkerTypes.PathingRoute, PathingType.Start, MarkerTooltipMode.Never);
+                    ShowWaypoint(tt, formMain.fromToOverlay, Resources.marker_start, MarkerTypes.PathingRoute, PathingType.Start, MarkerTooltipMode.Never, false, null);
                     tt.Name = "Начало маршрута";
                     formMain.fromPoint = tt;
                 }
                 if (tag == "to")
                 {
-                    tt.Icon = IconOffsets.marker_finish;
+                    tt.Icon = IconOffsets.MARKER_FINISH;
                     DeleteWaypoint(formMain.toPoint, formMain.fromToOverlay);
-                    ShowWaypoint(tt, formMain.fromToOverlay, Resources.marker_finish, MarkerTypes.PathingRoute, PathingType.Finish, MarkerTooltipMode.Never);
+                    ShowWaypoint(tt, formMain.fromToOverlay, Resources.marker_finish, MarkerTypes.PathingRoute, PathingType.Finish, MarkerTooltipMode.Never, false, null);
                     tt.Name = "Конец маршрута";
                     formMain.toPoint = tt;
                 }
                 if (tag == "intermediate")
                 {
-                    tt.Icon = IconOffsets.marker_intermediate;
-                    ShowWaypoint(tt, formMain.fromToOverlay, Resources.intermed_point, MarkerTypes.PathingRoute, PathingType.Intermed, MarkerTooltipMode.Never);
+                    tt.Icon = IconOffsets.MARKER_INTERMEDIATE;
+                    ShowWaypoint(tt, formMain.fromToOverlay, Resources.intermed_point, MarkerTypes.PathingRoute, PathingType.Intermed, MarkerTooltipMode.Never, false, null);
                     if (formMain.IntermediatePoints == null)
                         formMain.IntermediatePoints = new TrackFile();
                     tt.Name = "Промежуточная точка";
@@ -1388,8 +1411,8 @@ namespace TrackConverter.UI.Shell
 
             formMain.selectedPointsOverlay.Markers.Clear();
             TrackPoint cop = point.Clone();
-            cop.Icon = IconOffsets.selected_point_icon;
-            ShowWaypoint(cop, formMain.selectedPointsOverlay, Resources.selected_point, MarkerTypes.SelectedPoint);
+            cop.Icon = IconOffsets.SELECTED_POINT_ICON;
+            ShowWaypoint(cop, formMain.selectedPointsOverlay, Resources.selected_point, MarkerTypes.SelectedPoint, false);
 
             //центр на точку
             formMain.gmapControlMap.Position = cop.Coordinates.GMap;

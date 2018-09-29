@@ -98,6 +98,16 @@ namespace TrackConverter.Res.Properties {
         }
         
         /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Icon, аналогичного (Значок).
+        /// </summary>
+        public static System.Drawing.Icon category_marker {
+            get {
+                object obj = ResourceManager.GetObject("category_marker", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на \crash.txt.
         /// </summary>
         public static string crash_file {

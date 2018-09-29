@@ -61,10 +61,10 @@ namespace TrackConverter.UI.Common.Dialogs
             //если это результат поиска, маркеры построения маршрута, 
             //то все элементы только для чтения и кнопка "Сохранить" становится "Сохранить как"
             if (point != null && (
-                point.Icon == IconOffsets.search_result_icon ||
-                point.Icon == IconOffsets.marker_finish ||
-                point.Icon == IconOffsets.marker_intermediate ||
-                point.Icon == IconOffsets.marker_start))
+                point.Icon == IconOffsets.SEARCH_RESULT_ICON ||
+                point.Icon == IconOffsets.MARKER_FINISH ||
+                point.Icon == IconOffsets.MARKER_INTERMEDIATE ||
+                point.Icon == IconOffsets.MARKER_START))
             {
                 comboBoxPointType.Enabled = false;
                 comboBoxSelectImage.Enabled = false;
@@ -83,7 +83,7 @@ namespace TrackConverter.UI.Common.Dialogs
                 this.buttonSave.Click += (sender, e) =>
                 {
                     TrackPoint ntp = point.Clone();
-                    ntp.Icon = IconOffsets.marker;
+                    ntp.Icon = IconOffsets.MARKER;
                     ntp.PointType = RouteWaypointType.None;
                     FormEditPoint fep = new FormEditPoint(ntp);
                     if (fep.ShowDialog(Program.winMain) == DialogResult.OK)
@@ -156,11 +156,11 @@ namespace TrackConverter.UI.Common.Dialogs
                 //если иконки точки нет в списке, то выделяем первую иконку
                 //иконка ставится только после типа точки (при изменении типа точки менется иконка для некоторых типов в событии comboBoxPointType.SelectedIndexChanged)
                 if (point == null ||
-                    point.Icon == IconOffsets.marker ||
-                    point.Icon == IconOffsets.search_result_icon ||
-                    point.Icon == IconOffsets.marker_finish ||
-                    point.Icon == IconOffsets.marker_intermediate ||
-                    point.Icon == IconOffsets.marker_start
+                    point.Icon == IconOffsets.MARKER ||
+                    point.Icon == IconOffsets.SEARCH_RESULT_ICON ||
+                    point.Icon == IconOffsets.MARKER_FINISH ||
+                    point.Icon == IconOffsets.MARKER_INTERMEDIATE ||
+                    point.Icon == IconOffsets.MARKER_START
                     )
                     comboBoxSelectImage.SelectedIndex = 0;
                 else

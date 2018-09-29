@@ -199,6 +199,12 @@
     <Compile Include="Map\FormShowObjectInfo.Designer.cs">
       <DependentUpon>FormShowObjectInfo.cs</DependentUpon>
     </Compile>
+    <Compile Include="Map\FormWikimapiaToolbar.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Map\FormWikimapiaToolbar.Designer.cs">
+      <DependentUpon>FormWikimapiaToolbar.cs</DependentUpon>
+    </Compile>
     <Compile Include="Shell\ConverterHelper.cs" />
     <Compile Include="Shell\FormMain.cs">
       <SubType>Form</SubType>
@@ -341,6 +347,7 @@
     <Content Include="Docs\добавление формата файла.txt" />
     <Content Include="Docs\СК, проекции и прочее.txt" />
     <Content Include="Docs\стандарты.txt" />
+    <Content Include="f.js" />
     <Content Include="Images\icons\001.ico">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -488,6 +495,9 @@
     <EmbeddedResource Include="Map\FormShowObjectInfo.resx">
       <DependentUpon>FormShowObjectInfo.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Map\FormWikimapiaToolbar.resx">
+      <DependentUpon>FormWikimapiaToolbar.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Shell\FormMain.resx">
       <DependentUpon>FormMain.cs</DependentUpon>
     </EmbeddedResource>
@@ -563,6 +573,7 @@
     <None Include="Data\ETOPO2\SQL\etopo2.sq3">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="f.json" />
     <None Include="packages.config" />
     <None Include="Properties\app.manifest" />
     <None Include="Templates\template.dot">

@@ -100,10 +100,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
 
             //http://pkk5.rosreestr.ru/arcgis/rest/services/Cadastre/Cadastre/MapServer
             //http://pkk5.rosreestr.ru/arcgis/sdk/rest/index.html#//02ss0000006v000000
-
-            //TODO: из файла описания преобразования координат из  планеты реализовать преобразование в метрические координаты
-            //                                      minX       minY    maxX       maxY
-            //границы WebMercator: WGS84 Bounds: -180.0000, -76.6798, 180.0000, 76.6798
+            
 
             /*http://c.pkk5.rosreestr.ru/arcgis/rest/services/Cadastre/Cadastre/MapServer/export/?
              * &service=WMS

@@ -39,7 +39,7 @@ namespace TrackConverter.Lib.Tracking.Helpers
                     if (rtn.LocalName.ToLower() == "placemark")
                         routePoints += XmlHelper.GetChild(rtn, "coordinates", true).InnerText;
                 routePoints = routePoints.TrimEnd(new char[] { ' ' });
-                TrackFile oneRoute = ParseLineString(routePoints);
+                TrackFile oneRoute = parseLineString(routePoints);
 
                 //#region получение времени маршрута
                 //try
@@ -93,7 +93,7 @@ namespace TrackConverter.Lib.Tracking.Helpers
                             #region если метка - маршрут
                             //выделение точек маршрута
                             string routePoints = XmlHelper.GetChild(node, "coordinates", true).InnerText;
-                            TrackFile tf = ParseLineString(routePoints);
+                            TrackFile tf = parseLineString(routePoints);
 
                             //время всегда ноль
                             //tf.Time = TimeSpan.Zero;
@@ -117,7 +117,7 @@ namespace TrackConverter.Lib.Tracking.Helpers
                         {
                             #region если метка - точка
                             string coords = XmlHelper.GetChild(node, "coordinates", true).InnerText;
-                            TrackPoint nv = ParsePoint(coords);
+                            TrackPoint nv = parsePoint(coords);
                             //название, описание
                             try { nv.Name = XmlHelper.GetChild(node, "name", false).InnerText; }
                             catch (NullReferenceException) { nv.Name = "noname"; }
@@ -170,7 +170,7 @@ namespace TrackConverter.Lib.Tracking.Helpers
                 string linestring = placemark["MultiGeometry"]["LineString"]["coordinates"].InnerText;
                 linestring = linestring.Replace("\n", " ").Trim().Trim();
 
-                TrackFile geometry = ParseLineString(linestring);
+                TrackFile geometry = parseLineString(linestring);
                 double perim = getPerimeter(geometry);
 
                 //если периметр объекта меньше заданного, то не добавляем в карту
@@ -200,7 +200,7 @@ namespace TrackConverter.Lib.Tracking.Helpers
         /// </summary>
         /// <param name="lineString">строка координат, координаты разделены пробелами</param>
         /// <returns></returns>
-        private static TrackFile ParseLineString(string lineString)
+        private static TrackFile parseLineString(string lineString)
         {
             TrackFile res = new TrackFile();
             //переменная lineString содержит последовательность координат в формате:
@@ -208,7 +208,7 @@ namespace TrackConverter.Lib.Tracking.Helpers
             //разбиваем на отдельные точки
             string[] pts = lineString.Trim().Split(' ');
             foreach (string pt in pts)
-                res += ParsePoint(pt);
+                res += parsePoint(pt);
             return res;
         }
 
@@ -217,7 +217,7 @@ namespace TrackConverter.Lib.Tracking.Helpers
         /// </summary>
         /// <param name="pointString">строка, содержаящая долготу, широту, высоту</param>
         /// <returns></returns>
-        private static TrackPoint ParsePoint(string pointString)
+        private static TrackPoint parsePoint(string pointString)
         {
             string[] arr = pointString.Split(',');
             string al = "0";

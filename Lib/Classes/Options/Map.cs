@@ -25,6 +25,7 @@ namespace TrackConverter.Lib.Classes.Options
             this.MapProvider = this.AllMapProviders[3];
             this.LayerProvider = this.AllLayerProviders[0];
             this.IsFormNavigatorShow = false;
+            this.IsFormWikimpiaToolbarShow = true;
             this.MapLanguange = LanguageType.Russian;
             this.MaxFullSearchNodes = 14;
             this.UseRouterInOptimal = true;
@@ -157,5 +158,10 @@ namespace TrackConverter.Lib.Classes.Options
         /// Если истина, то при редактировании не будут показываться маркеры азимутов
         /// </summary>
         public bool ShowAziMarkers { get; set; }
+
+        /// <summary>
+        /// если истина, то при выборе карты викимапии открывается окно настроек викимапии
+        /// </summary>
+        public bool IsFormWikimpiaToolbarShow { get; set; }
     }
 }

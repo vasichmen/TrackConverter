@@ -84,6 +84,11 @@ namespace TrackConverter.UI
         public static FormWaiting winWaiting;
 
         /// <summary>
+        /// окно  настроек карты викимапиа
+        /// </summary>
+        internal static FormWikimapiaToolbar winWikimapiaToolbar;
+
+        /// <summary>
         /// Основное окно программы
         /// </summary>
         public static FormMain winMain;
@@ -102,12 +107,14 @@ namespace TrackConverter.UI
         private static TrayIcon trayIcon = null;
 
 
+
         internal static bool winNavigatorNullOrDisposed { get { return winNavigator == null || winNavigator.IsDisposed; } }
         public static bool winJoinTrackNullOrDisposed { get { return winJoinTrack == null || winJoinTrack.IsDisposed; } }
         public static bool winCompareTrackNullOrDisposed { get { return winJoinTrack == null || winJoinTrack.IsDisposed; } }
         public static bool winWaitingNullOrDisposed { get { return winWaiting == null || winWaiting.IsDisposed; } }
         public static bool winSaveMapNullOrDisposed { get { return winSaveMap == null || winSaveMap.IsDisposed; } }
         public static bool winOptionsNullOrDisposed { get { return winOptions == null || winOptions.IsDisposed; } }
+        public static bool winWikimapiaToolbarNullOrDisposed { get {return winWikimapiaToolbar == null || winWikimapiaToolbar.IsDisposed; } }
 
 
         /// <summary>

@@ -119,6 +119,9 @@ namespace TrackConverter.UI.Tools
             //сохранять точки и маршрутв при перезапуске
             checkBoxRestoreWptsRts.Checked = Vars.Options.Map.RestoreRoutesWaypoints;
 
+            //окно настроек Wikimapia
+            checkBoxIsFormWikimapiaToolbarShow.Checked = Vars.Options.Map.IsFormWikimpiaToolbarShow;
+
             //язык карты
             switch (Vars.Options.Map.MapLanguange)
             {
@@ -295,6 +298,9 @@ namespace TrackConverter.UI.Tools
 
             //восстанавливать точки и машрруты при перезапуске
             Vars.Options.Map.RestoreRoutesWaypoints = checkBoxRestoreWptsRts.Checked;
+
+            //окно настроек Wikimapia
+            Vars.Options.Map.IsFormWikimpiaToolbarShow = checkBoxIsFormWikimapiaToolbarShow.Checked;
 
             //язык карты
             if (comboBoxMapLanguange.SelectedIndex == 0)

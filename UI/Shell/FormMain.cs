@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.IO;
+using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GMap.NET;
@@ -12,6 +13,7 @@ using TrackConverter.Lib.Classes;
 using TrackConverter.Lib.Classes.ProviderRecords;
 using TrackConverter.Lib.Classes.StackEdits;
 using TrackConverter.Lib.Data;
+using TrackConverter.Lib.Data.Providers.InternetServices;
 using TrackConverter.Lib.Maping.GMap;
 using TrackConverter.Lib.Tracking;
 using TrackConverter.Res.Properties;
@@ -398,7 +400,6 @@ namespace TrackConverter.UI.Shell
 
             #region КАРТА
 
-            mapHelper.ConfigureGMapControl();
 
             //стек перехода по поиску мест
             this.PositionsStack = new Stack<KeyValuePair<string, Coordinate>>();
@@ -577,6 +578,11 @@ namespace TrackConverter.UI.Shell
             this.ResumeLayout();
         }
 
+        /// <summary>
+        /// настройка внешнего вида элементов
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void formMain_Shown(object sender, EventArgs e)
         {
             this.SuspendLayout();
@@ -595,6 +601,7 @@ namespace TrackConverter.UI.Shell
             #region КАРТА
 
 
+            mapHelper.ConfigureGMapControl();
 
             TripRouteFile gf = null;
             try
@@ -1453,10 +1460,9 @@ namespace TrackConverter.UI.Shell
 
         private void button1_Click(object sender, EventArgs e)
         {
-            PointLatLng pt = this.gmapControlMap.Position;
-            this.gmapControlMap.MapProvider.Projection.FromGeodeticToCartesian(pt.Lat,pt.Lng, 0, out double x, out double y, out double z);
-
-
+            //при x=2474, y=1278, zoom=14, factor=10 => quadCode = 0302310101113
+            //при x=618, y=319, zoom=12, factor=10 => quadCode = 0302310101113
+           // var s = new Wikimapia(null).GetQuadKey(618, 319, 12);
         }
 
 

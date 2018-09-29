@@ -1,8 +1,8 @@
-﻿using System.Drawing;
+﻿using GMap.NET;
+using GMap.NET.WindowsForms;
+using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
-using GMap.NET;
-using GMap.NET.WindowsForms;
 using TrackConverter.Lib.Maping.GMap;
 using TrackConverter.Lib.Tracking;
 using TrackConverter.Res;
@@ -70,18 +70,24 @@ namespace TrackConverter.UI.Shell
             }
             //если иконки нет, то базовую иконку
             Icon ic;
-            if (point.Icon == IconOffsets.marker)
-                ic = Resources.marker;
-            else
+            switch (point.Icon)
             {
-                //если есть файл такой иконки, то его, если нет - базовую иконку
-                string fn = Application.StartupPath + Resources.icons_directory + "\\" + point.Icon.ToString("000") + ".ico";
-                if (File.Exists(fn))
-                    ic = new Icon(fn);
-                else
+                case IconOffsets.MARKER:
                     ic = Resources.marker;
+                    break;
+                case IconOffsets.CATEGORY_MARKER:
+                    ic = Resources.category_marker;
+                    break;
+                default:
+                    //если есть файл такой иконки, то его, если нет - базовую иконку
+                    string fn = Application.StartupPath + Resources.icons_directory + "\\" + point.Icon.ToString("000") + ".ico";
+                    if (File.Exists(fn))
+                        ic = new Icon(fn);
+                    else
+                        ic = Resources.marker;
+                    break;
             }
-            ShowWaypoint(point, lay, ic, MarkerTypes.Waypoint);
+            ShowWaypoint(point, lay, ic, MarkerTypes.Waypoint,true);
         }
 
         /// <summary>
@@ -91,9 +97,9 @@ namespace TrackConverter.UI.Shell
         /// <param name="lay">слой</param>
         /// <param name="icon">относительный адрес картинки (из Resources)</param>
         /// <param name="type">тип маркера</param>
-        public void ShowWaypoint(TrackPoint point, GMapOverlay lay, Icon icon, MarkerTypes type)
+        public void ShowWaypoint(TrackPoint point, GMapOverlay lay, Icon icon, MarkerTypes type,bool clickable)
         {
-            ShowWaypoint(point, lay, icon, type, MarkerTooltipMode.OnMouseOver);
+            ShowWaypoint(point, lay, icon, type, MarkerTooltipMode.OnMouseOver,clickable);
         }
 
         /// <summary>
@@ -103,10 +109,11 @@ namespace TrackConverter.UI.Shell
         /// <param name="lay">слой</param>
         /// <param name="icon">картинка</param>
         /// <param name="mType">тип  маркера</param>
+        /// <param name="clickable">если истина, то на маркер можно нажать и появится окно редактирования точки</param>
         /// <param name="ttMode">тип всплывающей подсказки</param>
-        public void ShowWaypoint(TrackPoint point, GMapOverlay lay, Icon icon, MarkerTypes mType, MarkerTooltipMode ttMode)
+        public void ShowWaypoint(TrackPoint point, GMapOverlay lay, Icon icon, MarkerTypes mType, MarkerTooltipMode ttMode,bool clickable)
         {
-            ShowWaypoint(point, lay, icon, mType, PathingType.None, ttMode);
+            ShowWaypoint(point, lay, icon, mType, PathingType.None, ttMode,clickable,null);
         }
 
         /// <summary>
@@ -118,10 +125,12 @@ namespace TrackConverter.UI.Shell
         /// <param name="mType">тип  маркера</param>
         /// <param name="pType">тип точки при прокладке маршрута</param>
         /// <param name="ttMode">тип всплывающей подсказки</param>
-        public void ShowWaypoint(TrackPoint point, GMapOverlay lay, Icon icon, MarkerTypes mType, PathingType pType, MarkerTooltipMode ttMode)
+        /// <param name="clickable">если истина, то на маркер можно нажать и появится окно редактирования точки</param>
+        /// <param name="tag">дополнительная информация о маркере</param>
+        public void ShowWaypoint(TrackPoint point, GMapOverlay lay, Icon icon, MarkerTypes mType, PathingType pType, MarkerTooltipMode ttMode, bool clickable, object tag)
         {
             Point offsets = IconOffsets.GetOffset(point.Icon);
-            MapMarker mar = new MapMarker(point.Coordinates.GMap, icon, offsets);
+            MapMarker mar = new MapMarker(point.Coordinates.GMap, icon, offsets,clickable);
 
             if (string.IsNullOrWhiteSpace(point.Name))
                 point.Name = point.Coordinates.ToString("{lat},{lon}", "00.000");
@@ -131,6 +140,7 @@ namespace TrackConverter.UI.Shell
             mar.ToolTipText = point.Name;
             mar.ToolTipMode = ttMode;
             mar.Tag.Info = point;
+            mar.Tag.Tag = tag;
 
             lay.Markers.Add(mar);
         }

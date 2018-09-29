@@ -11,6 +11,10 @@ namespace TrackConverter.Lib.Maping.GMap
     /// </summary>
     public class MapMarker: GMapMarker
     {
+        /// <summary>
+        /// если истина, то на маркер можно нажать и появится окно редактирования
+        /// </summary>
+        public bool Clickable { get; private set; }
 
         /// <summary>
         /// информация о маркере, тип
@@ -27,8 +31,8 @@ namespace TrackConverter.Lib.Maping.GMap
         /// </summary>
         /// <param name="point">географические координаты</param>
         /// <param name="image">изображение</param>
-        public MapMarker(PointLatLng point, Icon image)
-            : this(point, image, 0, 0)
+        public MapMarker(PointLatLng point, Icon image, bool clickable)
+            : this(point, image, 0, 0,  clickable)
         { }
 
         /// <summary>
@@ -38,12 +42,13 @@ namespace TrackConverter.Lib.Maping.GMap
         /// <param name="image">иконка маркера</param>
         /// <param name="offsetY">Сдвиг в пикселях по Y. Отрицательнвй сдвиг сдвигаем маркер вверх</param>
         /// <param name="offsetX">Сдвиг в пикселях по Х. Отрицательнвй сдвиг сдвигаем маркер влево</param>
-        public MapMarker(PointLatLng point, Icon image, int offsetX, int offsetY)
+        public MapMarker(PointLatLng point, Icon image, int offsetX, int offsetY, bool clickable)
             : base(point)
         {
             Size = new Size(image.Width, image.Height);
             Offset = new Point(-Size.Width / 2 + offsetX, -Size.Height / 2 + offsetY);
             this.image = image;
+            this.Clickable = clickable;
         }
 
         /// <summary>
@@ -52,8 +57,8 @@ namespace TrackConverter.Lib.Maping.GMap
         /// <param name="point">координаты точки</param>
         /// <param name="image">иконка маркера</param>
         /// <param name="offsets">Отступы по Х и по Y. Отрицательные отступы сдвигают влево и вверх соответственно</param>
-        public MapMarker(PointLatLng point, Icon image, Point offsets)
-            : this(point, image, offsets.X, offsets.Y)
+        public MapMarker(PointLatLng point, Icon image, Point offsets, bool clickable)
+            : this(point, image, offsets.X, offsets.Y,  clickable)
         { }
 
         /// <summary>

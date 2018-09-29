@@ -428,5 +428,23 @@ namespace TrackConverter.UI.Tools
                 return;
             }
         }
+
+        /// <summary>
+        /// точку на центр карты
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void linkLabelMap_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            Coordinate cr = new Coordinate(
+                          new Coordinate.CoordinateRecord(
+                              double.Parse(textBoxDegLatDeg.Text.Replace('.', Vars.DecimalSeparator)),
+                              double.Parse(textBoxDegLatDeg.Text.Replace('.', Vars.DecimalSeparator)) <= 0 ? Coordinate.CoordinateChar.S : Coordinate.CoordinateChar.N),
+                          new Coordinate.CoordinateRecord(
+                              double.Parse(textBoxDegLonDeg.Text.Replace('.', Vars.DecimalSeparator)),
+                              double.Parse(textBoxDegLonDeg.Text.Replace('.', Vars.DecimalSeparator)) <= 0 ? Coordinate.CoordinateChar.W : Coordinate.CoordinateChar.E)
+                      );
+            Program.winMain.gmapControlMap.Position = cr.GMap;
+        }
     }
 }

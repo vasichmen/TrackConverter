@@ -77,6 +77,7 @@
             this.label7 = new System.Windows.Forms.Label();
             this.radioButtonDeg = new System.Windows.Forms.RadioButton();
             this.buttonTransform = new System.Windows.Forms.Button();
+            this.linkLabelMap = new System.Windows.Forms.LinkLabel();
             this.groupBox1.SuspendLayout();
             this.groupBox4.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -123,6 +124,7 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.linkLabelMap);
             this.groupBox1.Controls.Add(this.linkLabelGoogle);
             this.groupBox1.Controls.Add(this.linkLabelYandex);
             this.groupBox1.Controls.Add(this.groupBox4);
@@ -140,12 +142,12 @@
             // linkLabelGoogle
             // 
             this.linkLabelGoogle.AutoSize = true;
-            this.linkLabelGoogle.Location = new System.Drawing.Point(241, 23);
+            this.linkLabelGoogle.Location = new System.Drawing.Point(131, 23);
             this.linkLabelGoogle.Name = "linkLabelGoogle";
-            this.linkLabelGoogle.Size = new System.Drawing.Size(140, 13);
+            this.linkLabelGoogle.Size = new System.Drawing.Size(41, 13);
             this.linkLabelGoogle.TabIndex = 7;
             this.linkLabelGoogle.TabStop = true;
-            this.linkLabelGoogle.Text = "Показать на карте Google";
+            this.linkLabelGoogle.Text = "Google";
             this.linkLabelGoogle.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelGoogle_LinkClicked);
             // 
             // linkLabelYandex
@@ -153,10 +155,10 @@
             this.linkLabelYandex.AutoSize = true;
             this.linkLabelYandex.Location = new System.Drawing.Point(80, 23);
             this.linkLabelYandex.Name = "linkLabelYandex";
-            this.linkLabelYandex.Size = new System.Drawing.Size(144, 13);
+            this.linkLabelYandex.Size = new System.Drawing.Size(45, 13);
             this.linkLabelYandex.TabIndex = 6;
             this.linkLabelYandex.TabStop = true;
-            this.linkLabelYandex.Text = "Показать на карте Яндекс";
+            this.linkLabelYandex.Text = "Яндекс";
             this.linkLabelYandex.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelYandex_LinkClicked);
             // 
             // groupBox4
@@ -596,6 +598,17 @@
             this.buttonTransform.UseVisualStyleBackColor = true;
             this.buttonTransform.Click += new System.EventHandler(this.buttonTransform_Click);
             // 
+            // linkLabelMap
+            // 
+            this.linkLabelMap.AutoSize = true;
+            this.linkLabelMap.Location = new System.Drawing.Point(178, 23);
+            this.linkLabelMap.Name = "linkLabelMap";
+            this.linkLabelMap.Size = new System.Drawing.Size(53, 13);
+            this.linkLabelMap.TabIndex = 8;
+            this.linkLabelMap.TabStop = true;
+            this.linkLabelMap.Text = "На карте";
+            this.linkLabelMap.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelMap_LinkClicked);
+            // 
             // FormTransformCoordinate
             // 
             this.AcceptButton = this.buttonTransform;
@@ -669,5 +682,6 @@
         private System.Windows.Forms.ComboBox comboBoxDegminsecLat;
         private System.Windows.Forms.LinkLabel linkLabelGoogle;
         private System.Windows.Forms.LinkLabel linkLabelYandex;
+        private System.Windows.Forms.LinkLabel linkLabelMap;
     }
 }

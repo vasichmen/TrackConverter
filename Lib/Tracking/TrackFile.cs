@@ -38,7 +38,6 @@ namespace TrackConverter.Lib.Tracking
             }
         }
 
-
         /// <summary>
         /// время прохождения трека
         /// </summary>
@@ -52,7 +51,6 @@ namespace TrackConverter.Lib.Tracking
                     return Track[Track.Count - 1].Time - Track[0].Time;
             }
         }
-
 
         /// <summary>
         /// последовательность высот в метрах
@@ -335,8 +333,7 @@ namespace TrackConverter.Lib.Tracking
         /// <param name="points"></param>
         public override void Add(IEnumerable<TrackPoint> points)
         {
-            foreach (TrackPoint pt in points)
-                this.Add(pt);
+            Track.AddRange(points);
         }
 
         /// <summary>
@@ -780,7 +777,6 @@ namespace TrackConverter.Lib.Tracking
             Track.RemoveAt(index);
         }
 
-
         /// <summary>
         /// перечислитель
         /// </summary>
@@ -789,7 +785,6 @@ namespace TrackConverter.Lib.Tracking
         {
             return Track.GetEnumerator();
         }
-
 
         /// <summary>
         /// показывает, является ли коллекция доступна только для чтения

@@ -15,42 +15,47 @@ namespace TrackConverter.Res
         /// <summary>
         /// иконка маркера обычной точки (красный баллон)
         /// </summary>
-        public const int marker = 70;
+        public const int MARKER = 70;
 
         /// <summary>
         /// иконка начала маршрута
         /// </summary>
-        public const int marker_start = 72;
+        public const int MARKER_START = 72;
 
         /// <summary>
         /// иконка конца маршрута
         /// </summary>
-        public const int marker_finish = 73;
+        public const int MARKER_FINISH = 73;
 
         /// <summary>
         /// иконка промежуточной точки при построении маршрута
         /// </summary>
-        public const int marker_intermediate = 77;
+        public const int MARKER_INTERMEDIATE = 77;
 
         /// <summary>
         /// иконки при построении маршрута
         /// </summary>
-        public const int creating_route_marker = 78;
+        public const int CREATING_ROUTE_MARKER = 78;
 
         /// <summary>
         /// иконка "что здесь"
         /// </summary>
-        public const int what_there = 74;
+        public const int WHAT_THERE = 74;
 
         /// <summary>
         /// исконка результатов поиска на карте
         /// </summary>
-        public const int search_result_icon = 75;
+        public const int SEARCH_RESULT_ICON = 75;
 
         /// <summary>
         /// выделенная иконка при выделении из графика или списка (большой красный круг)
         /// </summary>
-        public const int selected_point_icon = 76;
+        public const int SELECTED_POINT_ICON = 76;
+
+        /// <summary>
+        /// маркер поиска категорий по викимапии
+        /// </summary>
+        public const int CATEGORY_MARKER = 79;
 
         /// <summary>
         /// возращает отступы по осям для отображения маркера на карте для заданной иконки.
@@ -64,26 +69,26 @@ namespace TrackConverter.Res
             //ВСТРОЕННЫЕ ИКОНКИ
 
             //для стандартной иконки из ресурсов (красный указатель)
-            if (icon == marker) return new Point(0, -16);
+            if (icon == MARKER) return new Point(0, -16);
 
             //для иконки конца маршрута
-            if (icon == marker_finish) return new Point(0, -16);
+            if (icon == MARKER_FINISH) return new Point(0, -16);
 
             //для иконки начала маршрута
-            if (icon == marker_start) return new Point(16, -16);
+            if (icon == MARKER_START) return new Point(16, -16);
 
             //иконка Что здесь?
-            if (icon == what_there) return new Point(0, -16);
+            if (icon == WHAT_THERE) return new Point(0, -16);
 
             //иконка без сдвига
-            if (icon == marker_intermediate) return new Point(0, 0);
+            if (icon == MARKER_INTERMEDIATE) return new Point(0, 0);
 
             //иконка результатов поиска
-            if (icon == search_result_icon)
+            if (icon == SEARCH_RESULT_ICON)
                 return new Point(0, -16);
 
-            //иконка выделенной точки на карте или иконки построения маршрута
-            if (icon == selected_point_icon || icon == creating_route_marker)
+            //иконка выделенной точки на карте или иконки построения маршрута, маркера категории wikimapia
+            if (icon == SELECTED_POINT_ICON || icon == CREATING_ROUTE_MARKER || icon==CATEGORY_MARKER)
                 return new Point(0, 0);
 
 

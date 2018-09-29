@@ -13,10 +13,9 @@ namespace TrackConverter.Lib.Classes
     /// <summary>
     /// информация об объекте на слое карты
     /// </summary>
-    [Serializable]
     public class VectorMapLayerObject
     {
-        private const char sep = '#';
+        private const char SEP = '#';
 
         /// <summary>
         /// координаты центра многоугольника
@@ -29,9 +28,24 @@ namespace TrackConverter.Lib.Classes
         private double perimeter;
 
         /// <summary>
+        /// ограничивающщий прямоугольник
+        /// </summary>
+        private RectLatLng bounds = RectLatLng.Empty;
+
+        /// <summary>
         /// ID 
         /// </summary>
         public int ID { get; set; }
+
+        /// <summary>
+        /// Ограничивающий прямоугольник
+        /// </summary>
+        public RectLatLng Bounds { get {
+                if (bounds.IsEmpty)
+                    bounds = getGeometryBounds();
+                return bounds;
+            } }
+
 
         /// <summary>
         /// Поставщик информации об объекте
@@ -64,10 +78,10 @@ namespace TrackConverter.Lib.Classes
         /// <param name="geometryString">строковое представленение координат вершин многоугольника</param>
         /// <param name="name">название объекта</param>
         /// <returns></returns>
-        private GMapPolygon GetGeometryFromString(string geometryString, string name)
+        private GMapPolygon getGeometryFromString(string geometryString, string name)
         {
             List<PointLatLng> points = new List<PointLatLng>();
-            string[] pairs = geometryString.Split(sep);
+            string[] pairs = geometryString.Split(SEP);
             if (Math.IEEERemainder(pairs.Length, 2d) == 0)
                 throw new Exception("Ошибка в строке координат вершин многоугольника. (не все числа имеют пары)");
             for (int i = 0; i < pairs.Length - 1; i += 2)
@@ -85,15 +99,15 @@ namespace TrackConverter.Lib.Classes
         /// </summary>
         /// <param name="geometry">вершины многоугольника</param>
         /// <returns></returns>
-        private string GetGeometryString(GMapPolygon geometry)
+        private string getGeometryString(GMapPolygon geometry)
         {
             string res = string.Empty;
             foreach (PointLatLng pt in geometry.Points)
                 res += pt.Lat.ToString().Replace(Vars.DecimalSeparator, '.') +
-                    sep +
+                    SEP +
                     pt.Lng.ToString().Replace(Vars.DecimalSeparator, '.') +
-                    sep;
-            res.TrimEnd(new[] { sep });
+                    SEP;
+            res.TrimEnd(new[] { SEP });
             return res;
         }
 
@@ -102,7 +116,7 @@ namespace TrackConverter.Lib.Classes
         /// </summary>
         /// <param name="geometry">вершины многоугольника</param>
         /// <returns></returns>
-        private Coordinate GetGeometryCenter(GMapPolygon geometry)
+        private Coordinate getGeometryCenter(GMapPolygon geometry)
         {
             double lat_min = double.MaxValue;
             double lat_max = double.MinValue;
@@ -123,11 +137,36 @@ namespace TrackConverter.Lib.Classes
         }
 
         /// <summary>
+        /// получить границы прямоугольника вокруг объекта
+        /// </summary>
+        /// <returns></returns>
+        private RectLatLng getGeometryBounds()
+        {
+            double latMin = double.MaxValue;
+            double lonMin = double.MaxValue;
+            double latMax = double.MinValue;
+            double lonMax = double.MinValue;
+            foreach (var pt in Geometry.Points)
+            {
+                if (pt.Lat < latMin)
+                    latMin = pt.Lat;
+                if (pt.Lng < lonMin)
+                    lonMin = pt.Lng;
+                if (pt.Lat > latMax)
+                    latMax = pt.Lat;
+                if (pt.Lng > lonMax)
+                    lonMax = pt.Lng;
+            }
+            RectLatLng res = new RectLatLng(latMax, lonMin, lonMax-lonMin, latMax-latMin);
+            return res;
+        }
+
+        /// <summary>
         /// получение хэш-суммы строки
         /// </summary>
         /// <param name="s"></param>
         /// <returns></returns>
-        private string GetHashString(string s)
+        private string getHashString(string s)
         {
             //переводим строку в байт-массим  
             byte[] bytes = Encoding.Unicode.GetBytes(s);
@@ -171,7 +210,7 @@ namespace TrackConverter.Lib.Classes
             get
             {
                 if (geometryCenter.isEmpty)
-                    geometryCenter = GetGeometryCenter(this.Geometry);
+                    geometryCenter = getGeometryCenter(this.Geometry);
                 return geometryCenter;
             }
             private set { geometryCenter = value; }

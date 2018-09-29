@@ -64,7 +64,7 @@ namespace TrackConverter.Lib.Tracking
             this.Coordinates = cd;
             this.MagneticAzimuth = double.NaN;
             this.TrueAzimuth = double.NaN;
-            this.Icon = IconOffsets.marker;
+            this.Icon = IconOffsets.MARKER;
             this.MetrAltitude = double.NaN;
             this.PointType = RouteWaypointType.None;
         }
@@ -134,12 +134,12 @@ namespace TrackConverter.Lib.Tracking
         /// <summary>
         /// Имя точки
         /// </summary>
-        public string Name { get => name?.Replace(",", " ").Replace("\r\n", ""); set { name = value; } }
+        public string Name { get => name; set { name = value.Replace(",", " ").Replace("\r\n", ""); } }
 
         /// <summary>
         /// Описание точки
         /// </summary>
-        public string Description { get => description?.Replace(",", " ").Replace("\r\n", ""); set { description = value; } }
+        public string Description { get => description; set { description = value.Replace(",", " ").Replace("\r\n", ""); } }
 
         /// <summary>
         /// Скорость в этой точке в км/ч
@@ -226,7 +226,6 @@ namespace TrackConverter.Lib.Tracking
                 int mins = Fall.Minutes = Rise.Minutes;
                 int secs = Fall.Seconds - Rise.Seconds;
                 return new TimeSpan(hours, mins, secs);
-
             }
         }
 
@@ -265,15 +264,20 @@ namespace TrackConverter.Lib.Tracking
         }
 
         /// <summary>
+        /// коорднаты точки в формате GMap
+        /// </summary>
+        private PointLatLng gmap = PointLatLng.Empty;
+
+        /// <summary>
         /// координаты в формате GMap
         /// </summary>
         public PointLatLng GMap
         {
             get
             {
-                // return  GMapIconMarker(this.Coordinates.GMap);
-                //return this.Coordinates.GMap;
-                return new PointLatLng(Coordinates.Latitude.TotalDegrees, Coordinates.Longitude.TotalDegrees);
+                if(gmap.IsEmpty)
+                    gmap =  new PointLatLng(Coordinates.Latitude.TotalDegrees, Coordinates.Longitude.TotalDegrees);
+                return gmap;
             }
         }
 
