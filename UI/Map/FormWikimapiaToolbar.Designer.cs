@@ -34,7 +34,6 @@
             this.comboBoxCategories = new System.Windows.Forms.ComboBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.linkLabelAllCategories = new System.Windows.Forms.LinkLabel();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -94,22 +93,9 @@
             this.label1.TabIndex = 4;
             this.label1.Text = "Выбор категории";
             // 
-            // linkLabelAllCategories
-            // 
-            this.linkLabelAllCategories.AutoSize = true;
-            this.linkLabelAllCategories.Location = new System.Drawing.Point(146, 61);
-            this.linkLabelAllCategories.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.linkLabelAllCategories.Name = "linkLabelAllCategories";
-            this.linkLabelAllCategories.Size = new System.Drawing.Size(81, 13);
-            this.linkLabelAllCategories.TabIndex = 5;
-            this.linkLabelAllCategories.TabStop = true;
-            this.linkLabelAllCategories.Text = "Все категории";
-            this.linkLabelAllCategories.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelAllCategories_LinkClicked);
-            // 
             // groupBox2
             // 
             this.groupBox2.Controls.Add(this.label1);
-            this.groupBox2.Controls.Add(this.linkLabelAllCategories);
             this.groupBox2.Controls.Add(this.comboBoxCategories);
             this.groupBox2.Location = new System.Drawing.Point(9, 10);
             this.groupBox2.Margin = new System.Windows.Forms.Padding(2);
@@ -149,7 +135,6 @@
         private System.Windows.Forms.ComboBox comboBoxCategories;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.LinkLabel linkLabelAllCategories;
         private System.Windows.Forms.GroupBox groupBox2;
     }
 }

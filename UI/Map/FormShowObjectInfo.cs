@@ -68,7 +68,7 @@ namespace TrackConverter.UI.Map
                         load.Wait();
 
                         //ОСНОВНЫЕ ДАННЫЕ
-                        labelName.Text = info.Title;
+                        //labelName.Text = info.Title; //на этой строке по неизвестной причине ширина textBoxComments становится равно нулю!!!
                         new ToolTip().SetToolTip(labelName, info.Title);
                         textBoxDescription.Text = info.Description;
                         linkLabelLink.Text = info.Link;
@@ -94,7 +94,7 @@ namespace TrackConverter.UI.Map
 
                         //КАРТИНКИ
 
-                        //метод добавления катинки на панель
+                        //метод добавления картинки на панель
                         Action<Image, Wikimapia.ExtInfo.PhotoInfo> addImg = new Action<Image, Wikimapia.ExtInfo.PhotoInfo>((img, pho) =>
                           {
                               this.Invoke(new Action(() =>
@@ -114,7 +114,6 @@ namespace TrackConverter.UI.Map
                                   new ToolTip().SetToolTip(pb, "Загружено " + pho.TimeString);
                               }));
                           });
-
                         imgs = new Task(() =>
                         {
                             foreach (Wikimapia.ExtInfo.PhotoInfo pho in info.Photos)
@@ -135,6 +134,8 @@ namespace TrackConverter.UI.Map
                             }
                         });
                         imgs.Start();
+
+                        //НАСТРОЙКИ ВНЕШНЕГО ВИДА ОКНА
                         if (info.Photos.Count == 0)
                         {
                             this.Height -= flowLayoutPanelImages.Height;
@@ -145,6 +146,8 @@ namespace TrackConverter.UI.Map
                             this.Height += flowLayoutPanelImages.Height;
                             flowLayoutPanelImages.Height *= 2;
                         }
+
+                        //выделение выбранного объекта
                         Program.winMain.gmapControlMap.SelectPolygon(this.Obj.ID);
                     }
                     catch (Exception ex)
@@ -156,6 +159,7 @@ namespace TrackConverter.UI.Map
                     finally
                     {
                         Program.winMain.EndOperation();
+                        //MessageBox.Show(textBoxComments.Height + "        " + textBoxComments.Width);
                     }
                     break;
                 case MapLayerProviders.None:

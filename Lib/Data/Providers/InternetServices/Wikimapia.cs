@@ -17,6 +17,8 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
     /// </summary>
     public class Wikimapia : BaseConnection, IVectorMapLayerProvider
     {
+        #region Структуры
+
         /// <summary>
         /// расширенная инфорация об объекте (фотографии, комментарии итд)
         /// </summary>
@@ -172,11 +174,6 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
             public string Name { get; set; }
 
             /// <summary>
-            /// показывает, надо ли отображать категорию в основном списке
-            /// </summary>
-            public bool isBase { get; set; }
-
-            /// <summary>
             /// Количество объектов в категории
             /// </summary>
             public int Amount { get; set; }
@@ -199,16 +196,34 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                 return this.ID == ((CategoryInfo)obj).ID;
             }
 
+            public override int GetHashCode()
+            {
+                unchecked
+                {
+                    return 1213502048 + ID.GetHashCode();
+                }
+            }
+
             public static bool operator !=(CategoryInfo obj1, CategoryInfo obj2)
             {
-                    return !Equals(obj1,obj2);
+                return !Equals(obj1, obj2);
             }
 
             public static bool operator ==(CategoryInfo obj1, CategoryInfo obj2)
             {
-                    return Equals(obj1,obj2);
+                return Equals(obj1, obj2);
             }
         }
+
+        /// <summary>
+        /// информация об элементе ответа на поисковый запрос
+        /// </summary>
+        public class SearchItemInfo
+        {
+
+        }
+
+        #endregion
 
 
         /// <summary>
@@ -228,38 +243,6 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                 return basicCategories;
             }
         }
-
-        /// <summary>
-        /// получение основных категорий
-        /// </summary>
-        /// <returns></returns>
-        private List<CategoryInfo> getCategories(bool isBasic)
-        {
-            //http://wikimapia.org/localization/tags/ru.json
-            string url = "http://wikimapia.org/localization/tags/ru.json";
-            JObject jo = SendJsonGetRequest(url);
-            JToken cats = jo["categories"];
-            List<CategoryInfo> res = new List<CategoryInfo>();
-            foreach (var cat in cats)
-                foreach (var catt in cat)
-                {
-                    CategoryInfo i = new CategoryInfo();
-                    i.Amount = int.Parse(catt["count"].ToString());
-                    i.ID = int.Parse(catt["category_id"].ToString());
-                    string n = catt["name"].ToString();
-                    i.Name = n;
-                    res.Add(i);
-                }
-            return res;
-        }
-
-        /// <summary>
-        /// Создаёт новый объект связи с сервисом с заданной папкой кэша запросов и временем хранения кэша
-        /// </summary>
-        /// <param name="cacheDirectory">папка с кэшем или null, если не надо использовать кэш</param>
-        /// <param name="duration">время хранения кэша в часах. По умолчанию - неделя</param>
-        public Wikimapia(string cacheDirectory, int duration = 24 * 7) : base(cacheDirectory, duration)
-        { }
 
         /// <summary>
         /// Максимальное число попыток переподключения
@@ -282,6 +265,18 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                 return TimeSpan.FromSeconds(0.1);
             }
         }
+
+        /// <summary>
+        /// Создаёт новый объект связи с сервисом с заданной папкой кэша запросов и временем хранения кэша
+        /// </summary>
+        /// <param name="cacheDirectory">папка с кэшем или null, если не надо использовать кэш</param>
+        /// <param name="duration">время хранения кэша в часах. По умолчанию - неделя</param>
+        public Wikimapia(string cacheDirectory, int duration = 24 * 7) : base(cacheDirectory, duration)
+        { }
+        
+
+        #region Слой объектов
+
 
         /// <summary>
         /// получение списка объектов в заданной области при заданном масштабе. Через API функцию BBOX
@@ -685,6 +680,64 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
             return res;
         }
 
+
+
+        #endregion
+
+        #region Категории
+
+        /// <summary>
+        /// получение основных категорий
+        /// </summary>
+        /// <returns></returns>
+        private List<CategoryInfo> getCategories(bool isBasic)
+        {
+            //http://wikimapia.org/localization/tags/ru.json
+            string url = "http://wikimapia.org/localization/tags/ru.json";
+            JObject jo = SendJsonGetRequest(url);
+            JToken cats = jo["categories"];
+            List<CategoryInfo> res = new List<CategoryInfo>();
+            foreach (var cat in cats)
+                foreach (var catt in cat)
+                {
+                    CategoryInfo i = new CategoryInfo();
+                    i.Amount = int.Parse(catt["count"].ToString());
+                    i.ID = int.Parse(catt["category_id"].ToString());
+                    string n = catt["name"].ToString();
+                    i.Name = n;
+                    res.Add(i);
+                }
+            return res;
+        }
+
+
+        /// <summary>
+        /// получить код тайла. Источник: http://wikimapia.org/js/application.js#getQuadKey:function(..
+        /// </summary>
+        /// <param name="x">тайловая координата х</param>
+        /// <param name="y">тайловая координата у</param>
+        /// <param name="zoom">масштаб</param>
+        /// <returns></returns>
+        private string getQuadKey(int x, int y, int zoom)
+        {
+            int tileWidth = 1024;
+            int tileFactor = (int)(Math.Log(tileWidth) / Math.Log(2));
+
+            var ob = new int[][] { new int[] { -2, 1 }, new int[] { 0, 2 }, new int[] { 2, 3 } };
+            var o = ob[tileFactor - 8];
+            string n = "0";
+            int s;
+            y = ((1 << zoom - o[0]) - y - 1); //????
+            zoom -= o[1];
+            while (zoom >= 0)
+            {
+                s = 1 << zoom;
+                n += ((x & s) > 0 ? 1 : 0) + ((y & s) > 0 ? 2 : 0);
+                zoom--;
+            }
+            return n;
+        }
+
         /// <summary>
         /// получить список точек категории в заданном тайле карты
         /// </summary>
@@ -756,32 +809,23 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
             return res;
         }
 
-        /// <summary>
-        /// получить код тайла. Источник: http://wikimapia.org/js/application.js#getQuadKey:function(..
-        /// </summary>
-        /// <param name="x">тайловая координата х</param>
-        /// <param name="y">тайловая координата у</param>
-        /// <param name="zoom">масштаб</param>
-        /// <returns></returns>
-        private string getQuadKey(int x, int y, int zoom)
-        {
-            int tileWidth = 1024;
-            int tileFactor = (int)(Math.Log(tileWidth) / Math.Log(2));
 
-            var ob = new int[][] { new int[] { -2, 1 }, new int[] { 0, 2 }, new int[] { 2, 3 } };
-            var o = ob[tileFactor - 8];
-            string n = "0";
-            int s;
-            y = ((1 << zoom - o[0]) - y - 1); //????
-            zoom -= o[1];
-            while (zoom >= 0)
-            {
-                s = 1 << zoom;
-                n += ((x & s) > 0 ? 1 : 0) + ((y & s) > 0 ? 2 : 0);
-                zoom--;
-            }
-            return n;
+        #endregion
+
+        #region Поиск
+
+        /// <summary>
+        /// поиск объектов
+        /// </summary>
+        /// <param name="query">строка запроса</param>
+        /// <param name="point">точка, от которой надо искать</param>
+        /// <param name="page">номер страницы с результатами поиска</param>
+        /// <returns></returns>
+        public List<SearchItemInfo> Search(string query, PointLatLng point, int page)
+        {
+            throw new NotImplementedException();
         }
 
+        #endregion
     }
 }

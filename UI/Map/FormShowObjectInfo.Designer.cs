@@ -35,12 +35,12 @@
             this.linkLabelLink = new System.Windows.Forms.LinkLabel();
             this.contextMenuStripLinkLabel = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.copyLinkToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.copyLinkMapToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.flowLayoutPanelImages = new System.Windows.Forms.FlowLayoutPanel();
             this.label2 = new System.Windows.Forms.Label();
             this.textBoxDescription = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.textBoxComments = new System.Windows.Forms.TextBox();
-            this.copyLinkMapToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.flowLayoutPanelWrapper.SuspendLayout();
             this.contextMenuStripLinkLabel.SuspendLayout();
             this.SuspendLayout();
@@ -92,7 +92,7 @@
             this.copyLinkToolStripMenuItem,
             this.copyLinkMapToolStripMenuItem});
             this.contextMenuStripLinkLabel.Name = "contextMenuStripLinkLabel";
-            this.contextMenuStripLinkLabel.Size = new System.Drawing.Size(232, 70);
+            this.contextMenuStripLinkLabel.Size = new System.Drawing.Size(232, 48);
             // 
             // copyLinkToolStripMenuItem
             // 
@@ -100,6 +100,13 @@
             this.copyLinkToolStripMenuItem.Size = new System.Drawing.Size(231, 22);
             this.copyLinkToolStripMenuItem.Text = "Копировать ссылку";
             this.copyLinkToolStripMenuItem.Click += new System.EventHandler(this.copyLinkToolStripMenuItem_Click);
+            // 
+            // copyLinkMapToolStripMenuItem
+            // 
+            this.copyLinkMapToolStripMenuItem.Name = "copyLinkMapToolStripMenuItem";
+            this.copyLinkMapToolStripMenuItem.Size = new System.Drawing.Size(231, 22);
+            this.copyLinkMapToolStripMenuItem.Text = "Копировать ссылку на карту";
+            this.copyLinkMapToolStripMenuItem.Click += new System.EventHandler(this.copyLinkMapToolStripMenuItem_Click);
             // 
             // flowLayoutPanelImages
             // 
@@ -153,7 +160,7 @@
             this.textBoxComments.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxComments.BackColor = System.Drawing.SystemColors.Control;
+            this.textBoxComments.BackColor = System.Drawing.SystemColors.AppWorkspace;
             this.textBoxComments.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.textBoxComments.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.textBoxComments.Location = new System.Drawing.Point(3, 430);
@@ -165,13 +172,6 @@
             this.textBoxComments.Size = new System.Drawing.Size(566, 212);
             this.textBoxComments.TabIndex = 8;
             this.textBoxComments.TabStop = false;
-            // 
-            // copyLinkMapToolStripMenuItem
-            // 
-            this.copyLinkMapToolStripMenuItem.Name = "copyLinkMapToolStripMenuItem";
-            this.copyLinkMapToolStripMenuItem.Size = new System.Drawing.Size(231, 22);
-            this.copyLinkMapToolStripMenuItem.Text = "Копировать ссылку на карту";
-            this.copyLinkMapToolStripMenuItem.Click += new System.EventHandler(this.copyLinkMapToolStripMenuItem_Click);
             // 
             // FormShowObjectInfo
             // 

@@ -37,7 +37,10 @@ namespace TrackConverter.UI.Map
             }
         }
 
-
+        /// <summary>
+        /// создаёт новое окно настроек с заданным основным окном программы
+        /// </summary>
+        /// <param name="winMain">основное окно</param>
         public FormWikimapiaToolbar(FormMain winMain)
         {
             InitializeComponent();
@@ -46,47 +49,11 @@ namespace TrackConverter.UI.Map
             visibleMarkers = new ConcurrentDictionary<PointLatLng, object>();
         }
 
-        #region Категории объектов
-
         /// <summary>
-        /// обновление категорий при изменении выбранной категории из списка
+        /// при закрытии формы освобождение ресурсов
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void comboBoxCategories_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (comboBoxCategories.SelectedIndex == 0)
-                CurrentCategory = null;
-            else
-            {
-                Wikimapia.CategoryInfo cat = (Wikimapia.CategoryInfo)comboBoxCategories.Items[comboBoxCategories.SelectedIndex];
-                CurrentCategory = cat;
-            }
-        }
-        
-        /// <summary>
-        /// добавление категорий в список при изменении текста
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void comboBoxCategories_TextUpdate(object sender, EventArgs e)
-        {
-            if (comboBoxCategories.Text.Length < 2)
-                return;
-        }
-
-        private void buttonSearch_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void linkLabelAllCategories_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-
-        }
-
-        #endregion
-
         private void formWikimapiaToolbar_FormClosed(object sender, FormClosedEventArgs e)
         {
             //удаление слоя из gmapControl
@@ -98,6 +65,11 @@ namespace TrackConverter.UI.Map
             frm.gmapControlMap.SizeChanged -= gmapControlMap_SizeChanged;
         }
 
+        /// <summary>
+        /// создание слоя, подписка на события
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void formWikimapiaToolbar_Shown(object sender, EventArgs e)
         {
             //добавление слоя поиска и категорий в  gmapControl
@@ -117,7 +89,52 @@ namespace TrackConverter.UI.Map
             frm.gmapControlMap.SizeChanged += gmapControlMap_SizeChanged;
         }
 
-        #region события GmapControl на основной форме
+        #region Категории объектов
+
+        /// <summary>
+        /// обновление категорий при изменении выбранной категории из списка
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void comboBoxCategories_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (comboBoxCategories.SelectedIndex == 0)
+                CurrentCategory = null;
+            else
+            {
+                Wikimapia.CategoryInfo cat = (Wikimapia.CategoryInfo)comboBoxCategories.Items[comboBoxCategories.SelectedIndex];
+                CurrentCategory = cat;
+            }
+        }
+
+        /// <summary>
+        /// добавление категорий в список при изменении текста
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void comboBoxCategories_TextUpdate(object sender, EventArgs e)
+        {
+            if (comboBoxCategories.Text.Length < 2)
+                return;
+        }
+
+        #endregion
+
+        #region Поиск
+
+        /// <summary>
+        /// Нажатие на кнопку поиска объектов
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void buttonSearch_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        #endregion
+
+        #region подписанные события GmapControl на основной форме
 
         /// <summary>
         /// обновление при изменении масштаба
@@ -185,7 +202,7 @@ namespace TrackConverter.UI.Map
                         if (zoom != (int)frm.gmapControlMap.Zoom ||
                             size != frm.gmapControlMap.Size ||
                             ccat != currentCategory ||
-                            pos != frm.gmapControlMap.Position ) //проверка, что предыдущие параметры остались неизменны
+                            pos != frm.gmapControlMap.Position) //проверка, что предыдущие параметры остались неизменны
                             return;
                         TrackPoint t = new TrackPoint(obj.GeometryCenter);
                         t.Name = obj.Name;
