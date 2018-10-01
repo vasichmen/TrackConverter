@@ -1,4 +1,6 @@
-﻿using System;
+﻿using HtmlAgilityPack;
+using Newtonsoft.Json.Linq;
+using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.IO;
@@ -7,8 +9,6 @@ using System.Net;
 using System.Text;
 using System.Threading;
 using System.Xml;
-using HtmlAgilityPack;
-using Newtonsoft.Json.Linq;
 using TrackConverter.Lib.Data.Providers.Local.OS;
 
 namespace TrackConverter.Lib.Data.Providers.InternetServices
@@ -156,6 +156,25 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         protected HtmlDocument SendHtmlGetRequest(string url, out HttpStatusCode code)
         {
             string ans = SendStringGetRequest(url, out code);
+
+            HtmlDocument doc = new HtmlDocument();
+            doc.LoadHtml(ans);
+
+            return doc;
+        }
+
+        /// <summary>
+        /// отправка запроса POST с ответом в формате HTML
+        /// </summary>
+        /// <param name="url">url запроса</param>
+        /// <param name="data">данные POST  запроса</param>
+        /// <returns></returns>
+        protected HtmlDocument SendHtmlPostRequest(string url, string data)
+        {
+            string ans = SendStringPostRequest(url, data);
+            //StreamReader sr = new StreamReader("sr.txt");
+            //string ans = sr.ReadToEnd();
+            //sr.Close();
 
             HtmlDocument doc = new HtmlDocument();
             doc.LoadHtml(ans);

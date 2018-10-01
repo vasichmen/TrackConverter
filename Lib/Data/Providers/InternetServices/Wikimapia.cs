@@ -218,11 +218,34 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         /// <summary>
         /// информация об элементе ответа на поисковый запрос
         /// </summary>
-        public class SearchItemInfo
+        public class SearchObjectItemInfo
         {
+            /// <summary>
+            /// координаты объекта
+            /// </summary>
+            public Coordinate Coordinates { get; set; }
 
+            /// <summary>
+            /// масштаб для показа объекта
+            /// </summary>
+            public int Zoom { get; set; }
+
+            /// <summary>
+            /// назание объекта
+            /// </summary>
+            public string Name { get; set; }
+
+            /// <summary>
+            /// назание ближайшего к объекту города
+            /// </summary>
+            public string NearestCity { get; set; }
+
+            /// <summary>
+            /// расстояние от центра карты до объекта в километрах
+            /// </summary>
+            public double Distance { get; set; }
         }
-
+        
         #endregion
 
 
@@ -239,7 +262,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
             get
             {
                 if (basicCategories == null)
-                    basicCategories = getCategories(true);
+                    basicCategories = GetCategories();
                 return basicCategories;
             }
         }
@@ -273,7 +296,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         /// <param name="duration">время хранения кэша в часах. По умолчанию - неделя</param>
         public Wikimapia(string cacheDirectory, int duration = 24 * 7) : base(cacheDirectory, duration)
         { }
-        
+
 
         #region Слой объектов
 
@@ -689,14 +712,25 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         /// <summary>
         /// получение основных категорий
         /// </summary>
+        /// <param name="query">часть названия категории. По умолчанию - базовые категории</param>
         /// <returns></returns>
-        private List<CategoryInfo> getCategories(bool isBasic)
+        public List<CategoryInfo> GetCategories(string query=null)
         {
+            //базовые категории
             //http://wikimapia.org/localization/tags/ru.json
-            string url = "http://wikimapia.org/localization/tags/ru.json";
+            string url;
+
+
+            if (string.IsNullOrWhiteSpace(query))
+                url = "http://wikimapia.org/localization/tags/ru.json"; //основные категории
+            else
+                url =string.Format( "http://wikimapia.org/ajax/get_category/?search_tcat={0}&format=json&lng=1",query);  //поиск по категориям
+
             JObject jo = SendJsonGetRequest(url);
             JToken cats = jo["categories"];
             List<CategoryInfo> res = new List<CategoryInfo>();
+            if (cats == null)
+                return new List<CategoryInfo>();
             foreach (var cat in cats)
                 foreach (var catt in cat)
                 {
@@ -819,12 +853,52 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         /// </summary>
         /// <param name="query">строка запроса</param>
         /// <param name="point">точка, от которой надо искать</param>
-        /// <param name="page">номер страницы с результатами поиска</param>
+        /// <param name="z">масштаб, при котором производится поиск</param>
+        /// <param name="start">номер последнего элемента из предыдущего результата (на каждой странице по 10 элементов)</param>
         /// <returns></returns>
-        public List<SearchItemInfo> Search(string query, PointLatLng point, int page)
+        public List<SearchObjectItemInfo> Search(string query, PointLatLng point, int z, int start)
         {
-            throw new NotImplementedException();
+            string url = "http://wikimapia.org/search/?q=" + query;
+            int y = (int)(point.Lat * 1e7);
+            int x = (int)(point.Lng * 1e7);
+            string jtype = "simple"; //simple - всё, geo - города, coord - координаты
+            int tryp = 0;
+            string data = string.Format("x={0}&y={1}&z={2}&qu={3}&jtype={4}&start={5}&try={6}", x, y, z, query, jtype, start, tryp);
+            HtmlDocument html = SendHtmlPostRequest(url, data);
+
+            HtmlNode searchlist = html.DocumentNode.SelectSingleNode(@".//div[@class='row-fluid']/ul[@class='nav searchlist']");
+
+            List<SearchObjectItemInfo> res = new List<SearchObjectItemInfo>();
+            HtmlNodeCollection items = searchlist.SelectNodes(@".//li[@class='search-result-item']");
+            foreach (var item in items)
+            {
+                int zoom = item.Attributes.Contains("data-zoom") ? int.Parse(item.Attributes["data-zoom"].Value) : 14;
+                double lat = item.Attributes.Contains("data-latitude") ? double.Parse(item.Attributes["data-latitude"].Value.Replace('.',Vars.DecimalSeparator)) : double.NaN;
+                double lon = item.Attributes.Contains("data-longitude") ? double.Parse(item.Attributes["data-longitude"].Value.Replace('.', Vars.DecimalSeparator)) : double.NaN;
+
+                HtmlNode name = item.SelectSingleNode(@".//div/strong");
+                string nameS = name.InnerText;
+
+                string distance = item.SelectSingleNode(@".//span[@class='label label-info']").InnerText;
+                double dist = double.Parse(distance.Replace("&nbsp;км", "").Replace('.', Vars.DecimalSeparator));
+
+                string city = item.SelectSingleNode(@".//small").InnerText.Trim(new char[] {'\r','\n',' ' });
+
+                // var userID = comment.SelectSingleNode(@".//div[@class='comment-body']/div[@class='comment-header']/a");
+                //com.UserLink = userID.Attributes.Contains("href") ? "http://wikimapia.org" + userID.Attributes["href"].Value : "";
+                SearchObjectItemInfo ni = new SearchObjectItemInfo()
+                {
+                    Name = nameS,
+                    Coordinates = new Coordinate(lat, lon),
+                    Distance = dist,
+                    NearestCity = city,
+                    Zoom = zoom
+                };
+                res.Add(ni);
+            }
+            return res;
         }
+
 
         #endregion
     }

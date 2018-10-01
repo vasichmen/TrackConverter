@@ -1,0 +1,293 @@
+﻿<!DOCTYPE html>
+<html>
+    <head>
+            <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+        <title>    Search: завод
+</title>
+        <meta name="description" content=""/>
+
+    <link type="text/css" rel="stylesheet" href="/css/bootstrap.css?660">
+    <link type="text/css" rel="stylesheet" href="/css/app.css?660">
+    <link type="text/css" rel="stylesheet" href="/css/user.css?660">
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    </head>
+    <body>
+<div class="container-fluid inner-page">
+    <input type="hidden" id="search-query" value="завод" />
+    <input type="hidden" id="search-type" value="simple" />
+    <div class="row-fluid">
+        
+        <ul class="nav nav-tabs search-nav">
+            <li class="active">
+                <span class="mode" href="#" data-search-type="_">
+                    всё
+                </span>
+            </li>
+            <li >
+                <span class="mode" data-search-type="geo">
+                    города
+                </span>
+            </li>
+            <li >
+                <span class="mode" data-search-type="coord">
+                    координаты
+                </span>
+            </li>
+        </ul>
+        
+                
+                    <ul class="nav searchlist">
+                
+                                    
+                        <li class="search-result-item" 
+                            data-zoom="13" 
+                            data-latitude="54.72"
+                            data-longitude="35.97">
+                            <div>
+                                <span style="color: #9BBDDE;">&bull;</span> <strong>Polotnyanyy Zavod (Полотняный Завод)</strong>
+                                <span class="label label-info">156&nbsp;км</span>
+                            </div>
+                            <small>
+                                Kaluga, Russia <span class="small">(city)</span>
+                            </small>
+                        </li>
+                                                        
+                        <li class="search-result-item" 
+                            data-zoom="13" 
+                            data-latitude="51.32"
+                            data-longitude="119.6">
+                            <div>
+                                <span style="color: #9BBDDE;">&bull;</span> <strong>Nerchinskiy Zavod (Нерчинский Завод)</strong>
+                                <span class="label label-info">5122&nbsp;км</span>
+                            </div>
+                            <small>
+                                Chita, Russia <span class="small">(city)</span>
+                            </small>
+                        </li>
+                                                        
+                        <li class="search-result-item" 
+                            data-zoom="13" 
+                            data-latitude="50.92"
+                            data-longitude="117.95">
+                            <div>
+                                <span style="color: #9BBDDE;">&bull;</span> <strong>Aleksandrovskiy Zavod (Александровский Завод)</strong>
+                                <span class="label label-info">5060&nbsp;км</span>
+                            </div>
+                            <small>
+                                Chita, Russia <span class="small">(city)</span>
+                            </small>
+                        </li>
+                                                        
+                        <li class="search-result-item" 
+                            data-zoom="18" 
+                            data-latitude="55.7349265"
+                            data-longitude="37.6635272">
+                            <div>
+                                <span style="color: #fc0;">&bull;</span> <strong>Памятник воинам-работникам 1-го Московского часового завода</strong>
+                                <span class="label label-info">0&nbsp;км</span>
+                            </div>
+                            <small>
+                                Moscow, Russia
+                            </small>
+                        </li>
+                                                        
+                        <li class="search-result-item" 
+                            data-zoom="17" 
+                            data-latitude="55.7349789"
+                            data-longitude="37.6638118">
+                            <div>
+                                <span style="color: #fc0;">&bull;</span> <strong>ОАО «Первый часовой завод»</strong>
+                                <span class="label label-info">0&nbsp;км</span>
+                            </div>
+                            <small>
+                                Moscow, Russia
+                            </small>
+                        </li>
+                                                        
+                        <li class="search-result-item" 
+                            data-zoom="18" 
+                            data-latitude="55.7344739"
+                            data-longitude="37.6647039">
+                            <div>
+                                <span style="color: #fc0;">&bull;</span> <strong>Проходная № 1 Первого московского часового завода «Полёт»</strong>
+                                <span class="label label-info">0.1&nbsp;км</span>
+                            </div>
+                            <small>
+                                Moscow, Russia
+                            </small>
+                        </li>
+                                                        
+                        <li class="search-result-item" 
+                            data-zoom="17" 
+                            data-latitude="55.7378847"
+                            data-longitude="37.6554339">
+                            <div>
+                                <span style="color: #fc0;">&bull;</span> <strong>Здание заводоуправления</strong>
+                                <span class="label label-info">0.6&nbsp;км</span>
+                            </div>
+                            <small>
+                                Moscow, Russia
+                            </small>
+                        </li>
+                                                        
+                        <li class="search-result-item" 
+                            data-zoom="19" 
+                            data-latitude="55.7283259"
+                            data-longitude="37.6485344">
+                            <div>
+                                <span style="color: #fc0;">&bull;</span> <strong>Памятник воинам-работникам завода «Аремкуз»</strong>
+                                <span class="label label-info">1.2&nbsp;км</span>
+                            </div>
+                            <small>
+                                Moscow, Russia
+                            </small>
+                        </li>
+                                                        
+                        <li class="search-result-item" 
+                            data-zoom="18" 
+                            data-latitude="55.7320715"
+                            data-longitude="37.6824993">
+                            <div>
+                                <span style="color: #fc0;">&bull;</span> <strong>Завод «НефтеКИП»</strong>
+                                <span class="label label-info">1.2&nbsp;км</span>
+                            </div>
+                            <small>
+                                Moscow, Russia
+                            </small>
+                        </li>
+                                                        
+                        <li class="search-result-item" 
+                            data-zoom="18" 
+                            data-latitude="55.727391"
+                            data-longitude="37.6484915">
+                            <div>
+                                <span style="color: #fc0;">&bull;</span> <strong>Территория бывшего завода «Аремкуз»</strong>
+                                <span class="label label-info">1.3&nbsp;км</span>
+                            </div>
+                            <small>
+                                Moscow, Russia
+                            </small>
+                        </li>
+                                                        
+                        <li class="search-result-item" 
+                            data-zoom="18" 
+                            data-latitude="55.7267972"
+                            data-longitude="37.6474226">
+                            <div>
+                                <span style="color: #fc0;">&bull;</span> <strong>Заброшенный цех завода «Аремкуз»</strong>
+                                <span class="label label-info">1.4&nbsp;км</span>
+                            </div>
+                            <small>
+                                Moscow, Russia
+                            </small>
+                        </li>
+                                                        
+                        <li class="search-result-item" 
+                            data-zoom="18" 
+                            data-latitude="55.7478589"
+                            data-longitude="37.662203">
+                            <div>
+                                <span style="color: #fc0;">&bull;</span> <strong>«Экспериментальный оптико-механический завод» (ФГУП «ЭОМЗ»)</strong>
+                                <span class="label label-info">1.4&nbsp;км</span>
+                            </div>
+                            <small>
+                                Moscow, Russia
+                            </small>
+                        </li>
+                                                        
+                        <li class="search-result-item" 
+                            data-zoom="19" 
+                            data-latitude="55.7231684"
+                            data-longitude="37.6734119">
+                            <div>
+                                <span style="color: #fc0;">&bull;</span> <strong>КПП шинного завода</strong>
+                                <span class="label label-info">1.4&nbsp;км</span>
+                            </div>
+                            <small>
+                                Moscow, Russia
+                            </small>
+                        </li>
+                                                
+            </ul>
+            
+                            <ul class="pager inner-page">
+                    <li class="previous disabled">
+                        <a class="page-button"
+                           data-role="previous" data-start="-10">&larr; Назад</a>
+                    </li>
+                    <li class="next active">
+                        <a class="page-button"
+                           data-role="next" data-start="10">Далее &rarr;</a>
+                    </li>
+                </ul>
+                    
+            </div>
+    </div>
+<script type="text/javascript"
+        data-usage="frame" 
+        src="/js/linkrouter.js?660"></script>
+
+    
+    <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-6147425-1', 'auto');
+    ga('send', 'pageview');
+
+    </script>
+    <script type="text/javascript">
+    (function(results, modes, pageButtons, addPlaceButton){
+        var target = parent.app.map,
+            query = document.getElementById('search-query').value,
+            type = document.getElementById('search-type').value,
+            getData = function(row) {
+                return {
+                    lat: parseFloat(row.getAttribute('data-latitude')),
+                    lng: parseFloat(row.getAttribute('data-longitude')),
+                    zoom: parseInt(row.getAttribute('data-zoom'))
+                };
+            };
+
+        // search results
+        results.on({
+            'click': function() {
+                target.fireEvent('search_result_select', getData(this));
+            },
+            'mouseover': function() {
+                target.fireEvent('search_result_highlight', getData(this));
+            },
+            'mouseout': function() {
+                target.fireEvent('search_result_blur');
+            }
+        });
+
+        // search modes
+        modes.on('click', function() {
+            target.fireEvent('search_change_mode', [query, this.getAttribute('data-search-type')]);
+        });
+
+        // pagination
+        pageButtons.on('click', function() {
+            target.fireEvent('search_pagination', [query, type, parseInt(this.getAttribute('data-start'))]);
+        });
+
+        // add place button
+        if(addPlaceButton) {
+            $(addPlaceButton).on('click', function(evt){
+                evt.preventDefault();
+                var map = parent.app.map;
+                map.addPlace('search');
+                map.closePanel();
+            });
+        }
+
+    })($('.search-result-item'), 
+       $('.search-nav .mode'), 
+       $('.pager .active .page-button'),
+       document.getElementById('add-place'));
+    </script>
+    </body>
+</html>

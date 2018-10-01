@@ -4,6 +4,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Net;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using TrackConverter.Lib.Classes;
@@ -76,8 +77,17 @@ namespace TrackConverter.UI.Map
             overlay = new GMapOverlay(overlayId);
             frm.gmapControlMap.Overlays.Add(overlay);
 
-            //получение списка категорий 
-            List<Wikimapia.CategoryInfo> cats = new Wikimapia(null).BasicCategories;
+            //получение списка категорий
+            List<Wikimapia.CategoryInfo> cats;
+            try
+            {
+                cats = new Wikimapia(null).BasicCategories;
+            }
+            catch (WebException)
+            {
+                cats = new List<Wikimapia.CategoryInfo>();
+            }
+
             comboBoxCategories.Items.Clear();
             comboBoxCategories.Items.Add("Нет категории");
             comboBoxCategories.Items.AddRange(cats.ToArray());
@@ -98,6 +108,7 @@ namespace TrackConverter.UI.Map
         /// <param name="e"></param>
         private void comboBoxCategories_SelectedIndexChanged(object sender, EventArgs e)
         {
+            overlay.Markers.Clear();
             if (comboBoxCategories.SelectedIndex == 0)
                 CurrentCategory = null;
             else
@@ -115,7 +126,16 @@ namespace TrackConverter.UI.Map
         private void comboBoxCategories_TextUpdate(object sender, EventArgs e)
         {
             if (comboBoxCategories.Text.Length < 2)
+            {
+                comboBoxCategories.DroppedDown = false;
                 return;
+            }
+            List<Wikimapia.CategoryInfo> cats = wiki_engine.GetCategories(comboBoxCategories.Text);
+            comboBoxCategories.Items.Clear();
+            comboBoxCategories.Items.Add("Нет категории");
+            comboBoxCategories.Items.AddRange(cats.ToArray());
+            comboBoxCategories.SelectionStart = comboBoxCategories.Text.Length;
+            comboBoxCategories.DroppedDown = true;
         }
 
         #endregion
@@ -129,8 +149,11 @@ namespace TrackConverter.UI.Map
         /// <param name="e"></param>
         private void buttonSearch_Click(object sender, EventArgs e)
         {
+            string q = textBoxSearch.Text;
+            List<Wikimapia.SearchObjectItemInfo> list = wiki_engine.Search(q, frm.gmapControlMap.Position, (int)frm.gmapControlMap.Zoom, 0);
 
         }
+        
 
         #endregion
 
@@ -239,5 +262,6 @@ namespace TrackConverter.UI.Map
         }
 
         #endregion
+
     }
 }

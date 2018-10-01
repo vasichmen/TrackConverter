@@ -60,7 +60,7 @@ namespace TrackConverter.UI.Map
                                 info = Vars.dataCache.GetLayerObjectExtInfo(Obj.ID);
                             else
                             {
-                                info = new Wikimapia(Application.StartupPath + Resources.cache_directory + "\\http_cache\\wikimapia").GetExtInfo(Obj.ID);
+                                info = new Wikimapia(Application.StartupPath + Resources.cache_directory + "\\http_cache\\wikimapia\\objects_info").GetExtInfo(Obj.ID);
                                 Vars.dataCache.PutLayerObjectExtInfo(info);
                             }
                         });
@@ -159,7 +159,6 @@ namespace TrackConverter.UI.Map
                     finally
                     {
                         Program.winMain.EndOperation();
-                        //MessageBox.Show(textBoxComments.Height + "        " + textBoxComments.Width);
                     }
                     break;
                 case MapLayerProviders.None:
