@@ -662,19 +662,18 @@ namespace TrackConverter.UI.Ext
         /// Получить область координат, видимых на экране
         /// </summary>
         /// <returns></returns>
-        public RectLatLng GetViewArea(PureProjection proj = null)
+        public RectLatLng GetViewArea()
         {
             //вычисление координат выдимой части карты
-            if (proj == null)
-                proj = this.MapProvider.Projection;
+            PureProjection proj = MapProvider.Projection;
             GPoint center = proj.FromLatLngToPixel(Position, (int)Zoom);
 
-            long lt_y = center.Y - this.Height / 2;
-            long lt_x = center.X - this.Width / 2;
+            long lt_y = center.Y - Height / 2;
+            long lt_x = center.X - Width / 2;
             PointLatLng lt = proj.FromPixelToLatLng(new GPoint(lt_x, lt_y), (int)Zoom);
 
-            long rb_y = center.Y + this.Height / 2;
-            long rb_x = center.X + this.Width / 2;
+            long rb_y = center.Y + Height / 2;
+            long rb_x = center.X + Width / 2;
             PointLatLng rb = proj.FromPixelToLatLng(new GPoint(rb_x, rb_y), (int)Zoom);
 
             double deg_height = lt.Lat - rb.Lat;

@@ -200,6 +200,7 @@ namespace TrackConverter.UI.Map
             if (currentCategory == null)
             {
                 overlay.Markers.Clear();
+                visibleMarkers.Clear();
                 return;
             }
 
@@ -216,7 +217,6 @@ namespace TrackConverter.UI.Map
             {
                 List<GPoint> tiles = frm.gmapControlMap.GetVisiblePixelTiles(null, 1024);
                 Parallel.ForEach(tiles, (tile) =>
-                //foreach (var tile in tiles)
                 {
                     List<VectorMapLayerObject> objects = wiki_engine.GetCategoryTile(currentCategory.ID, (int)tile.X, (int)tile.Y, (int)frm.gmapControlMap.Zoom);
 
@@ -252,6 +252,11 @@ namespace TrackConverter.UI.Map
         /// <param name="view"></param>
         private void removeInvisibleMarkers(RectLatLng view)
         {
+            var poss = visibleMarkers.Keys;
+            foreach (var pos in poss)
+                if (!view.Contains(pos))
+                    visibleMarkers.TryRemove(pos, out object val);
+
             for (int i = 0; i < overlay.Markers.Count;)
             {
                 var mark = overlay.Markers[i];
