@@ -1,15 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Diagnostics;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using TrackConverter.Lib;
 using TrackConverter.Lib.Classes;
 using TrackConverter.Lib.Tracking;
 
@@ -30,7 +22,7 @@ namespace TrackConverter.UI.Tools
             comboBoxDegminLon.SelectedIndex = 0;
             comboBoxDegminsecLat.SelectedIndex = 0;
             comboBoxDegminsecLon.SelectedIndex = 0;
-            RefreshEnabling();
+            refreshEnabling();
 
             new ToolTip().SetToolTip(textBoxDegLatDeg, "Дробное число от -90 до 90");
             new ToolTip().SetToolTip(textBoxDegLonDeg, "Дробное число от -180 до 180");
@@ -47,7 +39,7 @@ namespace TrackConverter.UI.Tools
             new ToolTip().SetToolTip(textBoxDegminsecLonDeg, "Целое число от 0 до 180");
             new ToolTip().SetToolTip(textBoxDegminsecLonMin, "Целое число от 0 до 60");
             new ToolTip().SetToolTip(textBoxDegminsecLonSec, "Дробное число от 0 до 60");
-            new ToolTip().SetToolTip(textBoxDegminsecLonText, "Строковое представление координаты"); 
+            new ToolTip().SetToolTip(textBoxDegminsecLonText, "Строковое представление координаты");
             new ToolTip().SetToolTip(linkLabelGoogle, "Открыть точку c координатами, указанными ниже, на картах Google");
             new ToolTip().SetToolTip(linkLabelYandex, "Открыть точку c координатами, указанными ниже, на картах Яндекс");
         }
@@ -57,10 +49,10 @@ namespace TrackConverter.UI.Tools
         /// </summary>
         /// <param name="trackPoint">точка, которая будет записана в окне</param>
         public FormTransformCoordinate(TrackPoint trackPoint)
-            :this()
+            : this()
         {
-            textBoxDegLatDeg.Text = trackPoint.Coordinates.Latitude.TotalDegrees.ToString();
-            textBoxDegLonDeg.Text = trackPoint.Coordinates.Longitude.TotalDegrees.ToString();
+            textBoxDegLatDeg.Text = trackPoint.Coordinates.Latitude.ToString();
+            textBoxDegLonDeg.Text = trackPoint.Coordinates.Longitude.ToString();
             buttonTransform_Click(null, null);
         }
 
@@ -71,13 +63,13 @@ namespace TrackConverter.UI.Tools
         /// <param name="e"></param>
         private void radioButton_CheckedChanged(object sender, EventArgs e)
         {
-            RefreshEnabling();
+            refreshEnabling();
         }
 
         /// <summary>
         /// обновление активности элементов при изменении radioButton
         /// </summary>
-        private void RefreshEnabling()
+        private void refreshEnabling()
         {
             textBoxDegLatDeg.ReadOnly = !radioButtonDeg.Checked;
             textBoxDegLonDeg.ReadOnly = !radioButtonDeg.Checked;
@@ -193,59 +185,48 @@ namespace TrackConverter.UI.Tools
                 if (radioButtonDeg.Checked)
                 {
                     Coordinate cr = new Coordinate(
-                        new Coordinate.CoordinateRecord(
-                            double.Parse(textBoxDegLatDeg.Text.Replace('.', Vars.DecimalSeparator)),
-                            double.Parse(textBoxDegLatDeg.Text.Replace('.', Vars.DecimalSeparator)) <= 0 ? Coordinate.CoordinateChar.S : Coordinate.CoordinateChar.N),
-                        new Coordinate.CoordinateRecord(
-                            double.Parse(textBoxDegLonDeg.Text.Replace('.', Vars.DecimalSeparator)),
-                            double.Parse(textBoxDegLonDeg.Text.Replace('.', Vars.DecimalSeparator)) <= 0 ? Coordinate.CoordinateChar.W : Coordinate.CoordinateChar.E)
-                    );
+                        double.Parse(textBoxDegLatDeg.Text.Replace('.', Vars.DecimalSeparator)),
+                        double.Parse(textBoxDegLonDeg.Text.Replace('.', Vars.DecimalSeparator))
+                        );
 
                     //градусы, минуты
-                    textBoxDegminLatDeg.Text = cr.Latitude.Degrees.ToString();
-                    textBoxDegminLatMin.Text = (cr.Latitude.Minutes + cr.Latitude.Seconds / 60.0000).ToString("00.0000");
-                    textBoxDegminLatText.Text = cr.Latitude.ToString("ddº mm.mmmm' H");
-                    textBoxDegminLonDeg.Text = cr.Longitude.Degrees.ToString();
-                    textBoxDegminLonMin.Text = (cr.Longitude.Minutes + cr.Latitude.Seconds / 60.0000).ToString("00.0000");
-                    textBoxDegminLonText.Text = cr.Longitude.ToString("ddº mm.mmmm' H");
-                    switch (cr.Latitude.Char)
-                    {
-                        case Coordinate.CoordinateChar.N: comboBoxDegminLat.SelectedIndex = 0;
-                            break;
-                        case Coordinate.CoordinateChar.S: comboBoxDegminLat.SelectedIndex = 1;
-                            break;
-                    }
-                    switch (cr.Longitude.Char)
-                    {
-                        case Coordinate.CoordinateChar.E: comboBoxDegminLon.SelectedIndex = 0;
-                            break;
-                        case Coordinate.CoordinateChar.W: comboBoxDegminLon.SelectedIndex = 1;
-                            break;
-                    }
+                    textBoxDegminLatDeg.Text = ((int)(cr.Latitude)).ToString();
+                    textBoxDegminLatMin.Text = (cr.Minutes(Coordinate.CoordinateKind.Latitude) + cr.Seconds(Coordinate.CoordinateKind.Latitude)/60d).ToString("00.0000");
+                    textBoxDegminLatText.Text = cr.ToString(Coordinate.CoordinateKind.Latitude,"ddº mm.mmmm' H");
+
+                    textBoxDegminLonDeg.Text = ((int)(cr.Longitude)).ToString();
+                    textBoxDegminLatMin.Text = (cr.Minutes(Coordinate.CoordinateKind.Longitude) + cr.Seconds(Coordinate.CoordinateKind.Longitude) / 60d).ToString("00.0000");
+                    textBoxDegminLonText.Text = cr.ToString(Coordinate.CoordinateKind.Longitude, "ddº mm.mmmm' H");
+                   if(cr.Latitude > 0)
+                            comboBoxDegminLat.SelectedIndex = 0;
+                   else
+                            comboBoxDegminLat.SelectedIndex = 1;
+                    if (cr.Longitude > 0)
+                        comboBoxDegminLon.SelectedIndex = 0;
+                    else
+                        comboBoxDegminLon.SelectedIndex = 1;
+                  
 
                     //градусы, минуты, секунды
-                    textBoxDegminsecLatDeg.Text = cr.Latitude.Degrees.ToString();
-                    textBoxDegminsecLatMin.Text = cr.Latitude.Minutes.ToString();
-                    textBoxDegminsecLatSec.Text = cr.Latitude.Seconds.ToString("00.0000");
-                    textBoxDegminsecLatText.Text = cr.Latitude.ToString("ddº mm' ss.ssss\" H");
-                    textBoxDegminsecLonDeg.Text = cr.Longitude.Degrees.ToString();
-                    textBoxDegminsecLonMin.Text = cr.Longitude.Minutes.ToString();
-                    textBoxDegminsecLonSec.Text = cr.Longitude.Seconds.ToString("00.0000");
-                    textBoxDegminsecLonText.Text = cr.Longitude.ToString("ddº mm' ss.ssss\" H");
-                    switch (cr.Latitude.Char)
-                    {
-                        case Coordinate.CoordinateChar.N: comboBoxDegminsecLat.SelectedIndex = 0;
-                            break;
-                        case Coordinate.CoordinateChar.S: comboBoxDegminsecLat.SelectedIndex = 1;
-                            break;
-                    }
-                    switch (cr.Longitude.Char)
-                    {
-                        case Coordinate.CoordinateChar.E: comboBoxDegminsecLon.SelectedIndex = 0;
-                            break;
-                        case Coordinate.CoordinateChar.W: comboBoxDegminsecLon.SelectedIndex = 1;
-                            break;
-                    }
+                    textBoxDegminsecLatDeg.Text = cr.Degrees(Coordinate.CoordinateKind.Latitude).ToString();
+                    textBoxDegminsecLatMin.Text = cr.Minutes(Coordinate.CoordinateKind.Latitude).ToString();
+                    textBoxDegminsecLatSec.Text = cr.Seconds(Coordinate.CoordinateKind.Latitude).ToString("00.0000");
+                    textBoxDegminsecLatText.Text = cr.ToString(Coordinate.CoordinateKind.Latitude,"ddº mm' ss.ssss\" H");
+
+                    textBoxDegminsecLonDeg.Text = cr.Degrees(Coordinate.CoordinateKind.Longitude).ToString();
+                    textBoxDegminsecLonMin.Text = cr.Minutes(Coordinate.CoordinateKind.Longitude).ToString();
+                    textBoxDegminsecLonSec.Text = cr.Seconds(Coordinate.CoordinateKind.Longitude).ToString("00.0000");
+                    textBoxDegminsecLonText.Text = cr.ToString(Coordinate.CoordinateKind.Longitude,"ddº mm' ss.ssss\" H");
+
+
+                    if (cr.Latitude > 0)
+                        comboBoxDegminsecLat.SelectedIndex = 0;
+                    else
+                        comboBoxDegminsecLat.SelectedIndex = 1;
+                    if (cr.Longitude > 0)
+                        comboBoxDegminsecLon.SelectedIndex = 0;
+                    else
+                        comboBoxDegminsecLon.SelectedIndex = 1;
                 }
 
                 #endregion
@@ -254,50 +235,41 @@ namespace TrackConverter.UI.Tools
 
                 if (radioButtonDegMinSec.Checked)
                 {
-                    Coordinate cr = new Coordinate(
-                        new Coordinate.CoordinateRecord(
+                    Coordinate cr =
+                        new Coordinate(
                             int.Parse(textBoxDegminsecLatDeg.Text),
                             int.Parse(textBoxDegminsecLatMin.Text),
                             double.Parse(textBoxDegminsecLatSec.Text.Replace('.', Vars.DecimalSeparator)),
-                            comboBoxDegminsecLat.SelectedIndex == 0 ? Coordinate.CoordinateChar.N : Coordinate.CoordinateChar.S
-                            ),
-                        new Coordinate.CoordinateRecord(
+                            comboBoxDegminsecLat.SelectedIndex == 0 ? Coordinate.CoordinateChar.N : Coordinate.CoordinateChar.S,
                             int.Parse(textBoxDegminsecLonDeg.Text),
                             int.Parse(textBoxDegminsecLonMin.Text),
                             double.Parse(textBoxDegminsecLonSec.Text.Replace('.', Vars.DecimalSeparator)),
-                            comboBoxDegminsecLon.SelectedIndex == 0 ? Coordinate.CoordinateChar.E : Coordinate.CoordinateChar.W
-                            )
-                    );
+                            comboBoxDegminsecLon.SelectedIndex == 0 ? Coordinate.CoordinateChar.E : Coordinate.CoordinateChar.W);
 
                     //градусы, минуты
-                    textBoxDegminLatDeg.Text = cr.Latitude.Degrees.ToString();
-                    textBoxDegminLatMin.Text = (cr.Latitude.Minutes + cr.Latitude.Seconds / 60.0000).ToString("00.0000");
-                    textBoxDegminLatText.Text = cr.Latitude.ToString("ddº mm.mmmm' H");
-                    textBoxDegminLonDeg.Text = cr.Longitude.Degrees.ToString();
-                    textBoxDegminLonMin.Text = (cr.Longitude.Minutes + cr.Latitude.Seconds / 60.0000).ToString("00.0000");
-                    textBoxDegminLonText.Text = cr.Longitude.ToString("ddº mm.mmmm' H");
-                    switch (cr.Latitude.Char)
-                    {
-                        case Coordinate.CoordinateChar.N: comboBoxDegminLat.SelectedIndex = 0;
-                            break;
-                        case Coordinate.CoordinateChar.S: comboBoxDegminLat.SelectedIndex = 1;
-                            break;
-                    }
-                    switch (cr.Longitude.Char)
-                    {
-                        case Coordinate.CoordinateChar.E: comboBoxDegminLon.SelectedIndex = 0;
-                            break;
-                        case Coordinate.CoordinateChar.W: comboBoxDegminLon.SelectedIndex = 1;
-                            break;
-                    }
+                    textBoxDegminLatDeg.Text = ((int)(cr.Latitude)).ToString();
+                    textBoxDegminLatMin.Text = (cr.Latitude / 60d).ToString("00.0000");
+
+                    textBoxDegminLatText.Text = cr.ToString(Coordinate.CoordinateKind.Latitude, "ddº mm.mmmm' H");
+                    textBoxDegminLonDeg.Text = ((int)(cr.Longitude)).ToString();
+                    textBoxDegminLatMin.Text = (cr.Longitude / 60d).ToString("00.0000");
+                    textBoxDegminLonText.Text = cr.ToString(Coordinate.CoordinateKind.Longitude, "ddº mm.mmmm' H");
+                    if (cr.Latitude > 0)
+                        comboBoxDegminLat.SelectedIndex = 0;
+                    else
+                        comboBoxDegminLat.SelectedIndex = 1;
+                    if (cr.Longitude > 0)
+                        comboBoxDegminLon.SelectedIndex = 0;
+                    else
+                        comboBoxDegminLon.SelectedIndex = 1;
 
                     //градусы
-                    textBoxDegLatDeg.Text = cr.Latitude.TotalDegrees.ToString();
-                    textBoxDegLonDeg.Text = cr.Longitude.TotalDegrees.ToString();
+                    textBoxDegLatDeg.Text = cr.Latitude.ToString();
+                    textBoxDegLonDeg.Text = cr.Longitude.ToString();
 
                     //градусы, минуты, секунды
-                    textBoxDegminsecLatText.Text = cr.Latitude.ToString("ddº mm' ss.ssss\" H");
-                    textBoxDegminsecLonText.Text = cr.Longitude.ToString("ddº mm' ss.ssss\" H");
+                    textBoxDegminsecLatText.Text = cr.ToString(Coordinate.CoordinateKind.Latitude, "ddº mm' ss.ssss\" H");
+                    textBoxDegminsecLonText.Text = cr.ToString(Coordinate.CoordinateKind.Longitude, "ddº mm' ss.ssss\" H");
 
                 }
 
@@ -308,44 +280,34 @@ namespace TrackConverter.UI.Tools
                 if (radioButtonDegMin.Checked)
                 {
                     Coordinate cr = new Coordinate(
-                        new Coordinate.CoordinateRecord(
-                            int.Parse(textBoxDegminLatDeg.Text),
-                            double.Parse(textBoxDegminLatMin.Text.Replace('.', Vars.DecimalSeparator)),
-                            comboBoxDegminLat.SelectedIndex == 0 ? Coordinate.CoordinateChar.N : Coordinate.CoordinateChar.S
-                            ),
-                        new Coordinate.CoordinateRecord(
-                            int.Parse(textBoxDegminLonDeg.Text),
-                            double.Parse(textBoxDegminLonMin.Text.Replace('.', Vars.DecimalSeparator)),
-                            comboBoxDegminLon.SelectedIndex == 0 ? Coordinate.CoordinateChar.E : Coordinate.CoordinateChar.W)
-                    );
+                       double.Parse(textBoxDegLatDeg.Text.Replace('.', Vars.DecimalSeparator)),
+                       double.Parse(textBoxDegLonDeg.Text.Replace('.', Vars.DecimalSeparator))
+                       );
 
                     //градусы
-                    textBoxDegLatDeg.Text = cr.Latitude.TotalDegrees.ToString();
-                    textBoxDegLonDeg.Text = cr.Longitude.TotalDegrees.ToString();
+                    textBoxDegLatDeg.Text = cr.Latitude.ToString();
+                    textBoxDegLonDeg.Text = cr.Longitude.ToString();
 
                     //градусы, минуты, секунды
-                    textBoxDegminsecLatDeg.Text = cr.Latitude.Degrees.ToString();
-                    textBoxDegminsecLatMin.Text = cr.Latitude.Minutes.ToString();
-                    textBoxDegminsecLatSec.Text = cr.Latitude.Seconds.ToString("00.0000");
-                    textBoxDegminsecLatText.Text = cr.Latitude.ToString("ddº mm' ss.ssss\" H");
-                    textBoxDegminsecLonDeg.Text = cr.Longitude.Degrees.ToString();
-                    textBoxDegminsecLonMin.Text = cr.Longitude.Minutes.ToString();
-                    textBoxDegminsecLonSec.Text = cr.Longitude.Seconds.ToString("00.0000");
-                    textBoxDegminsecLonText.Text = cr.Longitude.ToString("ddº mm' ss.ssss\" H");
-                    switch (cr.Latitude.Char)
-                    {
-                        case Coordinate.CoordinateChar.N: comboBoxDegminsecLat.SelectedIndex = 0;
-                            break;
-                        case Coordinate.CoordinateChar.S: comboBoxDegminsecLat.SelectedIndex = 1;
-                            break;
-                    }
-                    switch (cr.Longitude.Char)
-                    {
-                        case Coordinate.CoordinateChar.E: comboBoxDegminsecLon.SelectedIndex = 0;
-                            break;
-                        case Coordinate.CoordinateChar.W: comboBoxDegminsecLon.SelectedIndex = 1;
-                            break;
-                    }
+                    textBoxDegminsecLatDeg.Text = cr.Degrees(Coordinate.CoordinateKind.Latitude).ToString();
+                    textBoxDegminsecLatMin.Text = cr.Minutes(Coordinate.CoordinateKind.Latitude).ToString();
+                    textBoxDegminsecLatSec.Text = cr.Seconds(Coordinate.CoordinateKind.Latitude).ToString("00.0000");
+                    textBoxDegminsecLatText.Text = cr.ToString(Coordinate.CoordinateKind.Latitude, "ddº mm' ss.ssss\" H");
+
+                    textBoxDegminsecLonDeg.Text = cr.Degrees(Coordinate.CoordinateKind.Longitude).ToString();
+                    textBoxDegminsecLonMin.Text = cr.Minutes(Coordinate.CoordinateKind.Longitude).ToString();
+                    textBoxDegminsecLonSec.Text = cr.Seconds(Coordinate.CoordinateKind.Longitude).ToString("00.0000");
+                    textBoxDegminsecLonText.Text = cr.ToString(Coordinate.CoordinateKind.Longitude, "ddº mm' ss.ssss\" H");
+
+
+                    if (cr.Latitude > 0)
+                        comboBoxDegminsecLat.SelectedIndex = 0;
+                    else
+                        comboBoxDegminsecLat.SelectedIndex = 1;
+                    if (cr.Longitude > 0)
+                        comboBoxDegminsecLon.SelectedIndex = 0;
+                    else
+                        comboBoxDegminsecLon.SelectedIndex = 1;
 
                     //градусы, минуты
                     textBoxDegminLonText.Text = cr.Longitude.ToString("ddº mm.mmmm' H");
@@ -383,12 +345,8 @@ namespace TrackConverter.UI.Tools
             try
             {
                 Coordinate cr = new Coordinate(
-                           new Coordinate.CoordinateRecord(
                                double.Parse(textBoxDegLatDeg.Text.Replace('.', Vars.DecimalSeparator)),
-                               double.Parse(textBoxDegLatDeg.Text.Replace('.', Vars.DecimalSeparator)) <= 0 ? Coordinate.CoordinateChar.S : Coordinate.CoordinateChar.N),
-                           new Coordinate.CoordinateRecord(
-                               double.Parse(textBoxDegLonDeg.Text.Replace('.', Vars.DecimalSeparator)),
-                               double.Parse(textBoxDegLonDeg.Text.Replace('.', Vars.DecimalSeparator)) <= 0 ? Coordinate.CoordinateChar.W : Coordinate.CoordinateChar.E)
+                               double.Parse(textBoxDegLonDeg.Text.Replace('.', Vars.DecimalSeparator))
                        );
 
                 string link = cr.ExportYandex();
@@ -411,13 +369,9 @@ namespace TrackConverter.UI.Tools
             try
             {
                 Coordinate cr = new Coordinate(
-                           new Coordinate.CoordinateRecord(
-                               double.Parse(textBoxDegLatDeg.Text.Replace('.', Vars.DecimalSeparator)),
-                               double.Parse(textBoxDegLatDeg.Text.Replace('.', Vars.DecimalSeparator)) <= 0 ? Coordinate.CoordinateChar.S : Coordinate.CoordinateChar.N),
-                           new Coordinate.CoordinateRecord(
-                               double.Parse(textBoxDegLonDeg.Text.Replace('.', Vars.DecimalSeparator)),
-                               double.Parse(textBoxDegLonDeg.Text.Replace('.', Vars.DecimalSeparator)) <= 0 ? Coordinate.CoordinateChar.W : Coordinate.CoordinateChar.E)
-                       );
+                              double.Parse(textBoxDegLatDeg.Text.Replace('.', Vars.DecimalSeparator)),
+                              double.Parse(textBoxDegLonDeg.Text.Replace('.', Vars.DecimalSeparator))
+                      );
 
                 string link = cr.ExportGoogle();
                 Process pr = Process.Start(link);
@@ -437,12 +391,8 @@ namespace TrackConverter.UI.Tools
         private void linkLabelMap_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             Coordinate cr = new Coordinate(
-                          new Coordinate.CoordinateRecord(
                               double.Parse(textBoxDegLatDeg.Text.Replace('.', Vars.DecimalSeparator)),
-                              double.Parse(textBoxDegLatDeg.Text.Replace('.', Vars.DecimalSeparator)) <= 0 ? Coordinate.CoordinateChar.S : Coordinate.CoordinateChar.N),
-                          new Coordinate.CoordinateRecord(
-                              double.Parse(textBoxDegLonDeg.Text.Replace('.', Vars.DecimalSeparator)),
-                              double.Parse(textBoxDegLonDeg.Text.Replace('.', Vars.DecimalSeparator)) <= 0 ? Coordinate.CoordinateChar.W : Coordinate.CoordinateChar.E)
+                              double.Parse(textBoxDegLonDeg.Text.Replace('.', Vars.DecimalSeparator))
                       );
             Program.winMain.gmapControlMap.Position = cr.GMap;
         }

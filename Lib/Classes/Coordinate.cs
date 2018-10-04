@@ -1,7 +1,7 @@
-﻿using System;
-using System.Text.RegularExpressions;
-using GMap.NET;
+﻿using GMap.NET;
 using Newtonsoft.Json;
+using System;
+using System.Text.RegularExpressions;
 
 namespace TrackConverter.Lib.Classes
 {
@@ -15,13 +15,10 @@ namespace TrackConverter.Lib.Classes
 #pragma warning restore CS0661 // Тип определяет оператор == или оператор !=, но не переопределяет Object.GetHashCode()
 #pragma warning restore CS0659 // Тип переопределяет Object.Equals(object o), но не переопределяет Object.GetHashCode()
     {
-        private readonly long llon;
-        private readonly long llat;
-
         #region классы, перечисления
 
         /// <summary>
-        /// 
+        /// стороны света
         /// </summary>
         public enum CoordinateChar
         {
@@ -62,278 +59,22 @@ namespace TrackConverter.Lib.Classes
             Longitude
         }
 
-        /// <summary>
-        /// Одна координата
-        /// </summary>
-        [Serializable]
-        public struct CoordinateRecord
-        {
-
-            /// <summary>
-            /// создает новый экземпляр с указанной координатой
-            /// </summary>
-            /// <param name="degrees">дробное представление в градусах. (если задано положительное значение degrees , 
-            /// но полушарие западное или южное, то в CoordinateRecord = -degrees)</param>
-            /// <param name="Char">полушарие. 
-            /// Если указано южное или западное полушарие, то значение CoordinateRecord.TotalDegrees 
-            /// будет отрицательным</param>
-            /// <exception cref="ArgumentOutOfRangeException">Возникает, если широта или долгота не попадают в свой диапазон значений</exception>
-            public CoordinateRecord(double degrees, CoordinateChar Char)
-            {
-                if ((Char == CoordinateChar.N || Char == CoordinateChar.S) && (Math.Abs(degrees) > 90))
-                    throw new ArgumentOutOfRangeException("Значение широты должно быть в диапазоне от -90 до 90 градусов");
-                if ((Char == CoordinateChar.W || Char == CoordinateChar.E) && (Math.Abs(degrees) > 180))
-                    throw new ArgumentOutOfRangeException("Значение долготы должно быть в диапазоне от -180 до 180 градусов");
-
-
-                this.TotalDegrees = degrees;
-                this.Char = Char;
-                if ((Char == CoordinateChar.W || Char == CoordinateChar.S) && this.TotalDegrees > 0)
-                    this.TotalDegrees = -this.TotalDegrees;
-            }
-
-            /// <summary>
-            /// создает новый экземпляр с указанной координатой. 
-            /// Если количество минут или количество секунд превышает 60, 
-            /// то частное от деления минут или секунд на 60 прибавляется к градусам, а остаток к минутам.
-            /// </summary>
-            /// <param name="Deg">градусы</param>
-            /// <param name="Min">минуты</param>
-            /// <param name="Sec">секунды</param>
-            /// <param name="Char">полушарие. </param>
-            public CoordinateRecord(int Deg, int Min, double Sec, CoordinateChar Char)
-                : this(Deg + Min / 60 + Sec / 3600, Char) { }
-
-            /// <summary>
-            /// создает новый экземпляр с указанной координатой
-            /// </summary>
-            /// <param name="Deg">градусы</param>
-            /// <param name="Min">минуты</param>
-            /// <param name="Char">полушарие</param>
-            public CoordinateRecord(int Deg, double Min, CoordinateChar Char)
-                : this(Deg + Min / 60, Char) { }
-
-            /// <summary>
-            /// создает пустую координату
-            /// </summary>
-            /// <param name="isEmpty"></param>
-            public CoordinateRecord(bool isEmpty)
-            { TotalDegrees = double.NaN; Char = CoordinateChar.E; }
-
-            /// <summary>
-            /// дробное представление координаты, включая знак
-            /// </summary>
-            public double TotalDegrees { get; set; }
-
-            /// <summary>
-            /// целое положительное число градусов в координате
-            /// </summary>
-            [JsonIgnore]
-            public int Degrees
-            {
-                get
-                {
-                    int dd = (int)TotalDegrees;
-                    return Math.Abs(dd);
-                }
-            }
-
-            /// <summary>
-            /// целое положительное число минут в координате
-            /// </summary>
-            [JsonIgnore]
-            public int Minutes
-            {
-                get
-                {
-                    double mo = TotalDegrees - (int)TotalDegrees;
-                    int mm = (int)(mo * 60);
-                    return Math.Abs(mm);
-                }
-            }
-
-            /// <summary>
-            /// положительное число секунд в координате
-            /// </summary>
-            [JsonIgnore]
-            public double Seconds
-            {
-                get
-                {
-                    double mo = TotalDegrees - (int)TotalDegrees;
-                    double m = mo * 60;
-                    double so = m - ((int)m);
-                    double sec = so * 60;
-                    return Math.Abs(sec);
-                }
-            }
-
-            /// <summary>
-            /// знак при координате
-            /// </summary>
-            [JsonIgnore]
-            public CoordinateChar Char { get; set; }
-
-            /// <summary>
-            /// тип координаты: Широта/Долгота
-            /// </summary>
-            [JsonIgnore]
-            public CoordinateKind Kind { get { return Char == CoordinateChar.E || Char == CoordinateChar.W ? CoordinateKind.Longitude : CoordinateKind.Latitude; } }
-
-            /// <summary>
-            /// если истина, то координата пуста
-            /// </summary>
-            [JsonIgnore]
-            public bool isEmpty { get { return double.IsNaN(TotalDegrees); } }
-
-            /// <summary>
-            /// перевод строкового представления координаты
-            /// </summary>
-            /// <param name="source">строковое представление</param>
-            /// <param name="format">формат записи координаты. Hddmm.mmm  ddmm.mmm,H</param>
-            /// <returns></returns>
-            public static CoordinateRecord Parse(string source, string format)
-            {
-                double Min = 0;
-                double Deg = 0;
-                double Sec = 0;
-                string ch = "";
-                string min = "";
-                string grad = "";
-                string sec = "";
-
-                switch (format)
-                {
-
-                    case "Hddmm.mmm":
-                        min = source.Substring(3);
-                        grad = source.Substring(1, 2);
-                        sec = "0";
-                        ch = source[0].ToString();
-                        break;
-                    case "ddmm.mmm,H":
-                        min = source.Substring(2, 6);
-                        grad = source.Substring(0, 2);
-                        sec = "0";
-                        ch = source[9].ToString();
-                        break;
-                    case "Hdd mm.mmm":
-                        min = source.Substring(4, 6);
-                        grad = source.Substring(1, 2);
-                        sec = "0";
-                        ch = source.Substring(0, 1);
-                        break;
-                    case "ddº mm.mmmm' H":
-                        min = source.Substring(4, 7);
-                        grad = source.Substring(0, 2);
-                        sec = "0";
-                        ch = source.Substring(12, 1);
-                        break;
-                    case "ddº mm' ss.ssss\" H":
-                        min = source.Substring(4, 2);
-                        grad = source.Substring(0, 2);
-                        sec = source.Substring(8, 6);
-                        ch = source.Substring(17, 1);
-                        break;
-                    case "ddºmm'ss.s\"H":
-                        min = source.Substring(3, 2);
-                        grad = source.Substring(0, 2);
-                        sec = source.Substring(6, 4);
-                        ch = source.Substring(11, 1);
-                        break;
-                    default:
-                        throw new FormatException("Неподдерживаемый формат координат");
-                }
-
-                Min = double.Parse(min.Replace('.', Vars.DecimalSeparator));
-                Deg = double.Parse(grad.Replace('.', Vars.DecimalSeparator));
-                Sec = double.Parse(sec.Replace('.', Vars.DecimalSeparator));
-                double td = Deg + Min / 60 + Sec / 3600;
-
-                CoordinateChar cc = CoordinateChar.N;
-                switch (ch.ToLower())
-                {
-                    case "w":
-                        cc = CoordinateChar.W;
-                        break;
-                    case "s":
-                        cc = CoordinateChar.S;
-                        break;
-                    case "n":
-                        cc = CoordinateChar.N;
-                        break;
-                    case "e":
-                        cc = CoordinateChar.E;
-                        break;
-                    default:
-                        throw new Exception("Не удалось распознать полушарие");
-                }
-
-
-                return new CoordinateRecord(td, cc);
-            }
-
-            /// <summary>
-            /// строковое представление координаты в указанном формате
-            /// </summary>
-            /// <param name="format">формат записи координаты. 
-            /// Hddmm.mmm     ddmm.mmm,H    dd, mm.mmmm,H     Hdd mm.mmm       ddº mm.mmmm' H     ddº mm' ss.sss\" H     ddºmm'ss.s\"H       00.000000 </param>
-            /// <returns></returns>
-            /// <exception cref="FormatException">Возникает если заданный формат не поддерживается</exception>
-            public string ToString(string format)
-            {
-                string res = "";
-
-                switch (format)
-                {
-                    case "Hddmm.mmm":
-                        res = this.Char.ToString() + Degrees.ToString() + Math.Round((Math.Abs(TotalDegrees) - Degrees) * 60, 3).ToString("00.000").Replace(Vars.DecimalSeparator, '.');
-                        break;
-                    case "ddmm.mmm,H":
-                        res = Degrees.ToString() + Math.Round((Math.Abs(TotalDegrees) - Degrees) * 60, 3).ToString("00.000").Replace(Vars.DecimalSeparator, '.') + "," + this.Char.ToString();
-                        break;
-                    case "Hdd mm.mmm":
-                        res = this.Char.ToString() + Degrees.ToString() + " " + Math.Round((Math.Abs(TotalDegrees) - Degrees) * 60, 3).ToString("00.000").Replace(Vars.DecimalSeparator, '.');
-                        break;
-                    case "ddº mm.mmmm' H":
-                        res = this.Degrees.ToString() + "º " + Math.Round((Math.Abs(TotalDegrees) - Degrees) * 60, 4).ToString("00.0000").Replace(Vars.DecimalSeparator, '.') + "' " + this.Char.ToString();
-                        break;
-                    case "ddº mm' ss.ssss\" H":
-                        res = this.Degrees.ToString() + "º " + this.Minutes.ToString() + "' " + this.Seconds.ToString("00.0000").Replace(Vars.DecimalSeparator, '.') + "\" " + this.Char.ToString();
-                        break;
-                    case "ddºmm'ss.s\"H":
-                        res = this.Degrees.ToString() + "º" + this.Minutes.ToString() + "'" + this.Seconds.ToString("00.0").Replace(Vars.DecimalSeparator, '.') + "\"" + this.Char.ToString();
-                        break;
-                    case "00.000000":
-                        res = this.TotalDegrees.ToString("00.000000").Replace(Vars.DecimalSeparator, '.');
-                        break;
-                    case "00.000":
-                        res = this.TotalDegrees.ToString("00.000").Replace(Vars.DecimalSeparator, '.');
-                        break;
-                    case "dd, mm.mmmm,H":
-                        res = this.Degrees.ToString() + ", " + Math.Round((Math.Abs(TotalDegrees) - Degrees) * 60, 4).ToString("0.0000").Replace(Vars.DecimalSeparator, '.') + "," + this.Char.ToString();
-                        break;
-                    default:
-                        throw new FormatException("Неподдерживаемый формат координат");
-                }
-
-                return res;
-            }
-        }
 
         #endregion
 
         #region  поля, свойства
 
+        private readonly bool NotEmpty;
+
         /// <summary>
         /// долгота
         /// </summary>
-        public CoordinateRecord Longitude { get; set; }
+        public readonly double Longitude;
 
         /// <summary>
         /// широта
         /// </summary>
-        public CoordinateRecord Latitude { get; set; }
+        public readonly double Latitude;
 
         /// <summary>
         /// координата в формате GMap
@@ -344,8 +85,8 @@ namespace TrackConverter.Lib.Classes
             get
             {
                 return new PointLatLng(
-                    this.Latitude.TotalDegrees,
-                    this.Longitude.TotalDegrees);
+                    this.Latitude,
+                    this.Longitude);
             }
 
         }
@@ -354,13 +95,13 @@ namespace TrackConverter.Lib.Classes
         /// пустые координаты
         /// </summary>
         [JsonIgnore]
-        public static Coordinate Empty { get { return new Coordinate(true); } }
+        public static Coordinate Empty { get { return default(Coordinate); } }
 
         /// <summary>
         /// если истина, то координата пуста
         /// </summary>
         [JsonIgnore]
-        public bool isEmpty { get { return this.Latitude.isEmpty || this.Longitude.isEmpty; } }
+        public bool isEmpty { get { return !NotEmpty; } }
 
         #endregion
 
@@ -378,7 +119,9 @@ namespace TrackConverter.Lib.Classes
         /// <param name="LonSec">секунды долготы</param>
         /// <param name="LonChar">полушарие долготы</param>
         public Coordinate(int LatDeg, int LatMin, double LatSec, CoordinateChar LatChar, int LonDeg, int LonMin, double LonSec, CoordinateChar LonChar)
-            : this(new CoordinateRecord(LatDeg, LatMin, LatSec, LatChar), new CoordinateRecord(LonDeg, LonMin, LonSec, LonChar)) { }
+            : this(LatDeg + LatMin / 60d + LatSec / 3600d * ((LatChar == CoordinateChar.S || LatChar == CoordinateChar.W) ? -1 : 1),
+                  LonDeg + LonMin / 60d + LonSec / 3600d * ((LonChar == CoordinateChar.S || LonChar == CoordinateChar.W) ? -1 : 1))
+        { }
 
         /// <summary>
         /// создает новый экземпляр с указанными координатами
@@ -386,32 +129,20 @@ namespace TrackConverter.Lib.Classes
         /// <param name="lat">широта</param>
         /// <param name="lon">долгота</param>
         public Coordinate(double lat, double lon)
-            : this(new CoordinateRecord(lat, lat >= 0 ? Coordinate.CoordinateChar.N : Coordinate.CoordinateChar.S), new CoordinateRecord(lon, lon >= 0 ? Coordinate.CoordinateChar.E : Coordinate.CoordinateChar.W)) { }
+        {
+            this.Latitude = lat;
+            this.Longitude = lon;
+            NotEmpty = true;
+        }
 
 
         /// <summary>
         /// создает новый экземпляр с указанными координатами формата dd.dddddd
         /// </summary>
         /// <param name="lat">широта</param>
-        /// <param name="lon">широта</param>
-        public Coordinate(string lat, string lon)
-            : this(double.Parse(lat.Replace('.', Vars.DecimalSeparator)), double.Parse(lon.Replace('.', Vars.DecimalSeparator))) { }
-
-        /// <summary>
-        /// создает новый экземпляр Coordinate с заданными координатами
-        /// </summary>
-        /// <param name="lat">широта</param>
         /// <param name="lon">долгота</param>
-        /// <exception cref="ArgumentNullException">Если долгота или широта равна null</exception>
-        public Coordinate(CoordinateRecord lat, CoordinateRecord lon)
-        {
-            // if (lat == null || lon == null)
-            //    throw new ArgumentNullException("Один из аргументов равен null");
-            Latitude = lat;
-            Longitude = lon;
-            this.llon = (long)(lon.TotalDegrees * 10000000);
-            this.llat = (long)(lat.TotalDegrees * 10000000);
-        }
+        public Coordinate(string lat, string lon)
+            : this(double.Parse(lat), double.Parse(lon)) { }
 
         /// <summary>
         /// создает новые координаты из координат GMap
@@ -420,20 +151,86 @@ namespace TrackConverter.Lib.Classes
         public Coordinate(PointLatLng point)
             : this(point.Lat, point.Lng) { }
 
-        /// <summary>
-        /// создает пустуые координаты
-        /// </summary>
-        /// <param name="isEmpty"></param>
-        private Coordinate(bool isEmpty)
-        {
-            this.Latitude = new CoordinateRecord(true);
-            this.Longitude = new CoordinateRecord(true);
-            llat = long.MinValue;
-            llon = long.MinValue;
-        }
-
         #endregion
 
+
+        /// <summary>
+        /// возвращает целое число секунд в заданной координате
+        /// </summary>
+        /// <param name="kind">типа координаты</param>
+        /// <returns></returns>
+        public double Seconds(CoordinateKind kind)
+        {
+            double deg;
+            switch (kind)
+            {
+                case CoordinateKind.Latitude: deg = Latitude; break;
+                case CoordinateKind.Longitude: deg = Longitude; break;
+                default: throw new Exception("О_о");
+            }
+            double mo = deg - (int)deg;
+            double m = mo * 60;
+            double so = m - ((int)m);
+            double sec = so * 60;
+            return Math.Abs(sec);
+        }
+
+        /// <summary>
+        /// возвращает целое число минут в заданной координате
+        /// </summary>
+        /// <param name="kind">типа координаты</param>
+        /// <returns></returns>
+        public int Minutes(CoordinateKind kind)
+        {
+            double deg;
+            switch (kind)
+            {
+                case CoordinateKind.Latitude: deg = Latitude; break;
+                case CoordinateKind.Longitude: deg = Longitude; break;
+                default: throw new Exception("О_о");
+            }
+            double mo = deg - (int)deg;
+            int mm = (int)(mo * 60);
+            return Math.Abs(mm);
+        }
+
+        /// <summary>
+        /// возвращает целое число градусов в заданной координате
+        /// </summary>
+        /// <param name="kind">типа координаты</param>
+        /// <returns></returns>
+        public int Degrees(CoordinateKind kind)
+        {
+            switch (kind)
+            {
+                case CoordinateKind.Latitude: return Math.Abs((int)this.Latitude);
+                case CoordinateKind.Longitude: return Math.Abs((int)this.Longitude);
+                default: throw new Exception("О_о");
+            }
+        }
+
+        /// <summary>
+        /// возвращает сторону света для заданной координаты
+        /// </summary>
+        /// <param name="kind"></param>
+        /// <returns></returns>
+        public CoordinateChar Char(CoordinateKind kind)
+        {
+            switch (kind)
+            {
+                case CoordinateKind.Latitude:
+                    if (this.Latitude > 0)
+                        return CoordinateChar.N;
+                    else
+                        return CoordinateChar.S;
+                case CoordinateKind.Longitude:
+                    if (this.Longitude > 0)
+                        return CoordinateChar.E;
+                    else
+                        return CoordinateChar.W;
+                default: throw new Exception("O_o");
+            }
+        }
 
         /// <summary>
         /// чтение строкового представления координаты
@@ -462,7 +259,95 @@ namespace TrackConverter.Lib.Classes
             }
 
 
-            return new Coordinate(CoordinateRecord.Parse(lat, coordFormat), CoordinateRecord.Parse(lon, coordFormat));
+            return new Coordinate(parse(lat, coordFormat), parse(lon, coordFormat));
+        }
+
+        /// <summary>
+        /// парсер одной координаты по заданному формату
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="format"></param>
+        /// <returns></returns>
+        private static double parse(string source, string format)
+
+        {
+            double Min = 0;
+            double Deg = 0;
+            double Sec = 0;
+            string ch = "";
+            string min = "";
+            string grad = "";
+            string sec = "";
+
+            switch (format)
+            {
+
+                case "Hddmm.mmm":
+                    min = source.Substring(3);
+                    grad = source.Substring(1, 2);
+                    sec = "0";
+                    ch = source[0].ToString();
+                    break;
+                case "ddmm.mmm,H":
+                    min = source.Substring(2, 6);
+                    grad = source.Substring(0, 2);
+                    sec = "0";
+                    ch = source[9].ToString();
+                    break;
+                case "Hdd mm.mmm":
+                    min = source.Substring(4, 6);
+                    grad = source.Substring(1, 2);
+                    sec = "0";
+                    ch = source.Substring(0, 1);
+                    break;
+                case "ddº mm.mmmm' H":
+                    min = source.Substring(4, 7);
+                    grad = source.Substring(0, 2);
+                    sec = "0";
+                    ch = source.Substring(12, 1);
+                    break;
+                case "ddº mm' ss.ssss\" H":
+                    min = source.Substring(4, 2);
+                    grad = source.Substring(0, 2);
+                    sec = source.Substring(8, 6);
+                    ch = source.Substring(17, 1);
+                    break;
+                case "ddºmm'ss.s\"H":
+                    min = source.Substring(3, 2);
+                    grad = source.Substring(0, 2);
+                    sec = source.Substring(6, 4);
+                    ch = source.Substring(11, 1);
+                    break;
+                default:
+                    throw new FormatException("Неподдерживаемый формат координат");
+            }
+
+            Min = double.Parse(min.Replace('.', Vars.DecimalSeparator));
+            Deg = double.Parse(grad.Replace('.', Vars.DecimalSeparator));
+            Sec = double.Parse(sec.Replace('.', Vars.DecimalSeparator));
+            double td = Deg + Min / 60 + Sec / 3600;
+
+            CoordinateChar cc = CoordinateChar.N;
+            switch (ch.ToLower())
+            {
+                case "w":
+                    cc = CoordinateChar.W;
+                    break;
+                case "s":
+                    cc = CoordinateChar.S;
+                    break;
+                case "n":
+                    cc = CoordinateChar.N;
+                    break;
+                case "e":
+                    cc = CoordinateChar.E;
+                    break;
+                default:
+                    throw new Exception("Не удалось распознать полушарие");
+            }
+
+            double res = td * ((cc == CoordinateChar.S || cc == CoordinateChar.W) ? -1 : 1);
+            return res;
         }
 
         /// <summary>
@@ -481,6 +366,59 @@ namespace TrackConverter.Lib.Classes
         }
 
         /// <summary>
+        /// форматирование одной координаты в заданном формате
+        /// </summary>
+        /// <param name="kind">тип координаты</param>
+        /// <param name="format">формат</param>
+        /// <returns></returns>
+        public string ToString(CoordinateKind kind, string format)
+        {
+            string res = "";
+            double TotalDegrees;
+            switch (kind)
+            {
+                case CoordinateKind.Latitude: TotalDegrees = Latitude; break;
+                case CoordinateKind.Longitude: TotalDegrees = Longitude; break;
+                default: throw new Exception("О_о");
+            }
+
+
+            switch (format)
+            {
+                case "Hddmm.mmm":
+                    res = this.Char(kind).ToString() + Degrees(kind).ToString() + Math.Round((Math.Abs(TotalDegrees) - Degrees(kind)) * 60, 3).ToString("00.000").Replace(Vars.DecimalSeparator, '.');
+                    break;
+                case "ddmm.mmm,H":
+                    res = Degrees(kind).ToString() + Math.Round((Math.Abs(TotalDegrees) - Degrees(kind)) * 60, 3).ToString("00.000").Replace(Vars.DecimalSeparator, '.') + "," + this.Char(kind).ToString();
+                    break;
+                case "Hdd mm.mmm":
+                    res = this.Char(kind).ToString() + Degrees(kind).ToString() + " " + Math.Round((Math.Abs(TotalDegrees) - Degrees(kind)) * 60, 3).ToString("00.000").Replace(Vars.DecimalSeparator, '.');
+                    break;
+                case "ddº mm.mmmm' H":
+                    res = this.Degrees(kind).ToString() + "º " + Math.Round((Math.Abs(TotalDegrees) - Degrees(kind)) * 60, 4).ToString("00.0000").Replace(Vars.DecimalSeparator, '.') + "' " + this.Char(kind).ToString();
+                    break;
+                case "ddº mm' ss.ssss\" H":
+                    res = this.Degrees(kind).ToString() + "º " + this.Minutes(kind).ToString() + "' " + this.Seconds(kind).ToString("00.0000").Replace(Vars.DecimalSeparator, '.') + "\" " + this.Char(kind).ToString();
+                    break;
+                case "ddºmm'ss.s\"H":
+                    res = this.Degrees(kind).ToString() + "º" + this.Minutes(kind).ToString() + "'" + this.Seconds(kind).ToString("00.0").Replace(Vars.DecimalSeparator, '.') + "\"" + this.Char(kind).ToString();
+                    break;
+                case "00.000000":
+                    res = TotalDegrees.ToString("00.000000").Replace(Vars.DecimalSeparator, '.');
+                    break;
+                case "00.000":
+                    res = TotalDegrees.ToString("00.000").Replace(Vars.DecimalSeparator, '.');
+                    break;
+                case "dd, mm.mmmm,H":
+                    res = this.Degrees(kind).ToString() + ", " + Math.Round((Math.Abs(TotalDegrees) - Degrees(kind)) * 60, 4).ToString("0.0000").Replace(Vars.DecimalSeparator, '.') + "," + this.Char(kind).ToString();
+                    break;
+                default:
+                    throw new FormatException("Неподдерживаемый формат координат");
+            }
+
+            return res;
+        }
+        /// <summary>
         /// сохранение ссылки на google
         /// </summary>
         /// <returns></returns>
@@ -488,8 +426,8 @@ namespace TrackConverter.Lib.Classes
         {
             //https://www.google.ru/maps/place/55%C2%B040'51.6%22N+37%C2%B058'18.9%22E/@55.680696,37.9729728,17z/
             string ex = string.Format(@"https://www.google.ru/maps/place/{2}+{3}/@{0},{1},10z/",
-                this.Latitude.TotalDegrees.ToString("00.000000").Replace(Vars.DecimalSeparator, '.'),
-                this.Longitude.TotalDegrees.ToString("00.000000").Replace(Vars.DecimalSeparator, '.'),
+                this.Latitude.ToString("00.000000").Replace(Vars.DecimalSeparator, '.'),
+                this.Longitude.ToString("00.000000").Replace(Vars.DecimalSeparator, '.'),
                 this.Latitude.ToString("ddºmm'ss.s\"H"),
                 this.Longitude.ToString("ddºmm'ss.s\"H")
                 );
@@ -503,11 +441,12 @@ namespace TrackConverter.Lib.Classes
         public string ExportYandex()
         {
             //https://yandex.ru/maps/213/moscow/?ll=37.598420%2C55.760155&z=10&z=17&mt=map&p=37.598420%2C55.760155&whatshere%5Bpoint%5D=37.679444%2C55.750087&whatshere%5Bzoom%5D=10
-            string ex = string.Format(@"https://yandex.ru/maps/?ll={1}%2C{0}&z=10&z=17&mt=map&p={1}%2C{0}&whatshere%5Bpoint%5D={1}%2C{0}&whatshere%5Bzoom%5D=10", this.Latitude.TotalDegrees.ToString("00.000000").Replace(Vars.DecimalSeparator, '.'), this.Longitude.TotalDegrees.ToString("00.000000").Replace(Vars.DecimalSeparator, '.'));
+            string ex = string.Format(@"https://yandex.ru/maps/?ll={1}%2C{0}&z=10&z=17&mt=map&p={1}%2C{0}&whatshere%5Bpoint%5D={1}%2C{0}&whatshere%5Bzoom%5D=10",
+                this.Latitude.ToString("00.000000").Replace(Vars.DecimalSeparator, '.'),
+                this.Longitude.ToString("00.000000").Replace(Vars.DecimalSeparator, '.'));
             return ex;
 
         }
-
 
         /// <summary>
         /// object.Equals(obj)
@@ -528,7 +467,7 @@ namespace TrackConverter.Lib.Classes
 
             //return c1.strid == c2.strid;
             Coordinate d = (Coordinate)obj;
-            return (this.Latitude.TotalDegrees == d.Latitude.TotalDegrees) && (this.Longitude.TotalDegrees == d.Longitude.TotalDegrees);
+            return (this.Latitude == d.Latitude) && (this.Longitude == d.Longitude);
         }
 
         /// <summary>

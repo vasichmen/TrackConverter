@@ -60,7 +60,7 @@ namespace TrackConverter.Lib.Classes
         {
             Geometry = geometry;
             geometryCenter = Coordinate.Empty;
-            this.Name = geometry.Name;
+            Name = geometry.Name;
             perimeter = double.NaN;
         }
 

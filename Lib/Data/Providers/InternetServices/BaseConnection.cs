@@ -188,9 +188,9 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         /// <param name="url">запрос</param>
         /// <returns></returns>
         /// <exception cref="WebException">Если произошла ошибка при подключении</exception>
-        protected string SendStringGetRequest(string url)
+        protected string SendStringGetRequest(string url, bool useGZip = true)
         {
-            string ans = SendStringGetRequest(url, out HttpStatusCode code);
+            string ans = SendStringGetRequest(url, out HttpStatusCode code, useGZip);
             return ans;
         }
 
@@ -201,7 +201,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         /// <param name="code">код ответа сервера</param>
         /// <returns></returns>
         /// <exception cref="WebException">Если произошла ошибка при подключении</exception>
-        protected string SendStringGetRequest(string url, out HttpStatusCode code)
+        protected string SendStringGetRequest(string url, out HttpStatusCode code, bool useGZip=true)
         {
             if (useCache)
                 if (cache.ContainsWebUrl(url))
@@ -230,10 +230,12 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                 //для чтения данных из интернет-ресурса.
                 Stream dataStream = response.GetResponseStream();
 
-                GZipStream gstream = new GZipStream(dataStream, CompressionMode.Decompress);
+                if(useGZip)
+                dataStream = new GZipStream(dataStream, CompressionMode.Decompress);
+
                 //Инициализируем новый экземпляр класса 
                 //System.IO.StreamReader для указанного потока.
-                StreamReader sreader = new StreamReader(gstream);
+                StreamReader sreader = new StreamReader(dataStream);
                 code = response.StatusCode;
 
                 //Считывает поток от текущего положения до конца.            

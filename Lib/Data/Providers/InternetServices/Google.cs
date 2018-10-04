@@ -245,8 +245,8 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
 
             foreach (TrackPoint point in trk)
             {
-                long lat = (long)Math.Round(point.Coordinates.Latitude.TotalDegrees * 1e5);
-                long lng = (long)Math.Round(point.Coordinates.Longitude.TotalDegrees * 1e5);
+                long lat = (long)Math.Round(point.Coordinates.Latitude * 1e5);
+                long lng = (long)Math.Round(point.Coordinates.Longitude * 1e5);
                 long dLat = lat - lastLat;
                 long dLng = lng - lastLng;
                 encodeCoord(dLat, ref result);
@@ -368,8 +368,8 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
             //https://maps.googleapis.com/maps/api/elevation/json?locations=39.7391536,-104.9847034&api_key=
 
             string url = string.Format("https://maps.googleapis.com/maps/api/elevation/xml?locations={0},{1}&api_key={2}",
-                coordinate.Latitude.TotalDegrees.ToString().Replace(Vars.DecimalSeparator, '.'),
-                coordinate.Longitude.TotalDegrees.ToString().Replace(Vars.DecimalSeparator, '.'),
+                coordinate.Latitude.ToString().Replace(Vars.DecimalSeparator, '.'),
+                coordinate.Longitude.ToString().Replace(Vars.DecimalSeparator, '.'),
                 Resources.google_elevation_api_key);
 
             XmlDocument xml = SendXmlGetRequest(url);
@@ -638,8 +638,8 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
             //https://maps.googleapis.com/maps/api/timezone/xml?location=39.6034810,-119.6822510&timestamp=1331161200&key=YOUR_API_KEY
             int timestamp = (int)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
             string url = string.Format("https://maps.googleapis.com/maps/api/timezone/xml?location={0},{1}&timestamp={2}&language=ru&api_key={3}",
-                coordinate.Latitude.TotalDegrees.ToString().Replace(Vars.DecimalSeparator, '.'),
-                coordinate.Longitude.TotalDegrees.ToString().Replace(Vars.DecimalSeparator, '.'),
+                coordinate.Latitude.ToString().Replace(Vars.DecimalSeparator, '.'),
+                coordinate.Longitude.ToString().Replace(Vars.DecimalSeparator, '.'),
                 timestamp,
                 Resources.google_elevation_api_key);
 

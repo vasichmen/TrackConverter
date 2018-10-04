@@ -34,12 +34,12 @@ namespace TrackConverter.Lib.Mathematic.Base
 
             //перевод координат в радианы
             double rad1deg = Math.PI / 180;
-            double lat1 = A.Latitude.TotalDegrees * rad1deg; //α1
-            double lat2 = C.Latitude.TotalDegrees * rad1deg; //α2
-            double lon1 = A.Longitude.TotalDegrees * rad1deg; //β1
-            double lon2 = C.Longitude.TotalDegrees * rad1deg; //β2
-            double NPlat = B.Latitude.TotalDegrees * rad1deg; //широта северного полюса
-            double NPlon = B.Longitude.TotalDegrees * rad1deg; //долгота северного полюса
+            double lat1 = A.Latitude * rad1deg; //α1
+            double lat2 = C.Latitude * rad1deg; //α2
+            double lon1 = A.Longitude * rad1deg; //β1
+            double lon2 = C.Longitude * rad1deg; //β2
+            double NPlat = B.Latitude * rad1deg; //широта северного полюса
+            double NPlon = B.Longitude * rad1deg; //долгота северного полюса
 
             //косинусы центральных углов (дуг) между точками и полюсом
             //cosY = cos α1 ∙ cos α2 ∙ (cos(β1 - β2) - 1) + cos(α1 - α2)
@@ -95,7 +95,7 @@ namespace TrackConverter.Lib.Mathematic.Base
         /// <returns></returns>
         public static double CalculateDistance(Coordinate c1, Coordinate c2)
         {
-            return CalculateDistance(c1.Latitude.TotalDegrees, c1.Longitude.TotalDegrees, c2.Latitude.TotalDegrees, c2.Longitude.TotalDegrees);
+            return CalculateDistance(c1.Latitude, c1.Longitude, c2.Latitude, c2.Longitude);
         }
 
         /// <summary>
@@ -152,7 +152,7 @@ namespace TrackConverter.Lib.Mathematic.Base
  */
 
             double in1grad = Math.PI / 180; //преобразователь в градусы и обратно
-            double[] pt1 = { start.Latitude.TotalDegrees * in1grad, start.Longitude.TotalDegrees * in1grad }; //исходная точка
+            double[] pt1 = { start.Latitude * in1grad, start.Longitude * in1grad }; //исходная точка
             double[] pt2 = { -999, -999 }; //результат
 
             double[] pt = new double[2];

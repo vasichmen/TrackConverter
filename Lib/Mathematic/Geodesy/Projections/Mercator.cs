@@ -51,8 +51,8 @@ namespace TrackConverter.Lib.Mathematic.Geodesy.Projections
         /// <returns></returns>
         public System.Windows.Point GetXY(Coordinate coordinate)
         {
-            double lat = coordinate.Latitude.TotalDegrees;
-            double lon = coordinate.Longitude.TotalDegrees;
+            double lat = coordinate.Latitude;
+            double lon = coordinate.Longitude;
             double deg2rad = Math.PI / 180d;
 
             if (lat > 85)

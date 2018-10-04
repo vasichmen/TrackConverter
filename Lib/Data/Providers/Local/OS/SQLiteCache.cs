@@ -220,8 +220,8 @@ namespace TrackConverter.Lib.Data.Providers.Local.OS
         public void PutGeoInfo(Coordinate Coordinate, double Altitude)
         {
             this.addGeocoder(
-                Coordinate.Latitude.TotalDegrees,
-                Coordinate.Longitude.TotalDegrees,
+                Coordinate.Latitude,
+                Coordinate.Longitude,
                 Altitude,
                 null,
                 null
@@ -236,8 +236,8 @@ namespace TrackConverter.Lib.Data.Providers.Local.OS
         public void PutGeocoder(Coordinate Coordinate, string Address)
         {
             this.addGeocoder(
-                Coordinate.Latitude.TotalDegrees,
-                Coordinate.Longitude.TotalDegrees,
+                Coordinate.Latitude,
+                Coordinate.Longitude,
                 double.NaN,
                 Address,
                 null
@@ -263,8 +263,8 @@ namespace TrackConverter.Lib.Data.Providers.Local.OS
                     SQLiteCommand cm = cache_connection.CreateCommand();
 
                     string command = createCommandGeocoder(
-                    track[i].Coordinates.Latitude.TotalDegrees,
-                    track[i].Coordinates.Longitude.TotalDegrees,
+                    track[i].Coordinates.Latitude,
+                    track[i].Coordinates.Longitude,
                     els[i],
                     null,
                     null);
@@ -287,8 +287,8 @@ namespace TrackConverter.Lib.Data.Providers.Local.OS
         public void PutGeoInfo(Coordinate coordinates, TimeZoneInfo tzi)
         {
             this.addGeocoder(
-                coordinates.Latitude.TotalDegrees,
-                coordinates.Longitude.TotalDegrees,
+                coordinates.Latitude,
+                coordinates.Longitude,
                 double.NaN,
                 null,
                 tzi
@@ -351,8 +351,8 @@ namespace TrackConverter.Lib.Data.Providers.Local.OS
         //        obj.GeometryString,
         //        obj.Name,
         //        string.IsNullOrEmpty(obj.Description) ? "NULL" : "'" + obj.Description + "'",
-        //        obj.GeometryCenter.Latitude.TotalDegrees.ToString().Replace(Vars.DecimalSeparator, '.'),
-        //        obj.GeometryCenter.Longitude.TotalDegrees.ToString().Replace(Vars.DecimalSeparator, '.'),
+        //        obj.GeometryCenter.Latitude.ToString().Replace(Vars.DecimalSeparator, '.'),
+        //        obj.GeometryCenter.Longitude.ToString().Replace(Vars.DecimalSeparator, '.'),
         //        "NULL", //TODO: сделать сохранение времени добавления объекта
         //        string.IsNullOrEmpty(obj.Link) ? "NULL" : "'" + obj.Link + "'",
         //        obj.Perimeter.ToString().Replace(Vars.DecimalSeparator, '.')
@@ -487,8 +487,8 @@ namespace TrackConverter.Lib.Data.Providers.Local.OS
             //  List<Row> ar = ExecuteReader(all);
 
             string sel = string.Format(@"SELECT * FROM '" + geocoder_table + @"' WHERE latitude = '{0}' AND longitude = '{1}' AND address IS NOT NULL",
-                Math.Round(coordinate.Latitude.TotalDegrees, decimal_digits).ToString().Replace(',', '.'),
-                Math.Round(coordinate.Longitude.TotalDegrees, decimal_digits).ToString().Replace(',', '.')
+                Math.Round(coordinate.Latitude, decimal_digits).ToString().Replace(',', '.'),
+                Math.Round(coordinate.Longitude, decimal_digits).ToString().Replace(',', '.')
                 );
             List<RowGeocoder> dr = executeReaderGeocoder(sel);
             if (dr.Count == 0)
@@ -518,8 +518,8 @@ namespace TrackConverter.Lib.Data.Providers.Local.OS
         public TimeZoneInfo GetTimeZone(Coordinate coordinates)
         {
             string sel = string.Format(@"SELECT * FROM '" + geocoder_table + @"' WHERE latitude = {0} AND longitude = {1} AND tzid IS NOT NULL AND tzname IS NOT NULL AND tzoffset IS NOT NULL",
-           Math.Round(coordinates.Latitude.TotalDegrees, decimal_digits).ToString().Replace(',', '.'),
-           Math.Round(coordinates.Longitude.TotalDegrees, decimal_digits).ToString().Replace(',', '.')
+           Math.Round(coordinates.Latitude, decimal_digits).ToString().Replace(',', '.'),
+           Math.Round(coordinates.Longitude, decimal_digits).ToString().Replace(',', '.')
            );
             List<RowGeocoder> dr = executeReaderGeocoder(sel);
             if (dr.Count == 0)
@@ -555,8 +555,8 @@ namespace TrackConverter.Lib.Data.Providers.Local.OS
         {
             //string sel = "SELECT * FROM " + table_name;
             string sel = string.Format(@"SELECT * FROM " + geocoder_table + @" WHERE latitude = '{0}' AND longitude = '{1}' AND altitude IS NOT NULL",
-            Math.Round(coordinate.Latitude.TotalDegrees, decimal_digits).ToString().Replace(',', '.'),
-            Math.Round(coordinate.Longitude.TotalDegrees, decimal_digits).ToString().Replace(',', '.')
+            Math.Round(coordinate.Latitude, decimal_digits).ToString().Replace(',', '.'),
+            Math.Round(coordinate.Longitude, decimal_digits).ToString().Replace(',', '.')
             );
             List<RowGeocoder> dr = executeReaderGeocoder(sel);
             if (dr.Count == 0)

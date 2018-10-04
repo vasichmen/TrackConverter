@@ -641,8 +641,8 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
             {
                 List<int> cd = new List<int>
                 {
-                    (int)(tt.Coordinates.Longitude.TotalDegrees * 1000000d),
-                    (int)(tt.Coordinates.Latitude.TotalDegrees * 1000000d)
+                    (int)(tt.Coordinates.Longitude * 1000000d),
+                    (int)(tt.Coordinates.Latitude * 1000000d)
                 }; //lon lat
                 coords.Add(cd);
             }
@@ -894,7 +894,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         {
             string url = string.Format(
                "https://geocode-maps.yandex.ru/1.x/?geocode={0}&results=1",
-               coordinate.Longitude.TotalDegrees.ToString().Replace(Vars.DecimalSeparator, '.') + "," + coordinate.Latitude.TotalDegrees.ToString().Replace(Vars.DecimalSeparator, '.'));
+               coordinate.Longitude.ToString().Replace(Vars.DecimalSeparator, '.') + "," + coordinate.Latitude.ToString().Replace(Vars.DecimalSeparator, '.'));
             XmlDocument dc = SendXmlGetRequest(url);
 
             XmlNode found = dc.GetElementsByTagName("found")[0];

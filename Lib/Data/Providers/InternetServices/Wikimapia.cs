@@ -245,7 +245,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
             /// </summary>
             public double Distance { get; set; }
         }
-        
+
         #endregion
 
 
@@ -403,10 +403,10 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
             double lat_max = Math.Max(area.LocationRightBottom.Lat, area.LocationTopLeft.Lat);
             double lon_min = Math.Min(area.LocationRightBottom.Lng, area.LocationTopLeft.Lng);
             double lat_min = Math.Min(area.LocationTopLeft.Lat, area.LocationRightBottom.Lat);
-            string bbox = "&BBOX=" + lon_min.ToString("0.00000").Replace(Vars.DecimalSeparator, '.') +
-                               "," + lat_min.ToString("0.00000").Replace(Vars.DecimalSeparator, '.') +
-                               "," + lon_max.ToString("0.00000").Replace(Vars.DecimalSeparator, '.') +
-                               "," + lat_max.ToString("0.00000").Replace(Vars.DecimalSeparator, '.');
+            string bbox = string.Concat("&BBOX=", lon_min.ToString("0.00000").Replace(Vars.DecimalSeparator, '.'),
+                               ",", lat_min.ToString("0.00000").Replace(Vars.DecimalSeparator, '.'),
+                               ",", lon_max.ToString("0.00000").Replace(Vars.DecimalSeparator, '.'),
+                               ",", lat_max.ToString("0.00000").Replace(Vars.DecimalSeparator, '.'));
             string url = string.Format("http://wikimapia.org/d?lng=1{0}", bbox);
 
             string kml = SendStringGetRequest(url);
@@ -714,7 +714,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         /// </summary>
         /// <param name="query">часть названия категории. По умолчанию - базовые категории</param>
         /// <returns></returns>
-        public List<CategoryInfo> GetCategories(string query=null)
+        public List<CategoryInfo> GetCategories(string query = null)
         {
             //базовые категории
             //http://wikimapia.org/localization/tags/ru.json
@@ -724,7 +724,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
             if (string.IsNullOrWhiteSpace(query))
                 url = "http://wikimapia.org/localization/tags/ru.json"; //основные категории
             else
-                url =string.Format( "http://wikimapia.org/ajax/get_category/?search_tcat={0}&format=json&lng=1",query);  //поиск по категориям
+                url = string.Format("http://wikimapia.org/ajax/get_category/?search_tcat={0}&format=json&lng=1", query);  //поиск по категориям
 
             JObject jo = SendJsonGetRequest(url);
             JToken cats = jo["categories"];
@@ -873,7 +873,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
             foreach (var item in items)
             {
                 int zoom = item.Attributes.Contains("data-zoom") ? int.Parse(item.Attributes["data-zoom"].Value) : 14;
-                double lat = item.Attributes.Contains("data-latitude") ? double.Parse(item.Attributes["data-latitude"].Value.Replace('.',Vars.DecimalSeparator)) : double.NaN;
+                double lat = item.Attributes.Contains("data-latitude") ? double.Parse(item.Attributes["data-latitude"].Value.Replace('.', Vars.DecimalSeparator)) : double.NaN;
                 double lon = item.Attributes.Contains("data-longitude") ? double.Parse(item.Attributes["data-longitude"].Value.Replace('.', Vars.DecimalSeparator)) : double.NaN;
 
                 HtmlNode name = item.SelectSingleNode(@".//div/strong");
@@ -882,7 +882,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                 string distance = item.SelectSingleNode(@".//span[@class='label label-info']").InnerText;
                 double dist = double.Parse(distance.Replace("&nbsp;км", "").Replace('.', Vars.DecimalSeparator));
 
-                string city = item.SelectSingleNode(@".//small").InnerText.Trim(new char[] {'\r','\n',' ' });
+                string city = item.SelectSingleNode(@".//small").InnerText.Trim(new char[] { '\r', '\n', ' ' });
 
                 // var userID = comment.SelectSingleNode(@".//div[@class='comment-body']/div[@class='comment-header']/a");
                 //com.UserLink = userID.Attributes.Contains("href") ? "http://wikimapia.org" + userID.Attributes["href"].Value : "";

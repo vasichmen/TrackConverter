@@ -77,7 +77,7 @@ namespace TrackConverter.Lib.Tracking
             {
                 List<double> res = new List<double>();
                 foreach (TrackPoint tt in Track)
-                    res.Add(tt.Coordinates.Longitude.TotalDegrees);
+                    res.Add(tt.Coordinates.Longitude);
                 return res;
             }
         }
@@ -92,7 +92,7 @@ namespace TrackConverter.Lib.Tracking
             {
                 List<double> res = new List<double>();
                 foreach (TrackPoint tt in Track)
-                    res.Add(tt.Coordinates.Latitude.TotalDegrees);
+                    res.Add(tt.Coordinates.Latitude);
                 return res;
             }
         }
@@ -146,8 +146,8 @@ namespace TrackConverter.Lib.Tracking
                 {
                     res.LoadDataRow(new object[] {
                     tp.Name,
-                    tp.Coordinates.Latitude.TotalDegrees,
-                    tp.Coordinates.Longitude.TotalDegrees,
+                    tp.Coordinates.Latitude,
+                    tp.Coordinates.Longitude,
                     Math.Round(tp.MetrAltitude==-777?double.NaN:tp.MetrAltitude,3),
                     tp.Description,
                     tp.Time,

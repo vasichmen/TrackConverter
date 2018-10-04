@@ -129,16 +129,7 @@ namespace TrackConverter.Lib.Data.Providers.Local.ETOPO
         /// <returns></returns>
         public double GetElevation(double lat, double lon)
         { return GetElevation(new Coordinate(lat, lon)); }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="lat"></param>
-        /// <param name="lon"></param>
-        /// <returns></returns>
-        public double GetElevation(Coordinate.CoordinateRecord lat, Coordinate.CoordinateRecord lon)
-        { return GetElevation(new Coordinate(lat, lon)); }
-
+        
         /// <summary>
         /// 
         /// </summary>

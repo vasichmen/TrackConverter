@@ -1460,9 +1460,12 @@ namespace TrackConverter.UI.Shell
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //при x=2474, y=1278, zoom=14, factor=10 => quadCode = 0302310101113
-            //при x=618, y=319, zoom=12, factor=10 => quadCode = 0302310101113
-           // var s = new Wikimapia(null).GetQuadKey(618, 319, 12);
+            
+            Wikimapia eng = new Wikimapia(Application.StartupPath+Resources.cache_directory+"\\tmp");
+            var tls = gmapControlMap.GetViewArea();
+
+            for (int i = 0; i < 500; i++)
+                eng.GetObjects(tls, 1);
         }
 
 

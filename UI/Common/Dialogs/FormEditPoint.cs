@@ -98,8 +98,8 @@ namespace TrackConverter.UI.Common.Dialogs
             if (point != null)
             {
                 textBoxName.Text = string.IsNullOrWhiteSpace(point.Name) ? "Точка" : point.Name;
-                textBoxLat.Text = point.Coordinates.Latitude.TotalDegrees.ToString();
-                textBoxLon.Text = point.Coordinates.Longitude.TotalDegrees.ToString();
+                textBoxLat.Text = point.Coordinates.Latitude.ToString();
+                textBoxLon.Text = point.Coordinates.Longitude.ToString();
                 textBoxAlt.Text = point.MetrAltitude.ToString();
                 textBoxDescription.Text = point.Description;
 
@@ -308,8 +308,8 @@ namespace TrackConverter.UI.Common.Dialogs
             {
                 string adr = textBoxName.Text;
                 Coordinate cd = new GeoCoder(Vars.Options.DataSources.GeoCoderProvider).GetCoordinate(adr);
-                textBoxLat.Text = cd.Latitude.TotalDegrees.ToString();
-                textBoxLon.Text = cd.Longitude.TotalDegrees.ToString();
+                textBoxLat.Text = cd.Latitude.ToString();
+                textBoxLon.Text = cd.Longitude.ToString();
                 Program.winMain.gmapControlMap.Position = cd.GMap;
             }
             catch (Exception)

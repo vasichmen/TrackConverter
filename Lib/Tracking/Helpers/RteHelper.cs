@@ -34,8 +34,8 @@ namespace TrackConverter.Lib.Tracking.Helpers
                     i, //<номер точки в маршруте>
                     pt.Name, //<имя точки>
                     pt.Description, //<описание точки>
-                    pt.Coordinates.Latitude.TotalDegrees.ToString().Replace(Vars.DecimalSeparator, '.'), //<широта>
-                    pt.Coordinates.Longitude.TotalDegrees.ToString().Replace(Vars.DecimalSeparator, '.'), //<долгота>
+                    pt.Coordinates.Latitude.ToString().Replace(Vars.DecimalSeparator, '.'), //<широта>
+                    pt.Coordinates.Longitude.ToString().Replace(Vars.DecimalSeparator, '.'), //<долгота>
                     pt.Time.ToOADate().ToString().Replace(Vars.DecimalSeparator, '.'), //<время>
                     "",
                     "",

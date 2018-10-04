@@ -78,7 +78,7 @@ namespace TrackConverter.UI.Ext
         /// <summary>
         /// всплывающие подсказки на объектах
         /// </summary>
-        private ToolTip ToolTipPolygonTitles = new ToolTip();
+        private ToolTip ToolTipPolygonTitles = new ToolTip() { AutomaticDelay = 50, AutoPopDelay = 10000, InitialDelay = 50 };
 
         /// <summary>
         /// работа с поставщиком векторного слоя
@@ -321,10 +321,6 @@ namespace TrackConverter.UI.Ext
             string text = "";
             foreach (VectorMapLayerObject obj in objects)
                 text += obj.Name + "\r\n";
-
-            ToolTipPolygonTitles.AutomaticDelay = 50;
-            ToolTipPolygonTitles.AutoPopDelay = 10000;
-            ToolTipPolygonTitles.InitialDelay = 50;
             ToolTipPolygonTitles.SetToolTip(this, text);
         }
 
@@ -768,16 +764,29 @@ namespace TrackConverter.UI.Ext
         /// </summary>
         private void clearLayers()
         {
-            ToolTipPolygonTitles.RemoveAll(); //удаление подсказок на объектах
-            vectorLayersOverlay.Polygons.Clear(); //очистка карты
-            VectorLayerObjects.Clear(); //удаляем векторные объекты на экране
-            loadedAreas.Clear(); //очистка растрового слоя
-            if (rastrLayersGraphics != null)
-                try
-                {
-                    rastrLayersGraphics.Clear(Color.Transparent); //очистка слоя рисования растровых слоёв
-                }
-                catch (Exception) { }
+            switch (layerProvider)
+            {
+                case MapLayerProviders.OSMGPSTracks:
+                case MapLayerProviders.OSMRailways:
+                case MapLayerProviders.OSMRoadSurface:
+                case MapLayerProviders.RosreestrCadaster:
+                case MapLayerProviders.YandexTraffic:
+                    if (rastrLayersGraphics != null)
+                        try
+                        {
+                            rastrLayersGraphics.Clear(Color.Transparent); //очистка слоя рисования растровых слоёв
+                        }
+                        catch (Exception) { }
+                    loadedAreas.Clear(); //очистка растрового слоя
+                    break;
+                case MapLayerProviders.Wikimapia:
+                    ToolTipPolygonTitles.RemoveAll(); //удаление подсказок на объектах
+                    vectorLayersOverlay.Polygons.Clear(); //очистка карты
+                    VectorLayerObjects.Clear(); //удаляем векторные объекты на экране
+                    break;
+                default: throw new Exception("Этот провайдер слоя не реализован");
+
+            }
         }
 
         #endregion

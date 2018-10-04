@@ -76,16 +76,7 @@ namespace TrackConverter.Lib.Data
             else
                 return adr;
         }
-
-        /// <summary>
-        /// получить адрес по точке на карте
-        /// </summary>
-        /// <param name="lat">широта</param>
-        /// <param name="lon">долгота</param>
-        /// <returns></returns>
-        public string GetAddress(Coordinate.CoordinateRecord lat, Coordinate.CoordinateRecord lon)
-        { return GetAddress(new Coordinate(lat, lon)); }
-
+        
         /// <summary>
         /// получить адрес по точке на карте
         /// </summary>

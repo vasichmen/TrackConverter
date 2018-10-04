@@ -19,7 +19,7 @@ namespace TrackConverter.Lib.Mathematic.Astronomy
         /// <returns></returns>
         public static double CalculateTimeOffset(TrackPoint trackPoint)
         {
-            double lat = trackPoint.Coordinates.Latitude.TotalDegrees;
+            double lat = trackPoint.Coordinates.Latitude;
             double in1ho = 180d / 12d;
             double offset = lat / in1ho;
             return (int)offset;
@@ -35,7 +35,7 @@ namespace TrackConverter.Lib.Mathematic.Astronomy
         public static SunTime CalculateRise(TrackPoint trackPoint)
         {
             double rise = 0, set = 0;
-            int ans = new SunRiseSet().RiseSet(trackPoint.TimeZone.BaseUtcOffset.TotalHours, trackPoint.Coordinates.Latitude.TotalDegrees, trackPoint.Coordinates.Longitude.TotalDegrees, ref rise, ref set);
+            int ans = new SunRiseSet().RiseSet(trackPoint.TimeZone.BaseUtcOffset.TotalHours, trackPoint.Coordinates.Latitude, trackPoint.Coordinates.Longitude, ref rise, ref set);
             return new SunTime(rise, ans);
         }
 
@@ -47,7 +47,7 @@ namespace TrackConverter.Lib.Mathematic.Astronomy
         public static SunTime CalculateFall(TrackPoint trackPoint)
         {
             double rise = 0, set = 0;
-            int ans = new SunRiseSet().RiseSet(trackPoint.TimeZone.BaseUtcOffset.TotalHours, trackPoint.Coordinates.Latitude.TotalDegrees, trackPoint.Coordinates.Longitude.TotalDegrees, ref rise, ref set);
+            int ans = new SunRiseSet().RiseSet(trackPoint.TimeZone.BaseUtcOffset.TotalHours, trackPoint.Coordinates.Latitude, trackPoint.Coordinates.Longitude, ref rise, ref set);
             return new SunTime(set, ans);
         }
 
@@ -59,7 +59,7 @@ namespace TrackConverter.Lib.Mathematic.Astronomy
         public static double CalculateRiseAzimuth(TrackPoint trackPoint)
         {
             double rise = 0, set = 0;
-            int ans = new SunRiseSet().Azimuths(trackPoint.TimeZone.BaseUtcOffset.TotalHours, trackPoint.Coordinates.Latitude.TotalDegrees, trackPoint.Coordinates.Longitude.TotalDegrees, ref rise, ref set);
+            int ans = new SunRiseSet().Azimuths(trackPoint.TimeZone.BaseUtcOffset.TotalHours, trackPoint.Coordinates.Latitude, trackPoint.Coordinates.Longitude, ref rise, ref set);
             if (ans != 1)
                 return double.NaN;
             return rise;
@@ -73,7 +73,7 @@ namespace TrackConverter.Lib.Mathematic.Astronomy
         public static double CalculateFallAzimuth(TrackPoint trackPoint)
         {
             double rise = 0, set = 0;
-            int ans = new SunRiseSet().Azimuths(trackPoint.TimeZone.BaseUtcOffset.TotalHours, trackPoint.Coordinates.Latitude.TotalDegrees, trackPoint.Coordinates.Longitude.TotalDegrees, ref rise, ref set);
+            int ans = new SunRiseSet().Azimuths(trackPoint.TimeZone.BaseUtcOffset.TotalHours, trackPoint.Coordinates.Latitude, trackPoint.Coordinates.Longitude, ref rise, ref set);
             if (ans != 1)
                 return double.NaN;
             return set;

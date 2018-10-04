@@ -410,7 +410,7 @@ namespace TrackConverter.Lib.Tracking
                 trf = ((TripRouteFile)this).Waypoints;
 
             foreach (TrackPoint tp in trf)
-                if (tp.Coordinates.Latitude.TotalDegrees == lat && tp.Coordinates.Longitude.TotalDegrees == lng)
+                if (tp.Coordinates.Latitude == lat && tp.Coordinates.Longitude == lng)
                     return tp;
             return null;
         }

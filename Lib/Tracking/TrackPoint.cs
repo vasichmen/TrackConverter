@@ -46,15 +46,7 @@ namespace TrackConverter.Lib.Tracking
         /// <param name="lon">долгота</param>
         public TrackPoint(string lat, string lon)
             : this(double.Parse(lat.Replace('.', Vars.DecimalSeparator)), double.Parse(lon.Replace('.', Vars.DecimalSeparator))) { }
-
-        /// <summary>
-        ///  создает  экземпляр TrackPoint с заданными координатами
-        /// </summary>
-        ///  <param name="lat">широта</param>
-        /// <param name="lon">долгота</param>
-        public TrackPoint(Coordinate.CoordinateRecord lat, Coordinate.CoordinateRecord lon)
-            : this(new Coordinate(lat, lon)) { }
-
+        
         /// <summary>
         /// создает  экземпляр TrackPoint с заданными координатами
         /// </summary>
@@ -81,7 +73,7 @@ namespace TrackConverter.Lib.Tracking
         /// <summary>
         /// преставление координат в виде структуры
         /// </summary>
-        public Coordinate Coordinates { get; set; }
+        public  Coordinate Coordinates;
 
         /// <summary>
         /// высота в метрах
@@ -276,7 +268,7 @@ namespace TrackConverter.Lib.Tracking
             get
             {
                 if(gmap.IsEmpty)
-                    gmap =  new PointLatLng(Coordinates.Latitude.TotalDegrees, Coordinates.Longitude.TotalDegrees);
+                    gmap =  new PointLatLng(Coordinates.Latitude, Coordinates.Longitude);
                 return gmap;
             }
         }
@@ -304,14 +296,14 @@ namespace TrackConverter.Lib.Tracking
             double clat = 0;
             double clon = 0;
             //разницы по координатам
-            double dlat = trackPoint.Coordinates.Latitude.TotalDegrees - this.Coordinates.Latitude.TotalDegrees;
-            double dlon = trackPoint.Coordinates.Longitude.TotalDegrees - this.Coordinates.Longitude.TotalDegrees;
+            double dlat = trackPoint.Coordinates.Latitude - this.Coordinates.Latitude;
+            double dlon = trackPoint.Coordinates.Longitude - this.Coordinates.Longitude;
             //прибавки к координатам
             double plat = dlat / 2.0;
             double plon = dlon / 2.0;
             //вычисление новых координат
-            clat = this.Coordinates.Latitude.TotalDegrees + plat;
-            clon = this.Coordinates.Longitude.TotalDegrees + plon;
+            clat = this.Coordinates.Latitude + plat;
+            clon = this.Coordinates.Longitude + plon;
 
             TrackPoint cpoint = new TrackPoint(clat, clon);
 
@@ -347,7 +339,7 @@ namespace TrackConverter.Lib.Tracking
         /// <returns></returns>
         public TrackPoint Clone()
         {
-            TrackPoint res = new TrackPoint(this.Coordinates.Latitude.TotalDegrees, this.Coordinates.Longitude.TotalDegrees)
+            TrackPoint res = new TrackPoint(this.Coordinates.Latitude, this.Coordinates.Longitude)
             {
                 Description = this.Description,
                 Icon = this.Icon,

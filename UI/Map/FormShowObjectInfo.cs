@@ -213,8 +213,8 @@ namespace TrackConverter.UI.Map
             // http://wikimapia.org/#lang=ru&lat=55.864909&lon=38.164444&z=12&m=b&show=/29795352/ru
             string base_url = "http://wikimapia.org/#lang=ru&lat={0}&lon={1}&z={2}&m=b&show=/{3}/ru";
 
-            double lat = Obj.GeometryCenter.Latitude.TotalDegrees;
-            double lon = Obj.GeometryCenter.Longitude.TotalDegrees;
+            double lat = Obj.GeometryCenter.Latitude;
+            double lon = Obj.GeometryCenter.Longitude;
             int z = (int)Program.winMain.gmapControlMap.Zoom;
             int id = Obj.ID;
 

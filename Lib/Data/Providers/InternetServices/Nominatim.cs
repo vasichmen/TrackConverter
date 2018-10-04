@@ -51,8 +51,8 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
 
 
             string url = string.Format("http://nominatim.openstreetmap.org/reverse?format=xml&lat={0}&lon={1}&accept-language={2}",
-                coordinate.Latitude.TotalDegrees.ToString().Replace(',', '.'),
-                coordinate.Longitude.TotalDegrees.ToString().Replace(',', '.'),
+                coordinate.Latitude.ToString().Replace(',', '.'),
+                coordinate.Longitude.ToString().Replace(',', '.'),
                 "ru-Ru");
             XmlDocument xml = SendXmlGetRequest(url);
 

@@ -91,7 +91,7 @@ namespace TrackConverter.Lib.Mathematic.Geodesy.Models
         /// <returns></returns>
         public double CalculateDistance(Coordinate c1, Coordinate c2)
         {
-            return CalculateDistance(c1.Latitude.TotalDegrees, c1.Longitude.TotalDegrees, c2.Latitude.TotalDegrees, c2.Longitude.TotalDegrees);
+            return CalculateDistance(c1.Latitude, c1.Longitude, c2.Latitude, c2.Longitude);
         }
 
         /// <summary>
@@ -174,7 +174,7 @@ namespace TrackConverter.Lib.Mathematic.Geodesy.Models
         {
             //перевод градусов в радианы
             double rad1deg = Math.PI / 180;
-            double lat1 = p1.Coordinates.Latitude.TotalDegrees * rad1deg; //α1
+            double lat1 = p1.Coordinates.Latitude * rad1deg; //α1
 
             //sin α1 = 0 - это означает, что начальная точка A находится на полюсе земли. 
             //Если широта начальной точки 90° (северный полюс), 

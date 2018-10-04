@@ -97,8 +97,8 @@ namespace TrackConverter.Lib.Data.Providers.Local.ETOPO
         /// <returns></returns>
         private Point geoToLocal(Coordinate coordinate)
         {
-            double lat = coordinate.Latitude.TotalDegrees;
-            double lon = coordinate.Longitude.TotalDegrees;
+            double lat = coordinate.Latitude;
+            double lon = coordinate.Longitude;
             double in1cell = this.CellSize;
             double ic = rows / 2;
             double jc = Columns / 2;

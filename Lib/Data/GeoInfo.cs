@@ -82,15 +82,6 @@ namespace TrackConverter.Lib.Data
         }
 
         /// <summary>
-        ///  возвращает высоту по заданной точке в метрах
-        /// </summary>
-        /// <param name="lat">широта</param>
-        /// <param name="lon">долгота</param>
-        /// <returns></returns>
-        public double GetElevation(Coordinate.CoordinateRecord lat, Coordinate.CoordinateRecord lon)
-        { return GetElevation(lat, lon); }
-
-        /// <summary>
         /// создает новый трек с высотами каждой точки в метрах
         /// </summary>
         /// <param name="track">трек</param>

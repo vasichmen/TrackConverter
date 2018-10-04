@@ -1,10 +1,9 @@
-﻿using System;
+﻿using GMap.NET;
+using GMap.NET.WindowsForms;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading;
 using System.Xml;
 using TrackConverter.Lib.Classes;
 
@@ -13,7 +12,7 @@ namespace TrackConverter.Lib.Tracking.Helpers
     /// <summary>
     /// вспомогательные методв при работе с форматом KML
     /// </summary>
-    static class KmlHelper
+    internal static class KmlHelper
     {
         /// <summary>
         /// разбор XML документа и выбор маршрутов и точек
@@ -147,11 +146,14 @@ namespace TrackConverter.Lib.Tracking.Helpers
             doc.LoadXml(kml);
             XmlNode folder = doc.DocumentElement["Document"]["Folder"];
 
+
             List<VectorMapLayerObject> res = new List<VectorMapLayerObject>();
             foreach (XmlNode placemark in folder.ChildNodes)
             {
                 //ID
-                string wid = placemark.Attributes["id"].InnerText.TrimStart(new[] { 'w', 'm' });
+                //string wid = placemark.Attributes["id"].InnerText.TrimStart(new[] { 'w', 'm' });
+                string wid = placemark.Attributes["id"].InnerText.Substring(2); //удаление первых символов wm
+
                 int id = int.Parse(wid);
 
                 //LINK
@@ -168,14 +170,17 @@ namespace TrackConverter.Lib.Tracking.Helpers
 
                 //GEOMETRY
                 string linestring = placemark["MultiGeometry"]["LineString"]["coordinates"].InnerText;
+                //string linestring = placemark.SelectSingleNode(@"MultiGeometry/LineString/coordinates").InnerText;
+
+
                 linestring = linestring.Replace("\n", " ").Trim().Trim();
 
-                TrackFile geometry = parseLineString(linestring);
-                double perim = getPerimeter(geometry);
+                GMapPolygon geometry = parseLineString(linestring,name);
+                bool perim = checkPerimeter(geometry, perimeter);
 
-                //если периметр объекта меньше заданного, то не добавляем в карту
-                if (perim > perimeter)
-                    res.Add(new VectorMapLayerObject(geometry, name) { ID = id, Link = link, LayerProvider = MapLayerProviders.Wikimapia, Invisible = false });
+                //если периметр объекта больше заданного, то добавляем в результат
+                if (perim)
+                    res.Add(new VectorMapLayerObject(geometry) {Name=name, ID = id, Link = link, LayerProvider = MapLayerProviders.Wikimapia, Invisible = false });
             }
             return res;
         }
@@ -194,6 +199,50 @@ namespace TrackConverter.Lib.Tracking.Helpers
             return res;
         }
 
+        /// <summary>
+        /// возвращает истину, если периметр объекта geometry больше или равен minimal
+        /// </summary>
+        /// <param name="geometry">объект</param>
+        /// <param name="minimal">минимальный периметр в метрах</param>
+        /// <returns></returns>
+        private static bool checkPerimeter(GMapPolygon geometry, double minimal)
+        {
+            double res = 0;
+            for (int i = 1; i < geometry.Points.Count; i++)
+            {
+                res += Vars.CurrentGeosystem.CalculateDistance(geometry.Points[i - 1], geometry.Points[i]);
+                if (minimal <= res)
+                    return true;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// получить из строки только координаты без высот
+        /// </summary>
+        /// <param name="lineString">строка с координатами</param>
+        /// <param name="name">название нового полигона</param>
+        /// <returns></returns>
+        private static GMapPolygon parseLineString(string lineString, string name)
+        {
+            List<PointLatLng> points = new List<PointLatLng>();
+            //переменная lineString содержит последовательность координат в формате:
+            //долгота1,широта1,высота1 долгота2,широта2,высота2
+            //разбиваем на отдельные точки
+            string[] pts = lineString.Trim().Split(' ');
+            foreach (string pt in pts)
+            {
+                string[] arr = pt.Split(',');
+
+                string lo = arr[0].ToString().Replace('.', Vars.DecimalSeparator).Trim();
+                string la = arr[1].ToString().Replace('.', Vars.DecimalSeparator).Trim();
+                double lon = double.Parse(lo);
+                double lat = double.Parse(la);
+                PointLatLng point = new PointLatLng(lat, lon);
+                points.Add(point);
+            }
+            return new GMapPolygon(points,name);
+        }
 
         /// <summary>
         /// распознает точки из строки координат с высотами
@@ -220,17 +269,20 @@ namespace TrackConverter.Lib.Tracking.Helpers
         private static TrackPoint parsePoint(string pointString)
         {
             string[] arr = pointString.Split(',');
-            string al = "0";
+
             string lo = arr[0].ToString().Replace('.', Vars.DecimalSeparator).Trim();
             string la = arr[1].ToString().Replace('.', Vars.DecimalSeparator).Trim();
-            if (arr.Length == 3)
-                al = arr[2].ToString().Replace('.', Vars.DecimalSeparator).Trim();
-            TrackPoint nv = new TrackPoint(la, lo)
-            {
-                MetrAltitude = Convert.ToDouble(al) //высота в метрах
-            };
+            double lon = double.Parse(lo);
+            double lat = double.Parse(la);
+            TrackPoint nv = new TrackPoint(lat, lon);
+            if (arr[2] != null)
+                if (arr[2] == "0")
+                    nv.MetrAltitude = 0;
+                else
+                    nv.MetrAltitude = double.Parse(arr[2].ToString().Replace('.', Vars.DecimalSeparator));
             return nv;
         }
+
 
         /// <summary>
         /// запись трека в указанный xml узел 
@@ -276,8 +328,8 @@ namespace TrackConverter.Lib.Tracking.Helpers
             //координаты
             string cords = "";
             foreach (TrackPoint pt in tf)
-                cords += pt.Coordinates.Longitude.TotalDegrees.ToString("00.0000000000000").Replace(Vars.DecimalSeparator, '.').Trim() + ","
-                    + pt.Coordinates.Latitude.TotalDegrees.ToString("00.0000000000000").Replace(Vars.DecimalSeparator, '.').Trim() + ","
+                cords += pt.Coordinates.Longitude.ToString("00.0000000000000").Replace(Vars.DecimalSeparator, '.').Trim() + ","
+                    + pt.Coordinates.Latitude.ToString("00.0000000000000").Replace(Vars.DecimalSeparator, '.').Trim() + ","
                     + pt.MetrAltitude.ToString("00.000").Replace(Vars.DecimalSeparator, '.').Trim() + " ";
 
             //LineString
@@ -320,8 +372,8 @@ namespace TrackConverter.Lib.Tracking.Helpers
 
             //точка
             XmlNode ppoint = parentDoc.CreateNode(XmlNodeType.Element, "Point", null);
-            string cords = tt.Coordinates.Longitude.TotalDegrees.ToString("00.0000000000000").Replace(Vars.DecimalSeparator, '.').Trim() + ","
-                + tt.Coordinates.Latitude.TotalDegrees.ToString("00.0000000000000").Replace(Vars.DecimalSeparator, '.').Trim() + ","
+            string cords = tt.Coordinates.Longitude.ToString("00.0000000000000").Replace(Vars.DecimalSeparator, '.').Trim() + ","
+                + tt.Coordinates.Latitude.ToString("00.0000000000000").Replace(Vars.DecimalSeparator, '.').Trim() + ","
                 + tt.MetrAltitude.ToString("00.000").Replace(Vars.DecimalSeparator, '.').Trim() + " ";
             ppoint.InnerXml = string.Format(@"<extrude>1</extrude><coordinates>{0}</coordinates>", cords);
             placemark.AppendChild(ppoint);
