@@ -53,33 +53,6 @@ namespace TrackConverter.UI.Common.Dialogs
         /// </summary>
         private int zoom;
 
-        /// <summary>
-        /// масштаб изображения
-        /// </summary>
-        public int Zoom
-        {
-            get { return zoom; }
-            set
-            {
-                Action act = new Action(() =>
-                {
-                    if (originalImage == null)
-                        return;
-
-                    zoom = value;
-                    int nw = originalImage.Size.Width * value;
-                    int nh = originalImage.Size.Height * value;
-                    pictureBoxImage.Image?.Dispose();
-                    pictureBoxImage.Image = resizeBitmap(originalImage, nw, nh);
-                    pictureBoxImage.Height = nh;
-                    pictureBoxImage.Width = nw;
-                });
-                if (pictureBoxImage.InvokeRequired)
-                    pictureBoxImage.Invoke(act);
-                else
-                    act.Invoke();
-            }
-        }
 
         /// <summary>
         /// изменение размера изображения
@@ -105,9 +78,8 @@ namespace TrackConverter.UI.Common.Dialogs
             InitializeComponent();
             this.photos = photos;
             this.start = start;
-            this.MouseWheel += FormShowPicture_MouseWheel;
             this.zoom = 1;
-            pictureBoxImage.SizeMode = PictureBoxSizeMode.CenterImage;
+            pictureBoxImage.SizeMode = PictureBoxSizeMode.Zoom;
 
             setOperation = new Action<string>((obj) =>
             {
@@ -134,26 +106,7 @@ namespace TrackConverter.UI.Common.Dialogs
             });
 
         }
-
-        /// <summary>
-        /// событие приближения или удаления картинки
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void FormShowPicture_MouseWheel(object sender, MouseEventArgs e)
-        {
-            if (e.Delta > 0)
-                if (Zoom == 5)
-                    return;
-                else
-                    Zoom++;
-            if (e.Delta < 0)
-                if (Zoom == 1)
-                    return;
-                else
-                    Zoom--;
-        }
-
+        
         private void formShowPicture_Shown(object sender, EventArgs e)
         {
             showPict(start);
@@ -213,8 +166,7 @@ namespace TrackConverter.UI.Common.Dialogs
                     if (Vars.dataCache.CheckImage(cur_url))
                     {
                         Image img = Vars.dataCache.GetImage(cur_url);
-                        originalImage = img;
-                        Zoom = 1; //изменение зума должн быть только после установки originalImage
+                        pictureBoxImage.Image = img;
                     }
                     else
                     {
@@ -222,8 +174,7 @@ namespace TrackConverter.UI.Common.Dialogs
                         {
                             Image imag = Image.FromFile(file);
                             Vars.dataCache.PutImage(cur_url, imag); //добавлять в кэш можно только ДО использования объекта, иначе - InvalidOperationException
-                            originalImage = imag;
-                            Zoom = 1; //изменение зума должн быть только после установки originalImage
+                            pictureBoxImage.Image = imag;
                             setOperation.Invoke("Изображение " + (cur_ind + 1) + "/" + photos.Count + ", загружено " + photos[cur_ind].TimeString);
                         }));
                     }

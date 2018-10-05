@@ -5,6 +5,7 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Text.RegularExpressions;
 using TrackConverter.Lib.Classes;
 using TrackConverter.Lib.Data.Interfaces;
 using TrackConverter.Lib.Tracking.Helpers;
@@ -540,7 +541,8 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
 
                     //описание
                     var description = html.GetElementbyId("place-description");
-                    res.Description = (description == null ? "" : description.InnerText.Trim(new[] { '\r', '\n', ' ' })).Replace("&quot;", "\"").Replace("&amp;quot;", "\"").Replace("&#039;", "'");
+                    //res.Description = (description == null ? "" : description.InnerText.Trim(new[] { '\r', '\n', ' ' })).Replace("&quot;", "\"").Replace("&amp;quot;", "\"").Replace("&#039;", "'");
+                    res.Description = description == null ? "" : parseDescription(description);
 
                     //wikipedia
                     var wikipedia = body.SelectSingleNode(@".//div[@class = 'placeinfo-row wikipedia-link']/a");
@@ -624,6 +626,34 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                     throw new Exception("Неизвестная ошибка: " + code.ToString());
             }
 
+        }
+
+        /// <summary>
+        /// получение описания объекта из HTML узла
+        /// </summary>
+        /// <param name="description">узел div, внутри которого описание объекта</param>
+        /// <returns></returns>
+        private string parseDescription(HtmlNode description)
+        {
+            string res = "";
+            foreach (var node in description.ChildNodes)
+            {
+                switch (node.Name)
+                {
+                    case "#text":
+                        res += node.InnerText;
+                        break;
+                    case "br":
+                        res += "\r\n";
+                        break;
+                    case "a":
+                        res += node.Attributes["href"].Value.Replace("/external_link?url=", "");
+                        break;
+
+                }
+            }
+            res = res.Replace("&quot;", "\"").Replace("&amp;quot;", "\"").Replace("&#039;", "'").Trim();
+            return res;
         }
 
         /// <summary>

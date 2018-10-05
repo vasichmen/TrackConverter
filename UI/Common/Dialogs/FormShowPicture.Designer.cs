@@ -75,9 +75,10 @@
             // pictureBoxImage
             // 
             this.pictureBoxImage.ContextMenuStrip = this.contextMenuStripPicture;
+            this.pictureBoxImage.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pictureBoxImage.Location = new System.Drawing.Point(3, 3);
             this.pictureBoxImage.Name = "pictureBoxImage";
-            this.pictureBoxImage.Size = new System.Drawing.Size(310, 249);
+            this.pictureBoxImage.Size = new System.Drawing.Size(730, 498);
             this.pictureBoxImage.TabIndex = 1;
             this.pictureBoxImage.TabStop = false;
             this.pictureBoxImage.MouseClick += new System.Windows.Forms.MouseEventHandler(this.pictureBoxImage_MouseClick);
@@ -93,14 +94,14 @@
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 1;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(316, 255);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(736, 504);
             this.tableLayoutPanel1.TabIndex = 2;
             // 
             // FormShowPicture
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(316, 255);
+            this.ClientSize = new System.Drawing.Size(736, 504);
             this.Controls.Add(this.tableLayoutPanel1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
