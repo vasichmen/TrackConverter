@@ -1460,15 +1460,19 @@ namespace TrackConverter.UI.Shell
 
         private void button1_Click(object sender, EventArgs e)
         {
-            
-            Wikimapia eng = new Wikimapia(Application.StartupPath+Resources.cache_directory+"\\tmp");
-            var tls = gmapControlMap.GetViewArea();
+            Image img = new Bitmap(256, 256);
+            ///MemoryStream str = new MemoryStream();
+            //img.Save(str, System.Drawing.Imaging.ImageFormat.Bmp);
+            // new GMapImage() { Img = img, Data = str };
 
-            for (int i = 0; i < 500; i++)
-                eng.GetObjects(tls, 1);
+            Graphics gr = gmapControlMap.CreateGraphics();
+            gr.DrawImage(img,0,0);
+
         }
+
+    }
 
 
     }
-}
+
 

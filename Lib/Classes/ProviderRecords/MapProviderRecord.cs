@@ -48,6 +48,7 @@ namespace TrackConverter.Lib.Classes.ProviderRecords
             switch (cl)
             {
                 case MapProviderClasses.Genshtab: return "Генштаб";
+                case MapProviderClasses.Retromap: return "Исторические карты";
                 case MapProviderClasses.Google: return "Google";
                 case MapProviderClasses.OSM: return "OpenStreetMaps";
                 case MapProviderClasses.Yandex: return "Яндекс";

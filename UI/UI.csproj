@@ -575,7 +575,7 @@
     <None Include="Data\ETOPO2\SQL\etopo2.sq3">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="f.json" />
+    <Content Include="f.js" />
     <None Include="packages.config" />
     <None Include="Properties\app.manifest" />
     <None Include="Templates\template.dot">

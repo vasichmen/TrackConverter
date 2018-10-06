@@ -784,6 +784,18 @@ namespace TrackConverter.UI.Ext
                     vectorLayersOverlay.Polygons.Clear(); //очистка карты
                     VectorLayerObjects.Clear(); //удаляем векторные объекты на экране
                     break;
+                case MapLayerProviders.None:
+                    if (rastrLayersGraphics != null)
+                        try
+                        {
+                            rastrLayersGraphics.Clear(Color.Transparent); //очистка слоя рисования растровых слоёв
+                        }
+                        catch (Exception) { }
+                    loadedAreas.Clear(); //очистка растрового слоя
+                    ToolTipPolygonTitles.RemoveAll(); //удаление подсказок на объектах
+                    vectorLayersOverlay.Polygons.Clear(); //очистка карты
+                    VectorLayerObjects.Clear(); //удаляем векторные объекты на экране
+                    break;
                 default: throw new Exception("Этот провайдер слоя не реализован");
 
             }

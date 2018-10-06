@@ -1,35 +1,47 @@
-﻿using System.Drawing;
+﻿using GMap.NET.MapProviders;
+using GMap.NET.WindowsForms;
+using System;
+using System.Drawing;
 using System.IO;
 using System.Net;
-using GMap.NET.MapProviders;
-using GMap.NET.WindowsForms;
 
 namespace TrackConverter.Lib.Data.Providers.InternetServices
 {
     /// <summary>
     /// базовый класс для поставщика карты
     /// </summary>
-    public abstract class BaseMapProvider: GMapProvider
+    public abstract class BaseMapProvider : GMapProvider
     {
 
         /// <summary>
         /// возвращает картинку тайла по запросу
         /// </summary>
         /// <param name="url">запрос к серверу</param>
+        /// <param name="referer">заголовок HTTP REFERER, который будет указан в запросе (нужен для некоторых карт)</param>
         /// <returns></returns>
-        protected static GMapImage GetGMapImage(string url)
+        protected static GMapImage GetGMapImage(string url, string referer = null)
         {
-            WebClient wc = new WebClient();
-
-            Stream str = wc.OpenRead(url);
-            if (wc.ResponseHeaders[HttpResponseHeader.ContentLength] == "0")
-                return new GMapImage();
-            GMapImage res = new GMapImage
+            try
             {
-                Data = copyStream(str)
-            };
-            res.Img = Image.FromStream(res.Data);
-            return res;
+                WebClient wc = new WebClient();
+                if (referer != null)
+                    wc.Headers[HttpRequestHeader.Referer] = referer;
+
+                Stream str = wc.OpenRead(url);
+                if (wc.ResponseHeaders[HttpResponseHeader.ContentLength] == "0")
+                    return new GMapImage();
+                GMapImage res = new GMapImage
+                {
+                    Data = copyStream(str)
+                };
+                res.Img = Image.FromStream(res.Data);
+                return res;
+            }
+            catch (Exception e) {
+                Image img = new Bitmap(256, 256);
+                MemoryStream str = new MemoryStream();
+                img.Save(str, System.Drawing.Imaging.ImageFormat.Bmp);
+                return new GMapImage() {  Img=img, Data =  str}; }
         }
 
         /// <summary>

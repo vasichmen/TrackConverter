@@ -501,7 +501,17 @@ namespace TrackConverter
         /// <summary>
         /// карты Генштаба 500 м
         /// </summary>
-        Genshtab_500m
+        Genshtab_500m,
+
+        /// <summary>
+        /// карта РККА 1941 года
+        /// </summary>
+        RKKA1941,
+
+        /// <summary>
+        /// немецкая карта подмосковья 1941
+        /// </summary>
+        GermanMoscowRegionMap1940
     }
 
     /// <summary>
@@ -528,6 +538,11 @@ namespace TrackConverter
         /// все типы карт OpenStreetMaps
         /// </summary>
         OSM,
+
+        /// <summary>
+        /// Исторические карты
+        /// </summary>
+        Retromap,
 
         /// <summary>
         /// одиночные карты 

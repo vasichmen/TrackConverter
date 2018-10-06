@@ -150,6 +150,7 @@
     <Compile Include="Data\Providers\InternetServices\Nominatim.cs" />
     <Compile Include="Data\Providers\InternetServices\OSM.cs" />
     <Compile Include="Data\Providers\InternetServices\Qps.cs" />
+    <Compile Include="Data\Providers\InternetServices\Retromap.cs" />
     <Compile Include="Data\Providers\InternetServices\RosreestrCadaster.cs" />
     <Compile Include="Data\Providers\InternetServices\Velomapa.cs" />
     <Compile Include="Data\Providers\InternetServices\VK.cs" />

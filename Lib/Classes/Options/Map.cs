@@ -78,16 +78,18 @@ namespace TrackConverter.Lib.Classes.Options
                         new MapProviderRecord(){ Enum = MapProviders.GoogleHybridMap, ID=0, Title = "Google.Гибрид",IconName="\\Images\\maps\\google_hibride.png", MapProviderClass = MapProviderClasses.Google},
                         new MapProviderRecord(){ Enum = MapProviders.GoogleMap, ID=1, Title = "Google.Схема" ,IconName="\\Images\\maps\\google_map.png", MapProviderClass = MapProviderClasses.Google},
                         new MapProviderRecord(){ Enum = MapProviders.GoogleSatelliteMap, ID=2, Title = "Google.Спутник" ,IconName="\\Images\\maps\\google_satellite.png", MapProviderClass = MapProviderClasses.Google},
-                        new MapProviderRecord(){ Enum = MapProviders.YandexHybridMap, ID=4, Title = "Яндекс.Гибрид" ,IconName="\\Images\\maps\\yandex_hibride.png", MapProviderClass = MapProviderClasses.Yandex},
-                        new MapProviderRecord(){ Enum = MapProviders.YandexMap, ID=5, Title = "Яндекс.Схема" ,IconName="\\Images\\maps\\yandex_map.png", MapProviderClass = MapProviderClasses.Yandex},
-                        new MapProviderRecord(){ Enum = MapProviders.YandexSatelliteMap, ID=6, Title = "Яндекс.Спутник" ,IconName="\\Images\\maps\\yandex_satellite.png", MapProviderClass = MapProviderClasses.Yandex},
-                        new MapProviderRecord(){ Enum = MapProviders.OpenCycleMap, ID=3, Title = "OSM Cycle Map",IconName="\\Images\\maps\\osm_cycle.png" , MapProviderClass = MapProviderClasses.OSM},
-                        new MapProviderRecord(){ Enum = MapProviders.Genshtab_1km, ID=8, Title = "Генштаб 1км" ,IconName="\\Images\\maps\\ggc_1km.png", MapProviderClass = MapProviderClasses.Genshtab},
-                        new MapProviderRecord(){ Enum = MapProviders.Genshtab_10km, ID=9, Title = "Генштаб 10км" ,IconName="\\Images\\maps\\ggc_1km.png", MapProviderClass = MapProviderClasses.Genshtab},
-                        new MapProviderRecord(){ Enum = MapProviders.Genshtab_250m, ID=10, Title = "Генштаб 250м" ,IconName="\\Images\\maps\\ggc_1km.png", MapProviderClass = MapProviderClasses.Genshtab},
-                        new MapProviderRecord(){ Enum = MapProviders.Genshtab_500m, ID=11, Title = "Генштаб 500м" ,IconName="\\Images\\maps\\ggc_1km.png", MapProviderClass = MapProviderClasses.Genshtab},
-                        new MapProviderRecord(){ Enum = MapProviders.Genshtab_5km, ID=12, Title = "Генштаб 5км" ,IconName="\\Images\\maps\\ggc_1km.png", MapProviderClass = MapProviderClasses.Genshtab},
-                        new MapProviderRecord(){ Enum = MapProviders.WikimapiaMap, ID=7, Title = "Карта Wikimapia.org" ,IconName="\\Images\\maps\\wikimapia_map.png", MapProviderClass = MapProviderClasses.None}
+                        new MapProviderRecord(){ Enum = MapProviders.YandexHybridMap, ID=3, Title = "Яндекс.Гибрид" ,IconName="\\Images\\maps\\yandex_hibride.png", MapProviderClass = MapProviderClasses.Yandex},
+                        new MapProviderRecord(){ Enum = MapProviders.YandexMap, ID=4, Title = "Яндекс.Схема" ,IconName="\\Images\\maps\\yandex_map.png", MapProviderClass = MapProviderClasses.Yandex},
+                        new MapProviderRecord(){ Enum = MapProviders.YandexSatelliteMap, ID=5, Title = "Яндекс.Спутник" ,IconName="\\Images\\maps\\yandex_satellite.png", MapProviderClass = MapProviderClasses.Yandex},
+                        new MapProviderRecord(){ Enum = MapProviders.OpenCycleMap, ID=6, Title = "OSM Cycle Map",IconName="\\Images\\maps\\osm_cycle.png" , MapProviderClass = MapProviderClasses.OSM},
+                        new MapProviderRecord(){ Enum = MapProviders.Genshtab_1km, ID=7, Title = "Генштаб 1км" ,IconName="\\Images\\maps\\ggc_1km.png", MapProviderClass = MapProviderClasses.Genshtab},
+                        new MapProviderRecord(){ Enum = MapProviders.Genshtab_10km, ID=8, Title = "Генштаб 10км" ,IconName="\\Images\\maps\\ggc_1km.png", MapProviderClass = MapProviderClasses.Genshtab},
+                        new MapProviderRecord(){ Enum = MapProviders.Genshtab_250m, ID=9, Title = "Генштаб 250м" ,IconName="\\Images\\maps\\ggc_1km.png", MapProviderClass = MapProviderClasses.Genshtab},
+                        new MapProviderRecord(){ Enum = MapProviders.Genshtab_500m, ID=10, Title = "Генштаб 500м" ,IconName="\\Images\\maps\\ggc_1km.png", MapProviderClass = MapProviderClasses.Genshtab},
+                        new MapProviderRecord(){ Enum = MapProviders.Genshtab_5km, ID=11, Title = "Генштаб 5км" ,IconName="\\Images\\maps\\ggc_1km.png", MapProviderClass = MapProviderClasses.Genshtab},
+                        new MapProviderRecord(){ Enum = MapProviders.GermanMoscowRegionMap1940, ID=12, Title = "Немецкая карта Подмосковья 1940 г. 1:50 000" ,IconName="\\Images\\maps\\ggc_1km.png", MapProviderClass = MapProviderClasses.Retromap},
+                        new MapProviderRecord(){ Enum = MapProviders.RKKA1941, ID=13, Title = "Карта РККА 1941 г. 1:100 000" ,IconName="\\Images\\maps\\ggc_1km.png", MapProviderClass = MapProviderClasses.Retromap},
+                        new MapProviderRecord(){ Enum = MapProviders.WikimapiaMap, ID=14, Title = "Карта Wikimapia.org" ,IconName="\\Images\\maps\\wikimapia_map.png", MapProviderClass = MapProviderClasses.None}
                         };
             }
             set { }

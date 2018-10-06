@@ -133,6 +133,12 @@ namespace TrackConverter.UI.Shell
                 case MapProviders.Genshtab_5km:
                     formMain.gmapControlMap.MapProvider = GenshtabGGC.KM5.Instance;
                     break;
+                case MapProviders.RKKA1941:
+                    formMain.gmapControlMap.MapProvider = Retromap.RKKA1941.Instance;
+                    break;
+                case MapProviders.GermanMoscowRegionMap1940:
+                    formMain.gmapControlMap.MapProvider = Retromap.GermanMoscowRegionMap1940.Instance;
+                    break;
                 default:
                     throw new NotSupportedException("Этот поставщик карты не поддерживается " + Vars.Options.Map.MapProvider.Enum);
             }
@@ -823,6 +829,12 @@ namespace TrackConverter.UI.Shell
                     break;
                 case MapProviders.Genshtab_5km:
                     formMain.gmapControlMap.MapProvider = GenshtabGGC.KM5.Instance;
+                    break;
+                case MapProviders.RKKA1941:
+                    formMain.gmapControlMap.MapProvider = Retromap.RKKA1941.Instance;
+                    break;
+                case MapProviders.GermanMoscowRegionMap1940:
+                    formMain.gmapControlMap.MapProvider = Retromap.GermanMoscowRegionMap1940.Instance;
                     break;
                 default:
                     throw new NotSupportedException("Этот поставщик карты не поддерживается " + mpr.Enum);
