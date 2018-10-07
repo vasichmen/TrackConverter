@@ -586,6 +586,7 @@ namespace TrackConverter.UI.Shell
         private void formMain_Shown(object sender, EventArgs e)
         {
             this.SuspendLayout();
+
             #region ВНЕШНИЙ ВИД ОКНА
 
             splitContainerHorizontalLeft.SplitterDistance = Vars.Options.Container.HorizontalLeftSplitter;

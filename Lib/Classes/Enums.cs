@@ -511,7 +511,17 @@ namespace TrackConverter
         /// <summary>
         /// немецкая карта подмосковья 1941
         /// </summary>
-        GermanMoscowRegionMap1940
+        GermanMoscowRegionMap1940,
+
+        /// <summary>
+        /// почвенная карта МО
+        /// </summary>
+        SoilMoscowRegionMap1985,
+
+        /// <summary>
+        /// Американская карта МО
+        /// </summary>
+        USMoscowRegionMap1953
     }
 
     /// <summary>

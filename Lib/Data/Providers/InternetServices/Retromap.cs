@@ -3,6 +3,7 @@ using GMap.NET.MapProviders;
 using GMap.NET.Projections;
 using GMap.NET.WindowsForms;
 using System;
+using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -14,6 +15,59 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
     /// </summary>
     public static class Retromap
     {
+        /// <summary>
+        /// вспомогательные методы для работы с картами retromap
+        /// </summary>
+        public static Service ServiceEngine;
+
+        static Retromap()
+        {
+            ServiceEngine = new Service(System.Windows.Forms.Application.StartupPath + Res.Properties.Resources.cache_directory + "\\http_cache\\wikimapia\\service");
+        }
+
+        /// <summary>
+        /// вспомогательные методы для работы с картами retromap
+        /// </summary>
+        public class Service : BaseConnection
+        {
+            public Service(string cacheDirectory, int duration = 168) : base(cacheDirectory, duration) { }
+
+            public override TimeSpan MinQueryInterval { get { return TimeSpan.FromMilliseconds(50); } }
+            public override int MaxAttempts { get { return 5; } }
+
+            /// <summary>
+            /// получить все карты Retromap, которые есть в заданной точке
+            /// </summary>
+            /// <param name="point"></param>
+            /// <returns></returns>
+            public List<string> MapsInPoint(PointLatLng point)
+            {
+                //http://www.retromap.ru/search_read_maps.php?mode=1&&lat=55.798193&lng=37.762413
+                string url = "http://www.retromap.ru/search_read_maps.php?mode=1&&lat={0}&lng={1}";
+                url = string.Format(url, point.Lat.ToString().Replace(Vars.DecimalSeparator, '.'), point.Lng.ToString().Replace(Vars.DecimalSeparator, '.'));
+                string ans = SendStringGetRequest(url, false);
+                ans = ans.Trim();
+                string[] ids = ans.Split(' ');
+                var res = new List<string>();
+                foreach (var id in ids)
+                    res.Add(id);
+                return res;
+            }
+
+            /// <summary>
+            /// проверяет наличие заданной карты в указанной точке
+            /// </summary>
+            /// <param name="mapID">значение поля MapID карты</param>
+            /// <param name="position">координаты точки</param>
+            /// <returns></returns>
+            public bool Exist(string mapID, PointLatLng position)
+            {
+                List<string> total_maps = MapsInPoint(position);
+                bool res = total_maps.Contains(mapID);
+                return res;
+            }
+        }
+
         /// <summary>
         /// базовый класс 
         /// </summary>
@@ -37,7 +91,12 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
             /// <summary>
             /// идентификатор карты (в строке адреса)
             /// </summary>
-            protected abstract string MapID { get; }
+            public abstract string MapID { get; }
+
+            /// <summary>
+            /// прямоугольник карты. Получается из свойства map_list[mapId].bounds
+            /// </summary>
+            public abstract RectLatLng Rectangle { get;}
 
             /// <summary>
             /// получить ссылку на тайл по координатам с учетом шифрования карты. Аналог фунции buckweatt
@@ -55,12 +114,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                     return string.Format(format, zoom, pos.Y, pos.X);
                 }
 
-                //проверка
-                //string q = xyToQuadKey(new GPoint(1235, 640), 11);
-                //12031010011
-
-
-                //попытка перевести функцию buckweatt 
+                //перевод функции buckweatt (x,y,z)
                 string addres;
                 int m = int.Parse(MapID);
                 string key = tileToQuadKey(pos, zoom);
@@ -70,7 +124,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                 if (Encryption != 2) //=> Encrition == 1 т.к. 3 отсеялось раньше, а 0 только что проверили
                     addres = prefix + key;
 
-                if (prefix.Length == 0 ||( prefix.Length > 0 && prefix[0] != 'F')) //сюда уже попадает только Encription == 2
+                if (prefix.Length == 0 || (prefix.Length > 0 && prefix[0] != 'F')) //сюда уже попадает только Encription == 2
                     addres = key;
                 else
                 {
@@ -88,44 +142,6 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                 string res = string.Concat(Mirrors[ind], "/", addres, ".jpg");
                 return res;
 
-
-
-                //Random rnd = new Random();
-                //int ind = rnd.Next(Mirrors.Length - 1);
-                //string key = xyToQuadKey(pos, zoom);
-                //string prefix = m_prefix(key);
-                //switch (Encryption)
-                //{
-                //    case 0://простое шифрование с QuadKey
-                //        return Mirrors[ind] + "/" + key + ".jpg";
-                //    case 1://перед QuadKey добавляется префикс, полученный из строки QuadKey с помощью алгоритма MD5
-                //        return Mirrors[ind] + "/" + prefix + key + ".jpg";
-                //    case 2://префикс и ключ модифицируются
-                //        if (prefix.Length > 0 && prefix[0] != 'F') //по какой-то причине при таком условии нужно получать картинку просто по QuadKey
-                //            return Mirrors[ind] + "/" + key + ".jpg";
-                //        string w = key,
-                //            f = "",
-                //            v = "";
-                //        if (key.Length > 16)
-                //            w = key.Substring(key.Length - 16, 16);
-                //        long wi = long.Parse(w);
-                //        string lastc = w[w.Length - 1].ToString();
-                //        long lastc_i = long.Parse(lastc);
-                //        long m_i = long.Parse(this.MapID);
-                //        string r = (wi + 10 * m_i * (lastc_i + 1)).ToString();
-                //        if (key.Length > 16)
-                //        {
-                //            f = key.Substring(0, key.Length - 16);
-                //            v = "000000".Substring(0, 16 - r.Length);
-                //        }
-                //        string res = prefix.Replace("FF", "FE") + f + v + r;
-                //        return Mirrors[ind] + "/" + res + ".jpg";
-                //    case 3://обычный тайловый способ
-                //        string format = Mirrors[ind] + @"/Z{0}/{1}/{2}.jpg";
-                //        return string.Format(format, zoom, pos.Y, pos.X);
-
-                //    default: throw new Exception("Этот способ кодировки не определён!");
-                //}
             }
 
             /// <summary>
@@ -167,23 +183,11 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                         start2 = qkey.Length + start2;
                     if ((qkey.Substring(start1, 1) == code) || (qkey.Substring(start2, 1) == "0"))
                     {
-                        string res = set_prefix(qkey + ".jpg");
+                        string res = "FF" + getHashString(" " + qkey).Substring(0, 4) + "_";
                         return res;
                     }
                 }
                 return "";
-            }
-
-            private string set_prefix(string str)
-            {
-
-                string huff = getHashString(" " + str);
-                string res = "FF" + huff.Substring(0, 4) + "_";
-
-                //проверка кодировки при расчёте хэша
-                //string h = getHashString(" 12013232300.jpg");
-                //"978127e5db4cd7a4562eac5e610068fe"
-                return res;
             }
 
             /// <summary>
@@ -248,7 +252,13 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
 
             protected override int Encryption { get { return 3; } }
 
-            protected override string MapID { get { return "14194126"; } }
+            public override string MapID { get { return "14194126"; } }
+
+            public override RectLatLng Rectangle { get {
+                    PointLatLng swest = new PointLatLng(51.9781113, 29.9487305);
+                    PointLatLng neast = new PointLatLng(58.0197334, 42.0227051);
+                    return new RectLatLng(swest.Lat, neast.Lng, neast.Lng - swest.Lng, neast.Lat - swest.Lat);
+                } }
         }
 
         public class GermanMoscowRegionMap1940 : BaseRetromap
@@ -267,9 +277,82 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
 
             protected override int Encryption { get { return 2; } }
 
-            protected override string MapID { get { return "061940"; } }
+            public override string MapID { get { return "061940"; } }
+
+            public override RectLatLng Rectangle
+            {
+                get
+                {
+                    PointLatLng swest = new PointLatLng(lat: 55.3416405, lng: 36.496582);
+                    PointLatLng neast = new PointLatLng(lat: 56.3409004, lng: 38.4960938);
+                    return new RectLatLng(swest.Lat, neast.Lng, neast.Lng - swest.Lng, neast.Lat - swest.Lat);
+                }
+            }
         }
 
+        /// <summary>
+        /// почвенная карта МО 1985
+        /// </summary>
+        public class SoilMoscowRegionMap1985 : BaseRetromap
+        {
+            public static SoilMoscowRegionMap1985 Instance;
+
+            static SoilMoscowRegionMap1985()
+            {
+                Instance = new SoilMoscowRegionMap1985();
+            }
+
+            public override Guid Id { get { return new Guid(new byte[] { 34, 56, 212, 13, 56, 52, 115, 94, 14, 105, 14, 28, 214, 38, 23, 83 }); } }
+            public override string Name { get { return "Почвенная карта Подмосковья 1985 г. 1:300 000"; } }
+            public override GMapProvider[] Overlays { get { return new GMapProvider[] { GoogleMapProvider.Instance, Instance }; } }
+            protected override string[] Mirrors { get { return new string[] { "http://www.retromap.ru/f19f53e/121988" }; } }
+
+            protected override int Encryption { get { return 0; } }
+
+            public override string MapID { get { return "121988"; } }
+
+            public override RectLatLng Rectangle
+            {
+                get
+                {
+                    PointLatLng swest = new PointLatLng(lat: 54.1624336, lng: 34.6289062);
+                    PointLatLng neast = new PointLatLng(lat: 57.1362381, lng: 40.4296875);
+                    return new RectLatLng(swest.Lat, neast.Lng, neast.Lng - swest.Lng, neast.Lat - swest.Lat);
+                }
+            }
+        }
+
+        /// <summary>
+        /// почвенная карта МО 1985
+        /// </summary>
+        public class USMoscowRegionMap1953 : BaseRetromap
+        {
+            public static USMoscowRegionMap1953 Instance;
+
+            static USMoscowRegionMap1953()
+            {
+                Instance = new USMoscowRegionMap1953();
+            }
+
+            public override Guid Id { get { return new Guid(new byte[] { 34, 56, 212, 13, 56, 52, 115, 94, 14, 105, 14, 20, 214, 38, 23, 83 }); } }
+            public override string Name { get { return "Американская карта Подмосковья 1953 г. 1:250 000"; } }
+            public override GMapProvider[] Overlays { get { return new GMapProvider[] { GoogleMapProvider.Instance, Instance }; } }
+            protected override string[] Mirrors { get { return new string[] { "http://map.host.ru/f19f53e/1419547" }; } }
+
+            protected override int Encryption { get { return 3; } }
+
+            public override string MapID { get { return "1419547"; } }
+
+            public override RectLatLng Rectangle
+            {
+                get
+                {
+                    PointLatLng swest = new PointLatLng(lat: 38.7540817, lng: 19.9511719);
+                    PointLatLng neast = new PointLatLng(lat: 70.0205841, lng: 60.2929688);
+                    return new RectLatLng(swest.Lat, neast.Lng, neast.Lng - swest.Lng, neast.Lat - swest.Lat);
+                }
+            }
+        }
 
     }
 }

@@ -1,10 +1,8 @@
 ﻿ДОБАВЛЕНИЕ НОВОЙ КАРТЫ
 0. Создать класс, наследующий TrackConverter.Lib.Data.Providers.InternetServices.BaseMapProvider
 1. TrackConverter.Lib.Classes.Enums.MapProviders добавить перечисление
-2. TrackConverter.UI.Shell.MapHelper.mpProviderToolStripMenuItem_Click()  добавить в оператор switсh
-3. TrackConverter.UI.Shell.MapHelper.ConfigureGMapControl() добавить в оператор switсh
-4. TrackConverter.UI.Tools.FormSaveMap.buttonStart_Click() добавить в оператор switсh
-5. изменить switch в методе TrackConverter.Lib.Data.MapProviderRecord.GetMapProviderClassName() ЕСЛИ ТРЕБУЕТСЯ
-6. TrackConverter.Lib.Classes.Options.Map.AllProviders  добавить информацию нового поставщика карты
+2. TrackConverter.Lib.Classes.ProviderRecords.MapProviderToClass()  добавить в оператор switсh
+3. изменить switch в методе TrackConverter.Lib.Data.MapProviderRecord.GetMapProviderClassName() ЕСЛИ ТРЕБУЕТСЯ
+4. TrackConverter.Lib.Classes.Options.Map.AllProviders  добавить информацию нового поставщика карты
 	ID должен быть порядковым номером поставщика!!! (для работы сохранения карты)
-7. Добавить в папку Images\maps файл значка карты с соответствующим именем, как в пункте 6
+5. Добавить в папку Images\maps файл значка карты с соответствующим именем, как в пункте 4

@@ -89,7 +89,9 @@ namespace TrackConverter.Lib.Classes.Options
                         new MapProviderRecord(){ Enum = MapProviders.Genshtab_5km, ID=11, Title = "Генштаб 5км" ,IconName="\\Images\\maps\\ggc_1km.png", MapProviderClass = MapProviderClasses.Genshtab},
                         new MapProviderRecord(){ Enum = MapProviders.GermanMoscowRegionMap1940, ID=12, Title = "Немецкая карта Подмосковья 1940 г. 1:50 000" ,IconName="\\Images\\maps\\ggc_1km.png", MapProviderClass = MapProviderClasses.Retromap},
                         new MapProviderRecord(){ Enum = MapProviders.RKKA1941, ID=13, Title = "Карта РККА 1941 г. 1:100 000" ,IconName="\\Images\\maps\\ggc_1km.png", MapProviderClass = MapProviderClasses.Retromap},
-                        new MapProviderRecord(){ Enum = MapProviders.WikimapiaMap, ID=14, Title = "Карта Wikimapia.org" ,IconName="\\Images\\maps\\wikimapia_map.png", MapProviderClass = MapProviderClasses.None}
+                        new MapProviderRecord(){ Enum = MapProviders.SoilMoscowRegionMap1985, ID=14, Title = "Почвенная карта Подмосковья 1985 г. 1:300 000" ,IconName="\\Images\\maps\\ggc_1km.png", MapProviderClass = MapProviderClasses.Retromap},
+                        new MapProviderRecord(){ Enum = MapProviders.USMoscowRegionMap1953, ID=15, Title = "Американская карта Подмосковья 1953 г. 1:250 000" ,IconName="\\Images\\maps\\ggc_1km.png", MapProviderClass = MapProviderClasses.Retromap},
+                        new MapProviderRecord(){ Enum = MapProviders.WikimapiaMap, ID=16, Title = "Карта Wikimapia.org" ,IconName="\\Images\\maps\\wikimapia_map.png", MapProviderClass = MapProviderClasses.None}
                         };
             }
             set { }

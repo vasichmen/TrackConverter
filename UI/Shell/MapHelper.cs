@@ -92,57 +92,8 @@ namespace TrackConverter.UI.Shell
             }
 
             //поставщик карты
-            switch (Vars.Options.Map.MapProvider.Enum)
-            {
-                case MapProviders.GoogleHybridMap:
-                    formMain.gmapControlMap.MapProvider = GMapProviders.GoogleHybridMap;
-                    break;
-                case MapProviders.GoogleMap:
-                    formMain.gmapControlMap.MapProvider = GMapProviders.GoogleMap;
-                    break;
-                case MapProviders.GoogleSatelliteMap:
-                    formMain.gmapControlMap.MapProvider = GMapProviders.GoogleSatelliteMap;
-                    break;
-                case MapProviders.OpenCycleMap:
-                    formMain.gmapControlMap.MapProvider = GMapProviders.OpenCycleMap;
-                    break;
-                case MapProviders.YandexHybridMap:
-                    formMain.gmapControlMap.MapProvider = Yandex.HybridMap.Instance;
-                    break;
-                case MapProviders.YandexMap:
-                    formMain.gmapControlMap.MapProvider = GMapProviders.YandexMap;
-                    break;
-                case MapProviders.YandexSatelliteMap:
-                    formMain.gmapControlMap.MapProvider = Yandex.SatelliteMap.Instance;
-                    break;
-                case MapProviders.WikimapiaMap:
-                    formMain.gmapControlMap.MapProvider = GMapProviders.WikiMapiaMap;
-                    break;
-                case MapProviders.Genshtab_1km:
-                    formMain.gmapControlMap.MapProvider = GenshtabGGC.KM1.Instance;
-                    break;
-                case MapProviders.Genshtab_10km:
-                    formMain.gmapControlMap.MapProvider = GenshtabGGC.KM10.Instance;
-                    break;
-                case MapProviders.Genshtab_250m:
-                    formMain.gmapControlMap.MapProvider = GenshtabGGC.M250.Instance;
-                    break;
-                case MapProviders.Genshtab_500m:
-                    formMain.gmapControlMap.MapProvider = GenshtabGGC.M500.Instance;
-                    break;
-                case MapProviders.Genshtab_5km:
-                    formMain.gmapControlMap.MapProvider = GenshtabGGC.KM5.Instance;
-                    break;
-                case MapProviders.RKKA1941:
-                    formMain.gmapControlMap.MapProvider = Retromap.RKKA1941.Instance;
-                    break;
-                case MapProviders.GermanMoscowRegionMap1940:
-                    formMain.gmapControlMap.MapProvider = Retromap.GermanMoscowRegionMap1940.Instance;
-                    break;
-                default:
-                    throw new NotSupportedException("Этот поставщик карты не поддерживается " + Vars.Options.Map.MapProvider.Enum);
-            }
-
+            formMain.gmapControlMap.MapProvider = MapProviderRecord.MapProviderToClass(Vars.Options.Map.MapProvider.Enum);
+            
             //поставщик слоя
             formMain.gmapControlMap.LayerProvider = Vars.Options.Map.LayerProvider.Enum;
 
@@ -789,59 +740,43 @@ namespace TrackConverter.UI.Shell
         internal void MpProvider_Click(object sender, EventArgs e)
         {
             MapProviderRecord mpr = (MapProviderRecord)((ToolStripMenuItem)sender).Tag;
-            switch (mpr.Enum)
-            {
-                case MapProviders.GoogleHybridMap:
-                    formMain.gmapControlMap.MapProvider = GMapProviders.GoogleHybridMap;
-                    break;
-                case MapProviders.GoogleMap:
-                    formMain.gmapControlMap.MapProvider = GMapProviders.GoogleMap;
-                    break;
-                case MapProviders.GoogleSatelliteMap:
-                    formMain.gmapControlMap.MapProvider = GMapProviders.GoogleSatelliteMap;
-                    break;
-                case MapProviders.OpenCycleMap:
-                    formMain.gmapControlMap.MapProvider = GMapProviders.OpenCycleMap;
-                    break;
-                case MapProviders.YandexHybridMap:
-                    formMain.gmapControlMap.MapProvider = Yandex.HybridMap.Instance;
-                    break;
-                case MapProviders.YandexMap:
-                    formMain.gmapControlMap.MapProvider = GMapProviders.YandexMap;
-                    break;
-                case MapProviders.YandexSatelliteMap:
-                    formMain.gmapControlMap.MapProvider = Yandex.SatelliteMap.Instance;
-                    break;
-                case MapProviders.WikimapiaMap:
-                    formMain.gmapControlMap.MapProvider = GMapProviders.WikiMapiaMap;
-                    break;
-                case MapProviders.Genshtab_1km:
-                    formMain.gmapControlMap.MapProvider = GenshtabGGC.KM1.Instance;
-                    break;
-                case MapProviders.Genshtab_10km:
-                    formMain.gmapControlMap.MapProvider = GenshtabGGC.KM10.Instance;
-                    break;
-                case MapProviders.Genshtab_250m:
-                    formMain.gmapControlMap.MapProvider = GenshtabGGC.M250.Instance;
-                    break;
-                case MapProviders.Genshtab_500m:
-                    formMain.gmapControlMap.MapProvider = GenshtabGGC.M500.Instance;
-                    break;
-                case MapProviders.Genshtab_5km:
-                    formMain.gmapControlMap.MapProvider = GenshtabGGC.KM5.Instance;
-                    break;
-                case MapProviders.RKKA1941:
-                    formMain.gmapControlMap.MapProvider = Retromap.RKKA1941.Instance;
-                    break;
-                case MapProviders.GermanMoscowRegionMap1940:
-                    formMain.gmapControlMap.MapProvider = Retromap.GermanMoscowRegionMap1940.Instance;
-                    break;
-                default:
-                    throw new NotSupportedException("Этот поставщик карты не поддерживается " + mpr.Enum);
-            }
-
+            GMapProvider newProvider = MapProviderRecord.MapProviderToClass(mpr.Enum);
 
             Vars.Options.Map.MapProvider = mpr;
+            GMapProvider provider;
+            if (mpr.MapProviderClass == MapProviderClasses.Retromap)
+            {
+                Retromap.BaseRetromap nmap = ((Retromap.BaseRetromap)(newProvider));
+                string MapID = nmap.MapID;
+                bool exist = Retromap.ServiceEngine.Exist(MapID, formMain.gmapControlMap.Position);
+                if (!exist)
+                {
+                    DialogResult dr = MessageBox.Show(formMain, "Этой карты нет в видимой области. Показать весь регион выбранной карты?", "Выбор карты", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
+                    switch (dr)
+                    {
+                        case DialogResult.Yes: //центр карты на центр выбранной карты
+                            RectLatLng rect = nmap.Rectangle;
+                            formMain.gmapControlMap.SetZoomToFitRect(rect);
+                            formMain.gmapControlMap.Position = rect.LocationMiddle;
+                            provider = newProvider;
+                            break;
+                        case DialogResult.No: //оставить всё как есть
+                            provider = newProvider;
+                            break;
+                        case DialogResult.Cancel: //отменить выбор карты
+                            provider = formMain.gmapControlMap.MapProvider;
+                            break;
+                        default: throw new Exception("Диалоговое окно вернуло некорректный ответ: " + dr.ToString());
+                    }
+
+                }
+                else
+                    provider = newProvider;
+            }
+            else
+                provider = newProvider;
+
+            formMain.gmapControlMap.MapProvider = provider;
 
             selectDropDownItems<MapProviderRecord>(formMain.toolStripDropDownButtonMapProvider, mpr.ID);
             selectDropDownItems<MapProviderRecord>(formMain.mapProviderToolStripMenuItem, mpr.ID);

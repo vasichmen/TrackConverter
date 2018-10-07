@@ -80,56 +80,7 @@ namespace TrackConverter.UI.Tools
             int id = comboBoxSaveMapProvider.SelectedIndex;
             MapProviderRecord mpr = MapProviderRecord.FromID(id);
             GMapProvider provider;
-            switch (mpr.Enum)
-            {
-                case MapProviders.GoogleHybridMap:
-                    provider = GMapProviders.GoogleHybridMap;
-                    break;
-                case MapProviders.GoogleMap:
-                    provider = GMapProviders.GoogleMap;
-                    break;
-                case MapProviders.GoogleSatelliteMap:
-                    provider = GMapProviders.GoogleSatelliteMap;
-                    break;
-                case MapProviders.OpenCycleMap:
-                    provider = GMapProviders.OpenCycleMap;
-                    break;
-                case MapProviders.YandexHybridMap:
-                    provider = Yandex.HybridMap.Instance;
-                    break;
-                case MapProviders.YandexMap:
-                    provider = GMapProviders.YandexMap;
-                    break;
-                case MapProviders.YandexSatelliteMap:
-                    provider = Yandex.SatelliteMap.Instance;
-                    break;
-                case MapProviders.WikimapiaMap:
-                    provider = GMapProviders.WikiMapiaMap;
-                    break;
-                case MapProviders.Genshtab_1km:
-                    provider = GenshtabGGC.KM1.Instance;
-                    break;
-                case MapProviders.Genshtab_10km:
-                    provider = GenshtabGGC.KM10.Instance;
-                    break;
-                case MapProviders.Genshtab_250m:
-                    provider = GenshtabGGC.M250.Instance;
-                    break;
-                case MapProviders.Genshtab_500m:
-                    provider = GenshtabGGC.M500.Instance;
-                    break;
-                case MapProviders.Genshtab_5km:
-                    provider = GenshtabGGC.KM5.Instance;
-                    break;
-                case MapProviders.RKKA1941:
-                    provider = Retromap.RKKA1941.Instance;
-                    break;
-                case MapProviders.GermanMoscowRegionMap1940:
-                    provider = Retromap.GermanMoscowRegionMap1940.Instance;
-                    break;
-                default:
-                    throw new NotSupportedException("Этот поставщик карты не поддерживается " + Vars.Options.Map.MapProvider.Enum);
-            }
+            provider = MapProviderRecord.MapProviderToClass(mpr.Enum);
 
             GMapControl parent = Program.winMain.gmapControlMap;
             gmc = new GMapControl

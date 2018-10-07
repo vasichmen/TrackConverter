@@ -38,10 +38,12 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                 return res;
             }
             catch (Exception e) {
-                Image img = new Bitmap(256, 256);
-                MemoryStream str = new MemoryStream();
-                img.Save(str, System.Drawing.Imaging.ImageFormat.Bmp);
-                return new GMapImage() {  Img=img, Data =  str}; }
+                //Image img = new Bitmap(256, 256);
+                //MemoryStream str = new MemoryStream();
+                //img.Save(str, System.Drawing.Imaging.ImageFormat.Bmp);
+                //return new GMapImage() {  Img=img, Data =  str};
+                return null;
+            }
         }
 
         /// <summary>
