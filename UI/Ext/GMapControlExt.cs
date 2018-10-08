@@ -1,4 +1,5 @@
 ﻿using GMap.NET;
+using GMap.NET.MapProviders;
 using GMap.NET.Projections;
 using GMap.NET.WindowsForms;
 using System;
@@ -10,6 +11,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using TrackConverter.Lib.Classes;
+using TrackConverter.Lib.Classes.ProviderRecords;
 using TrackConverter.Lib.Data;
 using TrackConverter.Lib.Exceptions;
 using TrackConverter.Lib.Mathematic.Geodesy.Projections.GMapImported;
@@ -58,7 +60,7 @@ namespace TrackConverter.UI.Ext
         /// <summary>
         /// цвет границы объекта
         /// </summary>
-        private readonly Pen polygonStroke = Pens.Gray;
+        private  Pen polygonStroke = Pens.Gray;
 
         /// <summary>
         /// цвет границы невидимого объекта
@@ -216,7 +218,9 @@ namespace TrackConverter.UI.Ext
             this.OnTileLoadComplete += gMapControlExt_OnTileLoadComplete;
             this.OnTileLoadStart += gMapControlExt_OnTileLoadStart;
             this.Paint += gMapControlExt_Paint;
+            this.OnMapTypeChanged += gMapControlExt_OnMapTypeChanged;
         }
+
 
         #region события карты 
 
@@ -243,6 +247,18 @@ namespace TrackConverter.UI.Ext
                         break;
                 }
             }
+        }
+
+        /// <summary>
+        /// изменение цвета контура объектов при смене карты
+        /// </summary>
+        /// <param name="type"></param>
+        private void gMapControlExt_OnMapTypeChanged(GMapProvider type)
+        {
+            MapProviders provider = Vars.Options.Map.MapProvider.Enum;
+            polygonStroke = new Pen(MapLayerProviderRecord.GetObjectBorderColor(provider));
+            foreach (var obj in vectorLayersOverlay.Polygons)
+                obj.Stroke = polygonStroke;
         }
 
         /// <summary>
