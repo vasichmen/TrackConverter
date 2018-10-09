@@ -1067,7 +1067,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                     string cb_id = "153" + rn.Next(999999).ToString() + rn.Next(999999).ToString() + "507";
                     long _ = rn.Next(23497611, 99999999);
                     string url_tm = string.Format("https://api-maps.yandex.ru/services/coverage/v2/layers_stamps?lang=ru_RU&l=trf&callback=id_{0}&_={1}", cb_id, _);
-                    string tm_jo = SendStringGetRequest(url_tm);
+                    string tm_jo = SendStringGetRequest(url_tm,false);
 
                     //получение параметра tm для следующего запроса
                     int ind = tm_jo.IndexOf("version\":\"");

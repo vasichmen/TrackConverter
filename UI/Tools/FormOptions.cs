@@ -1,8 +1,9 @@
-﻿using System;
-using System.Diagnostics;
-using System.Windows.Forms;
-using GMap.NET;
+﻿using GMap.NET;
 using IWshRuntimeLibrary;
+using System;
+using System.Diagnostics;
+using System.IO;
+using System.Windows.Forms;
 using TrackConverter.Lib.Data.Providers.Local.ETOPO;
 using TrackConverter.Res.Properties;
 
@@ -11,7 +12,7 @@ namespace TrackConverter.UI.Tools
     /// <summary>
     /// окно настроек
     /// </summary>
-    public partial class FormOptions: Form
+    public partial class FormOptions : Form
     {
         /// <summary>
         /// создает новое окно настроек
@@ -477,12 +478,15 @@ namespace TrackConverter.UI.Tools
                 Vars.dataCache.ClearGeocoder();
             if (checkBoxCacheAltitudes.Checked)
                 Vars.dataCache.ClearAltitudes();
+            if (checkBoxCacheHttp.Checked)
+                Directory.Delete(Application.StartupPath + Resources.cache_directory + "\\http_cache", true);
             if (doRestart)
             {
                 Vars.needRestart = true;
                 Application.Exit();
             }
-            MessageBox.Show("Кэш очищен!");
+            else
+                MessageBox.Show("Кэш очищен!");
         }
 
         /// <summary>

@@ -241,9 +241,7 @@ namespace TrackConverter.UI.Ext
                     case MapLayerProviders.OSMRoadSurface:
                     case MapLayerProviders.RosreestrCadaster:
                         foreach (var kv in this.loadedAreas)
-                        {
                             showRastrLayerTile(kv.Value, (GPoint)kv.Key, e.Graphics);
-                        }
                         break;
                 }
             }

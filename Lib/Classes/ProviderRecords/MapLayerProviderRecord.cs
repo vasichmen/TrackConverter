@@ -64,6 +64,7 @@ namespace TrackConverter.Lib.Classes.ProviderRecords
                 case MapProviders.Genshtab_250m:
                 case MapProviders.Genshtab_500m:
                 case MapProviders.Genshtab_5km:
+                    return Color.Red;
                 case MapProviders.SoilMoscowRegionMap1985:
                 case MapProviders.USMoscowRegionMap1953:
                 case MapProviders.GermanMoscowRegionMap1940:

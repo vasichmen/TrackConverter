@@ -183,7 +183,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                         start2 = qkey.Length + start2;
                     if ((qkey.Substring(start1, 1) == code) || (qkey.Substring(start2, 1) == "0"))
                     {
-                        string res = "FF" + getHashString(" " + qkey).Substring(0, 4) + "_";
+                        string res = "FF" + getHashString(" " + qkey + ".jpg").Substring(0, 4) + "_";
                         return res;
                     }
                 }
