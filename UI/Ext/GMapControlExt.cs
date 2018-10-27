@@ -32,7 +32,7 @@ namespace TrackConverter.UI.Ext
         public bool isControlLoaded = false;
 
         /// <summary>
-        /// слой на карте для доп. слоя
+        /// слой на карте для объектов
         /// </summary>
         public GMapOverlay vectorLayersOverlay;
 
@@ -75,7 +75,7 @@ namespace TrackConverter.UI.Ext
         /// <summary>
         /// цвет выделенного объекта
         /// </summary>
-        private readonly Brush selectedPolygonBrush = new SolidBrush(Color.FromArgb(128, Color.Red));
+        public readonly Brush selectedPolygonBrush = new SolidBrush(Color.FromArgb(128, Color.Red));
 
         /// <summary>
         /// всплывающие подсказки на объектах
@@ -411,7 +411,7 @@ namespace TrackConverter.UI.Ext
         /// прорисовка объекта слоя на карте (потокобезопасный)
         /// </summary>
         /// <param name="obj"></param>
-        private void showVectorLayerObject(VectorMapLayerObject obj)
+        public void ShowVectorLayerObject(VectorMapLayerObject obj)
         {
             if (VectorLayerObjects.ContainsKey(obj.ID))
                 return;
@@ -438,13 +438,38 @@ namespace TrackConverter.UI.Ext
         }
 
         /// <summary>
+        /// прорисовка объекта слоя на карте (потокобезопасный)
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <param name="lay">слой, на котором будет нарисован объект</param>
+        /// <param name="select">если истина, объект будет выделен</param>
+        public void ShowVectorLayerObject(GMapPolygon obj, int ID, GMapOverlay lay, bool selected)
+        {
+            if (LayerProvider == MapLayerProviders.None)
+                return;
+            obj.Fill = selected ? selectedPolygonBrush : polygonBrush;
+            obj.Stroke =polygonStroke;
+            obj.Tag = ID;
+            obj.IsHitTestVisible = true;
+            Action act = new Action(() => { lay.Polygons.Add(obj); });
+
+            if (!this.IsDisposed)
+            {
+                if (this.InvokeRequired)
+                    this.Invoke(act);
+                else
+                    act.Invoke();
+            }
+        }
+
+        /// <summary>
         /// быстрое добавление нескольких объектов
         /// </summary>
         /// <param name="list">коллекция объектов</param>
         private void showVectorLayerObjects(List<VectorMapLayerObject> list)
         {
             foreach (VectorMapLayerObject obj in list)
-                showVectorLayerObject(obj);
+                ShowVectorLayerObject(obj);
         }
 
         /// <summary>

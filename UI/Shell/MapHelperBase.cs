@@ -139,6 +139,7 @@ namespace TrackConverter.UI.Shell
             mar.Tag.PathingType = pType;
             mar.ToolTipText = point.Name;
             mar.ToolTipMode = ttMode;
+            mar.IsHitTestVisible = true;
             mar.Tag.Info = point;
             mar.Tag.Tag = tag;
 
@@ -261,6 +262,21 @@ namespace TrackConverter.UI.Shell
                 if (rect != null)
                     formMain.gmapControlMap.SetZoomToFitRect((RectLatLng)rect);
             }
+        }
+
+        /// <summary>
+        /// вывод периметра объекта на заданном слое
+        /// </summary>
+        /// <param name="track">периметр</param>
+        /// <param name="overlay">слой</param>
+        /// <param name="polygonBrush">заливка</param>
+        public void ShowPolygon(BaseTrack track, GMapOverlay overlay, Brush polygonBrush)
+        {
+            GMapPolygon pol = new GMapPolygon(track.GMapPoints, "");
+            pol.Stroke = Pens.Transparent;
+            pol.Fill = polygonBrush;
+            pol.IsHitTestVisible = false;
+            overlay.Polygons.Add(pol);
         }
 
         /// <summary>

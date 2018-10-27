@@ -193,6 +193,18 @@
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="Map\FormEditPolygon.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Map\FormEditPolygon.Designer.cs">
+      <DependentUpon>FormEditPolygon.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Map\FormEditWikimapiaObject.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Map\FormEditWikimapiaObject.Designer.cs">
+      <DependentUpon>FormEditWikimapiaObject.cs</DependentUpon>
+    </Compile>
     <Compile Include="Map\FormShowObjectInfo.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -347,6 +359,7 @@
     <Content Include="Docs\добавление формата файла.txt" />
     <Content Include="Docs\СК, проекции и прочее.txt" />
     <Content Include="Docs\стандарты.txt" />
+    <Content Include="f.js" />
     <Content Include="Images\icons\001.ico">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -467,9 +480,6 @@
     <Content Include="readme.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="sr.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <EmbeddedResource Include="Common\Dialogs\FormChooseVariant.resx">
       <DependentUpon>FormChooseVariant.cs</DependentUpon>
     </EmbeddedResource>
@@ -493,6 +503,12 @@
     <EmbeddedResource Include="Common\FormBrowser.resx">
       <DependentUpon>FormBrowser.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Map\FormEditPolygon.resx">
+      <DependentUpon>FormEditPolygon.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Map\FormEditWikimapiaObject.resx">
+      <DependentUpon>FormEditWikimapiaObject.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Map\FormShowObjectInfo.resx">
       <DependentUpon>FormShowObjectInfo.cs</DependentUpon>
@@ -575,7 +591,6 @@
     <None Include="Data\ETOPO2\SQL\etopo2.sq3">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <Content Include="f.js" />
     <None Include="packages.config" />
     <None Include="Properties\app.manifest" />
     <None Include="Templates\template.dot">

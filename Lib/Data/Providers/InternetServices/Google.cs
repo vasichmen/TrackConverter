@@ -521,7 +521,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                                 XmlNode r1 = xml["DirectionsResponse"]["route"]["leg"]["distance"]["value"];
                                 string routel = r1.InnerText;
                                 double distance = double.Parse(routel);
-                                res.setDistance(distance);
+                                res.SetDistance(distance);
                                 row.Add(res);
 
                                 //запись данных маршрута в файл

@@ -256,3 +256,4 @@ UrlCache/*
 *.diagsession
 /док апи карт
 /документация gmap
+/Privoxy/*

@@ -197,6 +197,7 @@ namespace TrackConverter.Lib.Tracking
         {
             get
             {
+                
                 List<PointLatLng> gr = new List<PointLatLng>();
                 foreach (TrackPoint tt in Track)
                     gr.Add(tt.Coordinates.GMap);
@@ -204,6 +205,7 @@ namespace TrackConverter.Lib.Tracking
                 return gr;
             }
         }
+        
 
         #endregion
 
@@ -620,8 +622,9 @@ namespace TrackConverter.Lib.Tracking
                 return tf;
             if (tf == null)
                 return new TrackFile() { tp };
-            tf.Track.Add(tp);
-            return tf;
+            TrackFile res = (TrackFile)tf.Clone();
+            res.Track.Add(tp);
+            return res;
         }
 
         /// <summary>

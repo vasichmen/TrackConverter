@@ -126,12 +126,12 @@ namespace TrackConverter.Lib.Tracking
         /// <summary>
         /// Имя точки
         /// </summary>
-        public string Name { get => name; set { name = value.Replace(",", " ").Replace("\r\n", ""); } }
+        public string Name { get => name; set { name = value?.Replace(",", " ").Replace("\r\n", ""); } }
 
         /// <summary>
         /// Описание точки
         /// </summary>
-        public string Description { get => description; set { description = value.Replace(",", " ").Replace("\r\n", ""); } }
+        public string Description { get => description; set { description = value?.Replace(",", " ").Replace("\r\n", ""); } }
 
         /// <summary>
         /// Скорость в этой точке в км/ч
@@ -375,6 +375,7 @@ namespace TrackConverter.Lib.Tracking
             else
                 return false;
         }
+
 
 
 

@@ -79,6 +79,11 @@ namespace TrackConverter.UI
         public static FormEditRoute winRouteEditor;
 
         /// <summary>
+        /// окно инструментов редактора маршрута
+        /// </summary>
+        public static FormEditPolygon winPolygonEditor;
+
+        /// <summary>
         /// окно ожидания
         /// </summary>
         public static FormWaiting winWaiting;
@@ -114,7 +119,7 @@ namespace TrackConverter.UI
         public static bool winWaitingNullOrDisposed { get { return winWaiting == null || winWaiting.IsDisposed; } }
         public static bool winSaveMapNullOrDisposed { get { return winSaveMap == null || winSaveMap.IsDisposed; } }
         public static bool winOptionsNullOrDisposed { get { return winOptions == null || winOptions.IsDisposed; } }
-        public static bool winWikimapiaToolbarNullOrDisposed { get {return winWikimapiaToolbar == null || winWikimapiaToolbar.IsDisposed; } }
+        public static bool winWikimapiaToolbarNullOrDisposed { get { return winWikimapiaToolbar == null || winWikimapiaToolbar.IsDisposed; } }
 
 
         /// <summary>
@@ -194,15 +199,14 @@ namespace TrackConverter.UI
                 Top = Vars.Options.Container.WinPosition.Y
             };
 
-            //winMain.splitContainerHorizontalLeft.SplitterDistance  = Vars.Options.Container.HorizontalLeftSplitter;
-            //winMain.splitContainerHorizontalRight.SplitterDistance = Vars.Options.Container.HorizontalRightSplitter;
-            //winMain.splitContainerVertical.SplitterDistance = Vars.Options.Container.VerticalSplitter;
 
             //создание окна ожидания
             winWaiting = new FormWaiting();
 
 
             #endregion
+
+
 
             #region запись статистики, проверка версии
 
@@ -296,8 +300,8 @@ namespace TrackConverter.UI
             //если требуется - очистка кэша карт
             if (Vars.clearMapCacheAfterExit)
                 Directory.Delete(Application.StartupPath + Resources.cache_directory + "\\TileDBv5", true);
-            else
-                GMaps.Instance.OptimizeMapDb(null);
+            //else
+            // GMaps.Instance.OptimizeMapDb(null);
 
             //если требуется перезапуск
             if (Vars.needRestart)
@@ -383,7 +387,8 @@ namespace TrackConverter.UI
             {
                 if (Vars.TaskLoadingETOPO.Status == TaskStatus.RanToCompletion || Vars.TaskLoadingETOPO.IsCompleted)
                     Vars.TaskLoadingETOPO = getETOPOLoadingTask();
-                winMain.BeginOperation();
+                if (winMain != null)
+                    winMain.BeginOperation();
                 Vars.TaskLoadingETOPO.Start();
             }
 
@@ -403,7 +408,10 @@ namespace TrackConverter.UI
                  try
                  {
                      if (GeoInfo.IsETOPOReady)
-                         GeoInfo.ETOPOProvider = new ETOPOProvider(Vars.Options.DataSources.ETOPODBFolder, winMain.SetCurrentOperation);
+                         if (winMain == null)
+                             GeoInfo.ETOPOProvider = new ETOPOProvider(Vars.Options.DataSources.ETOPODBFolder, null);
+                         else
+                             GeoInfo.ETOPOProvider = new ETOPOProvider(Vars.Options.DataSources.ETOPODBFolder, winMain.SetCurrentOperation);
                      else throw new ApplicationException("База данных ETOPO не установлена. Укажите в настройках путь к файлам базы данных");
                  }
                  catch (Exception exc)
@@ -414,7 +422,8 @@ namespace TrackConverter.UI
                  }
                  finally
                  {
-                     winMain.EndOperation();
+                     if (winMain != null)
+                         winMain.EndOperation();
                  }
              }));
         }

@@ -69,12 +69,12 @@ namespace TrackConverter.Lib.Classes
         /// <summary>
         /// долгота
         /// </summary>
-        public readonly double Longitude;
+        public  double Longitude { get; set; }
 
         /// <summary>
         /// широта
         /// </summary>
-        public readonly double Latitude;
+        public  double Latitude { get; set; }
 
         /// <summary>
         /// координата в формате GMap

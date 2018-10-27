@@ -708,10 +708,14 @@ namespace TrackConverter
         TrrFile,
 
         /// <summary>
+        /// формат csv для импорта в карту яндекса (точки)
+        /// </summary>
+        CsvYandexFile,
+
+        /// <summary>
         /// неопределенный формат файла
         /// </summary>
         Undefined
-
     }
 
     /// <summary>

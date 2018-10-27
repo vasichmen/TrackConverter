@@ -42,14 +42,13 @@ namespace TrackConverter.UI.Map
         /// <param name="Title">Заголовок окна редактирования</param>
         public FormEditRoute(string Title, TrackFile route,GMapOverlay overlay, Action<TrackFile> actionAfter, Action cancelAction)
         {
-            
             InitializeComponent();
             this.actionAfter = actionAfter;
             this.cancelAction = cancelAction;
             this.route = route;
             this.overlay = overlay;
             this.Text = Title;
-            Program.winMain.selectedPointIndex = route.Count-1;
+            Program.winMain.selectedRoutePointIndex = route.Count-1;
         }
 
         /// <summary>
@@ -65,17 +64,17 @@ namespace TrackConverter.UI.Map
             if (this.route.Count == 0) { return; }
 
             //удаление из списка точек
-            this.route.Remove(Program.winMain.selectedPointIndex);
+            this.route.Remove(Program.winMain.selectedRoutePointIndex);
             //удаление из списка маркеров
-            this.overlay.Markers.RemoveAt(Program.winMain.selectedPointIndex);
+            this.overlay.Markers.RemoveAt(Program.winMain.selectedRoutePointIndex);
 
             //если можно, уменьшение индекса
-            if (Program.winMain.selectedPointIndex > 0)
-                Program.winMain.selectedPointIndex--;
+            if (Program.winMain.selectedRoutePointIndex > 0)
+                Program.winMain.selectedRoutePointIndex--;
             else
                 //если уменьшать некуда, но есть еще точки, то выделяем первую точку
                 if (this.route.Count > 0)
-                    Program.winMain.selectedPointIndex = 0;
+                    Program.winMain.selectedRoutePointIndex = 0;
 
             //обновление карты
             if (Program.winMain.isCreatingRoute)
@@ -133,7 +132,7 @@ namespace TrackConverter.UI.Map
             Program.winMain.toolStripLabelFromStart.Text = "";
             Program.winMain.toolStripLabelInfo.Text = "";
             this.overlay.Clear();
-            Program.winMain.selectedPointIndex = 0;
+            Program.winMain.selectedRoutePointIndex = 0;
             Program.winMain.gmapControlMap.DragButton = MouseButtons.Left;
         }
     }

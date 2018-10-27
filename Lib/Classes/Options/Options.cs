@@ -67,6 +67,11 @@ namespace TrackConverter.Lib.Classes.Options
         public Container Container { get; set; }
 
         /// <summary>
+        /// настройки авторизации на сайтах
+        /// </summary>
+        public Auth Auth { get; set; }
+
+        /// <summary>
         /// формат сохранения настроек
         /// </summary>
         public OptionsFormat Format { get; set; }

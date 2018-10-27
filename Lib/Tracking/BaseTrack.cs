@@ -1,11 +1,11 @@
-﻿using System;
+﻿using GMap.NET;
+using Newtonsoft.Json;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
 using System.IO;
-using GMap.NET;
-using Newtonsoft.Json;
 using TrackConverter.Lib.Exceptions;
 using TrackConverter.Lib.Mathematic.Geodesy;
 
@@ -44,6 +44,33 @@ namespace TrackConverter.Lib.Tracking
                 else
                     return
                         distance;
+            }
+        }
+
+        /// <summary>
+        /// прямоугольные границы маршрута
+        /// </summary>
+        public RectLatLng Bounds
+        {
+            get
+            {
+                double latMin = double.MaxValue;
+                double lonMin = double.MaxValue;
+                double latMax = double.MinValue;
+                double lonMax = double.MinValue;
+                foreach (var pt in this)
+                {
+                    if (pt.Coordinates.Latitude < latMin)
+                        latMin = pt.Coordinates.Latitude;
+                    if (pt.Coordinates.Longitude < lonMin)
+                        lonMin = pt.Coordinates.Longitude;
+                    if (pt.Coordinates.Latitude > latMax)
+                        latMax = pt.Coordinates.Latitude;
+                    if (pt.Coordinates.Longitude > lonMax)
+                        lonMax = pt.Coordinates.Longitude;
+                }
+                RectLatLng res = new RectLatLng(latMax, lonMin, lonMax - lonMin, latMax - latMin);
+                return res;
             }
         }
 
@@ -317,7 +344,7 @@ namespace TrackConverter.Lib.Tracking
         /// запись поля только для чтения Distance
         /// </summary>
         /// <param name="newDist">расстояние маршрута в километрах</param>
-        public void setDistance(double newDist)
+        public void SetDistance(double newDist)
         {
             this.distance = newDist;
             this.lockDist = true;
@@ -403,7 +430,7 @@ namespace TrackConverter.Lib.Tracking
         /// <returns></returns>
         internal TrackPoint Find(double lat, double lng)
         {
-            BaseTrack trf=null;
+            BaseTrack trf = null;
             if (this is TrackFile)
                 trf = this;
             else if (this is TripRouteFile)

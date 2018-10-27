@@ -787,7 +787,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                                     //сохранения расстояния
                                     string routel = route.ToString();
                                     double distance = double.Parse(routel);
-                                    res.setDistance(distance);
+                                    res.SetDistance(distance);
                                     row.Add(res);
 
                                     //запись данных маршрута в файл

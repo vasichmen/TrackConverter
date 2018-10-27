@@ -960,6 +960,7 @@ readLength:
             sf.Filter += "|Файл OpenStreetMaps(*.osm)|*.osm";
             sf.Filter += "|Файл NMEA(*.nmea)|*.nmea";
             sf.Filter += "|Файл Excel(*.csv)|*.csv";
+            sf.Filter += "|Файл Яндекс (*.csv)|*.csv"; //не менять позицию этого пункта! (ниже от него зависит яндекс csv)
             sf.Filter += "|Текстовый файл(*.txt)|*.txt";
 
             sf.AddExtension = true;
@@ -973,6 +974,7 @@ readLength:
             if (sf.ShowDialog() == DialogResult.OK)
             {
                 BaseTrack bt;
+                //если надо сохранить адреса в файл wpt
                 if (sf.FilterIndex == 4)
                 {
                     bt = trip.Waypoints.Clone();
@@ -980,6 +982,11 @@ readLength:
                 }
                 else
                     bt = trip.Waypoints;
+
+                //если надо сохранить в формате яндекс csv
+                bool isYandexCsv = false;
+                if (sf.FilterIndex == 14)
+                    isYandexCsv = true;
 
                 switch (Path.GetExtension(sf.FileName).ToLower())
                 {
@@ -1011,7 +1018,7 @@ readLength:
                         Serializer.Serialize(sf.FileName, bt, FileFormats.NmeaFile);
                         break;
                     case ".csv":
-                        Serializer.Serialize(sf.FileName, bt, FileFormats.CsvFile);
+                        Serializer.Serialize(sf.FileName, bt,isYandexCsv?FileFormats.CsvYandexFile: FileFormats.CsvFile);
                         break;
                     case ".txt":
                         Serializer.Serialize(sf.FileName, bt, FileFormats.TxtFile);

@@ -143,6 +143,10 @@ namespace TrackConverter.UI.Shell
             this.clearFromtoMarkersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemWhatsThere = new System.Windows.Forms.ToolStripMenuItem();
             this.copyCoordinatesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.wikimapiaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.createObjectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.editObjectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.removeObjectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStripMarker = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.editMarkerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.deleteMarkerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -1216,7 +1220,7 @@ namespace TrackConverter.UI.Shell
             // 
             this.zedGraph.Dock = System.Windows.Forms.DockStyle.Fill;
             this.zedGraph.Location = new System.Drawing.Point(0, 0);
-            this.zedGraph.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.zedGraph.Margin = new System.Windows.Forms.Padding(4);
             this.zedGraph.Name = "zedGraph";
             this.zedGraph.ScrollGrace = 0D;
             this.zedGraph.ScrollMaxX = 0D;
@@ -1239,9 +1243,10 @@ namespace TrackConverter.UI.Shell
             this.toolStripMenuItemAddWaypoint,
             this.созданиеМаршрутаToolStripMenuItem,
             this.toolStripMenuItemWhatsThere,
-            this.copyCoordinatesToolStripMenuItem});
+            this.copyCoordinatesToolStripMenuItem,
+            this.wikimapiaToolStripMenuItem});
             this.contextMenuStripMap.Name = "contextMenuStripMap";
-            this.contextMenuStripMap.Size = new System.Drawing.Size(214, 108);
+            this.contextMenuStripMap.Size = new System.Drawing.Size(214, 156);
             this.contextMenuStripMap.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStripMap_Opening);
             // 
             // toolStripMenuItemAddWaypoint
@@ -1316,6 +1321,37 @@ namespace TrackConverter.UI.Shell
             this.copyCoordinatesToolStripMenuItem.Text = "Копировать координаты";
             this.copyCoordinatesToolStripMenuItem.Click += new System.EventHandler(this.copyCoordinatesToolStripMenuItem_Click);
             // 
+            // wikimapiaToolStripMenuItem
+            // 
+            this.wikimapiaToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.createObjectToolStripMenuItem,
+            this.editObjectToolStripMenuItem,
+            this.removeObjectToolStripMenuItem});
+            this.wikimapiaToolStripMenuItem.Name = "wikimapiaToolStripMenuItem";
+            this.wikimapiaToolStripMenuItem.Size = new System.Drawing.Size(213, 26);
+            this.wikimapiaToolStripMenuItem.Text = "Wikimapia";
+            // 
+            // createObjectToolStripMenuItem
+            // 
+            this.createObjectToolStripMenuItem.Name = "createObjectToolStripMenuItem";
+            this.createObjectToolStripMenuItem.Size = new System.Drawing.Size(195, 22);
+            this.createObjectToolStripMenuItem.Text = "Создать объект";
+            this.createObjectToolStripMenuItem.Click += new System.EventHandler(this.createObjectToolStripMenuItem_Click);
+            // 
+            // editObjectToolStripMenuItem
+            // 
+            this.editObjectToolStripMenuItem.Name = "editObjectToolStripMenuItem";
+            this.editObjectToolStripMenuItem.Size = new System.Drawing.Size(195, 22);
+            this.editObjectToolStripMenuItem.Text = "Редактировать объект";
+            this.editObjectToolStripMenuItem.Click += new System.EventHandler(this.editObjectToolStripMenuItem_Click);
+            // 
+            // removeObjectToolStripMenuItem
+            // 
+            this.removeObjectToolStripMenuItem.Name = "removeObjectToolStripMenuItem";
+            this.removeObjectToolStripMenuItem.Size = new System.Drawing.Size(195, 22);
+            this.removeObjectToolStripMenuItem.Text = "Удалить объект";
+            this.removeObjectToolStripMenuItem.Click += new System.EventHandler(this.removeObjectToolStripMenuItem_Click);
+            // 
             // contextMenuStripMarker
             // 
             this.contextMenuStripMarker.ImageScalingSize = new System.Drawing.Size(20, 20);
@@ -1376,7 +1412,7 @@ namespace TrackConverter.UI.Shell
             this.tableLayoutPanel1.Controls.Add(this.toolStrip4, 1, 0);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 699);
-            this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(2);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 1;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
@@ -1639,6 +1675,10 @@ namespace TrackConverter.UI.Shell
         private System.Windows.Forms.ToolStripButton toolStripButtonLocateDevice;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.ToolStripMenuItem loadAddressesToolStripMenuItem;
+        public System.Windows.Forms.ToolStripMenuItem wikimapiaToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem createObjectToolStripMenuItem;
+        public System.Windows.Forms.ToolStripMenuItem editObjectToolStripMenuItem;
+        public System.Windows.Forms.ToolStripMenuItem removeObjectToolStripMenuItem;
     }
 }
 

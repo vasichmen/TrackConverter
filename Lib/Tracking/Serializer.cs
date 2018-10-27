@@ -1,3 +1,4 @@
+using ICSharpCode.SharpZipLib.Zip;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -6,9 +7,9 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml;
-using ICSharpCode.SharpZipLib.Zip;
 using TrackConverter.Lib.Classes;
 using TrackConverter.Lib.Data;
+using TrackConverter.Lib.Data.Providers.InternetServices;
 using TrackConverter.Lib.Tracking.Helpers;
 using TrackConverter.Res;
 using TrackConverter.Res.Properties;
@@ -75,6 +76,9 @@ namespace TrackConverter.Lib.Tracking
                     return null;
                 case FileFormats.CsvFile:
                     ExportCSV(FileName, track);
+                    return null;
+                case FileFormats.CsvYandexFile:
+                    ExportCSV(FileName, track,true);
                     return null;
                 case FileFormats.AddressList:
                     exportADRS(FileName, track, callback);
@@ -392,30 +396,58 @@ namespace TrackConverter.Lib.Tracking
         /// <param name="FilePath">путь к файлу</param>
         private static TrackFile loadCSV(string FilePath)
         {
-            TrackFile res = new TrackFile();
             StreamReader inputS = new StreamReader(FilePath, new UTF8Encoding(false), true);
-            inputS.ReadLine();
-            //заголовок и информация
-            //<название трека>;<описание трека>;<длина, км>;<время>;<скорость>;<количчество точек>
-            while (!inputS.EndOfStream)
+            string type = inputS.ReadLine();
+            if (type.Contains("\"Широта\";\"Долгота\";\"Описание\";\"Подпись\";\"Номер метки\"")) // если это файл яндекс точек
             {
-                string[] line = Regex.Split(inputS.ReadLine(), "w*,w*");
-                TrackPoint pt = new TrackPoint(line[1], line[2])
+                TrackFile res = new TrackFile();
+                
+                //"Широта";"Долгота";"Описание";"Подпись";"Номер метки"
+                while (!inputS.EndOfStream)
                 {
-                    MetrAltitude = Convert.ToDouble(line[3].Replace('.', Vars.DecimalSeparator)),
-                    Time = DateTime.Parse(line[4])
-                };
-                TimeSpan tod = TimeSpan.Parse(line[5]);
-                pt.Time = pt.Time.Add(tod);
-                pt.Icon = IconOffsets.CREATING_ROUTE_MARKER;
-                res.Add(pt);
-            }
+                    string[] line = Regex.Split(inputS.ReadLine(), "w*;w*");
+                    if (line.Length < 4)
+                        continue;
+                    TrackPoint pt = new TrackPoint(line[0], line[1])
+                    {
+                        Description = line[2],
+                        Name = line[3].Trim('"')             
+                    };
+                    pt.Icon = IconOffsets.MARKER;
+                    res.Add(pt);
+                }
 
+                res.Name = Path.GetFileName(FilePath);
+                res.FilePath = FilePath;
+                return res;
+            }
+            else //если что-то другое
+            {
+                TrackFile res = new TrackFile();
+
+                //заголовок и информация
+                //<название трека>;<описание трека>;<длина, км>;<время>;<скорость>;<количчество точек>
+                while (!inputS.EndOfStream)
+                {
+                    string[] line = Regex.Split(inputS.ReadLine(), "w*,w*");
+                    TrackPoint pt = new TrackPoint(line[1], line[2])
+                    {
+                        MetrAltitude = Convert.ToDouble(line[3].Replace('.', Vars.DecimalSeparator)),
+                        Time = DateTime.Parse(line[4])
+                    };
+                    TimeSpan tod = TimeSpan.Parse(line[5]);
+                    pt.Time = pt.Time.Add(tod);
+                    pt.Icon = IconOffsets.CREATING_ROUTE_MARKER;
+                    res.Add(pt);
+                }
+
+                res.CalculateAll();
+                res.Name = Path.GetFileName(FilePath);
+                res.FilePath = FilePath;
+                return res;
+            }
             inputS.Close();
-            res.CalculateAll();
-            res.Name = Path.GetFileName(FilePath);
-            res.FilePath = FilePath;
-            return res;
+
         }
 
         /// <summary>
@@ -461,13 +493,13 @@ namespace TrackConverter.Lib.Tracking
                 {
                     line = Regex.Split(inputS.ReadLine(), "w*,w*");
                     string title = line[0];
-                                        switch (title.ToLower())
+                    switch (title.ToLower())
                     {
-                       
+
                         case "$gprmc":
                             TrackPoint pt = null;
-                            string lat =string.Concat( line[3] , ',' , line[4]);
-                            string lon = string.Concat(line[5] , ',' , line[6]);
+                            string lat = string.Concat(line[3], ',', line[4]);
+                            string lon = string.Concat(line[5], ',', line[6]);
                             string date = line[9];
                             string time = line[1];
                             Coordinate cord = Coordinate.Parse(string.Concat(lat, "#", lon), "lat#lon", "ddmm.mmm,H");
@@ -1256,23 +1288,42 @@ namespace TrackConverter.Lib.Tracking
         /// </summary>
         /// <param name="FileName">Имя файла</param>
         /// <param name="Track">трек для экспорта</param>
-        public static void ExportCSV(string FileName, BaseTrack Track)
+        public static void ExportCSV(string FileName, BaseTrack Track, bool isYandexFormat = false)
         {
-            Directory.CreateDirectory(Path.GetDirectoryName(FileName));
-            StreamWriter outputS = new StreamWriter(FileName, false, new UTF8Encoding(false));
-            outputS.WriteLine("No,Latitude,Longitude,Altitude,Date,Time");
-            int i = 1;
-            foreach (TrackPoint pt in Track)
-            {
-                string lat = pt.Coordinates.Latitude.ToString().Replace(Vars.DecimalSeparator, '.');
-                string lon = pt.Coordinates.Longitude.ToString().Replace(Vars.DecimalSeparator, '.');
-                string alt = pt.MetrAltitude.ToString().Replace(Vars.DecimalSeparator, '.');
-                string date = pt.Time.Date.ToString("yyyy/MM/dd").Replace('.', '/');
-                string time = pt.Time.TimeOfDay.ToString();
-                outputS.WriteLine("{0},{1},{2},{3},{4},{5}", i, lat, lon, alt, date, time);
-                i++;
+            if (isYandexFormat) {
+                Directory.CreateDirectory(Path.GetDirectoryName(FileName));
+                StreamWriter outputS = new StreamWriter(FileName, false, new UTF8Encoding(false));
+                outputS.WriteLine("\"Широта\";\"Долгота\";\"Описание\";\"Подпись\";\"Номер метки\"");
+                int i = 1;
+                foreach (TrackPoint pt in Track)
+                {
+                    string lat = pt.Coordinates.Latitude.ToString().Replace(Vars.DecimalSeparator, '.');
+                    string lon = pt.Coordinates.Longitude.ToString().Replace(Vars.DecimalSeparator, '.');
+                    string desc = pt.Description.Replace(";",",");
+                    string name = pt.Name.Replace(";",",");
+                    outputS.WriteLine("{0};{1};{2};{3};{4}", lat, lon, desc,name,i );
+                    i++;
+                }
+                outputS.Close();
             }
-            outputS.Close();
+            else
+            {
+                Directory.CreateDirectory(Path.GetDirectoryName(FileName));
+                StreamWriter outputS = new StreamWriter(FileName, false, new UTF8Encoding(false));
+                outputS.WriteLine("No,Latitude,Longitude,Altitude,Date,Time");
+                int i = 1;
+                foreach (TrackPoint pt in Track)
+                {
+                    string lat = pt.Coordinates.Latitude.ToString().Replace(Vars.DecimalSeparator, '.');
+                    string lon = pt.Coordinates.Longitude.ToString().Replace(Vars.DecimalSeparator, '.');
+                    string alt = pt.MetrAltitude.ToString().Replace(Vars.DecimalSeparator, '.');
+                    string date = pt.Time.Date.ToString("yyyy/MM/dd").Replace('.', '/');
+                    string time = pt.Time.TimeOfDay.ToString();
+                    outputS.WriteLine("{0},{1},{2},{3},{4},{5}", i, lat, lon, alt, date, time);
+                    i++;
+                }
+                outputS.Close();
+            }
         }
 
         /// <summary>
@@ -1442,25 +1493,9 @@ namespace TrackConverter.Lib.Tracking
             int latBase, lonBase;
             latBase = (int)(Track.AllLatitudes.Min<double>() * 10000000);
             lonBase = (int)(Track.AllLongitudes.Min<double>() * 10000000);
-            res += string.Format("{1};{0}", latBase, lonBase);
-            for (int i = 1; i < Track.Count; i += step)
-            {
-                string ndata = "";
-                int dlonA = (int)(Track[i].Coordinates.Longitude * 10000000);
-                int dlatA = (int)(Track[i].Coordinates.Latitude * 10000000);
-                int dlon = dlonA - lonBase;
-                int dlat = dlatA - latBase;
-                ndata += ";" + dlon.ToString() + ";" + dlat.ToString();
-                res += ndata;
-            }
-            //добавление последней точки
-            string ndata1 = "";
-            int dlonA1 = (int)(Track[Track.Count - 1].Coordinates.Longitude * 10000000);
-            int dlatA1 = (int)(Track[Track.Count - 1].Coordinates.Latitude * 10000000);
-            int dlon1 = dlonA1 - lonBase;
-            int dlat1 = dlatA1 - latBase;
-            ndata1 += ";" + dlon1.ToString() + ";" + dlat1.ToString();
-            res += ndata1;
+            res += string.Format("{1};{0};", latBase, lonBase);
+            res += Wikimapia.GetPolygon(Track, step);
+
             return res;
         }
 
@@ -1649,10 +1684,27 @@ namespace TrackConverter.Lib.Tracking
             string header = sr.ReadLine();
             string version = Regex.Split(header, "w* w*")[4];
 
+            string allData = sr.ReadToEnd();
+            sr.Close();
+
             switch (version)
             {
                 case "1.0":
-                    string allData = sr.ReadToEnd();
+                {
+                    string[] parts = Regex.Split(allData, "w*" + TrrHelper.separatorMain + "w*");
+
+                    string info = parts[1];
+                    string routes = parts[2];
+                    string wpts = parts[3];
+
+                    TripRouteFile res = TrrHelper.GetInformation(info);
+                    res.DaysRoutes = TrrHelper.GetRoutes10(routes);
+                    res.Waypoints = TrrHelper.GetWaypoints10(wpts);
+                    res.FilePath = fileName;
+                    return res;
+                }
+                case "2.0":
+                {
                     string[] parts = Regex.Split(allData, "w*" + TrrHelper.separatorMain + "w*");
 
                     string info = parts[1];
@@ -1663,8 +1715,8 @@ namespace TrackConverter.Lib.Tracking
                     res.DaysRoutes = TrrHelper.GetRoutes(routes);
                     res.Waypoints = TrrHelper.GetWaypoints(wpts);
                     res.FilePath = fileName;
-                    sr.Close();
                     return res;
+                }
                 default:
                     throw new ApplicationException("Версия файла " + version + " не поддерживается в этой версии программы. Обновите Track Converter!");
             }

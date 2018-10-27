@@ -1,6 +1,7 @@
 ﻿using HtmlAgilityPack;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.IO;
@@ -53,6 +54,9 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         private readonly bool useCache;
         private readonly string cacheDirectory;
         private readonly int duration;
+        public static bool UseProxy = false;
+        private readonly string ProxyHost = "127.0.0.1";
+        private readonly int ProxyPort = 8118;
         private FileSystemCache cache;
 
         /// <summary>
@@ -171,7 +175,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         /// <returns></returns>
         protected HtmlDocument SendHtmlPostRequest(string url, string data)
         {
-            string ans = SendStringPostRequest(url, data);
+            string ans = SendStringPostRequest(url, data,null);
             //StreamReader sr = new StreamReader("sr.txt");
             //string ans = sr.ReadToEnd();
             //sr.Close();
@@ -180,6 +184,26 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
             doc.LoadHtml(ans);
 
             return doc;
+        }
+
+        /// <summary>
+        /// отправка POST запроса с ответом в формате JSON
+        /// </summary>
+        /// <param name="url">адрес</param>
+        /// <param name="data">данные</param>
+        /// <returns></returns>
+        protected JObject SendJsonPostRequest(string url, string data, CookieCollection cookies)
+        {
+            JObject jobj;
+            string json = SendStringPostRequest(url, data,cookies);
+            if (string.IsNullOrWhiteSpace(json))
+                throw new Exception("Что-то не так с запросом - пустой ответ сервера");
+            json = json.Substring(json.IndexOf('{'));
+            json = json.TrimEnd(new char[] { ';', ')' });
+            try
+            { jobj = JObject.Parse(json); }
+            catch (Exception ex) { throw new ApplicationException("Ошибка в парсере JSON. Сервер вернул некорректный объект.", ex); }
+            return jobj;
         }
 
         /// <summary>
@@ -201,7 +225,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         /// <param name="code">код ответа сервера</param>
         /// <returns></returns>
         /// <exception cref="WebException">Если произошла ошибка при подключении</exception>
-        protected string SendStringGetRequest(string url, out HttpStatusCode code, bool useGZip=true)
+        protected string SendStringGetRequest(string url, out HttpStatusCode code, bool useGZip = true)
         {
             if (useCache)
                 if (cache.ContainsWebUrl(url))
@@ -216,8 +240,13 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                     Thread.Sleep(50);
 
                 //Выполняем запрос к универсальному коду ресурса (URI).
-                HttpWebRequest request =
-                    (HttpWebRequest)WebRequest.Create(url);
+
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+                if (UseProxy)
+                {
+                    WebProxy wp = new WebProxy(ProxyHost, ProxyPort);
+                    request.Proxy = wp;
+                }
                 request.UserAgent = "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.71 Safari/537.36";
                 request.ContentType = "application/xml";
                 request.Headers[HttpRequestHeader.AcceptLanguage] = "ru - RU,ru; q = 0.8,en - US; q = 0.6,en; q = 0.4";
@@ -230,22 +259,39 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                 //для чтения данных из интернет-ресурса.
                 Stream dataStream = response.GetResponseStream();
 
-                if(useGZip)
-                dataStream = new GZipStream(dataStream, CompressionMode.Decompress);
+                string responsereader;
+                try
+                {
+                    Stream str;
+                    if (useGZip)
+                        str = new GZipStream(dataStream, CompressionMode.Decompress);
+                    else
+                        str = dataStream;
 
-                //Инициализируем новый экземпляр класса 
-                //System.IO.StreamReader для указанного потока.
-                StreamReader sreader = new StreamReader(dataStream);
-                code = response.StatusCode;
+                    //Инициализируем новый экземпляр класса 
+                    //System.IO.StreamReader для указанного потока.
+                    StreamReader sreader = new StreamReader(str, Encoding.UTF8, true);
 
-                //Считывает поток от текущего положения до конца.            
-                string responsereader = sreader.ReadToEnd();
+                    //Считывает поток от текущего положения до конца.            
+                    responsereader = sreader.ReadToEnd();
+                }
+                catch (InvalidDataException)
+                {
+                    //Инициализируем новый экземпляр класса 
+                    //System.IO.StreamReader для указанного потока.
+                    StreamReader sreader = new StreamReader(dataStream, Encoding.UTF8, true);
 
+                    //Считывает поток от текущего положения до конца.            
+                    responsereader = sreader.ReadToEnd();
+                }
                 //Закрываем поток ответа.
                 response.Close();
 
                 //запоминание времени запроса
                 lastQuery = DateTime.Now;
+
+                //код ошибки
+                code = response.StatusCode;
 
                 //запись в кэш, если надо
                 if (useCache)
@@ -262,12 +308,19 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         /// <param name="url">запрос</param>
         /// <returns></returns>
         /// <exception cref="WebException">Если произошла ошибка при подключении</exception>
-        protected JObject SendJsonGetRequest(string url)
+        protected JObject SendJsonGetRequest(string url, bool gzip = true)
         {
             JObject jobj;
-            string json = SendStringGetRequest(url);
-            json = json.Substring(json.IndexOf('{'));
-            json = json.TrimEnd(new char[] { ';', ')' });
+            string json = SendStringGetRequest(url, gzip);
+            if (json == "")
+                return null;
+            if (json[0] != '[')
+            {
+                json = json.Substring(json.IndexOf('{'));
+                json = json.TrimEnd(new char[] { ';', ')' });
+            }
+            else
+                json = "{ \"array\": " + json + "}";
             try
             { jobj = JObject.Parse(json); }
             catch (Exception ex) { throw new ApplicationException("Ошибка в парсере JSON. Сервер вернул некорректный объект.", ex); }
@@ -280,14 +333,28 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         /// <param name="url">адрес</param>
         /// <param name="data">данные</param>
         /// <returns></returns>
-        protected string SendStringPostRequest(string url, string data)
+        protected string SendStringPostRequest(string url, string data, CookieCollection cookies)
         {
             try
             {
-                //ожидание времени интервала между запросами
+                                //ожидание времени интервала между запросами
                 while (DateTime.Now - lastQuery < MinQueryInterval)
                     Thread.Sleep(50);
+
                 HttpWebRequest req = (HttpWebRequest)WebRequest.Create(url);
+                if (UseProxy)
+                {
+                    WebProxy wp = new WebProxy(ProxyHost, ProxyPort);
+                    req.Proxy = wp;
+                }
+
+                if (cookies != null)
+                {
+                    req.CookieContainer = new CookieContainer();
+                    req.CookieContainer.Add(cookies);
+                }
+
+
                 req.Method = "POST";
                 req.Timeout = 100000;
                 req.ContentType = "application/x-www-form-urlencoded";
@@ -301,7 +368,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                 Stream ReceiveStream = res.GetResponseStream();
                 StreamReader sr = new StreamReader(ReceiveStream, Encoding.UTF8);
                 //Кодировка указывается в зависимости от кодировки ответа сервера
-                Char[] read = new char[256];
+                char[] read = new char[256];
                 int count = sr.Read(read, 0, 256);
                 string Out = string.Empty;
                 while (count > 0)

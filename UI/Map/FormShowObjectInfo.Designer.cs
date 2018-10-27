@@ -41,15 +41,18 @@
             this.textBoxDescription = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.textBoxComments = new System.Windows.Forms.TextBox();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.linkLabelCenterMap = new System.Windows.Forms.LinkLabel();
             this.flowLayoutPanelWrapper.SuspendLayout();
             this.contextMenuStripLinkLabel.SuspendLayout();
+            this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // flowLayoutPanelWrapper
             // 
             this.flowLayoutPanelWrapper.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.flowLayoutPanelWrapper.Controls.Add(this.labelName);
-            this.flowLayoutPanelWrapper.Controls.Add(this.linkLabelLink);
+            this.flowLayoutPanelWrapper.Controls.Add(this.panel1);
             this.flowLayoutPanelWrapper.Controls.Add(this.flowLayoutPanelImages);
             this.flowLayoutPanelWrapper.Controls.Add(this.label2);
             this.flowLayoutPanelWrapper.Controls.Add(this.textBoxDescription);
@@ -77,7 +80,7 @@
             this.linkLabelLink.AutoSize = true;
             this.linkLabelLink.ContextMenuStrip = this.contextMenuStripLinkLabel;
             this.linkLabelLink.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.linkLabelLink.Location = new System.Drawing.Point(8, 29);
+            this.linkLabelLink.Location = new System.Drawing.Point(1, 0);
             this.linkLabelLink.Margin = new System.Windows.Forms.Padding(8, 0, 3, 0);
             this.linkLabelLink.Name = "linkLabelLink";
             this.linkLabelLink.Size = new System.Drawing.Size(63, 18);
@@ -113,7 +116,7 @@
             this.flowLayoutPanelImages.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.flowLayoutPanelImages.AutoScroll = true;
             this.flowLayoutPanelImages.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.flowLayoutPanelImages.Location = new System.Drawing.Point(3, 50);
+            this.flowLayoutPanelImages.Location = new System.Drawing.Point(3, 61);
             this.flowLayoutPanelImages.Name = "flowLayoutPanelImages";
             this.flowLayoutPanelImages.Size = new System.Drawing.Size(566, 120);
             this.flowLayoutPanelImages.TabIndex = 10;
@@ -122,7 +125,7 @@
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 13F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label2.Location = new System.Drawing.Point(3, 173);
+            this.label2.Location = new System.Drawing.Point(3, 184);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(93, 22);
             this.label2.TabIndex = 11;
@@ -135,7 +138,7 @@
             this.textBoxDescription.BackColor = System.Drawing.SystemColors.Control;
             this.textBoxDescription.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.textBoxDescription.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.textBoxDescription.Location = new System.Drawing.Point(3, 198);
+            this.textBoxDescription.Location = new System.Drawing.Point(3, 209);
             this.textBoxDescription.MaximumSize = new System.Drawing.Size(0, 204);
             this.textBoxDescription.Multiline = true;
             this.textBoxDescription.Name = "textBoxDescription";
@@ -149,7 +152,7 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 13F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label1.Location = new System.Drawing.Point(3, 405);
+            this.label1.Location = new System.Drawing.Point(3, 416);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(126, 22);
             this.label1.TabIndex = 9;
@@ -163,15 +166,38 @@
             this.textBoxComments.BackColor = System.Drawing.SystemColors.Control;
             this.textBoxComments.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.textBoxComments.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.textBoxComments.Location = new System.Drawing.Point(3, 430);
+            this.textBoxComments.Location = new System.Drawing.Point(575, 3);
             this.textBoxComments.MaximumSize = new System.Drawing.Size(0, 212);
             this.textBoxComments.Multiline = true;
             this.textBoxComments.Name = "textBoxComments";
             this.textBoxComments.ReadOnly = true;
             this.textBoxComments.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBoxComments.Size = new System.Drawing.Size(566, 212);
+            this.textBoxComments.Size = new System.Drawing.Size(0, 212);
             this.textBoxComments.TabIndex = 8;
             this.textBoxComments.TabStop = false;
+            // 
+            // panel1
+            // 
+            this.panel1.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.panel1.Controls.Add(this.linkLabelCenterMap);
+            this.panel1.Controls.Add(this.linkLabelLink);
+            this.panel1.Location = new System.Drawing.Point(3, 32);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(566, 23);
+            this.panel1.TabIndex = 13;
+            // 
+            // linkLabelCenterMap
+            // 
+            this.linkLabelCenterMap.AutoSize = true;
+            this.linkLabelCenterMap.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.linkLabelCenterMap.Location = new System.Drawing.Point(450, 0);
+            this.linkLabelCenterMap.Margin = new System.Windows.Forms.Padding(8, 0, 3, 0);
+            this.linkLabelCenterMap.Name = "linkLabelCenterMap";
+            this.linkLabelCenterMap.Size = new System.Drawing.Size(116, 18);
+            this.linkLabelCenterMap.TabIndex = 12;
+            this.linkLabelCenterMap.TabStop = true;
+            this.linkLabelCenterMap.Text = "На центр карты";
+            this.linkLabelCenterMap.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelCenterMap_LinkClicked);
             // 
             // FormShowObjectInfo
             // 
@@ -190,6 +216,8 @@
             this.flowLayoutPanelWrapper.ResumeLayout(false);
             this.flowLayoutPanelWrapper.PerformLayout();
             this.contextMenuStripLinkLabel.ResumeLayout(false);
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -207,5 +235,7 @@
         private System.Windows.Forms.ContextMenuStrip contextMenuStripLinkLabel;
         private System.Windows.Forms.ToolStripMenuItem copyLinkToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem copyLinkMapToolStripMenuItem;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.LinkLabel linkLabelCenterMap;
     }
 }

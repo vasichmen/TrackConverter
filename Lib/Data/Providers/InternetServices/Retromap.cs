@@ -22,7 +22,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
 
         static Retromap()
         {
-            ServiceEngine = new Service(System.Windows.Forms.Application.StartupPath + Res.Properties.Resources.cache_directory + "\\http_cache\\wikimapia\\service");
+            ServiceEngine = new Service(System.Windows.Forms.Application.StartupPath + Res.Properties.Resources.cache_directory + "\\http_cache\\retromap\\service");
         }
 
         /// <summary>

@@ -4,6 +4,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
+using TrackConverter.Lib.Data.Providers.InternetServices;
 using TrackConverter.Lib.Data.Providers.Local.ETOPO;
 using TrackConverter.Res.Properties;
 
@@ -232,6 +233,14 @@ namespace TrackConverter.UI.Tools
             checkBoxYKm.Checked = Vars.Options.Graphs.isYKm;
             textBoxIntermediateDistance.Text = Vars.Options.Graphs.IntermediateDistance.ToString();
             checkBoxIsAddIntermediatePoints.Checked = Vars.Options.Graphs.IsAddIntermediatePoints;
+
+            #endregion
+
+            #region Авторизация
+
+            bool isWikimapiaLoggedIn = Wikimapia.ServiceEngine.LoggedIn;
+            buttonWikimapiaLogin.Enabled = !isWikimapiaLoggedIn;
+            buttonWikimapiaLogout.Enabled = isWikimapiaLoggedIn;
 
             #endregion
 
@@ -571,6 +580,42 @@ namespace TrackConverter.UI.Tools
         private void linkLabelDownloadETOPO5_Click(object sender, EventArgs e)
         {
             Process.Start("https://www.ngdc.noaa.gov/mgg/global/relief/ETOPO5/");
+        }
+
+        /// <summary>
+        /// авторизация на викимапии
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void buttonWikimapiaLogin_Click(object sender, EventArgs e)
+        {
+            string login = textBoxWikimapiaLogin.Text;
+            string password = textBoxWikimapiaPassword.Text;
+            string success = Wikimapia.ServiceEngine.Login(login, password);
+            if (success == "200")
+            {
+                buttonWikimapiaLogout.Enabled = true;
+                buttonWikimapiaLogin.Enabled = false;
+                Vars.Options.Auth.WikimapiaLogin = login;
+                Vars.Options.Auth.WikimapiaPassword = password;
+            }
+            else
+                MessageBox.Show(this, "Неверный логин или пароль", "Авторизация Wikimapia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+
+        }
+
+        /// <summary>
+        /// выход из викимапии
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void buttonWikimapiaLogout_Click(object sender, EventArgs e)
+        {
+            Wikimapia.ServiceEngine.Logout();
+            buttonWikimapiaLogout.Enabled = false;
+            buttonWikimapiaLogin.Enabled = true;
+            Vars.Options.Auth.WikimapiaLogin = "";
+            Vars.Options.Auth.WikimapiaPassword = "";
         }
     }
 }

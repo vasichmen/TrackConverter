@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GMap.NET;
+using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.Threading.Tasks;
@@ -60,7 +61,7 @@ namespace TrackConverter.UI.Map
                                 info = Vars.dataCache.GetLayerObjectExtInfo(Obj.ID);
                             else
                             {
-                                info = new Wikimapia(Application.StartupPath + Resources.cache_directory + "\\http_cache\\wikimapia\\objects_info").GetExtInfo(Obj.ID);
+                                info = new Wikimapia(Application.StartupPath + Resources.cache_directory + "\\http_cache\\wikimapia\\objects_info").GetExtInfo(Obj);
                                 Vars.dataCache.PutLayerObjectExtInfo(info);
                             }
                         });
@@ -194,6 +195,16 @@ namespace TrackConverter.UI.Map
         }
 
         /// <summary>
+        /// перевод центра карты на центр объекта
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void linkLabelCenterMap_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            PointLatLng c = Obj.Bounds.LocationMiddle;
+            Program.winMain.gmapControlMap.Position = c;
+        }
+        /// <summary>
         /// копировать ссылку на объект
         /// </summary>
         /// <param name="sender"></param>
@@ -221,5 +232,6 @@ namespace TrackConverter.UI.Map
             string url = string.Format(base_url, lat.ToString().Replace(Vars.DecimalSeparator, '.'), lon.ToString().Replace(Vars.DecimalSeparator, '.'), z, id);
             Clipboard.SetText(url);
         }
+
     }
 }

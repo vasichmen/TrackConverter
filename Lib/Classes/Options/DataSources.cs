@@ -24,7 +24,7 @@ namespace TrackConverter.Lib.Classes.Options
             UseSystemTimeZones = false;
             UseMapLayerCache = true;
             MaxImageCacheDays = 30;
-            MaxVectorLayersCacheDays = 7;
+            MaxVectorLayersCacheDays = 1;
         }
 
         /// <summary>
@@ -65,6 +65,6 @@ namespace TrackConverter.Lib.Classes.Options
         /// <summary>
         /// максимальное время хранения кэша векторных слоёв в днях (по умолчанию 7 дней)
         /// </summary>
-        public double MaxVectorLayersCacheDays { get; set; }
+        public int MaxVectorLayersCacheDays { get; set; }
     }
 }

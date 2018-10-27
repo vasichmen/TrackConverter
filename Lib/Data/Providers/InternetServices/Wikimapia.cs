@@ -4,10 +4,15 @@ using HtmlAgilityPack;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Net;
+using System.Security.Cryptography;
+using System.Text;
 using System.Text.RegularExpressions;
+using System.Web;
 using TrackConverter.Lib.Classes;
 using TrackConverter.Lib.Data.Interfaces;
+using TrackConverter.Lib.Tracking;
 using TrackConverter.Lib.Tracking.Helpers;
 using TrackConverter.Res.Properties;
 
@@ -19,6 +24,48 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
     public class Wikimapia : BaseConnection, IVectorMapLayerProvider
     {
         #region Структуры
+
+        /// <summary>
+        /// структура информации об улице
+        /// </summary>
+        public class StreetInfo
+        {
+            /// <summary>
+            /// ID улицы
+            /// </summary>
+            public int ID { get; set; }
+
+            /// <summary>
+            /// нащвание улицы
+            /// </summary>
+            public string Name { get; set; }
+
+            public override string ToString()
+            {
+                return Name;
+            }
+        }
+
+        /// <summary>
+        /// структура для сохранения и редактирования информации об объекте
+        /// </summary>
+        public class ObjectEditInfo
+        {
+            public ObjectEditInfo()
+            { Categories = new List<string>(); Geometry = new TrackFile(); }
+
+            public int ID { get; set; }
+            public int ObjectType { get; set; }
+            public string Title { get; set; }
+            public string Description { get; set; }
+            public string StreetName { get; set; }
+            public string BuildingNumber { get; set; }
+            public bool IsBuilding { get; set; }
+            public string WikipediaLink { get; set; }
+            public TrackFile Geometry { get; set; }
+            public List<string> Categories { get; set; }
+            public int StreetID { get; set; }
+        }
 
         /// <summary>
         /// расширенная инфорация об объекте (фотографии, комментарии итд)
@@ -148,6 +195,18 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
             /// </summary>
             public string Title { get; set; }
 
+            public TrackFile Geometry { get; set; }
+
+            /// <summary>
+            /// Название улицы
+            /// </summary>
+            public string Street { get; set; }
+
+            /// <summary>
+            /// номер дома
+            /// </summary>
+            public string BuildingNumber { get; set; }
+
             /// <summary>
             /// ссылка на википедию (если есть)
             /// </summary>
@@ -157,6 +216,11 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
             /// список комментариев к объекту
             /// </summary>
             public List<CommentInfo> Comments { get; private set; }
+
+            /// <summary>
+            /// адрес объекта
+            /// </summary>
+            public string Address { get; internal set; }
         }
 
         /// <summary>
@@ -249,6 +313,306 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
 
         #endregion
 
+        #region Классы
+
+        /// <summary>
+        /// сервисный класс
+        /// </summary>
+        public class Service : BaseConnection
+        {
+            /// <summary>
+            /// UID авторизованного пользователя
+            /// </summary>
+            private int UID=-1;
+
+            public override TimeSpan MinQueryInterval { get { return TimeSpan.FromMilliseconds(50); } }
+            public override int MaxAttempts { get { return 5; } }
+
+            /// <summary>
+            /// возвращает истину, если пользователь авторизован
+            /// </summary>
+            public bool LoggedIn { get { return UID > 0; }  }
+
+            public Service() : base(null)
+            {
+
+            }
+
+            /// <summary>
+            /// удаление объекта с карты (требуется авторизация)
+            /// </summary>
+            /// <param name="id"></param>
+            /// <returns></returns>
+            public bool RemoveObject(int id)
+            {
+                throw new NotImplementedException();
+            }
+
+            /// <summary>
+            /// редактирование объекта (требуется авторизация)
+            /// </summary>
+            /// <param name="id"></param>
+            /// <param name="newInfo"></param>
+            /// <returns></returns>
+            public bool EditObject(int id, ObjectEditInfo newInfo)
+            {
+
+                throw new NotImplementedException();
+            }
+
+            /// <summary>
+            /// создаёт новый объект от имени гостя
+            /// </summary>
+            /// <param name="info"></param>
+            /// <returns></returns>
+            public int CreateObject(ObjectEditInfo info)
+            {
+                //http://wikimapia.org/ajax/check/?function=place_add&qo
+                //вернуть должен просто "true"
+
+                //http://wikimapia.org/object/edit/?checkpoly=1
+                //в POST параметрах: x=991292095&y=736642332&x2=992133235&y2=736927921&poly=221443%3B199770%3B0%3B73855%3B219726%3B0%3B547599%3B17380%3B841140%3B199770%3B660896%3B285589%3B425720%3B235453&surface=0&zoom=13&_time=12045
+                //вернуть должен {"code":0}
+
+                //http://wikimapia.org/object/edit/?do=saveinfo
+                //в POST параметрах: id=0&parent_id=0&xy=&poly=221443%3B199770%3B0%3B73855%3B219726%3B0%3B547599%3B17380%3B841140%3B199770%3B660896%3B285589%3B425720%3B235453&x=991292095&y=736642332&zoom=13&pl=&object_type=1&langid=1&title=-&description=&street_name=&building_number=&street_id=0&tcats_add=++&tcats_del=++&tcats_curr=++&is_building=0&wikipedia=&_time=26617
+                //возвращает: {"code":20,"action":{"objectId":38644399,"trackAction":"\/add.new.place.save.info.ok","promote":false}}
+
+                //первый шаг - разрешение на создание
+                string url1 = "http://wikimapia.org/ajax/check/?function=place_add&qo";
+                string ans1 = SendStringGetRequest(url1, false);
+
+                if (ans1 != "true")
+                    throw new Exception("Разрешение на создание объекта не получено");
+
+                //второй шаг - проверка геометрии
+                string poly = GetPolygon(info.Geometry);
+                string url2 = "http://wikimapia.org/object/edit/?checkpoly=1";
+                string data2 = "x={0}&y={1}&x2={2}&y2={3}&poly={4}&surface=0&zoom=19";
+                data2 = string.Format(data2,
+                    (int)(info.Geometry.Bounds.Left * 10000000),
+                    (int)(info.Geometry.Bounds.Bottom * 10000000),
+                    (int)(info.Geometry.Bounds.Right * 10000000),
+                    (int)(info.Geometry.Bounds.Top * 10000000),
+                    HttpUtility.UrlEncode(poly).ToUpper() //без перевода в верхний регистр не работает
+                    );
+                int time = dataCheckSum(data2); //получаем хэш-сумму
+                data2 += "&_time=" + time;
+
+                string ans2 = SendStringPostRequest(url2, data2,null);
+                if (ans2 != "{\"code\":0}")
+                    throw new Exception("Ошибка вычисления хэш-суммы геометрии объекта");
+
+                //третий шаг - сохранение информации
+                string url3 = "http://wikimapia.org/object/edit/?do=saveinfo";
+                string data3 = "id=0&parent_id=0&xy=&poly={0}&x={1}&y={2}&zoom=13&pl=&object_type={3}&langid=1&title={4}&description={5}&street_name={6}&building_number={7}&street_id={10}&tcats_add=++&tcats_del=++&tcats_curr=++&is_building={8}&wikipedia={9}";
+                data3 = string.Format(data3,
+                    HttpUtility.UrlEncode(poly).ToUpper(),
+                    (int)(info.Geometry.Bounds.Left * 10000000),
+                    (int)(info.Geometry.Bounds.Bottom * 10000000),
+                    info.ObjectType,
+                    HttpUtility.UrlEncode(info.Title).ToUpper(),
+                    HttpUtility.UrlEncode(info.Description).ToUpper(),
+                    HttpUtility.UrlEncode(info.StreetName).ToUpper(),
+                    HttpUtility.UrlEncode(info.BuildingNumber).ToUpper(),
+                    info.IsBuilding ? 1 : 0,
+                    HttpUtility.UrlEncode(info.WikipediaLink).ToUpper(),
+                    info.StreetID!=0?info.StreetID.ToString():""
+                    );
+                data3 += "&_time=" + dataCheckSum(data3);
+                JToken ans3 = SendJsonPostRequest(url3, data3,null);
+                string ans3s = ans3.ToString();
+
+                //обработка ошибок
+                var codeNode = ans3["code"];
+                if (codeNode == null)
+                {
+                    string message = ans3["message"].ToString();
+                    throw new Exception(message);
+                }
+                string code = ans3["code"].ToString();
+
+                switch (code)
+                {
+                    case "20": //успех
+                        string ids = ans3["action"]["objectId"].ToString();
+                        int id = int.Parse(ids);
+                        return id;
+                    case "503": //где-то ошибка в запросе
+                        throw new Exception("Ошибка в геометрии объекта, контрольной сумме или в информации");
+                    case "11": //уже существующий объект
+                        throw new Exception("Этот объект уже добавлен на карту, попробуйте очистить кэш и загрузить карту заново");
+                    default:
+                        throw new Exception("Ошибка запроса.\r\nКод ошибки: " + code + "\r\nТекст:\r\n" + ans3["message"].ToString());
+                }
+            }
+
+            /// <summary>
+            /// хэш-сумма для проверки координат полигона, возвращает значение парамера _time при создании объекта.
+            /// Источник: application.js:Wikimapia.Net.dataCheckSum(t)
+            /// </summary>
+            /// <param name="arg">параметры POST запроса к http://wikimapia.org/object/edit/?checkpoly=1</param>
+            /// <returns></returns>
+            private static int dataCheckSum(string arg)
+            {
+                //application.js:Wikimapia.Net.dataCheckSum(t)
+                //x=378710424&y=557754084&x2=378716647&y2=557757855&poly=2145;3771;6222;1025;3808;0;0;2805&surface=0&zoom=18
+                //8242
+
+                //dataCheckSum: 
+                //function (t) 
+                //{ var e = 0; 
+                //for (var i = 0, a = t.length; i < a; i++) 
+                //{ e += t.charCodeAt(i) | 10 } 
+                //return e }
+
+                //arg = "x=370000000&y=550000000&x2=370010000&y2=550010000&poly=0%3b0%3b10000%3b10000%3b10000%3b0&surface=0&zoom=19";
+
+                var chaarr = arg.ToCharArray();
+                var e = 0;
+                var a = arg.Length;
+                for (int i = 0; i < a; i++)
+                {
+                    e += chaarr[i] | 10;
+                }
+                return e;
+            }
+
+
+            /// <summary>
+            /// получение основных категорий
+            /// </summary>
+            /// <param name="query">часть названия категории. По умолчанию - базовые категории</param>
+            /// <returns></returns>
+            public List<CategoryInfo> GetCategories(string query = null)
+            {
+                //базовые категории
+                //http://wikimapia.org/localization/tags/ru.json
+                string url;
+
+
+                if (string.IsNullOrWhiteSpace(query))
+                    url = "http://wikimapia.org/localization/tags/ru.json"; //основные категории
+                else
+                    url = string.Format("http://wikimapia.org/ajax/get_category/?search_tcat={0}&format=json&lng=1", query);  //поиск по категориям
+
+                JObject jo = SendJsonGetRequest(url);
+                JToken cats = jo["categories"];
+                List<CategoryInfo> res = new List<CategoryInfo>();
+                if (cats == null)
+                    return new List<CategoryInfo>();
+                foreach (var cat in cats)
+                    foreach (var catt in cat)
+                    {
+                        CategoryInfo i = new CategoryInfo();
+                        i.Amount = int.Parse(catt["count"].ToString());
+                        i.ID = int.Parse(catt["category_id"].ToString());
+                        string n = catt["name"].ToString();
+                        i.Name = n;
+                        res.Add(i);
+                    }
+                return res;
+            }
+
+            /// <summary>
+            /// получить список улиц в заданной области карты
+            /// </summary>
+            /// <param name="rect">область карты</param>
+            /// <returns></returns>
+            public List<StreetInfo> GetNearestStreets(RectLatLng rect)
+            {
+                //http://wikimapia.org/ajax/getNearestLinear/?action=near_streets&x1=37.911951541900635&y1=55.760518932336176&x2=37.917240858078&y2=55.76339829069628&ltype=0&lng=1
+                string url = "http://wikimapia.org/ajax/getNearestLinear/?action=near_streets&x1={0}&y1={1}&x2={2}&y2={3}&ltype=0&lng=1";
+                url = string.Format(url,
+                    rect.Left.ToString().Replace(Vars.DecimalSeparator, '.'),
+                    rect.Bottom.ToString().Replace(Vars.DecimalSeparator, '.'),
+                    rect.Right.ToString().Replace(Vars.DecimalSeparator, '.'),
+                    rect.Top.ToString().Replace(Vars.DecimalSeparator, '.'));
+                JToken ans = SendJsonGetRequest(url, true);
+                if (ans == null)
+                    return new List<StreetInfo>();
+                List<StreetInfo> res = new List<StreetInfo>();
+                foreach (JToken jt in ans["array"])
+                {
+                    string name = jt["value"].ToString();
+                    string ids = jt["id"].ToString();
+                    res.Add(new StreetInfo() { Name = name, ID = int.Parse(ids) });
+                }
+                return res;
+            }
+
+            /// <summary>
+            /// авторизация на сервере. Возвращает код ошибки, при успехе 200
+            /// </summary>
+            /// <param name="login"></param>
+            /// <param name="password"></param>
+            /// <returns></returns>
+            public string Login(string login, string password)
+            {
+                login = "vass.vass@mail.ru";
+                password = "WRitNadbichPod3";
+                string pwh = "81ee968587b6ab1a95d74a723d3db996";
+
+                string url = "http://wikimapia.org/user/login/";
+                string data = string.Format("username={0}&pw1={1}", HttpUtility.UrlEncode(login), password);
+                data = data + "&_time=" + dataCheckSum(data);
+
+                //CookieCollection cook = new CookieCollection() { new Cookie("pwh", pwh,"/", "wikimapia.org"), new Cookie("uid", "2071779", "/", "wikimapia.org")  };
+                JObject ans = SendJsonPostRequest(url, data,null);
+
+                string code = ans["code"].ToString();
+                switch (code)
+                {
+                    case "200":
+                        string uids = ans["uid"].ToString();
+                        int uid = int.Parse(uids);
+                        this.UID = uid;
+                        return "200";
+                    case "400":
+                        return "400";
+                    default: return "unknown error";
+                }
+
+                throw new NotImplementedException();
+            }
+
+            /// <summary>
+            /// получение хэш-суммы строки
+            /// </summary>
+            /// <param name="s"></param>
+            /// <returns></returns>
+            private string getHashString(string s)
+            {
+                //переводим строку в байт-массим  
+                byte[] bytes = Encoding.UTF8.GetBytes(s); //для работы retromap должна быть кодировка UTF8
+
+                //создаем объект для получения средст шифрования  
+                MD5CryptoServiceProvider CSP =
+                    new MD5CryptoServiceProvider();
+
+                //вычисляем хеш-представление в байтах  
+                byte[] byteHash = CSP.ComputeHash(bytes);
+
+                string hash = string.Empty;
+
+                //формируем одну цельную строку из массива  
+                foreach (byte b in byteHash)
+                    hash += string.Format("{0:x2}", b);
+
+                return hash;
+            }
+
+            /// <summary>
+            /// выход
+            /// </summary>
+            public void Logout()
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        #endregion
+
 
         /// <summary>
         /// список основных категорий
@@ -263,7 +627,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
             get
             {
                 if (basicCategories == null)
-                    basicCategories = GetCategories();
+                    basicCategories = ServiceEngine.GetCategories();
                 return basicCategories;
             }
         }
@@ -290,6 +654,8 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
             }
         }
 
+        public static Service ServiceEngine;
+
         /// <summary>
         /// Создаёт новый объект связи с сервисом с заданной папкой кэша запросов и временем хранения кэша
         /// </summary>
@@ -298,6 +664,10 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         public Wikimapia(string cacheDirectory, int duration = 24 * 7) : base(cacheDirectory, duration)
         { }
 
+        static Wikimapia()
+        {
+            ServiceEngine = new Service();
+        }
 
         #region Слой объектов
 
@@ -479,7 +849,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         /// </summary>
         /// <param name="id">ID объекта</param>
         /// <returns></returns>
-        public ExtInfo GetExtInfo(int id)
+        public ExtInfo GetExtInfo(VectorMapLayerObject obj)
         {
 
             //через HTML
@@ -502,7 +872,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                     lang = "ru";
                     break;
             }
-            url = string.Format(url + "{0}/{1}", id, lang);
+            url = string.Format(url + "{0}/{1}", obj.ID, lang);
 
             // url = "http://wikimapia.org/32984750/ru/"; //удаленный объект
             //url = "http://wikimapia.org/11025563/ru/"; // невидимый объект
@@ -522,7 +892,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
 
                     ExtInfo res = new ExtInfo
                     {
-                        ID = id,
+                        ID = obj.ID,
                         Link = url
                     };
 
@@ -547,6 +917,27 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                     //wikipedia
                     var wikipedia = body.SelectSingleNode(@".//div[@class = 'placeinfo-row wikipedia-link']/a");
                     res.Wikipedia = wikipedia == null ? "" : wikipedia.InnerText;
+
+                    //адрес
+                    var address = html.GetElementbyId(@"placeinfo-locationtree");
+                    string addr;
+                    if (address == null)
+                        addr = "";
+                    else
+                        addr = address.InnerText.Replace("  ", "").Replace("\r", "").Replace("\n", "").Replace("\t", "");
+                    res.Address = addr;
+                    int zpt = addr.LastIndexOf(',');
+                    if (zpt != -1)
+                    {
+                        string bnums = addr.Substring(zpt + 1);
+                        int sl = addr.LastIndexOf('/');
+                        string streets = addr.Substring(sl + 1, zpt - sl - 1);
+                        res.Street = streets;
+                        res.BuildingNumber = bnums;
+                    }
+
+                    //геометрия объекта
+                    res.Geometry = obj.GeometryTrackFile;
 
                     //категории объекта
                     var category_block = html.GetElementbyId("placeinfo-categories");
@@ -621,7 +1012,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
 
                 //обработка ошибок
                 case HttpStatusCode.NotFound:
-                    throw new Exception("Объект с id " + id + " не существует");
+                    throw new Exception("Объект с id " + obj.ID + " не существует");
                 default:
                     throw new Exception("Неизвестная ошибка: " + code.ToString());
             }
@@ -738,41 +1129,6 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         #endregion
 
         #region Категории
-
-        /// <summary>
-        /// получение основных категорий
-        /// </summary>
-        /// <param name="query">часть названия категории. По умолчанию - базовые категории</param>
-        /// <returns></returns>
-        public List<CategoryInfo> GetCategories(string query = null)
-        {
-            //базовые категории
-            //http://wikimapia.org/localization/tags/ru.json
-            string url;
-
-
-            if (string.IsNullOrWhiteSpace(query))
-                url = "http://wikimapia.org/localization/tags/ru.json"; //основные категории
-            else
-                url = string.Format("http://wikimapia.org/ajax/get_category/?search_tcat={0}&format=json&lng=1", query);  //поиск по категориям
-
-            JObject jo = SendJsonGetRequest(url);
-            JToken cats = jo["categories"];
-            List<CategoryInfo> res = new List<CategoryInfo>();
-            if (cats == null)
-                return new List<CategoryInfo>();
-            foreach (var cat in cats)
-                foreach (var catt in cat)
-                {
-                    CategoryInfo i = new CategoryInfo();
-                    i.Amount = int.Parse(catt["count"].ToString());
-                    i.ID = int.Parse(catt["category_id"].ToString());
-                    string n = catt["name"].ToString();
-                    i.Name = n;
-                    res.Add(i);
-                }
-            return res;
-        }
 
 
         /// <summary>
@@ -931,5 +1287,40 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
 
 
         #endregion
+
+        /// <summary>
+        /// получить кодированный полигон из координат
+        /// </summary>
+        /// <param name="track">список точек</param>
+        /// <param name="step">шаг с корорым будет идти цикл по точкам</param>
+        /// <returns></returns>
+        public static string GetPolygon(BaseTrack track, int step = 1)
+        {
+            int latBase = (int)(track.Bounds.Bottom * 10000000);
+            int lonBase = (int)(track.Bounds.Left * 10000000);
+            string res = "";
+
+            for (int i = 0; i < track.Count - 1; i += step)
+            {
+                string ndata = "";
+                int dlonA = (int)(track[i].Coordinates.Longitude * 10000000);
+                int dlatA = (int)(track[i].Coordinates.Latitude * 10000000);
+                int dlon = dlonA - lonBase;
+                int dlat = dlatA - latBase;
+                ndata += ";" + dlon.ToString() + ";" + dlat.ToString();
+                res += ndata;
+            }
+            //добавление последней точки
+            string ndata1 = "";
+            int dlonA1 = (int)(track[track.Count - 1].Coordinates.Longitude * 10000000);
+            int dlatA1 = (int)(track[track.Count - 1].Coordinates.Latitude * 10000000);
+            int dlon1 = dlonA1 - lonBase;
+            int dlat1 = dlatA1 - latBase;
+            ndata1 += ";" + dlon1.ToString() + ";" + dlat1.ToString();
+            res += ndata1;
+
+
+            return res.Trim(';');
+        }
     }
 }

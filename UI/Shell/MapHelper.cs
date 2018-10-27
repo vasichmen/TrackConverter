@@ -93,7 +93,7 @@ namespace TrackConverter.UI.Shell
 
             //поставщик карты
             formMain.gmapControlMap.MapProvider = MapProviderRecord.MapProviderToClass(Vars.Options.Map.MapProvider.Enum);
-            
+
             //поставщик слоя
             formMain.gmapControlMap.LayerProvider = Vars.Options.Map.LayerProvider.Enum;
 
@@ -128,6 +128,7 @@ namespace TrackConverter.UI.Shell
             formMain.selectedPointsOverlay = new GMapOverlay(formMain.selectedPointsOverlayID);
             formMain.selectedRouteOverlay = new GMapOverlay(formMain.selectedRouteOverlayID);
             formMain.creatingRouteOverlay = new GMapOverlay(formMain.creatingRouteOverlayID);
+            formMain.creatingPolygonOverlay = new GMapOverlay(formMain.creatingPolygonOverlayID);
             formMain.rulerRouteOverlay = new GMapOverlay(formMain.rulerRouteOverlayID);
             formMain.baseOverlay = new GMapOverlay(formMain.baseOverlayID);
             formMain.fromToOverlay = new GMapOverlay(formMain.fromToOverlayID);
@@ -139,6 +140,7 @@ namespace TrackConverter.UI.Shell
             formMain.gmapControlMap.Overlays.Add(formMain.selectedPointsOverlay);
             formMain.gmapControlMap.Overlays.Add(formMain.selectedRouteOverlay);
             formMain.gmapControlMap.Overlays.Add(formMain.creatingRouteOverlay);
+            formMain.gmapControlMap.Overlays.Add(formMain.creatingPolygonOverlay);
             formMain.gmapControlMap.Overlays.Add(formMain.rulerRouteOverlay);
             formMain.gmapControlMap.Overlays.Add(formMain.baseOverlay);
             formMain.gmapControlMap.Overlays.Add(formMain.fromToOverlay);
@@ -174,7 +176,7 @@ namespace TrackConverter.UI.Shell
             if (e.Button == MouseButtons.Left && //если левая кнопка
                 (formMain.isCreatingRoute || formMain.isRuling) && //создание маршрута или линейка
                 !formMain.isMarkerMoving && //не происходит движение маркера
-                !formMain.isMarkerClicked)
+                !formMain.gmapControlMap.IsMouseOverMarker)
             {
                 //обновление информации в списке точек после перемещения
                 refreshWaypoints();
@@ -184,16 +186,16 @@ namespace TrackConverter.UI.Shell
                     PointLatLng pt = formMain.gmapControlMap.FromLocalToLatLng(e.X, e.Y);
 
                     //если выделена последняя точка, то добавляем
-                    if (formMain.selectedPointIndex == formMain.creatingRoute.Count)
+                    if (formMain.selectedRoutePointIndex == formMain.creatingRoute.Count)
                     {
                         formMain.creatingRoute.Add(new TrackPoint(pt) { Icon = IconOffsets.CREATING_ROUTE_MARKER });
-                        formMain.selectedPointIndex = formMain.creatingRoute.Count - 1;
+                        formMain.selectedRoutePointIndex = formMain.creatingRoute.Count - 1;
                     }
                     //если выделена точка в середине маршрута, то вставляем после нее
                     else
                     {
-                        formMain.creatingRoute.Insert(formMain.selectedPointIndex + 1, new TrackPoint(pt) { Icon = IconOffsets.CREATING_ROUTE_MARKER });
-                        formMain.selectedPointIndex++;
+                        formMain.creatingRoute.Insert(formMain.selectedRoutePointIndex + 1, new TrackPoint(pt) { Icon = IconOffsets.CREATING_ROUTE_MARKER });
+                        formMain.selectedRoutePointIndex++;
                     }
 
                     //вывод нового маршрута на экран
@@ -204,21 +206,55 @@ namespace TrackConverter.UI.Shell
                     PointLatLng pt = formMain.gmapControlMap.FromLocalToLatLng(e.X, e.Y);
 
                     //если выделена последняя точка, то добавляем
-                    if (formMain.selectedPointIndex == formMain.rulerRoute.Count)
+                    if (formMain.selectedRoutePointIndex == formMain.rulerRoute.Count)
                     {
                         formMain.rulerRoute.Add(new TrackPoint(pt) { Icon = IconOffsets.CREATING_ROUTE_MARKER });
-                        formMain.selectedPointIndex = formMain.rulerRoute.Count - 1;
+                        formMain.selectedRoutePointIndex = formMain.rulerRoute.Count - 1;
                     }
                     //если выделена точка в середине маршрута, то вставляем после нее
                     else
                     {
-                        formMain.rulerRoute.Insert(formMain.selectedPointIndex + 1, new TrackPoint(pt) { Icon = IconOffsets.CREATING_ROUTE_MARKER });
-                        formMain.selectedPointIndex++;
+                        formMain.rulerRoute.Insert(formMain.selectedRoutePointIndex + 1, new TrackPoint(pt) { Icon = IconOffsets.CREATING_ROUTE_MARKER });
+                        formMain.selectedRoutePointIndex++;
                     }
 
                     //вывод нового маршрута на экран
                     ShowCreatingRoute(formMain.rulerRouteOverlay, formMain.rulerRoute);
                 }
+            }
+            #endregion
+
+            #region добавление точки к новому периметру если 
+
+            //происходит создание маршрута, 
+            //не происходит перемещение маркера,
+            //указатель не находится на другом маркере
+            if (e.Button == MouseButtons.Left && //если левая кнопка
+                (formMain.isCreatingPolygon) && //создание периметра
+                !formMain.isMarkerMoving && //не происходит движение маркера
+                !formMain.gmapControlMap.IsMouseOverMarker)
+            {
+                if (formMain.isCreatingPolygon)
+                {
+                    PointLatLng pt = formMain.gmapControlMap.FromLocalToLatLng(e.X, e.Y);
+
+                    //если выделена последняя точка, то добавляем
+                    if (formMain.selectedPolygonPointIndex == formMain.creatingPolygon.Count)
+                    {
+                        formMain.creatingPolygon.Add(new TrackPoint(pt) { Icon = IconOffsets.CREATING_ROUTE_MARKER });
+                        formMain.selectedPolygonPointIndex = formMain.creatingPolygon.Count - 1;
+                    }
+                    //если выделена точка в середине маршрута, то вставляем после нее
+                    else
+                    {
+                        formMain.creatingPolygon.Insert(formMain.selectedPolygonPointIndex + 1, new TrackPoint(pt) { Icon = IconOffsets.CREATING_ROUTE_MARKER });
+                        formMain.selectedPolygonPointIndex++;
+                    }
+
+                    //вывод нового маршрута на экран
+                    ShowCreatingPolygon(formMain.creatingPolygonOverlay, formMain.creatingPolygon);
+                }
+
                 return;
             }
             #endregion
@@ -331,8 +367,7 @@ namespace TrackConverter.UI.Shell
                 {
                     if (formMain.creatingRoute.Contains(item.Tag.Info))
                     {
-                        formMain.selectedPointIndex = formMain.creatingRoute.IndexOf(item.Tag.Info);
-                        formMain.isMarkerClicked = true;
+                        formMain.selectedRoutePointIndex = formMain.creatingRoute.IndexOf(item.Tag.Info);
                         ShowCreatingRoute(formMain.creatingRouteOverlay, formMain.creatingRoute);
                     }
                 }
@@ -340,11 +375,21 @@ namespace TrackConverter.UI.Shell
                 {
                     if (formMain.rulerRoute.Contains(item.Tag.Info))
                     {
-                        formMain.selectedPointIndex = formMain.rulerRoute.IndexOf(item.Tag.Info);
-                        formMain.isMarkerClicked = true;
+                        formMain.selectedRoutePointIndex = formMain.rulerRoute.IndexOf(item.Tag.Info);
                         ShowCreatingRoute(formMain.rulerRouteOverlay, formMain.rulerRoute);
                     }
                 }
+            }
+
+            //выделение нажатого маркера при создании периметра
+            if (e.Button == MouseButtons.Left && formMain.isCreatingPolygon && !formMain.isMarkerMoving && formMain.gmapControlMap.IsMouseOverMarker)
+            {
+                if (formMain.creatingPolygon.Contains(item.Tag.Info))
+                {
+                    formMain.selectedPolygonPointIndex = formMain.creatingPolygon.IndexOf(item.Tag.Info);
+                    ShowCreatingPolygon(formMain.creatingPolygonOverlay, formMain.creatingPolygon);
+                }
+
             }
         }
 
@@ -354,26 +399,31 @@ namespace TrackConverter.UI.Shell
         /// <param name="e"></param>
         internal void OnPolygonClick(MouseEventArgs e)
         {
-            formMain.currentMarker = null;
-            List<VectorMapLayerObject> objs = formMain.gmapControlMap.GetVectorObjectsUnderCursor();
-            if (objs.Count == 0)
-                return;
-            VectorMapLayerObject obj;
-            if (objs.Count == 1)
-                obj = objs[0];
-            else
+            //выбор дополнительной информации об объекте 
+            if (e.Button == MouseButtons.Left)
             {
-                FormChooseVariant fcv = new FormChooseVariant(objs, "Выбор объекта", SelectionMode.One);
-                if (fcv.ShowDialog(Program.winMain) == DialogResult.OK)
-                {
-                    if (fcv.Result.Count != 1) //выход, если выбрано более одного объекта
-                        return;
-                    obj = objs[fcv.Result[0]];
-                }
-                else //выход, если выбор объекта отменён
+                formMain.currentMarker = null;
+                List<VectorMapLayerObject> objs = formMain.gmapControlMap.GetVectorObjectsUnderCursor();
+                if (objs.Count == 0)
                     return;
+                VectorMapLayerObject obj;
+                if (objs.Count == 1)
+                    obj = objs[0];
+                else
+                {
+                    FormChooseVariant fcv = new FormChooseVariant(objs, "Выбор объекта", SelectionMode.One);
+                    if (fcv.ShowDialog(Program.winMain) == DialogResult.OK)
+                    {
+                        if (fcv.Result.Count != 1) //выход, если выбрано более одного объекта
+                            return;
+                        obj = objs[fcv.Result[0]];
+                    }
+                    else //выход, если выбор объекта отменён
+                        return;
+                }
+                new FormShowObjectInfo(obj).Show();
+                return;
             }
-            new FormShowObjectInfo(obj).Show();
         }
 
         internal void OnMarkerEnter(GMapMarker itm)
@@ -494,10 +544,10 @@ namespace TrackConverter.UI.Shell
             //вывод контекстного меню если не перемещается карта и мышь не на маршруте
             if (e.Button == MouseButtons.Right && !formMain.gmapControlMap.IsDragging && !formMain.gmapControlMap.IsMouseOverRoute)
             {
-                if (!formMain.gmapControlMap.IsMouseOverMarker)
+                if (!formMain.gmapControlMap.IsMouseOverMarker) //если курсор не на маркере, то открываем контекстное окно карты
                 {
-                    formMain.contextMenuStripMap.Show(formMain.gmapControlMap, new Point(e.X, e.Y));
                     formMain.pointClicked = formMain.gmapControlMap.FromLocalToLatLng(e.X, e.Y);
+                    formMain.contextMenuStripMap.Show(formMain.gmapControlMap, new Point(e.X, e.Y));
                 }
                 return;
             }
@@ -543,6 +593,8 @@ namespace TrackConverter.UI.Shell
                     ShowCreatingRoute(formMain.creatingRouteOverlay, formMain.creatingRoute);
                 if (formMain.isRuling)
                     ShowCreatingRoute(formMain.rulerRouteOverlay, formMain.rulerRoute);
+                if (formMain.isCreatingPolygon)
+                    ShowCreatingPolygon(formMain.creatingPolygonOverlay, formMain.creatingPolygon);
             }
 
         }
@@ -782,6 +834,7 @@ namespace TrackConverter.UI.Shell
             selectDropDownItems<MapProviderRecord>(formMain.mapProviderToolStripMenuItem, mpr.ID);
         }
 
+
         /// <summary>
         /// выделяет пункты меню, карта или слой которого выбран
         /// </summary>
@@ -841,11 +894,20 @@ namespace TrackConverter.UI.Shell
 
         #endregion
 
-        #region Контекстные меню
+        #region Контекстные меню карты
 
         internal void ContextMenuMapOpening(object sender, CancelEventArgs e)
         {
+            //кнопка очистки маркеров построения маршрутов
             formMain.clearFromtoMarkersToolStripMenuItem.Visible = formMain.fromToOverlay.Markers.Count != 0;
+
+            //кнопка редактирования викимапии
+            formMain.wikimapiaToolStripMenuItem.Visible = formMain.gmapControlMap.LayerProvider == MapLayerProviders.Wikimapia;
+            if (formMain.gmapControlMap.LayerProvider == MapLayerProviders.Wikimapia)
+            {
+                formMain.editObjectToolStripMenuItem.Visible = formMain.gmapControlMap.IsMouseOverPolygon;
+                formMain.removeObjectToolStripMenuItem.Visible = formMain.gmapControlMap.IsMouseOverPolygon;
+            }
         }
 
         internal void ContextMenuMarkerOpening(object sender, CancelEventArgs e)
@@ -1028,6 +1090,101 @@ namespace TrackConverter.UI.Shell
             }
         }
 
+        /// <summary>
+        /// создать новый объект викимапии
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        internal void ToolStripCreateWikimapiaObject(object sender, EventArgs e)
+        {
+            //нарисовать периметр объекта
+            TrackFile tf = new TrackFile();
+            BeginEditPolygon(tf, (track) =>
+            {
+                //открыть окно редактирования
+                Wikimapia.ObjectEditInfo inf = new Wikimapia.ObjectEditInfo()
+                {
+                    Geometry = track
+                };
+                new FormEditWikimapiaObject(inf, (obj) =>
+                {
+                    try
+                    {
+                        int id = Wikimapia.ServiceEngine.CreateObject(obj);
+                        var f = new Wikimapia(null).GetExtInfo(new VectorMapLayerObject(null, "n") { ID = id });
+                        VectorMapLayerObject vo = new VectorMapLayerObject(obj.Geometry, f.Title) { ID = id, LayerProvider = MapLayerProviders.Wikimapia, Link = "http://wikimapia.org/" + id };
+                        formMain.gmapControlMap.ShowVectorLayerObject(vo);
+                    }
+                    catch (Exception ee)
+                    {
+                        MessageBox.Show(formMain, "Произошла ошибка:\r\n" + ee.Message, "Создание объекта Wikimapia", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                        return;
+                    }
+
+                }).Show(formMain);
+                formMain.isCreatingPolygon = false;
+            });
+
+        }
+
+        internal void ToolStripRemoveWikimapiaObject(object sender, EventArgs e)
+        {
+            formMain.currentMarker = null;
+            List<VectorMapLayerObject> objs = formMain.gmapControlMap.GetVectorObjectsUnderCursor();
+            if (objs.Count == 0)
+                return;
+            VectorMapLayerObject obj;
+            if (objs.Count == 1)
+                obj = objs[0];
+            else
+            {
+                FormChooseVariant fcv = new FormChooseVariant(objs, "Выбор объекта", SelectionMode.One);
+                if (fcv.ShowDialog(Program.winMain) == DialogResult.OK)
+                {
+                    if (fcv.Result.Count != 1) //выход, если выбрано более одного объекта
+                        return;
+                    obj = objs[fcv.Result[0]];
+                }
+                else //выход, если выбор объекта отменён
+                    return;
+            }
+            if (MessageBox.Show(formMain, "Вы действительно хотите удалить объект \"" + obj.Name + "\"?", "Удаление объекта", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) == DialogResult.Yes)
+                Wikimapia.ServiceEngine.RemoveObject(obj.ID);
+            return;
+        }
+
+        internal void ToolStripEditWikimapiaObject(object sender, EventArgs e)
+        {
+            formMain.currentMarker = null;
+            List<VectorMapLayerObject> objs = formMain.gmapControlMap.GetVectorObjectsUnderCursor();
+            if (objs.Count == 0)
+                return;
+            VectorMapLayerObject obj;
+            if (objs.Count == 1)
+                obj = objs[0];
+            else
+            {
+                FormChooseVariant fcv = new FormChooseVariant(objs, "Выбор объекта", SelectionMode.One);
+                if (fcv.ShowDialog(Program.winMain) == DialogResult.OK)
+                {
+                    if (fcv.Result.Count != 1) //выход, если выбрано более одного объекта
+                        return;
+                    obj = objs[fcv.Result[0]];
+                }
+                else //выход, если выбор объекта отменён
+                    return;
+            }
+            Wikimapia.ObjectEditInfo inf = new Wikimapia.ObjectEditInfo()
+            {
+                ID = obj.ID
+            };
+            new FormEditWikimapiaObject(inf, (nobj) =>
+            {
+                Wikimapia.ServiceEngine.EditObject(nobj.ID, nobj);
+            }).Show();
+            return;
+        }
+
         #endregion
 
         #region вспомогательные методы
@@ -1063,7 +1220,7 @@ namespace TrackConverter.UI.Shell
             foreach (TrackPoint tt in track)
             {
                 Icon ic;
-                if (i == formMain.selectedPointIndex)
+                if (i == formMain.selectedRoutePointIndex)
                     ic = Resources.route_point_selected;
                 else
                     ic = Resources.route_point;
@@ -1074,6 +1231,37 @@ namespace TrackConverter.UI.Shell
             ShowRoute(track, overlay, false);
             refreshToolTipsCreatingRoute(overlay);
             formMain.toolStripLabelInfo.Text = "Расстояние: " + track.Distance + " км, количество точек: " + track.Count;
+        }
+
+        /// <summary>
+        /// вывод создаваемого многоугольника
+        /// </summary>
+        /// <param name="overlay"></param>
+        /// <param name="track"></param>
+        public void ShowCreatingPolygon(GMapOverlay overlay, TrackFile track)
+        {
+            if (overlay.Id != formMain.creatingPolygonOverlayID)
+                throw new ArgumentException("Попытка вывода создаваемого периметра на чужой слой: " + overlay.Id, "overlay");
+
+            if (track.Count == 0)
+                return;
+
+            overlay.Clear();
+            int i = 0;
+            foreach (TrackPoint tt in track)
+            {
+                Icon ic;
+                if (i == formMain.selectedPolygonPointIndex)
+                    ic = Resources.route_point_selected;
+                else
+                    ic = Resources.route_point;
+                ShowWaypoint(tt, overlay, ic, MarkerTypes.CreatingRoute, MarkerTooltipMode.OnMouseOver, false);
+                i++;
+            }
+            ShowPolygon(track, overlay, formMain.gmapControlMap.selectedPolygonBrush);
+            TrackFile tf = track + track[0]; //добавляем последнюю точку, чтоб полигон был замкнут
+            tf.Color = Color.DarkBlue;
+            ShowRoute(tf, overlay, false);
         }
 
         /// <summary>
@@ -1203,6 +1391,7 @@ namespace TrackConverter.UI.Shell
 
         }
 
+
         /// <summary>
         /// отменить выделение всех точек
         /// </summary>
@@ -1315,6 +1504,47 @@ namespace TrackConverter.UI.Shell
                 cancelAction
                 );
             Program.winTripEditor.Show(Program.winMain);
+        }
+
+        /// <summary>
+        /// редактирование периметра объекта
+        /// </summary>
+        /// <param name="trackFile">редактируемый полигон</param>
+        /// <param name="afterAction">Действие, выполняемое после нажатия кнопки сохранить</param>
+        /// <param name="cancelAction">Действие, выполняемое после нажатия кнопки отменить или закрытии окна</param>
+        public void BeginEditPolygon(TrackFile trackFile, Action<TrackFile> afterAction, Action cancelAction = null)
+        {
+            if (trackFile == null)
+                throw new ArgumentNullException("trackFile не может быть null в FormMap.BeginEditPolygon()");
+
+            formMain.gmapControlMap.DragButton = MouseButtons.Right;
+
+
+            //если идет сздание маршрута, то прерываем
+            if (formMain.isCreatingRoute)
+                if (MessageBox.Show(formMain, "Уже идет создание или редактирование маршрута, прервать?", "Внимание!", MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk) == DialogResult.Yes)
+                    Program.winRouteEditor.Close();
+                else
+                {
+                    if (cancelAction != null)
+                        cancelAction.Invoke();
+                    return;
+                }
+
+            //открываем маршрут для редактирования
+            formMain.creatingPolygon = trackFile;
+            formMain.creatingPolygonOverlay.Clear();
+            formMain.isCreatingPolygon = true;
+            Program.winPolygonEditor = new FormEditPolygon(
+                "Редактирование периметра объекта",
+                formMain.creatingPolygon,
+                afterAction,
+                cancelAction
+                );
+            Program.winPolygonEditor.Show(formMain);
+            ShowCreatingPolygon(formMain.creatingPolygonOverlay, formMain.creatingPolygon);
+            if (formMain.creatingPolygonOverlay.Routes.Count > 0)
+                formMain.gmapControlMap.ZoomAndCenterRoute(formMain.creatingPolygonOverlay.Routes[0]);
         }
 
         /// <summary>

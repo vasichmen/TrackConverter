@@ -1,4 +1,7 @@
-﻿using System;
+﻿using GMap.NET;
+using GMap.NET.MapProviders;
+using GMap.NET.WindowsForms;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
@@ -6,9 +9,6 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using GMap.NET;
-using GMap.NET.MapProviders;
-using GMap.NET.WindowsForms;
 using TrackConverter.Lib.Classes;
 using TrackConverter.Lib.Classes.ProviderRecords;
 using TrackConverter.Lib.Classes.StackEdits;
@@ -22,7 +22,7 @@ using ZedGraph;
 
 namespace TrackConverter.UI.Shell
 {
-    public partial class FormMain: Form
+    public partial class FormMain : Form
     {
         #region ПОЛЯ
 
@@ -33,12 +33,22 @@ namespace TrackConverter.UI.Shell
         /// <summary>
         /// индекс активного маркера при создании маршрута
         /// </summary>
-        public int selectedPointIndex;
+        public int selectedRoutePointIndex;
+
+        /// <summary>
+        /// индекс активного маркера при создании маршрута
+        /// </summary>
+        public int selectedPolygonPointIndex;
 
         /// <summary>
         /// если истина, значит создается маршрут
         /// </summary>
         public bool isCreatingRoute;
+
+        /// <summary>
+        /// если истина, значит создается маршрут
+        /// </summary>
+        public bool isCreatingPolygon;
 
         /// <summary>
         /// если истина, то при нажатии на карту ЛКМ надо открыть меню редактирования точки и вызвать this.AfterSelectPointAction
@@ -91,6 +101,11 @@ namespace TrackConverter.UI.Shell
         public TrackFile creatingRoute;
 
         /// <summary>
+        /// создаваемый маршрут
+        /// </summary>
+        public TrackFile creatingPolygon;
+
+        /// <summary>
         /// слой с маркерами и маршрутами на карте
         /// </summary>
         public GMapOverlay baseOverlay;
@@ -99,6 +114,11 @@ namespace TrackConverter.UI.Shell
         /// слой создаваемого маршрута
         /// </summary>
         public GMapOverlay creatingRouteOverlay;
+
+        /// <summary>
+        /// слой создаваемого маршрута
+        /// </summary>
+        public GMapOverlay creatingPolygonOverlay;
 
         /// <summary>
         /// слой измерения расстояний
@@ -229,6 +249,11 @@ namespace TrackConverter.UI.Shell
         public readonly string creatingRouteOverlayID = "creatingRouteOverlay";
 
         /// <summary>
+        /// слой создаваемого периметра объекта
+        /// </summary>
+        public readonly string creatingPolygonOverlayID = "creatingPolygonOverlay";
+
+        /// <summary>
         /// слой создаваемого маршрута
         /// </summary>
         public readonly string creatingTripOverlayID = "creatingTripOverlay";
@@ -287,6 +312,16 @@ namespace TrackConverter.UI.Shell
         /// последний запрос в поиске мест
         /// </summary>
         public string lastGoToQuery = "";
+
+        /// <summary>
+        /// аргументы командной строки
+        /// </summary>
+        private string[] args;
+
+        /// <summary>
+        /// Счетчик одновременно запущенных операций.
+        /// </summary>
+        private int OperationCounter = 0;
 
         #endregion
 
@@ -352,11 +387,6 @@ namespace TrackConverter.UI.Shell
 
         #endregion
 
-
-        /// <summary>
-        /// Счетчик одновременно запущенных операций.
-        /// </summary>
-        private int OperationCounter = 0;
 
 
         internal GraphHelper graphHelper;
@@ -509,7 +539,7 @@ namespace TrackConverter.UI.Shell
                         c3 = it1;
                 }
 
-                
+
 
                 if (classes3.ContainsKey(mpr.MapLayerProviderClass))
                 {
@@ -539,7 +569,7 @@ namespace TrackConverter.UI.Shell
             }
 
             #endregion
-            
+
 
             #endregion
 
@@ -566,15 +596,8 @@ namespace TrackConverter.UI.Shell
 
             #endregion
 
-            //если есть аргументы командной строки 
-            if (args.Length > 0)
-            {
-                //загрузка файлов из параметров
-                foreach (string arg in args)
-                {
-                    converterHelper.OpenFile(arg);
-                }
-            }
+            this.args = args;
+
             this.ResumeLayout();
         }
 
@@ -700,6 +723,18 @@ namespace TrackConverter.UI.Shell
                     BeginOperation();
                     Vars.TaskLoadingETOPO.Start();
                 }
+
+
+            //если есть аргументы командной строки 
+            if (args.Length > 0)
+            {
+                //загрузка файлов из параметров
+                foreach (string arg in args)
+                {
+                    converterHelper.OpenFile(arg);
+                }
+            }
+
             this.ResumeLayout(true);
         }
 
@@ -1016,6 +1051,20 @@ namespace TrackConverter.UI.Shell
             mapHelper.ToolStripDeleteRoute(e);
         }
 
+        private void createObjectToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            mapHelper.ToolStripCreateWikimapiaObject(sender, e);
+        }
+
+        private void editObjectToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            mapHelper.ToolStripEditWikimapiaObject(sender, e);
+        }
+
+        private void removeObjectToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            mapHelper.ToolStripRemoveWikimapiaObject(sender, e);
+        }
 
         #endregion
 
@@ -1461,19 +1510,25 @@ namespace TrackConverter.UI.Shell
 
         private void button1_Click(object sender, EventArgs e)
         {
-            Image img = new Bitmap(256, 256);
-            ///MemoryStream str = new MemoryStream();
-            //img.Save(str, System.Drawing.Imaging.ImageFormat.Bmp);
-            // new GMapImage() { Img = img, Data = str };
-
-            Graphics gr = gmapControlMap.CreateGraphics();
-            gr.DrawImage(img,0,0);
-
+            BaseConnection.UseProxy = true;
+            Wikimapia.ServiceEngine.CreateObject(new Wikimapia.ObjectEditInfo()
+            {
+                Geometry = new TrackFile() {
+                new TrackPoint(55,37), new TrackPoint(56.002,36.004), new TrackPoint(56,36.002)
+            },
+                Title = "big homme",
+                BuildingNumber = "1",
+                Description = "descjhgxjdhf",
+                IsBuilding = true,
+                StreetName = "",
+                WikipediaLink = "",
+                 ObjectType = 1
+            });
         }
 
     }
 
 
-    }
+}
 
 

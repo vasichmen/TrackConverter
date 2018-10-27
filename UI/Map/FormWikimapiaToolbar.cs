@@ -130,7 +130,7 @@ namespace TrackConverter.UI.Map
                 comboBoxCategories.DroppedDown = false;
                 return;
             }
-            List<Wikimapia.CategoryInfo> cats = wiki_engine.GetCategories(comboBoxCategories.Text);
+            List<Wikimapia.CategoryInfo> cats = Wikimapia.ServiceEngine.GetCategories(comboBoxCategories.Text);
             comboBoxCategories.Items.Clear();
             comboBoxCategories.Items.Add("Нет категории");
             comboBoxCategories.Items.AddRange(cats.ToArray());

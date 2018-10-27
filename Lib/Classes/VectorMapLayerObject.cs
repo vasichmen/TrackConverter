@@ -70,7 +70,7 @@ namespace TrackConverter.Lib.Classes
         /// <param name="geometry">геометрия объекта, заданная списком точек</param>
         /// <param name="name">имя объекта</param>
         public VectorMapLayerObject(TrackFile geometry, string name)
-        : this(new GMapPolygon(geometry.GMapPoints, name)) { }
+        : this(new GMapPolygon(geometry==null?new List<PointLatLng>():geometry.GMapPoints, name)) { }
 
         /// <summary>
         /// преобразует строковое представление периметра объекта в полигон
@@ -234,6 +234,13 @@ namespace TrackConverter.Lib.Classes
         /// если истина, то объект невидим на карте
         /// </summary>
         public bool Invisible { get; set; }
+
+        /// <summary>
+        /// геометрия объекта в формате TrackFile
+        /// </summary>
+        public TrackFile GeometryTrackFile { get {
+                return new TrackFile(this.Geometry);
+            } }
 
         /// <summary>
         /// текстовое представление объекта слоя (имя)

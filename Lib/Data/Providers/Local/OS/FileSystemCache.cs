@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 using TrackConverter.Lib.Data.Interfaces;
 using TrackConverter.Lib.Exceptions;
 
@@ -341,20 +342,35 @@ namespace TrackConverter.Lib.Data.Providers.Local.OS
             if (!isFileLoaded)
                 throw new TrackConverterException("Перед удалением отсутствующих файлов необходимо загрузить файл данных");
 
-            foreach (var file in Directory.EnumerateFiles(directory))
+            List<string> files = new List<string>(Directory.EnumerateFiles(directory));
+            List<string> files_names = new List<string>(files.ConvertAll(new Converter<string, string>((file) => { return Path.GetFileName(file); })));
+            var values = files_data.Values;
+            
+            //удаление файлов, для которых нет записи в кэше
+            Parallel.For(0, files.Count, new Action<int>((i) =>
             {
+                string file = files[i];
                 bool f = false;
-                foreach (FileInfo fi in files_data.Values)
-                    if (fi.path == Path.GetFileName(file))
-                    {
+                foreach (FileInfo fi in values)
+                    if (fi.path == files_names[i])
                         f = true;
-                        break;
-                    }
-                if (!f && Path.GetFileName(file) != dataFileName)
+
+                if (!f && files_names[i] != dataFileName)
                     try
                     { File.Delete(file); }
                     catch (Exception) { }
-            }
+            }));
+
+            //удаление записей в кэше, для которых нет файлов
+            Parallel.ForEach(values, new Action<FileInfo>((i) =>
+            {
+                if (!files_names.Contains(i.path))
+                {
+                    string k = i.url;
+                    files_data.TryRemove(k, out FileInfo v);
+                }
+            }));
+
         }
 
         /// <summary>
