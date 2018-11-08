@@ -108,17 +108,17 @@
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.checkBoxYKm = new System.Windows.Forms.CheckBox();
             this.checkBoxXKm = new System.Windows.Forms.CheckBox();
+            this.tabPage7 = new System.Windows.Forms.TabPage();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.label19 = new System.Windows.Forms.Label();
+            this.label18 = new System.Windows.Forms.Label();
+            this.textBoxWikimapiaPassword = new System.Windows.Forms.TextBox();
+            this.textBoxWikimapiaLogin = new System.Windows.Forms.TextBox();
+            this.buttonWikimapiaLogout = new System.Windows.Forms.Button();
+            this.buttonWikimapiaLogin = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.tabPage7 = new System.Windows.Forms.TabPage();
-            this.buttonWikimapiaLogin = new System.Windows.Forms.Button();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.buttonWikimapiaLogout = new System.Windows.Forms.Button();
-            this.textBoxWikimapiaLogin = new System.Windows.Forms.TextBox();
-            this.textBoxWikimapiaPassword = new System.Windows.Forms.TextBox();
-            this.label18 = new System.Windows.Forms.Label();
-            this.label19 = new System.Windows.Forms.Label();
             this.groupBox2.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage5.SuspendLayout();
@@ -227,7 +227,7 @@
             this.tabPage5.Controls.Add(this.checkBoxLastExtension);
             this.tabPage5.Location = new System.Drawing.Point(4, 22);
             this.tabPage5.Name = "tabPage5";
-            this.tabPage5.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            this.tabPage5.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage5.Size = new System.Drawing.Size(460, 410);
             this.tabPage5.TabIndex = 4;
             this.tabPage5.Text = "Общие";
@@ -397,7 +397,7 @@
             this.tabPage1.Controls.Add(this.groupBox2);
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage1.Size = new System.Drawing.Size(460, 410);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Конвертер";
@@ -552,7 +552,7 @@
             this.tabPage2.Controls.Add(this.checkBoxRestoreWptsRts);
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage2.Size = new System.Drawing.Size(460, 410);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Карта";
@@ -758,7 +758,7 @@
             this.tabPage3.Controls.Add(this.label7);
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage3.Size = new System.Drawing.Size(460, 410);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Источники данных";
@@ -876,7 +876,8 @@
             this.comboBoxGeocodingProvider.Items.AddRange(new object[] {
             "Яндекс",
             "Google",
-            "Nominatim"});
+            "Nominatim",
+            "Arcgis"});
             this.comboBoxGeocodingProvider.Location = new System.Drawing.Point(128, 6);
             this.comboBoxGeocodingProvider.Name = "comboBoxGeocodingProvider";
             this.comboBoxGeocodingProvider.Size = new System.Drawing.Size(326, 21);
@@ -899,7 +900,7 @@
             this.tabPage4.Controls.Add(this.groupBox3);
             this.tabPage4.Location = new System.Drawing.Point(4, 22);
             this.tabPage4.Name = "tabPage4";
-            this.tabPage4.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage4.Size = new System.Drawing.Size(460, 410);
             this.tabPage4.TabIndex = 3;
             this.tabPage4.Text = "Сервисы";
@@ -1024,7 +1025,7 @@
             this.tabPage6.Controls.Add(this.groupBox4);
             this.tabPage6.Location = new System.Drawing.Point(4, 22);
             this.tabPage6.Name = "tabPage6";
-            this.tabPage6.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            this.tabPage6.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage6.Size = new System.Drawing.Size(460, 410);
             this.tabPage6.TabIndex = 5;
             this.tabPage6.Text = "Графики";
@@ -1111,6 +1112,87 @@
         "цы измерения для осей чтобы увидеть реальную картину рельефа");
             this.checkBoxXKm.UseVisualStyleBackColor = true;
             // 
+            // tabPage7
+            // 
+            this.tabPage7.Controls.Add(this.groupBox1);
+            this.tabPage7.Location = new System.Drawing.Point(4, 22);
+            this.tabPage7.Name = "tabPage7";
+            this.tabPage7.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage7.Size = new System.Drawing.Size(460, 410);
+            this.tabPage7.TabIndex = 6;
+            this.tabPage7.Text = "Авторизация";
+            this.tabPage7.UseVisualStyleBackColor = true;
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.label19);
+            this.groupBox1.Controls.Add(this.label18);
+            this.groupBox1.Controls.Add(this.textBoxWikimapiaPassword);
+            this.groupBox1.Controls.Add(this.textBoxWikimapiaLogin);
+            this.groupBox1.Controls.Add(this.buttonWikimapiaLogout);
+            this.groupBox1.Controls.Add(this.buttonWikimapiaLogin);
+            this.groupBox1.Location = new System.Drawing.Point(8, 6);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(444, 104);
+            this.groupBox1.TabIndex = 1;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Wikimapia";
+            // 
+            // label19
+            // 
+            this.label19.AutoSize = true;
+            this.label19.Location = new System.Drawing.Point(3, 48);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(45, 13);
+            this.label19.TabIndex = 4;
+            this.label19.Text = "Пароль";
+            // 
+            // label18
+            // 
+            this.label18.AutoSize = true;
+            this.label18.Location = new System.Drawing.Point(3, 22);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(38, 13);
+            this.label18.TabIndex = 3;
+            this.label18.Text = "Логин";
+            // 
+            // textBoxWikimapiaPassword
+            // 
+            this.textBoxWikimapiaPassword.Location = new System.Drawing.Point(54, 45);
+            this.textBoxWikimapiaPassword.Name = "textBoxWikimapiaPassword";
+            this.textBoxWikimapiaPassword.PasswordChar = '*';
+            this.textBoxWikimapiaPassword.Size = new System.Drawing.Size(147, 20);
+            this.textBoxWikimapiaPassword.TabIndex = 2;
+            this.textBoxWikimapiaPassword.UseSystemPasswordChar = true;
+            // 
+            // textBoxWikimapiaLogin
+            // 
+            this.textBoxWikimapiaLogin.Location = new System.Drawing.Point(54, 19);
+            this.textBoxWikimapiaLogin.Name = "textBoxWikimapiaLogin";
+            this.textBoxWikimapiaLogin.Size = new System.Drawing.Size(147, 20);
+            this.textBoxWikimapiaLogin.TabIndex = 1;
+            // 
+            // buttonWikimapiaLogout
+            // 
+            this.buttonWikimapiaLogout.Enabled = false;
+            this.buttonWikimapiaLogout.Location = new System.Drawing.Point(126, 71);
+            this.buttonWikimapiaLogout.Name = "buttonWikimapiaLogout";
+            this.buttonWikimapiaLogout.Size = new System.Drawing.Size(75, 23);
+            this.buttonWikimapiaLogout.TabIndex = 0;
+            this.buttonWikimapiaLogout.Text = "Выход";
+            this.buttonWikimapiaLogout.UseVisualStyleBackColor = true;
+            this.buttonWikimapiaLogout.Click += new System.EventHandler(this.buttonWikimapiaLogout_Click);
+            // 
+            // buttonWikimapiaLogin
+            // 
+            this.buttonWikimapiaLogin.Location = new System.Drawing.Point(6, 71);
+            this.buttonWikimapiaLogin.Name = "buttonWikimapiaLogin";
+            this.buttonWikimapiaLogin.Size = new System.Drawing.Size(114, 23);
+            this.buttonWikimapiaLogin.TabIndex = 0;
+            this.buttonWikimapiaLogin.Text = "Авторизоваться";
+            this.buttonWikimapiaLogin.UseVisualStyleBackColor = true;
+            this.buttonWikimapiaLogin.Click += new System.EventHandler(this.buttonWikimapiaLogin_Click);
+            // 
             // buttonCancel
             // 
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
@@ -1133,87 +1215,6 @@
             this.buttonOK.Text = "ОК";
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.buttonOK_Click);
-            // 
-            // tabPage7
-            // 
-            this.tabPage7.Controls.Add(this.groupBox1);
-            this.tabPage7.Location = new System.Drawing.Point(4, 22);
-            this.tabPage7.Name = "tabPage7";
-            this.tabPage7.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage7.Size = new System.Drawing.Size(460, 410);
-            this.tabPage7.TabIndex = 6;
-            this.tabPage7.Text = "Авторизация";
-            this.tabPage7.UseVisualStyleBackColor = true;
-            // 
-            // buttonWikimapiaLogin
-            // 
-            this.buttonWikimapiaLogin.Location = new System.Drawing.Point(6, 71);
-            this.buttonWikimapiaLogin.Name = "buttonWikimapiaLogin";
-            this.buttonWikimapiaLogin.Size = new System.Drawing.Size(114, 23);
-            this.buttonWikimapiaLogin.TabIndex = 0;
-            this.buttonWikimapiaLogin.Text = "Авторизоваться";
-            this.buttonWikimapiaLogin.UseVisualStyleBackColor = true;
-            this.buttonWikimapiaLogin.Click += new System.EventHandler(this.buttonWikimapiaLogin_Click);
-            // 
-            // groupBox1
-            // 
-            this.groupBox1.Controls.Add(this.label19);
-            this.groupBox1.Controls.Add(this.label18);
-            this.groupBox1.Controls.Add(this.textBoxWikimapiaPassword);
-            this.groupBox1.Controls.Add(this.textBoxWikimapiaLogin);
-            this.groupBox1.Controls.Add(this.buttonWikimapiaLogout);
-            this.groupBox1.Controls.Add(this.buttonWikimapiaLogin);
-            this.groupBox1.Location = new System.Drawing.Point(8, 6);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(444, 104);
-            this.groupBox1.TabIndex = 1;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Wikimapia";
-            // 
-            // buttonWikimapiaLogout
-            // 
-            this.buttonWikimapiaLogout.Enabled = false;
-            this.buttonWikimapiaLogout.Location = new System.Drawing.Point(126, 71);
-            this.buttonWikimapiaLogout.Name = "buttonWikimapiaLogout";
-            this.buttonWikimapiaLogout.Size = new System.Drawing.Size(75, 23);
-            this.buttonWikimapiaLogout.TabIndex = 0;
-            this.buttonWikimapiaLogout.Text = "Выход";
-            this.buttonWikimapiaLogout.UseVisualStyleBackColor = true;
-            this.buttonWikimapiaLogout.Click += new System.EventHandler(this.buttonWikimapiaLogout_Click);
-            // 
-            // textBoxWikimapiaLogin
-            // 
-            this.textBoxWikimapiaLogin.Location = new System.Drawing.Point(54, 19);
-            this.textBoxWikimapiaLogin.Name = "textBoxWikimapiaLogin";
-            this.textBoxWikimapiaLogin.Size = new System.Drawing.Size(147, 20);
-            this.textBoxWikimapiaLogin.TabIndex = 1;
-            // 
-            // textBoxWikimapiaPassword
-            // 
-            this.textBoxWikimapiaPassword.Location = new System.Drawing.Point(54, 45);
-            this.textBoxWikimapiaPassword.Name = "textBoxWikimapiaPassword";
-            this.textBoxWikimapiaPassword.PasswordChar = '*';
-            this.textBoxWikimapiaPassword.Size = new System.Drawing.Size(147, 20);
-            this.textBoxWikimapiaPassword.TabIndex = 2;
-            this.textBoxWikimapiaPassword.UseSystemPasswordChar = true;
-            // 
-            // label18
-            // 
-            this.label18.AutoSize = true;
-            this.label18.Location = new System.Drawing.Point(3, 22);
-            this.label18.Name = "label18";
-            this.label18.Size = new System.Drawing.Size(38, 13);
-            this.label18.TabIndex = 3;
-            this.label18.Text = "Логин";
-            // 
-            // label19
-            // 
-            this.label19.AutoSize = true;
-            this.label19.Location = new System.Drawing.Point(3, 48);
-            this.label19.Name = "label19";
-            this.label19.Size = new System.Drawing.Size(45, 13);
-            this.label19.TabIndex = 4;
-            this.label19.Text = "Пароль";
             // 
             // FormOptions
             // 

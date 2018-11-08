@@ -90,6 +90,9 @@ namespace TrackConverter.UI.Tools
                 case GeoCoderProvider.Nominatim:
                     comboBoxGeocodingProvider.SelectedIndex = 2;
                     break;
+                case GeoCoderProvider.Arcgis:
+                    comboBoxGeocodingProvider.SelectedIndex = 3;
+                    break;
             }
 
             //поставщик высот
@@ -353,6 +356,8 @@ namespace TrackConverter.UI.Tools
                 Vars.Options.DataSources.GeoCoderProvider = GeoCoderProvider.Google;
             if (comboBoxGeocodingProvider.SelectedIndex == 2)
                 Vars.Options.DataSources.GeoCoderProvider = GeoCoderProvider.Nominatim;
+            if (comboBoxGeocodingProvider.SelectedIndex == 3)
+                Vars.Options.DataSources.GeoCoderProvider = GeoCoderProvider.Arcgis;
 
             //поставщик  высоты
             if (comboBoxGeoInfoProvider.SelectedIndex == 0)

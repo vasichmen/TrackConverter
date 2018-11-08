@@ -142,6 +142,7 @@
     <Compile Include="Data\Interfaces\IVectorMapLayerProvider.cs" />
     <Compile Include="Data\Interfaces\ILayerObjectExtInfoCache.cs" />
     <Compile Include="Data\Interfaces\IWebCache.cs" />
+    <Compile Include="Data\Providers\InternetServices\Arcgis.cs" />
     <Compile Include="Data\Providers\InternetServices\Bitly.cs" />
     <Compile Include="Data\Providers\InternetServices\Clck.cs" />
     <Compile Include="Data\Providers\InternetServices\Genshtab.cs" />

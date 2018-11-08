@@ -68,8 +68,10 @@ namespace TrackConverter.UI.Map
                         load.Start();
                         load.Wait();
 
+                        this.SuspendLayout();
+
                         //ОСНОВНЫЕ ДАННЫЕ
-                        //labelName.Text = info.Title; //на этой строке по неизвестной причине ширина textBoxComments становится равно нулю!!!
+                        labelName.Text = info.Title; //на этой строке по неизвестной причине ширина textBoxComments становится равно нулю!!!
                         new ToolTip().SetToolTip(labelName, info.Title);
                         textBoxDescription.Text = info.Description;
                         linkLabelLink.Text = info.Link;
@@ -92,6 +94,7 @@ namespace TrackConverter.UI.Map
                             this.Height -= textBoxComments.Height;
                             textBoxComments.Height = 1;
                         }
+                        textBoxComments.Width = 200;
 
                         //КАРТИНКИ
 
@@ -160,6 +163,7 @@ namespace TrackConverter.UI.Map
                     finally
                     {
                         Program.winMain.EndOperation();
+                        this.ResumeLayout();
                     }
                     break;
                 case MapLayerProviders.None:
@@ -191,7 +195,7 @@ namespace TrackConverter.UI.Map
         private void linkLabelLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             if (e.Button == MouseButtons.Left)
-                Process.Start(linkLabelLink.Text);
+                Process.Start(Obj.Link);
         }
 
         /// <summary>

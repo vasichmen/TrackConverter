@@ -200,7 +200,7 @@ namespace TrackConverter.Lib.Classes
         /// <summary>
         /// Сссылка на описание объекта
         /// </summary>
-        public string Link { get; set; }
+        public string Link { get { return "http://wikimapia.org/" + this.ID + "/ru"; } }
 
         /// <summary>
         /// координаты центра многоугольника

@@ -44,6 +44,10 @@ namespace TrackConverter.Lib.Data
                 case GeoCoderProvider.Nominatim:
                     coder = new Nominatim();
                     break;
+                case GeoCoderProvider.Arcgis:
+                    coder = new Arcgis(Application.StartupPath + Resources.cache_directory + "\\http_cache\\arcgis");
+                    break;
+                        
                 default:
                     throw new Exception("Неизвестный поставщик геокодера");
             }

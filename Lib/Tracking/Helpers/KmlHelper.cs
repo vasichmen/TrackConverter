@@ -180,7 +180,7 @@ namespace TrackConverter.Lib.Tracking.Helpers
 
                 //если периметр объекта больше заданного, то добавляем в результат
                 if (perim)
-                    res.Add(new VectorMapLayerObject(geometry) {Name=name, ID = id, Link = link, LayerProvider = MapLayerProviders.Wikimapia, Invisible = false });
+                    res.Add(new VectorMapLayerObject(geometry) {Name=name, ID = id, LayerProvider = MapLayerProviders.Wikimapia, Invisible = false });
             }
             return res;
         }

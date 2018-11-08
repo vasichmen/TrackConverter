@@ -32,6 +32,8 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormShowObjectInfo));
             this.flowLayoutPanelWrapper = new System.Windows.Forms.FlowLayoutPanel();
             this.labelName = new System.Windows.Forms.Label();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.linkLabelCenterMap = new System.Windows.Forms.LinkLabel();
             this.linkLabelLink = new System.Windows.Forms.LinkLabel();
             this.contextMenuStripLinkLabel = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.copyLinkToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -41,11 +43,9 @@
             this.textBoxDescription = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.textBoxComments = new System.Windows.Forms.TextBox();
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.linkLabelCenterMap = new System.Windows.Forms.LinkLabel();
             this.flowLayoutPanelWrapper.SuspendLayout();
-            this.contextMenuStripLinkLabel.SuspendLayout();
             this.panel1.SuspendLayout();
+            this.contextMenuStripLinkLabel.SuspendLayout();
             this.SuspendLayout();
             // 
             // flowLayoutPanelWrapper
@@ -74,6 +74,29 @@
             this.labelName.Size = new System.Drawing.Size(126, 29);
             this.labelName.TabIndex = 6;
             this.labelName.Text = "Название";
+            // 
+            // panel1
+            // 
+            this.panel1.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.panel1.Controls.Add(this.linkLabelCenterMap);
+            this.panel1.Controls.Add(this.linkLabelLink);
+            this.panel1.Location = new System.Drawing.Point(3, 32);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(566, 23);
+            this.panel1.TabIndex = 13;
+            // 
+            // linkLabelCenterMap
+            // 
+            this.linkLabelCenterMap.AutoSize = true;
+            this.linkLabelCenterMap.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.linkLabelCenterMap.Location = new System.Drawing.Point(450, 0);
+            this.linkLabelCenterMap.Margin = new System.Windows.Forms.Padding(8, 0, 3, 0);
+            this.linkLabelCenterMap.Name = "linkLabelCenterMap";
+            this.linkLabelCenterMap.Size = new System.Drawing.Size(116, 18);
+            this.linkLabelCenterMap.TabIndex = 12;
+            this.linkLabelCenterMap.TabStop = true;
+            this.linkLabelCenterMap.Text = "На центр карты";
+            this.linkLabelCenterMap.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelCenterMap_LinkClicked);
             // 
             // linkLabelLink
             // 
@@ -166,38 +189,15 @@
             this.textBoxComments.BackColor = System.Drawing.SystemColors.Control;
             this.textBoxComments.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.textBoxComments.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.textBoxComments.Location = new System.Drawing.Point(575, 3);
+            this.textBoxComments.Location = new System.Drawing.Point(3, 441);
             this.textBoxComments.MaximumSize = new System.Drawing.Size(0, 212);
             this.textBoxComments.Multiline = true;
             this.textBoxComments.Name = "textBoxComments";
             this.textBoxComments.ReadOnly = true;
             this.textBoxComments.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBoxComments.Size = new System.Drawing.Size(0, 212);
+            this.textBoxComments.Size = new System.Drawing.Size(566, 203);
             this.textBoxComments.TabIndex = 8;
             this.textBoxComments.TabStop = false;
-            // 
-            // panel1
-            // 
-            this.panel1.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.panel1.Controls.Add(this.linkLabelCenterMap);
-            this.panel1.Controls.Add(this.linkLabelLink);
-            this.panel1.Location = new System.Drawing.Point(3, 32);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(566, 23);
-            this.panel1.TabIndex = 13;
-            // 
-            // linkLabelCenterMap
-            // 
-            this.linkLabelCenterMap.AutoSize = true;
-            this.linkLabelCenterMap.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.linkLabelCenterMap.Location = new System.Drawing.Point(450, 0);
-            this.linkLabelCenterMap.Margin = new System.Windows.Forms.Padding(8, 0, 3, 0);
-            this.linkLabelCenterMap.Name = "linkLabelCenterMap";
-            this.linkLabelCenterMap.Size = new System.Drawing.Size(116, 18);
-            this.linkLabelCenterMap.TabIndex = 12;
-            this.linkLabelCenterMap.TabStop = true;
-            this.linkLabelCenterMap.Text = "На центр карты";
-            this.linkLabelCenterMap.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelCenterMap_LinkClicked);
             // 
             // FormShowObjectInfo
             // 
@@ -215,9 +215,9 @@
             this.Shown += new System.EventHandler(this.formShowObjectInfo_Shown);
             this.flowLayoutPanelWrapper.ResumeLayout(false);
             this.flowLayoutPanelWrapper.PerformLayout();
-            this.contextMenuStripLinkLabel.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
+            this.contextMenuStripLinkLabel.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }

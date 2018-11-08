@@ -1112,7 +1112,7 @@ namespace TrackConverter.UI.Shell
                     {
                         int id = Wikimapia.ServiceEngine.CreateObject(obj);
                         var f = new Wikimapia(null).GetExtInfo(new VectorMapLayerObject(null, "n") { ID = id });
-                        VectorMapLayerObject vo = new VectorMapLayerObject(obj.Geometry, f.Title) { ID = id, LayerProvider = MapLayerProviders.Wikimapia, Link = "http://wikimapia.org/" + id };
+                        VectorMapLayerObject vo = new VectorMapLayerObject(obj.Geometry, f.Title) { ID = id, LayerProvider = MapLayerProviders.Wikimapia };
                         formMain.gmapControlMap.ShowVectorLayerObject(vo);
                     }
                     catch (Exception ee)

@@ -26,7 +26,12 @@ namespace TrackConverter
         /// <summary>
         /// Геокодер OpenStreetMaps
         /// </summary>
-        Nominatim
+        Nominatim,
+
+        /// <summary>
+        /// Arcgis.com
+        /// </summary>
+        Arcgis
     }
 
     /// <summary>

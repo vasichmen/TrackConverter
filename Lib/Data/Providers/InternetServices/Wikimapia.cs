@@ -178,7 +178,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
             /// <summary>
             /// ссылка на страницу объекта на викимапии
             /// </summary>
-            public string Link { get; internal set; }
+            public string Link { get { return "http://wikimapia.org/" + this.ID + "/ru"; } }
 
             /// <summary>
             /// список категорий объекта
@@ -738,7 +738,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                         string link = jt["url"].ToString();
                         string id = jt["id"].ToString();
                         pol.Name = name;
-                        VectorMapLayerObject lo = new VectorMapLayerObject(pol) { ID = int.Parse(id), Link = link, Name = name, LayerProvider = MapLayerProviders.Wikimapia };
+                        VectorMapLayerObject lo = new VectorMapLayerObject(pol) { ID = int.Parse(id),  Name = name, LayerProvider = MapLayerProviders.Wikimapia };
                         res.Add(lo);
                     }
 
@@ -811,7 +811,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
             {
                 Description = json["description"] != null ? json["description"].ToString() : "",
                 Title = json["title"].ToString(),
-                Link = "htp://wikimapia.org/" + id + "/" + json["language_iso"].ToString(),
+                //Link = "htp://wikimapia.org/" + id + "/" + json["language_iso"].ToString(),
                 Wikipedia = json["wikipedia"] != null ? json["wikipedia"].ToString() : ""
             };
             foreach (JObject jo in json["tags"])
@@ -892,8 +892,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
 
                     ExtInfo res = new ExtInfo
                     {
-                        ID = obj.ID,
-                        Link = url
+                        ID = obj.ID
                     };
 
                     var body = html.DocumentNode.ChildNodes["html"].ChildNodes["body"];
@@ -1255,6 +1254,8 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
             HtmlNode searchlist = html.DocumentNode.SelectSingleNode(@".//div[@class='row-fluid']/ul[@class='nav searchlist']");
 
             List<SearchObjectItemInfo> res = new List<SearchObjectItemInfo>();
+            if (searchlist == null)
+                return new List<SearchObjectItemInfo>();
             HtmlNodeCollection items = searchlist.SelectNodes(@".//li[@class='search-result-item']");
             foreach (var item in items)
             {
@@ -1266,7 +1267,8 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                 string nameS = name.InnerText;
 
                 string distance = item.SelectSingleNode(@".//span[@class='label label-info']").InnerText;
-                double dist = double.Parse(distance.Replace("&nbsp;км", "").Replace('.', Vars.DecimalSeparator));
+                string d1 = distance.Replace("&nbsp;км", "").Replace("&nbsp;km", "");
+                double dist = double.Parse(d1.Replace('.', Vars.DecimalSeparator));
 
                 string city = item.SelectSingleNode(@".//small").InnerText.Trim(new char[] { '\r', '\n', ' ' });
 
