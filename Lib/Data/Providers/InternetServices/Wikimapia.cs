@@ -661,7 +661,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         /// </summary>
         /// <param name="cacheDirectory">папка с кэшем или null, если не надо использовать кэш</param>
         /// <param name="duration">время хранения кэша в часах. По умолчанию - неделя</param>
-        public Wikimapia(string cacheDirectory, int duration = 24 * 7) : base(cacheDirectory, duration)
+        public Wikimapia(string cacheDirectory, double duration = 24 * 7) : base(cacheDirectory, duration)
         { }
 
         static Wikimapia()

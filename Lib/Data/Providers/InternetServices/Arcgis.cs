@@ -13,7 +13,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
     /// </summary>
     class Arcgis : BaseConnection, IGeoсoderProvider
     {
-        public Arcgis(string folder, int d=24*7):base(folder,d) { }
+        public Arcgis(string folder, double d=24*7):base(folder,d) { }
 
         /// <summary>
         /// 

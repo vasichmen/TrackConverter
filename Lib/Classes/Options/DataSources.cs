@@ -23,8 +23,14 @@ namespace TrackConverter.Lib.Classes.Options
             UseGeocoderCache = true;
             UseSystemTimeZones = false;
             UseMapLayerCache = true;
+            UseExtInfoCache = true;
+            UseImagesCache = true;
+
             MaxImageCacheDays = 30;
-            MaxVectorLayersCacheDays = 1;
+            MaxVectorLayersCacheDays = 0.5;
+            MaxGeocoderCacheDays = 30;
+            MaxExtInfoCacheDays = 1;
+
         }
 
         /// <summary>
@@ -60,11 +66,31 @@ namespace TrackConverter.Lib.Classes.Options
         /// <summary>
         /// максимальное время хранения кэша картинок в днях (по умолчанию 30 дней)
         /// </summary>
-        public int MaxImageCacheDays { get;  set; }
+        public double MaxImageCacheDays { get;  set; }
 
         /// <summary>
         /// максимальное время хранения кэша векторных слоёв в днях (по умолчанию 7 дней)
         /// </summary>
-        public int MaxVectorLayersCacheDays { get; set; }
+        public double MaxVectorLayersCacheDays { get; set; }
+
+        /// <summary>
+        /// время хранения кэша геокодера в днях
+        /// </summary>
+        public double MaxGeocoderCacheDays { get; set; }
+
+        /// <summary>
+        /// время хранения кэша информации об объектах в днях
+        /// </summary>
+        public double MaxExtInfoCacheDays { get; set; }
+
+        /// <summary>
+        /// использовать кэш для информации об объектах в днях
+        /// </summary>
+        public bool UseExtInfoCache { get; set; }
+
+        /// <summary>
+        /// использовать кэш картинок в днях
+        /// </summary>
+        public bool UseImagesCache { get; set; }
     }
 }

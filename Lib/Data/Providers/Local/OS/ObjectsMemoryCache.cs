@@ -12,10 +12,6 @@ namespace TrackConverter.Lib.Data.Providers.Local.OS
     /// </summary>
     internal class ObjectsMemoryCache: IVectorMapLayerCache
     {
-        /// <summary>
-        /// адрес папки для сохранения
-        /// </summary>
-        private readonly string dname;
 
         /// <summary>
         /// максимальное количество масштабов карты
@@ -31,9 +27,8 @@ namespace TrackConverter.Lib.Data.Providers.Local.OS
         /// создвёт новый объект кэша в памяти
         /// <param name="dname">адрес папки кэша</param>
         /// </summary>
-        public ObjectsMemoryCache(string dname)
+        public ObjectsMemoryCache()
         {
-            this.dname = dname;
             c = new MemoryCache[ZOOMS];
         }
         /// <summary>

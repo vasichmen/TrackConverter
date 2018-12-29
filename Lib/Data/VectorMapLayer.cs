@@ -31,7 +31,7 @@ namespace TrackConverter.Lib.Data
             switch (provider)
             {
                 case MapLayerProviders.Wikimapia:
-                    layer = new Wikimapia(Application.StartupPath + Resources.cache_directory + "\\http_cache\\wikimapia\\objects",Vars.Options.DataSources.MaxVectorLayersCacheDays);
+                    layer = new Wikimapia(Application.StartupPath + Resources.cache_directory + "\\http_cache\\wikimapia\\objects",Vars.Options.DataSources.MaxVectorLayersCacheDays*24);
                     break;
                 case MapLayerProviders.None:
                     throw new Exception("Нельзя создать поставщика слоя None");

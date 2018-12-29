@@ -32,7 +32,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         /// </summary>
         /// <param name="cacheDirectory">папка с кэшем или null, если не надо использоать кэш</param>
         /// <param name="duration">длительность хранения в часах. По умолчанию - неделя</param>
-        public BaseConnection(string cacheDirectory, int duration = 7 * 24) : this()
+        public BaseConnection(string cacheDirectory, double duration = 7 * 24) : this()
         {
             useCache = cacheDirectory != null;
             if (useCache)
@@ -53,7 +53,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         private DateTime lastQuery;
         private readonly bool useCache;
         private readonly string cacheDirectory;
-        private readonly int duration;
+        private readonly double duration;
         public static bool UseProxy = false;
         private readonly string ProxyHost = "127.0.0.1";
         private readonly int ProxyPort = 8118;

@@ -112,6 +112,14 @@ namespace TrackConverter.UI.Tools
             //использовать кэш
             checkBoxUseCacheGeocoder.Checked = Vars.Options.DataSources.UseGeocoderCache;
             checkBoxUseMaplayerCache.Checked = Vars.Options.DataSources.UseMapLayerCache;
+            checkBoxUseImageCache.Checked = Vars.Options.DataSources.UseImagesCache;
+            checkBoxUseExtInfoCache.Checked = Vars.Options.DataSources.UseExtInfoCache;
+
+            //длительность хранения кэша
+            numericUpDownImagesCacheDuration.Value = Convert.ToDecimal( Vars.Options.DataSources.MaxImageCacheDays);
+            numericUpDownMaplayersCacheDuration.Value = Convert.ToDecimal(Vars.Options.DataSources.MaxVectorLayersCacheDays);
+            numericUpDownExtInfoCacheDuration.Value = Convert.ToDecimal(Vars.Options.DataSources.MaxExtInfoCacheDays);
+            numericUpDownGeocoderCacheDuration.Value = Convert.ToDecimal(Vars.Options.DataSources.MaxGeocoderCacheDays);
 
             //папка ETOPO
             textBoxDBETOPOFolder.Text = Vars.Options.DataSources.ETOPODBFolder;
@@ -370,6 +378,14 @@ namespace TrackConverter.UI.Tools
             //использовать кэш
             Vars.Options.DataSources.UseGeocoderCache = checkBoxUseCacheGeocoder.Checked;
             Vars.Options.DataSources.UseMapLayerCache = checkBoxUseMaplayerCache.Checked;
+            Vars.Options.DataSources.UseImagesCache = checkBoxUseImageCache.Checked;
+            Vars.Options.DataSources.UseExtInfoCache = checkBoxUseExtInfoCache.Checked;
+
+            //длительность хранения кэша
+            Vars.Options.DataSources.MaxImageCacheDays = Convert.ToDouble(numericUpDownImagesCacheDuration.Value);
+            Vars.Options.DataSources.MaxVectorLayersCacheDays = Convert.ToDouble(numericUpDownMaplayersCacheDuration.Value);
+            Vars.Options.DataSources.MaxExtInfoCacheDays = Convert.ToDouble(numericUpDownExtInfoCacheDuration.Value);
+            Vars.Options.DataSources.MaxGeocoderCacheDays = Convert.ToDouble(numericUpDownGeocoderCacheDuration.Value);
 
             //папка ETOPO
             Vars.Options.DataSources.ETOPODBFolder = textBoxDBETOPOFolder.Text;
@@ -621,6 +637,26 @@ namespace TrackConverter.UI.Tools
             buttonWikimapiaLogin.Enabled = true;
             Vars.Options.Auth.WikimapiaLogin = "";
             Vars.Options.Auth.WikimapiaPassword = "";
+        }
+
+        /// <summary>
+        /// переключение активности элементов настройки кэша на Источники данных
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void checkBoxUseCache_CheckedChanged(object sender, EventArgs e)
+        {
+            numericUpDownGeocoderCacheDuration.Enabled = checkBoxUseCacheGeocoder.Checked;
+            labelGeocoder.Enabled = checkBoxUseCacheGeocoder.Checked;
+
+            numericUpDownExtInfoCacheDuration.Enabled = checkBoxUseExtInfoCache.Checked;
+            labelExtInfos.Enabled = checkBoxUseExtInfoCache.Checked;
+
+            numericUpDownImagesCacheDuration.Enabled = checkBoxUseImageCache.Checked;
+            labelImages.Enabled = checkBoxUseImageCache.Checked;
+
+            numericUpDownMaplayersCacheDuration.Enabled = checkBoxUseMaplayerCache.Checked;
+            labelMaplayers.Enabled = checkBoxUseMaplayerCache.Checked;
         }
     }
 }

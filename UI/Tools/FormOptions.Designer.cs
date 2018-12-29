@@ -79,6 +79,16 @@
             this.label6 = new System.Windows.Forms.Label();
             this.checkBoxRestoreWptsRts = new System.Windows.Forms.CheckBox();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.labelExtInfos = new System.Windows.Forms.Label();
+            this.numericUpDownExtInfoCacheDuration = new System.Windows.Forms.NumericUpDown();
+            this.labelImages = new System.Windows.Forms.Label();
+            this.numericUpDownImagesCacheDuration = new System.Windows.Forms.NumericUpDown();
+            this.labelMaplayers = new System.Windows.Forms.Label();
+            this.numericUpDownMaplayersCacheDuration = new System.Windows.Forms.NumericUpDown();
+            this.labelGeocoder = new System.Windows.Forms.Label();
+            this.numericUpDownGeocoderCacheDuration = new System.Windows.Forms.NumericUpDown();
+            this.checkBoxUseExtInfoCache = new System.Windows.Forms.CheckBox();
+            this.checkBoxUseImageCache = new System.Windows.Forms.CheckBox();
             this.checkBoxUseMaplayerCache = new System.Windows.Forms.CheckBox();
             this.linkLabelDownloadETOPO2 = new System.Windows.Forms.LinkLabel();
             this.linkLabelDownloadETOPO1 = new System.Windows.Forms.LinkLabel();
@@ -129,6 +139,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownRecursiveDepth)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarOptimalMethodType)).BeginInit();
             this.tabPage3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownExtInfoCacheDuration)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownImagesCacheDuration)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaplayersCacheDuration)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownGeocoderCacheDuration)).BeginInit();
             this.tabPage4.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.tabPage6.SuspendLayout();
@@ -745,6 +759,16 @@
             // 
             // tabPage3
             // 
+            this.tabPage3.Controls.Add(this.labelExtInfos);
+            this.tabPage3.Controls.Add(this.numericUpDownExtInfoCacheDuration);
+            this.tabPage3.Controls.Add(this.labelImages);
+            this.tabPage3.Controls.Add(this.numericUpDownImagesCacheDuration);
+            this.tabPage3.Controls.Add(this.labelMaplayers);
+            this.tabPage3.Controls.Add(this.numericUpDownMaplayersCacheDuration);
+            this.tabPage3.Controls.Add(this.labelGeocoder);
+            this.tabPage3.Controls.Add(this.numericUpDownGeocoderCacheDuration);
+            this.tabPage3.Controls.Add(this.checkBoxUseExtInfoCache);
+            this.tabPage3.Controls.Add(this.checkBoxUseImageCache);
             this.tabPage3.Controls.Add(this.checkBoxUseMaplayerCache);
             this.tabPage3.Controls.Add(this.linkLabelDownloadETOPO2);
             this.tabPage3.Controls.Add(this.linkLabelDownloadETOPO1);
@@ -765,21 +789,134 @@
             this.tabPage3.ToolTipText = "Настройки источников географических данных";
             this.tabPage3.UseVisualStyleBackColor = true;
             // 
+            // labelExtInfos
+            // 
+            this.labelExtInfos.AutoSize = true;
+            this.labelExtInfos.Location = new System.Drawing.Point(423, 133);
+            this.labelExtInfos.Name = "labelExtInfos";
+            this.labelExtInfos.Size = new System.Drawing.Size(31, 13);
+            this.labelExtInfos.TabIndex = 27;
+            this.labelExtInfos.Text = "дней";
+            // 
+            // numericUpDownExtInfoCacheDuration
+            // 
+            this.numericUpDownExtInfoCacheDuration.DecimalPlaces = 2;
+            this.numericUpDownExtInfoCacheDuration.Increment = new decimal(new int[] {
+            25,
+            0,
+            0,
+            131072});
+            this.numericUpDownExtInfoCacheDuration.Location = new System.Drawing.Point(366, 131);
+            this.numericUpDownExtInfoCacheDuration.Name = "numericUpDownExtInfoCacheDuration";
+            this.numericUpDownExtInfoCacheDuration.Size = new System.Drawing.Size(51, 20);
+            this.numericUpDownExtInfoCacheDuration.TabIndex = 26;
+            // 
+            // labelImages
+            // 
+            this.labelImages.AutoSize = true;
+            this.labelImages.Location = new System.Drawing.Point(423, 110);
+            this.labelImages.Name = "labelImages";
+            this.labelImages.Size = new System.Drawing.Size(31, 13);
+            this.labelImages.TabIndex = 25;
+            this.labelImages.Text = "дней";
+            // 
+            // numericUpDownImagesCacheDuration
+            // 
+            this.numericUpDownImagesCacheDuration.DecimalPlaces = 2;
+            this.numericUpDownImagesCacheDuration.Increment = new decimal(new int[] {
+            25,
+            0,
+            0,
+            131072});
+            this.numericUpDownImagesCacheDuration.Location = new System.Drawing.Point(366, 108);
+            this.numericUpDownImagesCacheDuration.Name = "numericUpDownImagesCacheDuration";
+            this.numericUpDownImagesCacheDuration.Size = new System.Drawing.Size(51, 20);
+            this.numericUpDownImagesCacheDuration.TabIndex = 24;
+            // 
+            // labelMaplayers
+            // 
+            this.labelMaplayers.AutoSize = true;
+            this.labelMaplayers.Location = new System.Drawing.Point(423, 87);
+            this.labelMaplayers.Name = "labelMaplayers";
+            this.labelMaplayers.Size = new System.Drawing.Size(31, 13);
+            this.labelMaplayers.TabIndex = 23;
+            this.labelMaplayers.Text = "дней";
+            // 
+            // numericUpDownMaplayersCacheDuration
+            // 
+            this.numericUpDownMaplayersCacheDuration.DecimalPlaces = 2;
+            this.numericUpDownMaplayersCacheDuration.Increment = new decimal(new int[] {
+            25,
+            0,
+            0,
+            131072});
+            this.numericUpDownMaplayersCacheDuration.Location = new System.Drawing.Point(366, 85);
+            this.numericUpDownMaplayersCacheDuration.Name = "numericUpDownMaplayersCacheDuration";
+            this.numericUpDownMaplayersCacheDuration.Size = new System.Drawing.Size(51, 20);
+            this.numericUpDownMaplayersCacheDuration.TabIndex = 22;
+            // 
+            // labelGeocoder
+            // 
+            this.labelGeocoder.AutoSize = true;
+            this.labelGeocoder.Location = new System.Drawing.Point(423, 64);
+            this.labelGeocoder.Name = "labelGeocoder";
+            this.labelGeocoder.Size = new System.Drawing.Size(31, 13);
+            this.labelGeocoder.TabIndex = 21;
+            this.labelGeocoder.Text = "дней";
+            // 
+            // numericUpDownGeocoderCacheDuration
+            // 
+            this.numericUpDownGeocoderCacheDuration.DecimalPlaces = 2;
+            this.numericUpDownGeocoderCacheDuration.Increment = new decimal(new int[] {
+            25,
+            0,
+            0,
+            131072});
+            this.numericUpDownGeocoderCacheDuration.Location = new System.Drawing.Point(366, 62);
+            this.numericUpDownGeocoderCacheDuration.Name = "numericUpDownGeocoderCacheDuration";
+            this.numericUpDownGeocoderCacheDuration.Size = new System.Drawing.Size(51, 20);
+            this.numericUpDownGeocoderCacheDuration.TabIndex = 20;
+            // 
+            // checkBoxUseExtInfoCache
+            // 
+            this.checkBoxUseExtInfoCache.AutoSize = true;
+            this.checkBoxUseExtInfoCache.Location = new System.Drawing.Point(10, 132);
+            this.checkBoxUseExtInfoCache.Name = "checkBoxUseExtInfoCache";
+            this.checkBoxUseExtInfoCache.Size = new System.Drawing.Size(222, 17);
+            this.checkBoxUseExtInfoCache.TabIndex = 19;
+            this.checkBoxUseExtInfoCache.Text = "Кэшировать информацию об объектах";
+            this.toolTip1.SetToolTip(this.checkBoxUseExtInfoCache, "Сохранение информации об объекте");
+            this.checkBoxUseExtInfoCache.UseVisualStyleBackColor = true;
+            this.checkBoxUseExtInfoCache.CheckedChanged += new System.EventHandler(this.checkBoxUseCache_CheckedChanged);
+            // 
+            // checkBoxUseImageCache
+            // 
+            this.checkBoxUseImageCache.AutoSize = true;
+            this.checkBoxUseImageCache.Location = new System.Drawing.Point(9, 109);
+            this.checkBoxUseImageCache.Name = "checkBoxUseImageCache";
+            this.checkBoxUseImageCache.Size = new System.Drawing.Size(138, 17);
+            this.checkBoxUseImageCache.TabIndex = 18;
+            this.checkBoxUseImageCache.Text = "Кэшировать картинки";
+            this.toolTip1.SetToolTip(this.checkBoxUseImageCache, "Сохранение загруженных картинок");
+            this.checkBoxUseImageCache.UseVisualStyleBackColor = true;
+            this.checkBoxUseImageCache.CheckedChanged += new System.EventHandler(this.checkBoxUseCache_CheckedChanged);
+            // 
             // checkBoxUseMaplayerCache
             // 
             this.checkBoxUseMaplayerCache.AutoSize = true;
-            this.checkBoxUseMaplayerCache.Location = new System.Drawing.Point(10, 81);
+            this.checkBoxUseMaplayerCache.Location = new System.Drawing.Point(9, 86);
             this.checkBoxUseMaplayerCache.Name = "checkBoxUseMaplayerCache";
             this.checkBoxUseMaplayerCache.Size = new System.Drawing.Size(196, 17);
             this.checkBoxUseMaplayerCache.TabIndex = 17;
             this.checkBoxUseMaplayerCache.Text = "Кэшировать данные слоёв карты";
-            this.toolTip1.SetToolTip(this.checkBoxUseMaplayerCache, "Если активно, то загруженные высоты и адреса будут сохраняться");
+            this.toolTip1.SetToolTip(this.checkBoxUseMaplayerCache, "Сохранение загруженных слоёв карты");
             this.checkBoxUseMaplayerCache.UseVisualStyleBackColor = true;
+            this.checkBoxUseMaplayerCache.CheckedChanged += new System.EventHandler(this.checkBoxUseCache_CheckedChanged);
             // 
             // linkLabelDownloadETOPO2
             // 
             this.linkLabelDownloadETOPO2.AutoSize = true;
-            this.linkLabelDownloadETOPO2.Location = new System.Drawing.Point(108, 127);
+            this.linkLabelDownloadETOPO2.Location = new System.Drawing.Point(108, 185);
             this.linkLabelDownloadETOPO2.Name = "linkLabelDownloadETOPO2";
             this.linkLabelDownloadETOPO2.Size = new System.Drawing.Size(94, 13);
             this.linkLabelDownloadETOPO2.TabIndex = 16;
@@ -791,7 +928,7 @@
             // linkLabelDownloadETOPO1
             // 
             this.linkLabelDownloadETOPO1.AutoSize = true;
-            this.linkLabelDownloadETOPO1.Location = new System.Drawing.Point(8, 127);
+            this.linkLabelDownloadETOPO1.Location = new System.Drawing.Point(8, 185);
             this.linkLabelDownloadETOPO1.Name = "linkLabelDownloadETOPO1";
             this.linkLabelDownloadETOPO1.Size = new System.Drawing.Size(94, 13);
             this.linkLabelDownloadETOPO1.TabIndex = 15;
@@ -803,19 +940,20 @@
             // checkBoxUseCacheGeocoder
             // 
             this.checkBoxUseCacheGeocoder.AutoSize = true;
-            this.checkBoxUseCacheGeocoder.Location = new System.Drawing.Point(10, 58);
+            this.checkBoxUseCacheGeocoder.Location = new System.Drawing.Point(9, 63);
             this.checkBoxUseCacheGeocoder.Name = "checkBoxUseCacheGeocoder";
             this.checkBoxUseCacheGeocoder.Size = new System.Drawing.Size(228, 17);
             this.checkBoxUseCacheGeocoder.TabIndex = 14;
             this.checkBoxUseCacheGeocoder.Text = "Кэшировать данные геокодера и высот";
             this.toolTip1.SetToolTip(this.checkBoxUseCacheGeocoder, "Если активно, то загруженные высоты и адреса будут сохраняться");
             this.checkBoxUseCacheGeocoder.UseVisualStyleBackColor = true;
+            this.checkBoxUseCacheGeocoder.CheckedChanged += new System.EventHandler(this.checkBoxUseCache_CheckedChanged);
             // 
             // buttonSelectETOPOFolder
             // 
             this.buttonSelectETOPOFolder.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonSelectETOPOFolder.AutoSize = true;
-            this.buttonSelectETOPOFolder.Location = new System.Drawing.Point(424, 98);
+            this.buttonSelectETOPOFolder.Location = new System.Drawing.Point(426, 156);
             this.buttonSelectETOPOFolder.Name = "buttonSelectETOPOFolder";
             this.buttonSelectETOPOFolder.Size = new System.Drawing.Size(30, 27);
             this.buttonSelectETOPOFolder.TabIndex = 13;
@@ -827,7 +965,7 @@
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(8, 102);
+            this.label8.Location = new System.Drawing.Point(8, 160);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(112, 13);
             this.label8.TabIndex = 12;
@@ -838,7 +976,7 @@
             // 
             this.textBoxDBETOPOFolder.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxDBETOPOFolder.Location = new System.Drawing.Point(128, 99);
+            this.textBoxDBETOPOFolder.Location = new System.Drawing.Point(128, 157);
             this.textBoxDBETOPOFolder.Name = "textBoxDBETOPOFolder";
             this.textBoxDBETOPOFolder.Size = new System.Drawing.Size(294, 20);
             this.textBoxDBETOPOFolder.TabIndex = 11;
@@ -1247,6 +1385,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.trackBarOptimalMethodType)).EndInit();
             this.tabPage3.ResumeLayout(false);
             this.tabPage3.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownExtInfoCacheDuration)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownImagesCacheDuration)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaplayersCacheDuration)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownGeocoderCacheDuration)).EndInit();
             this.tabPage4.ResumeLayout(false);
             this.tabPage4.PerformLayout();
             this.groupBox3.ResumeLayout(false);
@@ -1353,5 +1495,15 @@
         private System.Windows.Forms.Label label18;
         private System.Windows.Forms.TextBox textBoxWikimapiaPassword;
         private System.Windows.Forms.TextBox textBoxWikimapiaLogin;
+        private System.Windows.Forms.Label labelExtInfos;
+        private System.Windows.Forms.NumericUpDown numericUpDownExtInfoCacheDuration;
+        private System.Windows.Forms.Label labelImages;
+        private System.Windows.Forms.NumericUpDown numericUpDownImagesCacheDuration;
+        private System.Windows.Forms.Label labelMaplayers;
+        private System.Windows.Forms.NumericUpDown numericUpDownMaplayersCacheDuration;
+        private System.Windows.Forms.Label labelGeocoder;
+        private System.Windows.Forms.NumericUpDown numericUpDownGeocoderCacheDuration;
+        private System.Windows.Forms.CheckBox checkBoxUseExtInfoCache;
+        private System.Windows.Forms.CheckBox checkBoxUseImageCache;
     }
 }

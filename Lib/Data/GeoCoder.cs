@@ -36,16 +36,16 @@ namespace TrackConverter.Lib.Data
             switch (provider)
             {
                 case GeoCoderProvider.Yandex:
-                    coder = new Yandex(Application.StartupPath + Resources.cache_directory + "\\http_cache\\yandex");
+                    coder = new Yandex(Application.StartupPath + Resources.cache_directory + "\\http_cache\\yandex",Vars.Options.DataSources.MaxGeocoderCacheDays*24);
                     break;
                 case GeoCoderProvider.Google:
-                    coder = new Google(Application.StartupPath + Resources.cache_directory + "\\http_cache\\google");
+                    coder = new Google(Application.StartupPath + Resources.cache_directory + "\\http_cache\\google", Vars.Options.DataSources.MaxGeocoderCacheDays * 24);
                     break;
                 case GeoCoderProvider.Nominatim:
                     coder = new Nominatim();
                     break;
                 case GeoCoderProvider.Arcgis:
-                    coder = new Arcgis(Application.StartupPath + Resources.cache_directory + "\\http_cache\\arcgis");
+                    coder = new Arcgis(Application.StartupPath + Resources.cache_directory + "\\http_cache\\arcgis", Vars.Options.DataSources.MaxGeocoderCacheDays * 24);
                     break;
                         
                 default:

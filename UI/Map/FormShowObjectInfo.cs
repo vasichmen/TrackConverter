@@ -61,7 +61,7 @@ namespace TrackConverter.UI.Map
                                 info = Vars.dataCache.GetLayerObjectExtInfo(Obj.ID);
                             else
                             {
-                                info = new Wikimapia(Application.StartupPath + Resources.cache_directory + "\\http_cache\\wikimapia\\objects_info").GetExtInfo(Obj);
+                                info = new Wikimapia(Application.StartupPath + Resources.cache_directory + "\\http_cache\\wikimapia\\objects_info", Vars.Options.DataSources.MaxExtInfoCacheDays*24).GetExtInfo(Obj);
                                 Vars.dataCache.PutLayerObjectExtInfo(info);
                             }
                         });

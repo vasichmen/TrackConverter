@@ -59,12 +59,11 @@ namespace TrackConverter.Lib.Data
         {
             sqliteDir = baseDir + "\\geocoder";
             imagesDir = baseDir + "\\images";
-            layerObjectsFile = baseDir + "\\layerObjects";
 
             sqlite = new SQLiteCache(sqliteDir);
             images = new FileSystemCache(imagesDir, TimeSpan.FromDays(Vars.Options.DataSources.MaxImageCacheDays));
             extObjectsInfo = new MemoryCache();
-            vectorMapLayer = new ObjectsMemoryCache(layerObjectsFile);
+            vectorMapLayer = new ObjectsMemoryCache();
         }
 
 

@@ -46,7 +46,7 @@ namespace TrackConverter.UI.Map
         {
             InitializeComponent();
             frm = winMain;
-            wiki_engine = new Wikimapia(Application.StartupPath + Resources.cache_directory + "\\http_cache\\wikimapia\\categories");
+            wiki_engine = new Wikimapia(Application.StartupPath + Resources.cache_directory + "\\http_cache\\wikimapia\\categories",Vars.Options.DataSources.MaxVectorLayersCacheDays*24);
             visibleMarkers = new ConcurrentDictionary<PointLatLng, object>();
         }
 
