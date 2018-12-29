@@ -15,6 +15,7 @@ using TrackConverter.Lib.Classes.StackEdits;
 using TrackConverter.Lib.Data;
 using TrackConverter.Lib.Data.Providers.InternetServices;
 using TrackConverter.Lib.Maping.GMap;
+using TrackConverter.Lib.Mathematic.Astronomy;
 using TrackConverter.Lib.Tracking;
 using TrackConverter.Res.Properties;
 using TrackConverter.UI.Map;
@@ -1510,6 +1511,9 @@ namespace TrackConverter.UI.Shell
 
         private void button1_Click(object sender, EventArgs e)
         {
+           var s= new GeoCoder(GeoCoderProvider.Arcgis).GetCoordinate("Москва");
+
+
             BaseConnection.UseProxy = true;
             Wikimapia.ServiceEngine.CreateObject(new Wikimapia.ObjectEditInfo()
             {

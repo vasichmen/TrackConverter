@@ -78,5 +78,25 @@ namespace TrackConverter.Lib.Mathematic.Astronomy
                 return double.NaN;
             return set;
         }
+
+        /// <summary>
+        /// вычисление часового пояса по координатам точки (соответствует математическим границам часовых поясов)
+        /// </summary>
+        /// <param name="point">соординаты точки</param>
+        /// <returns></returns>
+        public static int CalculateTimeZone(Coordinate point) {
+            if (point.Longitude == 180 )
+                return 12;
+            if (point.Longitude == -180)
+                return -12;
+            if (point.Longitude == 0)
+                return 0;
+            if (point.Longitude == -0)
+                return 0;
+            if (point.Longitude > 0)
+                return (int)(point.Longitude / 15 + 1);
+            else
+                return -(int)(Math.Abs(point.Longitude) / 15 + 1);
+        }
     }
 }

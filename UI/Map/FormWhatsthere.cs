@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using TrackConverter.Lib.Classes;
 using TrackConverter.Lib.Data;
+using TrackConverter.Lib.Mathematic.Astronomy;
 using TrackConverter.Lib.Tracking;
 
 namespace TrackConverter.UI.Map
@@ -84,11 +86,12 @@ namespace TrackConverter.UI.Map
                     }
                     catch (Exception exx)
                     {
+                        int offset= AstronomyCalculations.CalculateTimeZone(point.Coordinates);
                         lock (point)
                         {
-                            point.TimeZone = TimeZoneInfo.Utc;
+                            point.TimeZone = TimeZoneInfo.CreateCustomTimeZone(" ", TimeSpan.FromHours(offset), "unknown", "unknown");
                         }
-                        this.Invoke(new Action(() => MessageBox.Show(null, "Не удалось получить локальное время. Причина:\r\n" + exx.Message + "\r\nДля вычислений будет использоваться время UTC", "Получение локального времени", MessageBoxButtons.OK, MessageBoxIcon.Warning)));
+                        this.Invoke(new Action(() => MessageBox.Show(null, "Не удалось получить локальное время. Причина:\r\n" + exx.Message + "\r\nДля вычислений будет использоваться часовой пояс, рассчитанный по координатам точки", "Получение локального времени", MessageBoxButtons.OK, MessageBoxIcon.Warning)));
                     }
             }));
 
@@ -131,7 +134,7 @@ namespace TrackConverter.UI.Map
             timer.Tick += timer_Tick;
             timer.Start();
         }
-
+        
         private void timer_Tick(object sender, EventArgs e)
         {
             this.Invoke(new Action(() =>
