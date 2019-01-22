@@ -248,7 +248,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
 
             public override GMapProvider[] Overlays { get { return new GMapProvider[] { GoogleMapProvider.Instance, Instance }; } }
 
-            protected override string[] Mirrors { get { return new string[] { "http://www.retromap.host.ru/f19f53e/14194126" }; } }
+            protected override string[] Mirrors { get { return new string[] { "http://www.map.host.ru/f19f53e/14194126" }; } }
 
             protected override int Encryption { get { return 3; } }
 
