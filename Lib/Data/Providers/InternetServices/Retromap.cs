@@ -55,12 +55,12 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
             }
 
             /// <summary>
-            /// проверяет наличие заданной карты в указанной точке
+            /// проверяет наличие заданной карты в указанной точке при заданном масштабе
             /// </summary>
             /// <param name="mapID">значение поля MapID карты</param>
             /// <param name="position">координаты точки</param>
             /// <returns></returns>
-            public bool Exist(string mapID, PointLatLng position)
+            public bool Exist(string mapID, PointLatLng position, int zoom)
             {
                 List<string> total_maps = MapsInPoint(position);
                 bool res = total_maps.Contains(mapID);

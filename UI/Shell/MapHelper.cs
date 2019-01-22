@@ -892,6 +892,54 @@ namespace TrackConverter.UI.Shell
             selectDropDownItems<MapLayerProviderRecord>(formMain.layerProviderToolStripMenuItem, lpr.ID);
         }
 
+        /// <summary>
+        /// обновление списка карт для этой точки при открытии меню списка поставщиков карт
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        internal void MapProviderDropDownOpening(object sender, EventArgs e)
+        {
+            PointLatLng pos = formMain.gmapControlMap.Position;
+            int zoom = (int)(formMain.gmapControlMap.Zoom);
+            ToolStripDropDownItem menu = sender as ToolStripDropDownItem;
+            bool inet_reach = true;
+            foreach (ToolStripMenuItem item in menu.DropDownItems)
+
+                if (item.HasDropDownItems)
+                    foreach (ToolStripMenuItem item_map in item.DropDownItems)
+                    {
+                        MapProviderRecord mpr = item_map.Tag as MapProviderRecord;
+                        switch (mpr.MapProviderClass)
+                        {
+                            case MapProviderClasses.Retromap:
+                                try
+                                {
+                                    bool exist = true;
+                                    if (inet_reach)
+                                    {
+                                        string id = (MapProviderRecord.MapProviderToClass(mpr.Enum) as Retromap.BaseRetromap).MapID;
+                                        exist = Retromap.ServiceEngine.Exist(id, pos,zoom);
+                                    }
+                                    item_map.Visible = exist;
+                                }
+                                catch (WebException we)
+                                {
+                                    inet_reach = false;
+                                    item_map.Visible = true;
+                                }
+                                break;
+                            case MapProviderClasses.Genshtab:
+                            case MapProviderClasses.Google:
+                            case MapProviderClasses.OSM:
+                            case MapProviderClasses.Yandex:
+                                break;
+                            case MapProviderClasses.None:
+                                break;
+                            default: throw new Exception("этот класс карт не реализован");
+                        }
+                    }
+        }
+
         #endregion
 
         #region Контекстные меню карты

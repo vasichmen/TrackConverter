@@ -902,6 +902,13 @@ namespace TrackConverter.UI.Shell
         #endregion
 
         #region Кнопки 
+
+        //открытие списка провайдеров карт (над картой и в главном меню)
+        private void toolStripDropDownButtonMapProvider_DropDownOpening(object sender, EventArgs e)
+        {
+            mapHelper.MapProviderDropDownOpening(sender, e);
+        }
+
         private void toolStripButtonUndo_Click(object sender, EventArgs e)
         {
             mapHelper.UndoClick(e);
@@ -991,6 +998,7 @@ namespace TrackConverter.UI.Shell
         {
             mapHelper.ContextMenuMapOpening(sender, e);
         }
+
 
         private void contextMenuStripMarker_Opening(object sender, CancelEventArgs e)
         {
@@ -1511,7 +1519,7 @@ namespace TrackConverter.UI.Shell
 
         private void button1_Click(object sender, EventArgs e)
         {
-           var s= new GeoCoder(GeoCoderProvider.Arcgis).GetCoordinate("Москва");
+            var s = new GeoCoder(GeoCoderProvider.Arcgis).GetCoordinate("Москва");
 
 
             BaseConnection.UseProxy = true;
@@ -1526,7 +1534,7 @@ namespace TrackConverter.UI.Shell
                 IsBuilding = true,
                 StreetName = "",
                 WikipediaLink = "",
-                 ObjectType = 1
+                ObjectType = 1
             });
         }
 
