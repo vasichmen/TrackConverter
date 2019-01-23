@@ -794,41 +794,44 @@ namespace TrackConverter.UI.Shell
             MapProviderRecord mpr = (MapProviderRecord)((ToolStripMenuItem)sender).Tag;
             GMapProvider newProvider = MapProviderRecord.MapProviderToClass(mpr.Enum);
 
-            Vars.Options.Map.MapProvider = mpr;
-            GMapProvider provider;
-            if (mpr.MapProviderClass == MapProviderClasses.Retromap)
-            {
-                Retromap.BaseRetromap nmap = ((Retromap.BaseRetromap)(newProvider));
-                string MapID = nmap.MapID;
-                bool exist = Retromap.ServiceEngine.Exist(MapID, formMain.gmapControlMap.Position);
-                if (!exist)
-                {
-                    DialogResult dr = MessageBox.Show(formMain, "Этой карты нет в видимой области. Показать весь регион выбранной карты?", "Выбор карты", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
-                    switch (dr)
-                    {
-                        case DialogResult.Yes: //центр карты на центр выбранной карты
-                            RectLatLng rect = nmap.Rectangle;
-                            formMain.gmapControlMap.SetZoomToFitRect(rect);
-                            formMain.gmapControlMap.Position = rect.LocationMiddle;
-                            provider = newProvider;
-                            break;
-                        case DialogResult.No: //оставить всё как есть
-                            provider = newProvider;
-                            break;
-                        case DialogResult.Cancel: //отменить выбор карты
-                            provider = formMain.gmapControlMap.MapProvider;
-                            break;
-                        default: throw new Exception("Диалоговое окно вернуло некорректный ответ: " + dr.ToString());
-                    }
+            //обновление провайдера карты независимо от доступности в этом регионе
+            formMain.gmapControlMap.MapProvider = newProvider;
 
-                }
-                else
-                    provider = newProvider;
-            }
-            else
-                provider = newProvider;
+            //проверка доступности карты в этом регионе
+            //Vars.Options.Map.MapProvider = mpr;
+            //GMapProvider provider;
+            //if (mpr.MapProviderClass == MapProviderClasses.Retromap)
+            //{
+            //    Retromap.BaseRetromap nmap = ((Retromap.BaseRetromap)(newProvider));
+            //    string MapID = nmap.MapID;
+            //    bool exist = Retromap.ServiceEngine.Exist(MapID, formMain.gmapControlMap.Position);
+            //    if (!exist)
+            //    {
+            //        DialogResult dr = MessageBox.Show(formMain, "Этой карты нет в видимой области. Показать весь регион выбранной карты?", "Выбор карты", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
+            //        switch (dr)
+            //        {
+            //            case DialogResult.Yes: //центр карты на центр выбранной карты
+            //                RectLatLng rect = nmap.Rectangle;
+            //                formMain.gmapControlMap.SetZoomToFitRect(rect);
+            //                formMain.gmapControlMap.Position = rect.LocationMiddle;
+            //                provider = newProvider;
+            //                break;
+            //            case DialogResult.No: //оставить всё как есть
+            //                provider = newProvider;
+            //                break;
+            //            case DialogResult.Cancel: //отменить выбор карты
+            //                provider = formMain.gmapControlMap.MapProvider;
+            //                break;
+            //            default: throw new Exception("Диалоговое окно вернуло некорректный ответ: " + dr.ToString());
+            //        }
 
-            formMain.gmapControlMap.MapProvider = provider;
+            //    }
+            //    else
+            //        provider = newProvider;
+            //}
+            //else
+            //    provider = newProvider;
+            //formMain.gmapControlMap.MapProvider = provider;
 
             selectDropDownItems<MapProviderRecord>(formMain.toolStripDropDownButtonMapProvider, mpr.ID);
             selectDropDownItems<MapProviderRecord>(formMain.mapProviderToolStripMenuItem, mpr.ID);
@@ -918,7 +921,7 @@ namespace TrackConverter.UI.Shell
                                     if (inet_reach)
                                     {
                                         string id = (MapProviderRecord.MapProviderToClass(mpr.Enum) as Retromap.BaseRetromap).MapID;
-                                        exist = Retromap.ServiceEngine.Exist(id, pos,zoom);
+                                        exist = Retromap.ServiceEngine.Exist(id, pos, zoom);
                                     }
                                     item_map.Visible = exist;
                                 }
