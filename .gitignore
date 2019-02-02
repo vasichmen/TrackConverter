@@ -257,3 +257,4 @@ UrlCache/*
 /док апи карт
 /документация gmap
 /Privoxy/*
+*.bat
