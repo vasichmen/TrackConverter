@@ -359,7 +359,6 @@
     <Content Include="Docs\добавление формата файла.txt" />
     <Content Include="Docs\СК, проекции и прочее.txt" />
     <Content Include="Docs\стандарты.txt" />
-    <Content Include="f.js" />
     <Content Include="Images\icons\001.ico">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

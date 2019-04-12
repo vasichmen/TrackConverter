@@ -116,10 +116,11 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
             }
 
             ////Фомируем запрос к API маршрутов Google.
-            string url = string.Format("http://maps.googleapis.com/maps/api/directions/xml?origin={0}&destination={1}&waypoints=(waypoints)&sensor=false&language=ru&mode={2}",
+            string url = string.Format("http://maps.googleapis.com/maps/api/directions/xml?origin={0}&destination={1}&waypoints=(waypoints)&sensor=false&language=ru&mode={2}&key={3}",
                 from.ToString("{lat},{lon}", "00.000000"),
                 to.ToString("{lat},{lon}", "00.000000"),
-                param
+                param,
+                Resources.google_api_key
                 );
 
             //заполнение промежуточных точек
@@ -283,8 +284,8 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         public string GetAddress(Coordinate coordinate)
         {
             //https://maps.googleapis.com/maps/api/geocode/json?latlng=40.714224,-73.961452
-            string url = string.Format("https://maps.googleapis.com/maps/api/geocode/xml?latlng={0}&languange=ru-Ru",
-                coordinate.ToString("{lat},{lon}", "00.000000"));
+            string url = string.Format("https://maps.googleapis.com/maps/api/geocode/xml?latlng={0}&languange=ru-Ru&key={1}",
+                coordinate.ToString("{lat},{lon}", "00.000000"), Resources.google_api_key);
             XmlDocument xml = SendXmlGetRequest(url);
 
             XmlNode status = xml.GetElementsByTagName("status")[0];
@@ -328,8 +329,8 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         public Coordinate GetCoordinate(string address)
         {
             string url = string.Format(
-               "http://maps.googleapis.com/maps/api/geocode/xml?address={0}&sensor=true_or_false&language=ru",
-               Uri.EscapeDataString(address));
+               "http://maps.googleapis.com/maps/api/geocode/xml?address={0}&sensor=true_or_false&language=ru&key={1}",
+               Uri.EscapeDataString(address), Resources.google_api_key);
 
             XmlDocument dc = SendXmlGetRequest(url);
 
@@ -367,10 +368,10 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         {
             //https://maps.googleapis.com/maps/api/elevation/json?locations=39.7391536,-104.9847034&api_key=
 
-            string url = string.Format("https://maps.googleapis.com/maps/api/elevation/xml?locations={0},{1}&api_key={2}",
+            string url = string.Format("https://maps.googleapis.com/maps/api/elevation/xml?locations={0},{1}&key={2}",
                 coordinate.Latitude.ToString().Replace(Vars.DecimalSeparator, '.'),
                 coordinate.Longitude.ToString().Replace(Vars.DecimalSeparator, '.'),
-                Resources.google_elevation_api_key);
+                Resources.google_api_key);
 
             XmlDocument xml = SendXmlGetRequest(url);
             XmlNode status = xml.GetElementsByTagName("status")[0];
@@ -416,7 +417,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
                 //передача точек кодированной линией. Этим способом можно отправлять 500 точек за один раз
                 string pts = "enc:" + ConvertPolyline(trk);
 
-                string url = string.Format("https://maps.googleapis.com/maps/api/elevation/json?locations={0}", pts);
+                string url = string.Format("https://maps.googleapis.com/maps/api/elevation/json?locations={0}&key={1}", pts, Resources.google_api_key);
 
                 int attempt = 0;
                 while (attempt < this.MaxAttempts)
@@ -637,11 +638,11 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         {
             //https://maps.googleapis.com/maps/api/timezone/xml?location=39.6034810,-119.6822510&timestamp=1331161200&key=YOUR_API_KEY
             int timestamp = (int)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
-            string url = string.Format("https://maps.googleapis.com/maps/api/timezone/xml?location={0},{1}&timestamp={2}&language=ru&api_key={3}",
+            string url = string.Format("https://maps.googleapis.com/maps/api/timezone/xml?location={0},{1}&timestamp={2}&language=ru&key={3}",
                 coordinate.Latitude.ToString().Replace(Vars.DecimalSeparator, '.'),
                 coordinate.Longitude.ToString().Replace(Vars.DecimalSeparator, '.'),
                 timestamp,
-                Resources.google_elevation_api_key);
+                Resources.google_api_key);
 
             XmlDocument xml = SendXmlGetRequest(url);
             XmlNode status = xml.GetElementsByTagName("status")[0];

@@ -283,20 +283,11 @@ namespace TrackConverter.Res.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на AIzaSyD_HQaeF2zZDgK7V22BJ_cI-iczZQD-ODo.
+        ///   Ищет локализованную строку, похожую на AIzaSyCl3mYuQiycBgd9fnmnRjl_bHTrf-kCVrI.
         /// </summary>
-        public static string google_elevation_api_key {
+        public static string google_api_key {
             get {
-                return ResourceManager.GetString("google_elevation_api_key", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на AIzaSyCmDnZ90-2gbv2tpqhkQiXsKM70hvkz3_A.
-        /// </summary>
-        public static string google_timezone_api {
-            get {
-                return ResourceManager.GetString("google_timezone_api", resourceCulture);
+                return ResourceManager.GetString("google_api_key", resourceCulture);
             }
         }
         
