@@ -590,12 +590,12 @@ namespace TrackConverter.UI.Tools
         /// <param name="e"></param>
         private void linkLabelDownloadETOPO2_Click(object sender, EventArgs e)
         {
-            Process.Start("https://www.ngdc.noaa.gov/mgg/global/relief/ETOPO2/");
+            Process.Start("https://www.ngdc.noaa.gov/mgg/global/relief/ETOPO2/ETOPO2v2-2006/ETOPO2v2g/raw_binary/");
         }
 
         private void linkLabelDownloadETOPO1_Click(object sender, EventArgs e)
         {
-            Process.Start("https://www.ngdc.noaa.gov/mgg/global/relief/ETOPO1/");
+            Process.Start("https://www.ngdc.noaa.gov/mgg/global/relief/ETOPO1/data/");
         }
 
         private void linkLabelDownloadETOPO5_Click(object sender, EventArgs e)

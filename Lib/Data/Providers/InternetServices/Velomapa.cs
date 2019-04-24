@@ -49,7 +49,7 @@ namespace TrackConverter.Lib.Data.Providers.InternetServices
         private void AttachGuid(string guid)
         {
             string site = Vars.Options.Common.SiteAddress;
-            string ver = Vars.Options.Common.VersionText;
+            string ver = "TrackConverter "+Vars.Options.Common.VersionText;
             string url = string.Format("{0}/receiver.php?mode=attach&program_guid={1}&version={2}", site, guid,ver);
             string ans = this.SendStringGetRequest(url,false);
             if (ans != "OK")
